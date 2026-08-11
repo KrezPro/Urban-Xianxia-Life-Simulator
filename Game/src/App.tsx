@@ -1,11 +1,11 @@
 import React from 'react';
-import { SafeAreaView, Text, View, Button, StyleSheet } from 'react-native';
-import { useTranslation } from './utils/i18n';
+import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from './navigation/TabNavigator';
 import { usePlayerStore } from './store/usePlayerStore';
 
 export default function App() {
-  const { t } = useTranslation();
-  const { age, growOlder, hasHydrated } = usePlayerStore();
+  const { hasHydrated } = usePlayerStore();
 
   if (!hasHydrated) {
     return (
@@ -16,14 +16,9 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Urban Xianxia</Text>
-      <Text style={styles.ageText}>{t('age')}: {age}</Text>
-      
-      <View style={styles.buttonContainer}>
-        <Button title={t('age_button')} onPress={growOlder} />
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 }
 
@@ -37,19 +32,4 @@ const styles = StyleSheet.create({
   loadingText: {
     color: '#fff',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 30,
-  },
-  ageText: {
-    fontSize: 20,
-    color: '#fff',
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    width: '60%',
-  }
 });

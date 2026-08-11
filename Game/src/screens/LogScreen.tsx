@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   secretText: {
-    color: '#9b59b6', // Фиолетовый цвет для тайных событий культивации
+    color: '#9b59b6',
     fontWeight: '600',
   },
   systemText: {
-    color: '#e74c3c', // Красный цвет для системных событий (смерть, перерождение)
+    color: '#e74c3c',
     fontStyle: 'italic',
   },
   emptyText: {

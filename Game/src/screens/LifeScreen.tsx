@@ -1,32 +1,49 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, View, Button, StyleSheet } from 'react-native';
+import { usePlayerStore } from '../store/usePlayerStore';
+import { useEventStore } from '../store/useEventStore';
 
 export default function LifeScreen() {
+  const { age, growOlder } = usePlayerStore();
+  const { addLog } = useEventStore();
+
+  const handleGrowOlder = () => {
+    growOlder();
+    addLog(`Прошел год. Вам теперь ${age + 1} лет.`, 'mundane');
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Мирская жизнь</Text>
-      <Text style={styles.subtitle}>Здесь будут доступны: школа, работа, инвестиции и отношения.</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Urban Xianxia</Text>
+      <Text style={styles.ageText}>Возраст: {age}</Text>
+      
+      <View style={styles.buttonContainer}>
+        <Button title="Повзрослеть (+1 год)" onPress={handleGrowOlder} />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#121212',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 10,
+    marginBottom: 30,
   },
-  subtitle: {
-    color: '#888',
-    textAlign: 'center',
-    lineHeight: 22,
+  ageText: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: '60%',
   }
 });

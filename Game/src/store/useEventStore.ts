@@ -20,7 +20,6 @@ export const useEventStore = create<EventState>()(
     (set) => ({
       logs: [],
       addLog: (text, type) => set((state) => ({
-        // Добавляем новую запись в начало массива
         logs: [{ 
           id: Date.now().toString() + Math.random().toString(), 
           text, 

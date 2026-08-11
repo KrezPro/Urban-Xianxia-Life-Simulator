@@ -1,4 +1,4 @@
-Уроки и архитектурные исключения:
-1. Expo Go НЕ поддерживает кастомные нативные C++ модули, такие как react-native-mmkv, выдавая ошибку "The native MMKV Module could not be found".
-2. ПРАВИЛО ПЕРЕЗАПИСАНО: Временно отменяется жесткий запрет на использование AsyncStorage. Для обеспечения возможности тестирования через стандартный клиент Expo Go, хранилище переведено на @react-native-async-storage/async-storage.
-3. Возврат к MMKV будет произведен только на этапе создания кастомного Dev Build (EAS).
+ВЫУЧЕННЫЕ УРОКИ:
+1. Ошибка Metro Bundler (TransformError Cannot find module 'babel-preset-expo') при использовании Custom Dev Client (APK) возникает, если пресет 'babel-preset-expo' отсутствует в devDependencies в package.json. Его всегда нужно добавлять, если проект создавался или мигрировал с вырезанными зависимостями Expo.
+2. При сборке custom dev client (expo-dev-client) с react-native-mmkv (v4+), плагин `react-native-mmkv/babel` больше не требуется, достаточно стандартного `babel-preset-expo`.
+3. Чтобы избежать дублирования точек входа, `Game/index.ts` должен указывать строго на `Game/src/App.tsx`, а `Game/App.tsx` нужно удалять из файловой системы.
