@@ -3,7 +3,7 @@ export const formatLargeNumber = (value: string | number): string => {
   const isNegative = strVal.startsWith('-');
   const absVal = isNegative ? strVal.slice(1) : strVal;
 
-  if (0 === absVal.length) {
+  if ('0' === absVal || 0 === absVal.length) {
     return '0';
   }
 

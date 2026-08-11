@@ -45,7 +45,7 @@ export default function TabNavigator() {
 
           return (
             <Text style={{ color, fontSize: 12 }}>
-              {uiData.tab_bar[key]}
+              {(uiData.tab_bar as any)[key]}
             </Text>
           );
         },
@@ -56,10 +56,10 @@ export default function TabNavigator() {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === 'Dao') {
             iconName = focused ? 'leaf' : 'leaf-outline';
-          } else if (route.name === 'Log') {
-            iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Store') {
             iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'Log') {
+            iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Sect') {
             iconName = focused ? 'people' : 'people-outline';
           }

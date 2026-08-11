@@ -1,27 +1,45 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useLocaleStore } from '../store/useLocaleStore';
+import { formatLargeNumber } from '../utils/formatUtils';
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
 
 export default function ProfileScreen() {
-  const { age, cultivationStage, health, intellect, charm, money, incrementAge } = usePlayerStore();
+  const player = usePlayerStore();
+  const locale = useLocaleStore((state) => state.locale);
+  const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>BitCultivator</Text>
-      
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>{uiData.profile_screen.title}</Text>
+
       <View style={styles.statsCard}>
-        <Text style={styles.statText}>Возраст: {age} лет</Text>
-        <Text style={styles.statText}>Стадия: {cultivationStage}</Text>
-        <Text style={styles.statText}>Здоровье: {health}/100</Text>
-        <Text style={styles.statText}>Интеллект: {intellect}</Text>
-        <Text style={styles.statText}>Привлекательность: {charm}</Text>
-        <Text style={styles.statText}>Деньги: ${money}</Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.age}: {player.age}
+        </Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.stage}: {player.cultivationStage}
+        </Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.health}: {player.health}
+        </Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.intelligence}: {player.intelligence}
+        </Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.appearance}: {player.appearance}
+        </Text>
+        <Text style={styles.statText}>
+          {uiData.profile_screen.money}: ${formatLargeNumber(player.money)}
+        </Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={incrementAge} activeOpacity={0.8}>
-        <Text style={styles.buttonText}>Повзрослеть (+1 год)</Text>
+      <TouchableOpacity style={styles.button} onPress={player.growOlder} activeOpacity={0.8}>
+        <Text style={styles.buttonText}>{uiData.profile_screen.btn_grow}</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -63,5 +81,5 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
-  }
+  },
 });

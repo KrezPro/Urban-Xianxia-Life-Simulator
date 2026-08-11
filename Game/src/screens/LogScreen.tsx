@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useEventStore, IEventLog } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { Theme } from '../constants/Theme';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -51,13 +52,13 @@ export default function LogScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: Theme.colors.background,
     paddingTop: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: Theme.colors.text,
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -69,11 +70,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 8,
     padding: 10,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: Theme.colors.card,
     borderRadius: 8,
   },
   logTime: {
-    color: '#888',
+    color: Theme.colors.textDim,
     marginRight: 8,
     fontSize: 12,
     marginTop: 2,
@@ -85,15 +86,15 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   secretText: {
-    color: '#9b59b6',
+    color: Theme.colors.info,
     fontWeight: '600',
   },
   systemText: {
-    color: '#e74c3c',
+    color: Theme.colors.danger,
     fontStyle: 'italic',
   },
   emptyText: {
-    color: '#888',
+    color: Theme.colors.textDim,
     textAlign: 'center',
     marginTop: 50,
     fontStyle: 'italic',

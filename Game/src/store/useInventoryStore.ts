@@ -20,28 +20,32 @@ export const useInventoryStore = create<InventoryState>()(
       setHasHydrated: (state) => set({ hasHydrated: state }),
       addItem: (item) => set((state) => {
         const existing = state.items[item.id];
+
         return {
           items: {
             ...state.items,
-            [item.id]: existing 
+            [item.id]: existing
               ? { ...existing, quantity: existing.quantity + item.quantity }
-              : item
-          }
+              : item,
+          },
         };
       }),
       useItem: (id) => set((state) => {
         const existing = state.items[id];
-        if (!existing || existing.quantity <= 0) return state;
-        
+
+        if (!existing || 0 >= existing.quantity) {
+          return state;
+        }
+
         const newQuantity = existing.quantity - 1;
         const newItems = { ...state.items };
-        
-        if (newQuantity <= 0) {
+
+        if (0 >= newQuantity) {
           delete newItems[id];
         } else {
           newItems[id] = { ...existing, quantity: newQuantity };
         }
-        
+
         return { items: newItems };
       }),
       clearInventory: () => set({ items: {} }),

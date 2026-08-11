@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { ILeaderboardEntry, ISect } from '../types';
 import { generateInviteCode, isValidInviteCode, normalizeInviteCode } from '../services/inviteCodeService';
-import { createNpcSectFromCode, createPlayerSect, simulateNpcProgress } from '../services/socialService';
+import { createNpcSectFromCode, createPlayerSect, getCurrentSeasonId, simulateNpcProgress } from '../services/socialService';
 import { buildLeaderboard } from '../services/leaderboardService';
 import { addBigIntStrings, divideBigIntStringByNumber, safeBigInt } from '../utils/bigIntUtils';
 import { GameConstants } from '../constants/GameConstants';
@@ -16,10 +16,11 @@ interface SocialState {
   sect: ISect | null;
   inviteCode: string;
   leaderboard: ILeaderboardEntry[];
+  seasonId: string;
   lastOfflineSimulationAt: number;
   setHasHydrated: (state: boolean) => void;
-  createSect: (name: string, tag: string, seasonId: string) => void;
-  joinSectByInvite: (code: string, seasonId: string) => boolean;
+  createSect: (name: string, tag: string) => void;
+  joinSectByInvite: (code: string) => boolean;
   leaveSect: () => void;
   contribute: (amount: string) => ContributeResult;
   simulateOffline: (now: number) => void;
@@ -33,33 +34,38 @@ export const useSocialStore = create<SocialState>()(
       sect: null,
       inviteCode: '',
       leaderboard: [],
+      seasonId: getCurrentSeasonId(),
       lastOfflineSimulationAt: Date.now(),
       setHasHydrated: (state) => set({ hasHydrated: state }),
 
-      createSect: (name, tag, seasonId) => {
+      createSect: (name, tag) => {
+        const seasonId = getCurrentSeasonId();
         const inviteCode = generateInviteCode();
         const sect = createPlayerSect({ name, tag, inviteCode, seasonId });
 
         set({
           sect,
           inviteCode,
+          seasonId,
           leaderboard: buildLeaderboard(sect),
           lastOfflineSimulationAt: Date.now(),
         });
       },
 
-      joinSectByInvite: (code, seasonId) => {
+      joinSectByInvite: (code) => {
         const normalized = normalizeInviteCode(code);
 
         if (!isValidInviteCode(normalized)) {
           return false;
         }
 
+        const seasonId = getCurrentSeasonId();
         const sect = createNpcSectFromCode(normalized, seasonId);
 
         set({
           sect,
           inviteCode: normalized,
+          seasonId,
           leaderboard: buildLeaderboard(sect),
           lastOfflineSimulationAt: Date.now(),
         });
@@ -122,17 +128,25 @@ export const useSocialStore = create<SocialState>()(
 
       simulateOffline: (now) => {
         const state = get();
+        const currentSeasonId = getCurrentSeasonId();
+
+        if (state.seasonId !== currentSeasonId) {
+          set({
+            seasonId: currentSeasonId,
+            leaderboard: buildLeaderboard(state.sect),
+          });
+        }
 
         if (!state.sect) {
+          set({ lastOfflineSimulationAt: now });
+          return;
+        }
+
+        if (state.lastOfflineSimulationAt >= now) {
           return;
         }
 
         const elapsedMs = now - state.lastOfflineSimulationAt;
-
-        if (0 >= elapsedMs) {
-          return;
-        }
-
         const maxMs = GameConstants.SOCIAL_MAX_OFFLINE_SECONDS * 1000;
         const cappedMs = Math.min(elapsedMs, maxMs);
         const elapsedSeconds = Math.floor(cappedMs / 1000);
@@ -149,9 +163,7 @@ export const useSocialStore = create<SocialState>()(
           return;
         }
 
-        set({
-          lastOfflineSimulationAt: now,
-        });
+        set({ lastOfflineSimulationAt: now });
       },
 
       refreshLeaderboard: () => {

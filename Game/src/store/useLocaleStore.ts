@@ -7,6 +7,7 @@ interface LocaleState {
   locale: Locale;
   hasHydrated: boolean;
   setLocale: (locale: Locale) => void;
+  toggleLocale: () => void;
   setHasHydrated: (state: boolean) => void;
 }
 
@@ -16,6 +17,7 @@ export const useLocaleStore = create<LocaleState>()(
       locale: 'ru',
       hasHydrated: false,
       setLocale: (locale) => set({ locale }),
+      toggleLocale: () => set((state) => ({ locale: state.locale === 'ru' ? 'en' : 'ru' })),
       setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {

@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 7 (Социальный слой: offline-first MVP частично реализован. LiveOps, EAS Updates и расширенная экономика вынесены в будущие задачи.)
+[СТАТУС]: ШАГ 7 (Социальный слой: offline-first MVP, навигация, локализация, базовый usability)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -12,7 +12,7 @@
 === Фаза 2: Core Loop и Вычисления (Завершено) ===
 6. [X] Фаза инкарнации: генерация стартовых параметров при рождении.
 7. [X] Механика выбора активностей (мирские vs тайные дела) перед кнопкой "Повзрослеть".
-8. [X] Рефакторинг стора: внедрение типа BigInt для вычислений энергии Ци и статов.
+8. [X] Рефакторинг стора: внедрение BigInt для вычислений энергии Ци и статов.
 9. [X] Фаза прорыва (Breakthrough): расчет вероятностей, риски и смерть от Небесной Скорби.
 
 === Фаза 3: Контент, Локализация и Виральность (Завершено базово) ===
@@ -33,7 +33,7 @@
     17.3. [X] Создан inviteCodeService для локальных инвайт-кодов.
     17.4. [X] Создан socialService для создания сект и NPC-симуляции.
     17.5. [X] Создан leaderboardService для локального рейтинга.
-    17.6. [X] Добавлен SectScreen и вкладка "Секта".
+    17.6. [X] Добавлен SectScreen с режимами "Моя секта" и "Рейтинг".
     17.7. [X] Добавлены social.json словари для RU/EN.
     17.8. [ ] Реальный серверный API, глобальные рейтинги и валидация инвайтов на сервере.
     17.9. [ ] Социальные сезонные награды и автоматический сброс сезонов.
@@ -46,80 +46,18 @@
     18.3. [ ] Создать updatesService.ts и useUpdates.ts.
     18.4. [ ] Добавить contentVersion и remote flags в useLiveOpsStore.ts.
 
-=== Фаза 7: Будущие задачи, вынесенные из-за объема контекста ===
-19. [ ] Удалить @react-native-async-storage/async-storage из package.json и заменить все следы AsyncStorage на MMKV.
-20. [ ] Вынести форматирование больших чисел из LifeScreen, DaoScreen и StoreScreen в formatUtils.ts.
-21. [ ] Создать полноценный RootNavigator.tsx для модалок, прорывов и социальных окон.
-22. [ ] Создать базовые UI-компоненты Button.tsx, Card.tsx, ProgressBar.tsx.
-23. [ ] Создать игровые компоненты StatRow.tsx, EventModal.tsx, BreakthroughAnim.tsx.
-24. [ ] Создать careers.json и систему мирской карьеры: школа, офис, инвестиции.
-25. [ ] Создать useMonetizationStore.ts и вынести туда Cultivator Pass, God Mode, Time Machine.
-26. [ ] Создать useLiveOpsStore.ts для сезонных событий, OTA-флагов и контентных версий.
-27. [ ] Добавить глоссарий терминов для EN/RU и пояснения Mana Burn / Qi Deviation.
-28. [ ] Добавить share-функцию для абсурдных смертей и виральных ситуаций.
-29. [ ] Провести полный рефакторинг ProfileScreen.tsx под актуальный PlayerStore и локализацию.
-30. [ ] Добавить ручные и автотесты для BigInt-сериализации, MMKV-гидратации и FlashList.
+=== Фаза 7: Технические и продуктовые задачи, вынесенные для следующих шагов ===
+19. [ ] Серверный мультиплеер: реальные инвайты, синхронизация сект, анти-чит.
+20. [ ] Карьера и экономика: careers.json, школы, офисы, инвестиции, боссы-демоны.
+21. [ ] Monetization store: вынести Cultivator Pass, God Mode, Time Machine в useMonetizationStore.
+22. [ ] Рефакторинг LifeScreen/DaoScreen/StoreScreen под Theme, formatUtils и ProgressBar.
+23. [ ] Глоссарий терминов и адаптация Mana Burn / Qi Deviation.
+24. [ ] Share-функция для абсурдных смертей и виральных ситуаций.
+25. [ ] Ручные и автотесты для BigInt-сериализации, MMKV-гидратации и FlashList.
 
-=== ОПИСАНИЕ структуры проекта (обновлено) ===
-Game/
-├── package.json                   // Зависимости и скрипты
-├── babel.config.js                // Настройки Babel
-├── app.json                       // Базовая Expo-конфигурация
-├── eas.json                       // EAS Build/Submit каналы
-├── PlanOfDevelopment.txt          // План разработки
-├── Library.txt                    // Библиотека архитектурных решений
-├── DataForAI.txt                  // Выученные уроки
-└── src/
-    ├── App.tsx                    // Корневой компонент и навигация
-    ├── components/                // Будет расширено в будущих задачах
-    ├── constants/
-    │   ├── GameConstants.ts       // Лимиты, кулдауны, социальные константы
-    │   └── Theme.ts               // Будет создан в будущих задачах
-    ├── data/
-    │   ├── events.json            // События
-    │   ├── items.json             // Предметы и баффы
-    │   ├── stages.json            // Стадии культивации
-    │   ├── sects.json             // Шаблоны сект и NPC-имена
-    │   └── rankings.json          // Seed-данные локального рейтинга
-    ├── hooks/
-    │   ├── useIdleProgress.ts     // Оффлайн прогресс
-    │   └── useBreakthrough.ts     // Логика прорыва
-    ├── navigation/
-    │   └── TabNavigator.tsx       // Нижние табы: Life, Dao, Store, Log, Sect
-    ├── screens/
-    │   ├── LifeScreen.tsx         // Мирская жизнь
-    │   ├── DaoScreen.tsx          // Путь Дао
-    │   ├── LogScreen.tsx          // Журнал судьбы
-    │   ├── StoreScreen.tsx        // Магазин Кармы
-    │   └── SectScreen.tsx         // Секта и локальный рейтинг
-    ├── services/
-    │   ├── inviteCodeService.ts   // Генерация и валидация инвайт-кодов
-    │   ├── socialService.ts       // Создание сект и NPC-симуляция
-    │   └── leaderboardService.ts  // Локальный рейтинг
-    ├── store/
-    │   ├── mmkvStorage.ts         // MMKV адаптер
-    │   ├── usePlayerStore.ts      // Игрок
-    │   ├── useEventStore.ts       // Журнал
-    │   ├── useInventoryStore.ts   // Инвентарь
-    │   ├── useLocaleStore.ts      // Язык интерфейса
-    │   └── useSocialStore.ts      // Секты, инвайты, рейтинг
-    ├── types/
-    │   └── index.ts               // Интерфейсы игрока, сект, рейтинга
-    └── utils/
-        ├── timeUtils.ts           // Дельта времени
-        ├── formatUtils.ts         // Форматирование больших чисел
-        ├── bigIntUtils.ts         // Безопасный BigInt
-        └── randomUtils.ts         // Утилиты рандома
-Game/src/locales/
-├── ru/
-│   ├── ui.json
-│   ├── events.json
-│   ├── items.json
-│   ├── stages.json
-│   └── social.json
-└── en/
-    ├── ui.json
-    ├── events.json
-    ├── items.json
-    ├── stages.json
-    └── social.json
+=== Фаза 8: Техническая гигиена ===
+26. [X] Удалить @react-native-async-storage/async-storage из package.json.
+27. [X] Создать useLocaleStore и убрать часть хардкода из служебных экранов.
+28. [X] Стабильные английские route names в TabNavigator.
+29. [X] Реальный MMKV-адаптер с memory-fallback для аварийных сред.
+30. [X] Утилиты formatUtils, bigIntUtils, randomUtils для повторного использования.

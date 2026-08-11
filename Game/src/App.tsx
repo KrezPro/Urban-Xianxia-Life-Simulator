@@ -3,19 +3,22 @@ import { SafeAreaView, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
 import { usePlayerStore } from './store/usePlayerStore';
-import { useIdleProgress } from './hooks/useIdleProgress';
 import { useLocaleStore } from './store/useLocaleStore';
+import { useSocialStore } from './store/useSocialStore';
+import { useIdleProgress } from './hooks/useIdleProgress';
 import ruUI from './locales/ru/ui.json';
 import enUI from './locales/en/ui.json';
 
 export default function App() {
-  const { hasHydrated } = usePlayerStore();
+  const playerHydrated = usePlayerStore((state) => state.hasHydrated);
+  const localeHydrated = useLocaleStore((state) => state.hasHydrated);
+  const socialHydrated = useSocialStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useIdleProgress();
 
-  if (!hasHydrated) {
+  if (!playerHydrated || !localeHydrated || !socialHydrated) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.loadingText}>{uiData.app.loading}</Text>

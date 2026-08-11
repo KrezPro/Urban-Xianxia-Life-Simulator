@@ -1,11 +1,15 @@
 import { ISect, ISectMember } from '../types';
 import { getRandomInt, pickRandom } from '../utils/randomUtils';
-import { safeBigInt } from '../utils/bigIntUtils';
+import { addBigIntStrings } from '../utils/bigIntUtils';
 import { codeToSeed } from './inviteCodeService';
 import sectsData from '../data/sects.json';
 
 const npcNames: string[] = (sectsData as any).npcNames || [];
 const templates: any[] = (sectsData as any).templates || [];
+
+export const getCurrentSeasonId = (): string => {
+  return new Date().toISOString().slice(0, 7);
+};
 
 const createNpcMembers = (count: number): ISectMember[] => {
   return Array.from({ length: count }).map((_, index) => {
@@ -51,16 +55,19 @@ export const createPlayerSect = (params: {
 
 export const createNpcSectFromCode = (code: string, seasonId: string): ISect => {
   const seed = codeToSeed(code);
-  const template = templates.length > 0
-    ? templates[seed % templates.length]
-    : {
-        id: 'shadow_syndicate',
-        name: 'Shadow Syndicate',
-        tag: 'SS',
-        focus: 'secret',
-        baseFunds: '5000',
-        baseInfluence: '300',
-      };
+
+  const fallbackTemplate = {
+    id: 'shadow_syndicate',
+    name: 'Shadow Syndicate',
+    tag: 'SS',
+    focus: 'secret',
+    baseFunds: '5000',
+    baseInfluence: '300',
+  };
+
+  const template = 0 === templates.length
+    ? fallbackTemplate
+    : templates[seed % templates.length];
 
   const playerMember: ISectMember = {
     id: 'player',
@@ -91,12 +98,27 @@ export const simulateNpcProgress = (sect: ISect, elapsedSeconds: number): ISect 
     return sect;
   }
 
-  const fundsGain = BigInt(elapsedSeconds) * BigInt(npcMembers.length);
-  const influenceGain = BigInt(Math.floor(elapsedSeconds / 60)) * BigInt(npcMembers.length);
+  const perMemberFunds = BigInt(elapsedSeconds);
+  const perMemberInfluence = BigInt(Math.floor(elapsedSeconds / 60));
+  const fundsGain = perMemberFunds * BigInt(npcMembers.length);
+  const influenceGain = perMemberInfluence * BigInt(npcMembers.length);
+
+  const members = sect.members.map((member) => {
+    if (member.id === 'player') {
+      return member;
+    }
+
+    return {
+      ...member,
+      contribution: addBigIntStrings(member.contribution, perMemberFunds.toString()),
+      influence: addBigIntStrings(member.influence, perMemberInfluence.toString()),
+    };
+  });
 
   return {
     ...sect,
-    funds: (safeBigInt(sect.funds) + fundsGain).toString(),
-    influence: (safeBigInt(sect.influence) + influenceGain).toString(),
+    funds: addBigIntStrings(sect.funds, fundsGain.toString()),
+    influence: addBigIntStrings(sect.influence, influenceGain.toString()),
+    members,
   };
 };

@@ -9,3 +9,8 @@ export const pickRandom = (arr: any[]): any => {
 
   return arr[Math.floor(Math.random() * arr.length)];
 };
+
+export const chance = (probability: number): boolean => {
+  const roll = Math.random();
+  return probability >= roll;
+};

@@ -1,7 +1,7 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
 1. Стейт-менеджмент: Строго Zustand. Состояние разбивается на логические модули (Player, Event, Inventory, Locale, Social).
 2. Хранилище: Строго react-native-mmkv. Используется паттерн hasHydrated. В MMKV пишется через zustandStorage.
-3. Отрисовка списков: Использовать @shopify/flash-list. FlatList запрещен для логов.
+3. Отрисовка списков: Использовать @shopify/flash-list. FlatList запрещен для логов и больших списков.
 4. Типизация: Strict TypeScript, интерфейсы лежат в src/types/.
 5. Большие числа: Использовать string для хранения в MMKV/JSON, парсить в BigInt через safeBigInt перед расчетами.
 6. UI: Functional Components + Hooks. Запрещен хардкод текста в .tsx, все строки берутся из locales/{lang}/.
@@ -11,4 +11,6 @@
 10. Рейтинги: Score хранится как string, сортировка выполняется через BigInt сравнения.
 11. Локализация: useLocaleStore хранит выбранный язык. Словари подключаются напрямую из locales/ru и locales/en до введения полноценного i18next-сервиса.
 12. Оффлайн симуляция секты: simulateNpcProgress начисляет фонды и влияние за время отсутствия, но ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. Будущая архитектура LiveOps: EAS Updates должен обновлять JSON-контент и баланс отдельно от бинарной версии приложения.
+13. MMKV: основной storage. Допустим memory-fallback только для аварийных сред, где нативный модуль недоступен.
+14. Форматирование чисел: использовать formatLargeNumber из utils/formatUtils.ts, не дублировать функцию по экранам.
+15. BigInt progress: для прогресс-баров использовать getBigIntProgress, который безопасно возвращает число от 0 до 1.

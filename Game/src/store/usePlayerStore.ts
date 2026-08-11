@@ -47,13 +47,13 @@ interface PlayerState {
 const initialState = {
   isDead: false,
   age: 0,
-  qi: "0",
-  money: "0",
+  qi: '0',
+  money: '0',
   intelligence: 10,
   health: 100,
   appearance: 50,
-  karma: "0",
-  lastLifeKarmaEarned: "0",
+  karma: '0',
+  lastLifeKarmaEarned: '0',
   spiritualRoot: 10,
   cultivationStage: 'mortal',
   activityFocus: 'mundane' as 'mundane' | 'secret',
@@ -75,76 +75,95 @@ export const usePlayerStore = create<PlayerState>()(
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
       setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
       setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
-      growOlder: () => set((state) => ({ age: state.age + 1 })),
+      growOlder: () => set((state) => {
+        if (state.isDead) {
+          return state;
+        }
+
+        return { age: state.age + 1 };
+      }),
       addQi: (amount) => set((state) => {
-        if (state.isDead) return state;
+        if (state.isDead) {
+          return state;
+        }
+
         const current = BigInt(state.qi);
         const add = BigInt(amount);
         return { qi: (current + add).toString() };
       }),
       deductQi: (amount) => set((state) => {
-        if (state.isDead) return state;
+        if (state.isDead) {
+          return state;
+        }
+
         const current = BigInt(state.qi);
         const deduct = BigInt(amount);
         const result = current - deduct;
-        return { qi: 0n > result ? "0" : result.toString() };
+        return { qi: 0n > result ? '0' : result.toString() };
       }),
       deductKarma: (amount) => set((state) => {
         const current = BigInt(state.karma);
         const deduct = BigInt(amount);
         const result = current - deduct;
-        return { karma: 0n > result ? "0" : result.toString() };
+        return { karma: 0n > result ? '0' : result.toString() };
       }),
       applyEffects: (effects) => set((state) => {
-        if (state.isDead) return state;
-        
+        if (state.isDead) {
+          return state;
+        }
+
         const newState: Partial<PlayerState> = {};
-        
+
         if (effects.health !== undefined) {
           newState.health = Math.max(0, state.health + effects.health);
         }
-        
-        if (effects.intelligence !== undefined) newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
-        if (effects.appearance !== undefined) newState.appearance = Math.max(0, state.appearance + effects.appearance);
-        
+
+        if (effects.intelligence !== undefined) {
+          newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
+        }
+
+        if (effects.appearance !== undefined) {
+          newState.appearance = Math.max(0, state.appearance + effects.appearance);
+        }
+
         if (effects.karma !== undefined) {
           const currentKarma = BigInt(state.karma);
           const addKarma = BigInt(effects.karma);
           newState.karma = (currentKarma + addKarma).toString();
         }
-        
+
         if (effects.money !== undefined) {
           const currentMoney = BigInt(state.money);
           const addMoney = BigInt(effects.money);
           const resultMoney = currentMoney + addMoney;
-          newState.money = 0n > resultMoney ? "0" : resultMoney.toString();
+          newState.money = 0n > resultMoney ? '0' : resultMoney.toString();
         }
-        
+
         if (effects.qi !== undefined) {
           const currentQi = BigInt(state.qi);
           const addQi = BigInt(effects.qi);
           const resultQi = currentQi + addQi;
-          newState.qi = 0n > resultQi ? "0" : resultQi.toString();
+          newState.qi = 0n > resultQi ? '0' : resultQi.toString();
         }
 
-        if (newState.health !== undefined && newState.health <= 0) {
+        if (newState.health !== undefined && 0 === newState.health) {
           newState.isDead = true;
-          
+
           const currentAge = BigInt(state.age);
           const finalMoney = BigInt(newState.money !== undefined ? newState.money : state.money);
           const finalQi = BigInt(newState.qi !== undefined ? newState.qi : state.qi);
-          
+
           const ageKarma = currentAge * GameConstants.KARMA_RATES.AGE_MULTIPLIER;
           const moneyKarma = finalMoney / GameConstants.KARMA_RATES.MONEY_DIVISOR;
           const qiKarma = finalQi / GameConstants.KARMA_RATES.QI_DIVISOR;
-          
           const earnedKarma = ageKarma + moneyKarma + qiKarma;
+
           newState.lastLifeKarmaEarned = earnedKarma.toString();
-          
+
           const existingKarma = BigInt(newState.karma !== undefined ? newState.karma : state.karma);
           newState.karma = (existingKarma + earnedKarma).toString();
         }
-        
+
         return newState;
       }),
       reincarnate: () => set((state) => {
@@ -157,19 +176,27 @@ export const usePlayerStore = create<PlayerState>()(
 
         itemsData.forEach((item: any) => {
           if (item.type === 'karma_buff' && inventory[item.id]) {
-            if (item.effects.money) bonusMoney += item.effects.money;
-            if (item.effects.health) bonusHealth += item.effects.health;
-            if (item.effects.spiritualRoot) bonusRoot += item.effects.spiritualRoot;
+            if (item.effects.money) {
+              bonusMoney += item.effects.money;
+            }
+
+            if (item.effects.health) {
+              bonusHealth += item.effects.health;
+            }
+
+            if (item.effects.spiritualRoot) {
+              bonusRoot += item.effects.spiritualRoot;
+            }
           }
         });
 
         return {
           isDead: false,
           age: 0,
-          qi: "0",
+          qi: '0',
           cultivationStage: 'mortal',
           karma: state.karma,
-          lastLifeKarmaEarned: "0",
+          lastLifeKarmaEarned: '0',
           activityFocus: 'mundane',
           hasCultivatorPass: state.hasCultivatorPass,
           lastInterstitialTime: state.lastInterstitialTime,
