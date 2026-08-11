@@ -1,7 +1,6 @@
 import React from 'react';
 import { SafeAreaView, Text, View, Button, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import './utils/i18n';
+import { useTranslation } from './utils/i18n';
 import { usePlayerStore } from './store/usePlayerStore';
 
 export default function App() {
