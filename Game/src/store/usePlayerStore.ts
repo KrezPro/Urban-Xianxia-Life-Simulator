@@ -1,43 +1,48 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { zustandStorage } from './mmkvStorage';
+import { zustandStorage, replacer, reviver } from './mmkvStorage';
 import { IPlayer } from '../types';
 
 interface PlayerState extends IPlayer {
   hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
-  incrementAge: () => void;
-  addQi: (amount: string) => void;
+  growOlder: () => void;
+  addQi: (amount: bigint) => void;
+  addMoney: (amount: bigint) => void;
+  resetPlayer: () => void;
 }
+
+const initialState: IPlayer = {
+  age: 0,
+  intelligence: 10,
+  health: 100,
+  appearance: 50,
+  money: 0n,
+  qi: 0n,
+  karma: 0,
+  spiritualRoot: 10, // Базовая скорость накопления Ци
+  cultivationStage: 'mortal',
+};
 
 export const usePlayerStore = create<PlayerState>()(
   persist(
-    (set, get) => ({
-      age: 0,
-      health: 100,
-      intellect: 10,
-      charm: 10,
-      money: 0,
-      qi: "0", 
-      spiritualRoot: "Смертный корень",
-      karma: 0,
-      cultivationStage: "Смертный",
-      
+    (set) => ({
+      ...initialState,
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
-
-      incrementAge: () => set((state) => ({ age: state.age + 1 })),
-      addQi: (amount: string) => {
-        const currentQi = BigInt(get().qi);
-        const addAmount = BigInt(amount);
-        set({ qi: (currentQi + addAmount).toString() });
-      },
+      growOlder: () => set((state) => ({ age: state.age + 1 })),
+      addQi: (amount) => set((state) => ({ qi: state.qi + amount })),
+      addMoney: (amount) => set((state) => ({ money: state.money + amount })),
+      resetPlayer: () => set({ ...initialState }),
     }),
     {
       name: 'player-storage',
-      storage: createJSONStorage(() => zustandStorage),
+      // Используем кастомный storage с поддержкой BigInt
+      storage: createJSONStorage(() => zustandStorage, { replacer, reviver }),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
+        if (state) {
+          state.setHasHydrated(true);
+        }
       },
     }
   )
