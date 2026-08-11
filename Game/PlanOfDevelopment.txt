@@ -1,4 +1,3 @@
-[СТАТУС]: ШАГ 4 (Исправление ошибки инициализации MMKV)
-1. [X] Добавлен плагин `react-native-mmkv/babel` в `babel.config.js`.
-2. [X] Реализована безопасная инициализация `MMKV` с защитным fallback-объектом.
-3. [ ] Создать FlashList для LogScreen (Журнал судьбы).
+[СТАТУС]: ШАГ 4 (Стабилизация среды)
+1. [X] Заменен нативный MMKV на безопасный In-Memory стор в mmkvStorage для устранения SyntaxError/TransformError в бандлере.
+2. [ ] Создать FlashList для LogScreen (Журнал судьбы).

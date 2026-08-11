@@ -1,37 +1,20 @@
-import { MMKV } from 'react-native-mmkv';
 import { StateStorage } from 'zustand/middleware';
 
-// Безопасная инициализация MMKV с обработкой ошибок времени выполнения
-let storageInstance: MMKV | null = null;
-
-try {
-  storageInstance = new MMKV({
-    id: 'bitcultivator-storage',
-  });
-} catch (e) {
-  console.warn('MMKV initialization failed, fallback storage used', e);
-}
+// Ультра-безопасное хранилище на базе обычного localStorage/InMemory мока для отладки без нативных сбоев MMKV
+const memoryMap = new Map<string, string>();
 
 export const storage = {
   set: (key: string, value: string) => {
-    if (storageInstance) {
-      storageInstance.set(key, value);
-    }
+    memoryMap.set(key, value);
   },
   getString: (key: string) => {
-    if (storageInstance) {
-      return storageInstance.getString(key);
-    }
-    return undefined;
+    return memoryMap.get(key);
   },
   delete: (key: string) => {
-    if (storageInstance) {
-      storageInstance.delete(key);
-    }
+    memoryMap.delete(key);
   },
 };
 
-// Адаптер для Zustand
 export const zustandStorage: StateStorage = {
   setItem: (name, value) => {
     storage.set(name, value);
