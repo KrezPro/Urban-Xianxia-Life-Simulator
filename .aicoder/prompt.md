@@ -102,13 +102,13 @@ Game/src/
 │       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
 │       └── NotificationToast.tsx    // Анимированный тост уведомления
 ├── constants/
-│   ├── GameConstants.ts             // Длительность уведомлений, лимиты очереди
-│   └── Theme.ts                     // Цвета и стили уведомлений
+│   ├── GameConstants.ts             // Лимиты, кулдауны, константы уведомлений
+│   └── Theme.ts                     // Цвета и стили
 ├── data/
 │   └── events.json                  // id и эффекты событий
 ├── hooks/
-│   ├── useBreakthrough.ts           // Прорывы, будет использовать уведомления
-│   └── useIdleProgress.ts           // Оффлайн прогресс, будет использовать уведомления
+│   ├── useBreakthrough.ts           // Прорывы, использует уведомления
+│   └── useIdleProgress.ts           // Оффлайн прогресс, использует уведомления
 ├── navigation/
 │   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
 ├── screens/
@@ -118,13 +118,17 @@ Game/src/
 │   ├── SectScreen.tsx               // Секта и рейтинг
 │   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
 ├── store/
-│   ├── useEventStore.ts             // Старый журнал, будет заменяться
+│   ├── useEventStore.ts             // Старый журнал, legacy
 │   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
 │   ├── usePlayerStore.ts            // Игрок
 │   ├── useLocaleStore.ts            // Язык интерфейса
 │   └── useSocialStore.ts            // Секты
 ├── types/
 │   └── index.ts                     // Типы уведомлений и событий
+├── utils/
+│   ├── notificationUtils.ts         // Получение текста уведомления по ключу
+│   ├── helpers.ts                   // Форматирование, BigInt, random
+│   └── timeUtils.ts                 // Дельта времени
 └── locales/
     ├── ru/
     │   ├── ui.json
