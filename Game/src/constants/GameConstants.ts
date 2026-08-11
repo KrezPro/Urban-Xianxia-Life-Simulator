@@ -2,6 +2,12 @@ export const GameConstants = {
   IDLE_MIN_TIME_MS: 60000, // Минимальное время оффлайна (1 минута) для начисления ресурсов
   BASE_BREAKTHROUGH_CHANCE: 0.3, // Базовый шанс прорыва (30%)
   QI_BASE_MULTIPLIER: 10, // Делитель для расчета притока Ци от Духовного корня
+  OFFLINE_MONEY_RATE: 2, // Пассивный доход ($2/сек) при мирском фокусе
+  KARMA_RATES: {
+    AGE_MULTIPLIER: BigInt(2), // 2 кармы за каждый прожитый год
+    QI_DIVISOR: BigInt(10000), // 1 кармы за каждые 10к Ци
+    MONEY_DIVISOR: BigInt(5000), // 1 кармы за каждые $5к
+  },
   STARTING_STATS: {
     HEALTH_MIN: 80,
     HEALTH_MAX: 100,

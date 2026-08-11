@@ -12,10 +12,12 @@
   ],
   "context_focus": [
 "Game/PlanOfDevelopment.txt",
-    "Game/src/store/useLocaleStore.ts",
-    "Game/src/locales/ru/events.json",
-    "Game/src/locales/en/events.json",
-    "Game/src/screens/LifeScreen.tsx"
+    "Game/src/store/usePlayerStore.ts",
+    "Game/src/utils/timeUtils.ts",
+    "Game/src/hooks/useIdleProgress.ts",
+    "Game/src/App.tsx",
+    "Game/src/screens/LifeScreen.tsx",
+    "Game/src/constants/GameConstants.ts"
   ],
   "max_file_size_kb": 100
 }

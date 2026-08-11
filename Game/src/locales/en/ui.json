@@ -19,7 +19,8 @@
     "btn_reincarnate": "Reincarnate (New Life)",
     "dead_title": "YOU ARE DEAD",
     "dead_subtitle": "Your life journey has been interrupted.",
-    "karma_accumulated": "Accumulated Karma:",
+    "karma_accumulated": "Total Karma:",
+    "karma_earned_last_life": "Legacy earned (Karma):",
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
     "age_log": "You turned {age}."
   }

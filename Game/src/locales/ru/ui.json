@@ -19,7 +19,8 @@
     "btn_reincarnate": "Реинкарнация (Новая жизнь)",
     "dead_title": "ВЫ МЕРТВЫ",
     "dead_subtitle": "Ваш жизненный путь прерван.",
-    "karma_accumulated": "Накоплено Кармы:",
+    "karma_accumulated": "Общая Карма:",
+    "karma_earned_last_life": "Наследие за жизнь (Карма):",
     "meditation_log": "Год прошел в тайной медитации. Накоплено {amount} энергии Ци.",
     "age_log": "Вам исполнилось {age}."
   }

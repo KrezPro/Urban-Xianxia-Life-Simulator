@@ -21,6 +21,7 @@ interface PlayerState {
   health: number;
   appearance: number;
   karma: string;
+  lastLifeKarmaEarned: string; // Новое поле для фиксации кармы за последнюю жизнь
   spiritualRoot: number;
   cultivationStage: string;
   activityFocus: 'mundane' | 'secret';
@@ -45,6 +46,7 @@ const initialState = {
   health: 100,
   appearance: 50,
   karma: "0",
+  lastLifeKarmaEarned: "0",
   spiritualRoot: 10,
   cultivationStage: 'mortal',
   activityFocus: 'mundane' as 'mundane' | 'secret',
@@ -84,10 +86,8 @@ export const usePlayerStore = create<PlayerState>()(
         
         if (effects.health !== undefined) {
           newState.health = Math.max(0, state.health + effects.health);
-          if (newState.health <= 0) {
-            newState.isDead = true;
-          }
         }
+        
         if (effects.intelligence !== undefined) newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
         if (effects.appearance !== undefined) newState.appearance = Math.max(0, state.appearance + effects.appearance);
         
@@ -110,6 +110,25 @@ export const usePlayerStore = create<PlayerState>()(
           const resultQi = currentQi + addQi;
           newState.qi = 0n > resultQi ? "0" : resultQi.toString();
         }
+
+        // Логика Наследия при смерти (Механика Престижа)
+        if (newState.health !== undefined && newState.health <= 0) {
+          newState.isDead = true;
+          
+          const currentAge = BigInt(state.age);
+          const finalMoney = BigInt(newState.money !== undefined ? newState.money : state.money);
+          const finalQi = BigInt(newState.qi !== undefined ? newState.qi : state.qi);
+          
+          const ageKarma = currentAge * GameConstants.KARMA_RATES.AGE_MULTIPLIER;
+          const moneyKarma = finalMoney / GameConstants.KARMA_RATES.MONEY_DIVISOR;
+          const qiKarma = finalQi / GameConstants.KARMA_RATES.QI_DIVISOR;
+          
+          const earnedKarma = ageKarma + moneyKarma + qiKarma;
+          newState.lastLifeKarmaEarned = earnedKarma.toString();
+          
+          const existingKarma = BigInt(newState.karma !== undefined ? newState.karma : state.karma);
+          newState.karma = (existingKarma + earnedKarma).toString();
+        }
         
         return newState;
       }),
@@ -121,6 +140,7 @@ export const usePlayerStore = create<PlayerState>()(
           qi: "0",
           cultivationStage: 'mortal',
           karma: state.karma,
+          lastLifeKarmaEarned: "0",
           activityFocus: 'mundane',
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX),
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),

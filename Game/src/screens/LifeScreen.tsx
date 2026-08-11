@@ -9,7 +9,6 @@ import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
-// Вспомогательная функция для форматирования больших чисел (K, M, B, T...)
 const formatLargeNumber = (value: string | number): string => {
   const strVal = value.toString();
   const isNegative = strVal.startsWith('-');
@@ -45,7 +44,6 @@ export default function LifeScreen() {
   const uiData = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
 
   useEffect(() => {
-    // Инициализация при первом запуске игры
     if (player.age === 0 && player.money === "0" && player.health === 100 && player.qi === "0" && !player.isDead) {
       player.reincarnate();
       addLog(uiData.born_log, "system");
@@ -61,23 +59,20 @@ export default function LifeScreen() {
   const handleGrowOlder = () => {
     player.growOlder();
     
-    let secretEventChance = 0.1; // Базовый шанс для мирских дел (10%)
+    let secretEventChance = 0.1; 
     
     if (player.activityFocus === 'secret') {
-      secretEventChance = 0.8; // Шанс повышается при тайном фокусе (80%)
+      secretEventChance = 0.8; 
       player.addQi(player.spiritualRoot.toString());
       addLog(uiData.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
     }
 
-    // Определяем, произойдет мирское или тайное событие
     const isSecretEvent = secretEventChance > Math.random();
     const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
     const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
 
-    // Применяем эффекты к состоянию
     player.applyEffects(randomEvent.effects);
     
-    // Записываем лог в Журнал
     const ageString = uiData.age_log.replace('{age}', (player.age + 1).toString());
     addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
   };
@@ -102,7 +97,16 @@ export default function LifeScreen() {
         <View style={styles.deadContainer}>
           <Text style={styles.deadTitle}>{uiData.dead_title}</Text>
           <Text style={styles.deadSubtitle}>{uiData.dead_subtitle}</Text>
-          <Text style={styles.karmaText}>{uiData.karma_accumulated} {formatLargeNumber(player.karma)}</Text>
+          
+          <View style={styles.karmaBlock}>
+            <Text style={styles.legacyText}>
+              {uiData.karma_earned_last_life} <Text style={styles.karmaHighlight}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
+            </Text>
+            <Text style={styles.karmaText}>
+              {uiData.karma_accumulated} {formatLargeNumber(player.karma)}
+            </Text>
+          </View>
+          
           <View style={styles.buttonContainer}>
             <Button 
               title={uiData.btn_reincarnate} 
@@ -213,11 +217,30 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginBottom: 30,
   },
+  karmaBlock: {
+    backgroundColor: '#1E1E1E',
+    padding: 20,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 40,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
   karmaText: {
     fontSize: 20,
     fontWeight: '600',
     color: '#f1c40f',
-    marginBottom: 40,
+    marginTop: 15,
+  },
+  legacyText: {
+    fontSize: 16,
+    color: '#ddd',
+  },
+  karmaHighlight: {
+    color: '#2ecc71',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   title: {
     fontSize: 28,
