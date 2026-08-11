@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNotificationStore } from '../../store/useNotificationStore';
 import { NotificationToast } from './NotificationToast';
-import { GameConstants } from '../../constants/GameConstants';
 import { Theme } from '../../constants/Theme';
+import { GameConstants } from '../../constants/GameConstants';
 
 export const NotificationHost = () => {
   const notifications = useNotificationStore((state) => state.notifications);
@@ -30,7 +30,10 @@ export const NotificationHost = () => {
 
 const styles = StyleSheet.create({
   host: {
-    paddingTop: Theme.spacing.sm,
-    paddingHorizontal: Theme.spacing.md,
+    position: 'absolute',
+    bottom: 84,
+    left: Theme.spacing.md,
+    right: Theme.spacing.md,
+    zIndex: 1000,
   },
 });

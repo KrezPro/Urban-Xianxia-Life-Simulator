@@ -12,6 +12,7 @@ export interface INotification {
   messageKey: string;
   eventPool?: 'mundane' | 'secret';
   params?: Record<string, string>;
+  text?: string;
   type: NotificationType;
   createdAt: number;
   durationMs: number;

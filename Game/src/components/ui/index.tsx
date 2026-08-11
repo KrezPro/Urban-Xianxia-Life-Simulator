@@ -124,10 +124,11 @@ interface StatRowProps {
   label: string;
   value: string;
   color?: string;
+  onLongPress?: () => void;
 }
 
-export const StatRow = ({ icon, label, value, color }: StatRowProps) => {
-  return (
+export const StatRow = ({ icon, label, value, color, onLongPress }: StatRowProps) => {
+  const content = (
     <View style={styles.statRow}>
       <View style={[styles.statIconBadge, color ? { borderColor: color } : null]}>
         <Ionicons name={icon} size={18} color={color || Theme.colors.secondary} />
@@ -136,6 +137,16 @@ export const StatRow = ({ icon, label, value, color }: StatRowProps) => {
       <Text style={styles.statLabel}>{label}</Text>
       <Text style={[styles.statValue, color ? { color } : null]}>{value}</Text>
     </View>
+  );
+
+  if (!onLongPress) {
+    return content;
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={0.9} onLongPress={onLongPress}>
+      {content}
+    </TouchableOpacity>
   );
 };
 

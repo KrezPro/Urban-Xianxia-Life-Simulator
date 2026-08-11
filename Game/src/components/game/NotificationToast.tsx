@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
-import { GameConstants } from '../../constants/GameConstants';
 import { INotification, NotificationType } from '../../types';
-import { getNotificationText } from '../../utils/notificationUtils';
 import { useLocaleStore } from '../../store/useLocaleStore';
+import { getNotificationText } from '../../utils/notificationUtils';
 
 interface NotificationToastProps {
   notification: INotification;
@@ -41,32 +40,28 @@ const typeConfig: Record<NotificationType, { icon: keyof typeof Ionicons.glyphMa
 
 export const NotificationToast = ({ notification, onDismiss }: NotificationToastProps) => {
   const locale = useLocaleStore((state) => state.locale);
+
   const opacity = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(-8)).current;
+  const translateY = useRef(new Animated.Value(16)).current;
   const progress = useRef(new Animated.Value(1)).current;
-  const [leaving, setLeaving] = useState(false);
-  const timerRef = useRef<any>(null);
+  const leavingRef = useRef(false);
 
   const startLeave = () => {
-    if (leaving) {
+    if (leavingRef.current) {
       return;
     }
 
-    setLeaving(true);
-
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    leavingRef.current = true;
 
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 0,
-        duration: GameConstants.NOTIFICATION_ANIMATION_OUT_MS,
+        duration: 180,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
-        toValue: -6,
-        duration: GameConstants.NOTIFICATION_ANIMATION_OUT_MS,
+        toValue: 16,
+        duration: 180,
         useNativeDriver: true,
       }),
     ]).start(() => {
@@ -78,12 +73,12 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
-        duration: GameConstants.NOTIFICATION_ANIMATION_IN_MS,
+        duration: 220,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
         toValue: 0,
-        duration: GameConstants.NOTIFICATION_ANIMATION_IN_MS,
+        duration: 220,
         useNativeDriver: true,
       }),
     ]).start();
@@ -94,14 +89,12 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
       useNativeDriver: false,
     }).start();
 
-    timerRef.current = setTimeout(() => {
+    const timer = setTimeout(() => {
       startLeave();
     }, notification.durationMs);
 
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      clearTimeout(timer);
     };
   }, []);
 
@@ -116,23 +109,23 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
   return (
     <Animated.View style={[styles.wrapper, { opacity, transform: [{ translateY }] }]}>
       <TouchableOpacity
-        activeOpacity={0.9}
+        activeOpacity={0.95}
         onPress={startLeave}
         style={[styles.toast, { borderColor: config.color }]}
       >
-        <View style={[styles.iconBadge, { backgroundColor: `${config.color}22`, borderColor: config.color }]}>
-          <Ionicons name={config.icon} size={16} color={config.color} />
+        <View style={[styles.iconBadge, { backgroundColor: `${config.color}22` }]}> 
+          <Ionicons name={config.icon} size={18} color={config.color} />
         </View>
 
-        <Text style={styles.text} numberOfLines={2}>
+        <Text style={styles.text} numberOfLines={3}>
           {text}
         </Text>
       </TouchableOpacity>
 
-      <View style={styles.countdownContainer}>
+      <View style={styles.progressContainer}>
         <Animated.View
           style={[
-            styles.countdownFill,
+            styles.progressFill,
             {
               width: progressWidth,
               backgroundColor: config.color,
@@ -158,10 +151,9 @@ const styles = StyleSheet.create({
     ...Theme.shadow,
   },
   iconBadge: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     borderRadius: 10,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: Theme.spacing.sm,
@@ -172,14 +164,14 @@ const styles = StyleSheet.create({
     fontSize: Theme.fontSize.sm,
     lineHeight: 18,
   },
-  countdownContainer: {
+  progressContainer: {
     height: 3,
     borderRadius: 999,
     backgroundColor: Theme.colors.surfaceLight,
     marginTop: 4,
     overflow: 'hidden',
   },
-  countdownFill: {
+  progressFill: {
     height: '100%',
     borderRadius: 999,
   },

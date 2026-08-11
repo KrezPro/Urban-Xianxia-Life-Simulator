@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
+import { NotificationHost } from './components/game/NotificationHost';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
 import { useSocialStore } from './store/useSocialStore';
@@ -15,13 +16,14 @@ export default function App() {
   const localeHydrated = useLocaleStore((state) => state.hasHydrated);
   const socialHydrated = useSocialStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
+
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useIdleProgress();
 
   if (!playerHydrated || !localeHydrated || !socialHydrated) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.loadingContainer}>
         <View style={styles.loadingCard}>
           <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
           <Text style={styles.loadingText}>{uiData.app.loading}</Text>
@@ -31,14 +33,22 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <TabNavigator />
-    </NavigationContainer>
+    <View style={styles.root}>
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
+
+      <NotificationHost />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
+    flex: 1,
+    backgroundColor: Theme.colors.background,
+  },
+  loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

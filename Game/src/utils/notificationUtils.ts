@@ -19,13 +19,17 @@ export const applyParams = (text: string, params?: Record<string, string>): stri
 };
 
 export const getNotificationText = (notification: INotification, locale: Locale): string => {
+  if (notification.text) {
+    return applyParams(notification.text, notification.params);
+  }
+
   if (notification.kind === 'event') {
     const events = locale === 'ru' ? ruEvents : enEvents;
     const pool = notification.eventPool || 'mundane';
     const list = (events as any)[pool] || [];
     const found = list.find((event: any) => event.id === notification.messageKey);
 
-    return found ? found.text : notification.messageKey;
+    return found ? applyParams(found.text, notification.params) : notification.messageKey;
   }
 
   const dictionary = locale === 'ru' ? ruNotifications : enNotifications;

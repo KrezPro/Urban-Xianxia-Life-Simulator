@@ -1,10 +1,18 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
-import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
@@ -14,21 +22,45 @@ import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
+interface HintData {
+  title: string;
+  text: string;
+}
+
 export default function LifeScreen() {
   const player = usePlayerStore();
+  const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
+
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
 
+  const [hint, setHint] = useState<HintData | null>(null);
+  const deathNotified = useRef(false);
+
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
+  const hints: any = ui.hints;
 
   useEffect(() => {
     if (player.age === 0 && player.money === '0' && player.health === 100 && player.qi === '0' && !player.isDead) {
       player.reincarnate();
+      addLog(ui.born_log, 'system');
       pushUiNotification('born', 'system');
     }
   }, []);
+
+  useEffect(() => {
+    if (player.isDead) {
+      if (!deathNotified.current) {
+        deathNotified.current = true;
+        addLog(ui.death_log, 'system');
+        pushUiNotification('death', 'danger');
+      }
+    } else {
+      deathNotified.current = false;
+    }
+  }, [player.isDead]);
 
   const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
   const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
@@ -37,12 +69,27 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.health / 100;
 
+  const openHint = (key: string) => {
+    const hintData = hints[key];
+
+    if (!hintData) {
+      return;
+    }
+
+    setHint({
+      title: hintData.title,
+      text: hintData.text,
+    });
+  };
+
   const handleGrowOlder = () => {
     const now = Date.now();
 
     if (!player.hasCultivatorPass) {
       if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         player.setLastInterstitialTime(now);
+        addLog(ui.interstitial_log, 'system');
+        pushUiNotification('interstitial', 'system');
       }
     }
 
@@ -53,6 +100,13 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
+
+      const meditationText = ui.meditation_log.replace('{amount}', player.spiritualRoot.toString());
+
+      addLog(meditationText, 'secret');
+      pushUiNotification('meditation', 'secret', {
+        amount: player.spiritualRoot.toString(),
+      });
     }
 
     const isSecretEvent = secretEventChance > Math.random();
@@ -61,6 +115,9 @@ export default function LifeScreen() {
 
     player.applyEffects(randomEvent.effects);
 
+    const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
+
+    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
     pushEventNotification(
       randomEvent.id,
       isSecretEvent ? 'secret' : 'mundane',
@@ -70,17 +127,17 @@ export default function LifeScreen() {
 
   const handleReincarnate = () => {
     player.reincarnate();
+    addLog(ui.reincarnate_log, 'system');
     pushUiNotification('reincarnate', 'system');
   };
 
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <NotificationHost />
-
-        <ScrollView contentContainerStyle={styles.deadScrollContent}>
+        <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
+
             <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
               <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
             </TouchableOpacity>
@@ -115,64 +172,86 @@ export default function LifeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <NotificationHost />
-
-      <View style={styles.statusHeader}>
-        <View style={styles.statusTopRow}>
-          <View style={styles.ageBlock}>
-            <Text style={styles.ageLabel}>{ui.age}</Text>
-            <Text style={styles.ageValue}>{player.age}</Text>
-          </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>{ui.title}</Text>
 
           <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
             <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
           </TouchableOpacity>
         </View>
 
-        <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} />
-        <Text style={styles.barLabel}>
-          {ui.health}: {player.health}/100
-        </Text>
+        <Card variant="primary" style={styles.heroCard}>
+          <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+          <Text style={styles.heroAgeValue}>{player.age}</Text>
 
-        <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.qiBar} />
-        <Text style={styles.barLabel}>
-          {ui.qi}: {formatLargeNumber(player.qi)}
-        </Text>
-      </View>
+          <ProgressBar
+            progress={healthProgress}
+            color={Theme.colors.success}
+            height={10}
+            style={styles.heroProgress}
+          />
+          <Text style={styles.heroProgressLabel}>
+            {ui.health}: {player.health}/100
+          </Text>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+          <ProgressBar
+            progress={qiProgress}
+            color={Theme.colors.info}
+            height={10}
+            style={styles.heroProgress}
+          />
+          <Text style={styles.heroProgressLabel}>
+            {ui.qi}: {formatLargeNumber(player.qi)}
+          </Text>
+        </Card>
+
         <Card style={styles.statsCard}>
           <StatRow
             icon="school"
             label={ui.intelligence}
             value={player.intelligence.toString()}
             color={Theme.colors.secondary}
+            onLongPress={() => openHint('intelligence')}
+          />
+          <StatRow
+            icon="heart"
+            label={ui.health}
+            value={player.health.toString()}
+            color={Theme.colors.success}
+            onLongPress={() => openHint('health')}
           />
           <StatRow
             icon="diamond"
             label={ui.appearance}
             value={player.appearance.toString()}
             color={Theme.colors.warning}
+            onLongPress={() => openHint('appearance')}
           />
           <StatRow
             icon="cash"
             label={ui.money}
             value={`$${formatLargeNumber(player.money)}`}
             color={Theme.colors.gold}
+            onLongPress={() => openHint('money')}
           />
           <StatRow
             icon="flame"
             label={ui.spiritual_root}
             value={player.spiritualRoot.toString()}
             color={Theme.colors.info}
+            onLongPress={() => openHint('spiritual_root')}
           />
           <StatRow
             icon="sparkles"
             label={ui.karma}
             value={formatLargeNumber(player.karma)}
             color={Theme.colors.primarySoft}
+            onLongPress={() => openHint('karma')}
           />
         </Card>
+
+        <Text style={styles.hintPrompt}>{hints.long_press_hint}</Text>
 
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
@@ -185,6 +264,7 @@ export default function LifeScreen() {
                 player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
               ]}
               onPress={() => player.setActivityFocus('mundane')}
+              onLongPress={() => openHint('focus_mundane')}
             >
               <Text
                 style={[
@@ -202,6 +282,7 @@ export default function LifeScreen() {
                 player.activityFocus === 'secret' && styles.focusChipActiveSecret,
               ]}
               onPress={() => player.setActivityFocus('secret')}
+              onLongPress={() => openHint('focus_secret')}
             >
               <Text
                 style={[
@@ -223,6 +304,32 @@ export default function LifeScreen() {
           style={styles.mainActionButton}
         />
       </ScrollView>
+
+      <Modal
+        visible={hint !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setHint(null)}
+      >
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          activeOpacity={1}
+          onPress={() => setHint(null)}
+        >
+          <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
+            <Text style={styles.modalTitle}>{hint?.title}</Text>
+            <Text style={styles.modalText}>{hint?.text}</Text>
+
+            <Button
+              title={hints.close}
+              onPress={() => setHint(null)}
+              variant="primary"
+              small
+              style={styles.modalButton}
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -232,10 +339,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Theme.colors.background,
   },
-  deadScrollContent: {
-    flexGrow: 1,
+  content: {
     padding: Theme.spacing.md,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
   headerRow: {
     flexDirection: 'row',
@@ -261,51 +367,39 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontWeight: '800',
   },
-  statusHeader: {
-    backgroundColor: Theme.colors.surface,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: Theme.colors.borderSoft,
-    paddingHorizontal: Theme.spacing.md,
-    paddingTop: Theme.spacing.sm,
-    paddingBottom: Theme.spacing.md,
-    ...Theme.shadow,
-  },
-  statusTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  heroCard: {
     alignItems: 'center',
-    marginBottom: Theme.spacing.sm,
+    marginBottom: Theme.spacing.md,
   },
-  ageBlock: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-  },
-  ageLabel: {
+  heroAgeLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
-    fontWeight: '700',
+    marginBottom: 4,
+    textAlign: 'center',
   },
-  ageValue: {
+  heroAgeValue: {
     color: Theme.colors.text,
-    fontSize: 34,
+    fontSize: Theme.fontSize.hero,
     fontWeight: '900',
+    marginBottom: Theme.spacing.md,
+    textAlign: 'center',
   },
-  barLabel: {
+  heroProgress: {
+    marginBottom: 8,
+  },
+  heroProgressLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
-    marginTop: 4,
-    marginBottom: 6,
-  },
-  qiBar: {
-    marginTop: 2,
-  },
-  scrollContent: {
-    padding: Theme.spacing.md,
-    paddingBottom: 32,
+    marginBottom: Theme.spacing.sm,
+    textAlign: 'center',
   },
   statsCard: {
+    marginBottom: Theme.spacing.sm,
+  },
+  hintPrompt: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    textAlign: 'center',
     marginBottom: Theme.spacing.md,
   },
   focusCard: {
@@ -358,10 +452,12 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: Theme.colors.danger,
     marginBottom: 8,
+    textAlign: 'center',
   },
   deadSubtitle: {
     color: Theme.colors.textMuted,
     marginBottom: Theme.spacing.lg,
+    textAlign: 'center',
   },
   karmaRow: {
     width: '100%',
@@ -379,5 +475,40 @@ const styles = StyleSheet.create({
   reincarnateButton: {
     marginTop: Theme.spacing.md,
     width: '100%',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Theme.spacing.lg,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
+    borderWidth: 1,
+    borderColor: Theme.colors.primarySoft,
+    padding: Theme.spacing.lg,
+    ...Theme.shadow,
+  },
+  modalTitle: {
+    color: Theme.colors.text,
+    fontSize: Theme.fontSize.lg,
+    fontWeight: '900',
+    marginBottom: Theme.spacing.sm,
+    textAlign: 'center',
+  },
+  modalText: {
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.sm,
+    lineHeight: 20,
+    marginBottom: Theme.spacing.md,
+    textAlign: 'center',
+  },
+  modalButton: {
+    alignSelf: 'center',
+    minWidth: 160,
   },
 });
