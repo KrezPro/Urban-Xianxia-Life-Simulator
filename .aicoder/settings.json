@@ -12,12 +12,7 @@
   ],
   "context_focus": [
 "Game/PlanOfDevelopment.txt",
-    "Game/src/data/items.json",
-    "Game/src/store/useInventoryStore.ts",
-    "Game/src/store/usePlayerStore.ts",
-    "Game/src/screens/StoreScreen.tsx",
-    "Game/src/locales/ru/ui.json",
-    "Game/src/locales/en/ui.json"
+    "Game/src/navigation/TabNavigator.tsx"
   ],
   "max_file_size_kb": 100
 }

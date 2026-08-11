@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LifeScreen from '../screens/LifeScreen';
 import DaoScreen from '../screens/DaoScreen';
 import LogScreen from '../screens/LogScreen';
+import StoreScreen from '../screens/StoreScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,8 @@ export default function TabNavigator() {
             iconName = focused ? 'leaf' : 'leaf-outline';
           } else if (route.name === 'Журнал') {
             iconName = focused ? 'book' : 'book-outline';
+          } else if (route.name === 'Магазин') {
+            iconName = focused ? 'cart' : 'cart-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -32,6 +35,7 @@ export default function TabNavigator() {
     >
       <Tab.Screen name="Мир" component={LifeScreen} />
       <Tab.Screen name="Дао" component={DaoScreen} />
+      <Tab.Screen name="Магазин" component={StoreScreen} />
       <Tab.Screen name="Журнал" component={LogScreen} />
     </Tab.Navigator>
   );
