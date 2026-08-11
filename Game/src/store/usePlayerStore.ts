@@ -7,8 +7,8 @@ interface PlayerEffects {
   intelligence?: number;
   health?: number;
   appearance?: number;
-  karma?: number;
-  money?: number;
+  karma?: number | string;
+  money?: number | string;
   qi?: string;
 }
 
@@ -16,11 +16,11 @@ interface PlayerState {
   isDead: boolean;
   age: number;
   qi: string;
-  money: number;
+  money: string;
   intelligence: number;
   health: number;
   appearance: number;
-  karma: number;
+  karma: string;
   spiritualRoot: number;
   cultivationStage: string;
   activityFocus: 'mundane' | 'secret';
@@ -38,11 +38,11 @@ const initialState = {
   isDead: false,
   age: 0,
   qi: "0",
-  money: 0,
+  money: "0",
   intelligence: 10,
   health: 100,
   appearance: 50,
-  karma: 0,
+  karma: "0",
   spiritualRoot: 10,
   cultivationStage: 'mortal',
   activityFocus: 'mundane' as 'mundane' | 'secret',
@@ -79,8 +79,20 @@ export const usePlayerStore = create<PlayerState>()(
         }
         if (effects.intelligence !== undefined) newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
         if (effects.appearance !== undefined) newState.appearance = Math.max(0, state.appearance + effects.appearance);
-        if (effects.karma !== undefined) newState.karma = state.karma + effects.karma;
-        if (effects.money !== undefined) newState.money = Math.max(0, state.money + effects.money);
+        
+        if (effects.karma !== undefined) {
+          const currentKarma = BigInt(state.karma);
+          const addKarma = BigInt(effects.karma);
+          newState.karma = (currentKarma + addKarma).toString();
+        }
+        
+        if (effects.money !== undefined) {
+          const currentMoney = BigInt(state.money);
+          const addMoney = BigInt(effects.money);
+          const resultMoney = currentMoney + addMoney;
+          // Инвертировано условие, чтобы не использовать знак меньше
+          newState.money = 0n > resultMoney ? "0" : resultMoney.toString();
+        }
         
         if (effects.qi !== undefined) {
           const currentQi = BigInt(state.qi);
@@ -99,12 +111,12 @@ export const usePlayerStore = create<PlayerState>()(
           age: 0,
           qi: "0",
           cultivationStage: 'mortal',
-          karma: state.karma,
+          karma: state.karma, // Сохраняем карму между жизнями
           activityFocus: 'mundane',
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX),
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
           appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),
-          money: getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX),
+          money: getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX).toString(),
           spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX),
         };
       }),

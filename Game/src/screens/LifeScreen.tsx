@@ -4,13 +4,42 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import eventsData from '../data/events.json';
 
+// Вспомогательная функция для форматирования больших чисел (K, M, B, T...)
+const formatLargeNumber = (value: string | number): string => {
+  const strVal = value.toString();
+  const isNegative = strVal.startsWith('-');
+  const absVal = isNegative ? strVal.slice(1) : strVal;
+  const len = absVal.length;
+  
+  // Если длина числа меньше или равна 3 (до 999), возвращаем как есть
+  if (len <= 3) return value.toString();
+  
+  const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
+  const suffixIndex = Math.floor((len - 1) / 3);
+  
+  // Если число слишком огромное даже для суффиксов, используем экспоненциальную запись
+  if (suffixIndex >= suffixes.length) {
+    return (isNegative ? "-" : "") + absVal[0] + "." + absVal.slice(1, 3) + "e" + (len - 1);
+  }
+  
+  const remainder = len % 3 === 0 ? 3 : len % 3;
+  const mainPart = absVal.slice(0, remainder);
+  const decimalPart = absVal.slice(remainder, remainder + 1);
+  
+  const result = decimalPart === "0" 
+    ? `${mainPart}${suffixes[suffixIndex]}` 
+    : `${mainPart}.${decimalPart}${suffixes[suffixIndex]}`;
+    
+  return (isNegative ? "-" : "") + result;
+};
+
 export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
 
   useEffect(() => {
     // Инициализация при первом запуске игры
-    if (player.age === 0 && player.money === 0 && player.health === 100 && player.qi === "0" && !player.isDead) {
+    if (player.age === 0 && player.money === "0" && player.health === 100 && player.qi === "0" && !player.isDead) {
       player.reincarnate();
       addLog("Вы родились в этом мире. Ваша история начинается...", "system");
     }
@@ -60,7 +89,7 @@ export default function LifeScreen() {
         <View style={styles.deadContainer}>
           <Text style={styles.deadTitle}>ВЫ МЕРТВЫ</Text>
           <Text style={styles.deadSubtitle}>Ваш жизненный путь прерван.</Text>
-          <Text style={styles.karmaText}>Накоплено Кармы: {player.karma}</Text>
+          <Text style={styles.karmaText}>Накоплено Кармы: {formatLargeNumber(player.karma)}</Text>
           <View style={styles.buttonContainer}>
             <Button 
               title="Реинкарнация (Новая жизнь)" 
@@ -83,10 +112,10 @@ export default function LifeScreen() {
           <Text style={styles.statText}>Здоровье: {player.health}</Text>
           <Text style={styles.statText}>Интеллект: {player.intelligence}</Text>
           <Text style={styles.statText}>Привлекательность: {player.appearance}</Text>
-          <Text style={styles.statText}>Деньги: ${player.money}</Text>
+          <Text style={styles.statText}>Деньги: ${formatLargeNumber(player.money)}</Text>
           <Text style={styles.statText}>Духовный корень: {player.spiritualRoot}</Text>
-          <Text style={styles.statText}>Энергия Ци: {player.qi}</Text>
-          <Text style={styles.statText}>Карма: {player.karma}</Text>
+          <Text style={styles.statText}>Энергия Ци: {formatLargeNumber(player.qi)}</Text>
+          <Text style={styles.statText}>Карма: {formatLargeNumber(player.karma)}</Text>
         </View>
         
         <View style={styles.focusContainer}>
