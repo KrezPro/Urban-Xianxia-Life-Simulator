@@ -6,10 +6,16 @@
 - [x] Корневой App.tsx.
 - [x] Фикс точки входа Expo.
 
-## Этап 2: Стейт-менеджмент (ТЕКУЩИЙ)
-- [x] Настройка zustand и react-native-mmkv (usePlayerStore).
-- [ ] Настройка useEventStore и useInventoryStore.
+## Этап 2: Стейт-менеджмент (ЗАВЕРШЕНО)
+- [x] Настройка zustand и react-native-mmkv / AsyncStorage (usePlayerStore).
+- [ ] Настройка useEventStore и useInventoryStore (перенесено на Этап 4).
 
-## Этап 3: Навигация и UI
-- [ ] Интеграция React Navigation (Bottom Tabs).
-- [ ] Базовые экраны (Profile, Life, Dao, Store, Log).
+## Этап 3: Навигация и UI (ТЕКУЩИЙ)
+- [x] Интеграция React Navigation (Bottom Tabs).
+- [x] Базовые экраны (Profile, Life, Dao, Log).
+- [x] Фикс варнинга SafeAreaView (замена на SafeAreaProvider).
+
+## Этап 4: Журнал судьбы и События
+- [ ] Настройка useEventStore.
+- [ ] Интеграция @shopify/flash-list в LogScreen.tsx.
+- [ ] Базовая логика генерации событий при нажатии "Повзрослеть".
