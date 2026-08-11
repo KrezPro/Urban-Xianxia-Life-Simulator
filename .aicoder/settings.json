@@ -12,7 +12,11 @@
   ],
   "context_focus": [
 "Game/PlanOfDevelopment.txt",
-    "Game/src/navigation/TabNavigator.tsx"
+    "Game/src/store/usePlayerStore.ts",
+    "Game/src/screens/StoreScreen.tsx",
+    "Game/src/screens/LifeScreen.tsx",
+    "Game/src/screens/DaoScreen.tsx",
+    "Game/src/hooks/useBreakthrough.ts"
   ],
   "max_file_size_kb": 100
 }

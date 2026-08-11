@@ -47,9 +47,13 @@ export default function StoreScreen() {
     
     if (karmaBig >= costBig && !inventory.items[item.id]) {
       player.deductKarma(item.cost);
-      // Приводим тип к any, чтобы обойти строгую проверку интерфейса IItem, если он не содержит всех полей
       inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
     }
+  };
+
+  const handleBuyPass = () => {
+    // В будущем здесь будет обработчик встроенных покупок (Expo In-App Purchases)
+    player.setCultivatorPass(true);
   };
 
   return (
@@ -101,16 +105,22 @@ export default function StoreScreen() {
         <View style={styles.iapCard}>
           <Text style={styles.iapName}>{uiData.iap_pass}</Text>
           <Text style={styles.itemDesc}>{uiData.iap_pass_desc}</Text>
-          <TouchableOpacity style={styles.iapBtn} disabled>
-            <Text style={styles.buyBtnText}>$4.99 (WIP)</Text>
+          <TouchableOpacity 
+            style={[styles.iapBtn, player.hasCultivatorPass ? styles.btnBought : styles.btnActive]} 
+            onPress={handleBuyPass}
+            disabled={player.hasCultivatorPass}
+          >
+            <Text style={styles.buyBtnText}>
+              {player.hasCultivatorPass ? uiData.btn_iap_active : uiData.btn_iap_buy}
+            </Text>
           </TouchableOpacity>
         </View>
         
         <View style={styles.iapCard}>
           <Text style={styles.iapName}>{uiData.iap_ad}</Text>
           <Text style={styles.itemDesc}>{uiData.iap_ad_desc}</Text>
-          <TouchableOpacity style={styles.iapBtn} disabled>
-            <Text style={styles.buyBtnText}>WATCH AD (WIP)</Text>
+          <TouchableOpacity style={[styles.iapBtn, styles.btnDisabled]} disabled>
+            <Text style={styles.buyBtnText}>INFO ONLY</Text>
           </TouchableOpacity>
         </View>
 
@@ -235,7 +245,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   iapBtn: {
-    backgroundColor: '#c0392b',
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: 'center',

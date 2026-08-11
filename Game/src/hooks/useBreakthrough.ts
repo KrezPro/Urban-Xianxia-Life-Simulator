@@ -1,15 +1,21 @@
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
+import { useLocaleStore } from '../store/useLocaleStore';
 import stagesData from '../data/stages.json';
+
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
 
 export const useBreakthrough = () => {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
+  const locale = useLocaleStore(state => state.locale);
+  const uiData = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
 
   const currentStageIndex = stagesData.findIndex(s => s.id === player.cultivationStage);
   const nextStage = stagesData[currentStageIndex + 1];
 
-  const calculateChance = () => {
+  const calculateChance = (hasAdBuff: boolean = false) => {
     if (!nextStage) return 0;
     
     // Бонус от духовного корня (0.5% за единицу) и интеллекта (0.2% за единицу)
@@ -18,7 +24,10 @@ export const useBreakthrough = () => {
     
     let chance = nextStage.baseSuccessRate + rootBonus + intBonus;
     
-    // Ограничиваем максимальный шанс 99%
+    if (hasAdBuff) {
+      chance += 0.15; // Бонус от рекламы
+    }
+    
     if (chance > 0.99) {
       chance = 0.99;
     }
@@ -26,42 +35,43 @@ export const useBreakthrough = () => {
     return chance;
   };
 
-  const attemptBreakthrough = () => {
+  const attemptBreakthrough = (hasAdBuff: boolean = false, clearBuff: () => void) => {
     if (!nextStage || player.isDead) return;
 
     const reqQi = BigInt(nextStage.requiredQi);
     const currentQi = BigInt(player.qi);
 
-    // Если Ци меньше требуемой, отменяем
     if (reqQi > currentQi) {
-      addLog("Недостаточно энергии Ци для прорыва.", "system");
+      addLog(uiData.log_no_qi, "system");
       return;
     }
 
-    // Списываем Ци
     player.deductQi(nextStage.requiredQi);
     
-    const chance = calculateChance();
+    const chance = calculateChance(hasAdBuff);
     const roll = Math.random();
-    // Успех, если ролл попадает в процент шанса
     const isSuccess = chance >= roll; 
 
     if (isSuccess) {
       player.setCultivationStage(nextStage.id);
-      addLog(`[УСПЕХ] Прорыв успешен! Вы достигли стадии: ${nextStage.name}. Меридианы расширены.`, "secret");
+      addLog(uiData.log_success.replace('{name}', nextStage.name), "secret");
     } else {
-      // Базовый урон при провале
-      const damage = 30; 
-      
-      player.applyEffects({ health: -damage });
-      
-      // Если здоровье падает ниже или равно урону, персонаж погибает
-      if (damage >= player.health) {
-        addLog(`[КРИТИЧЕСКИЙ ПРОВАЛ] Небесная скорбь оказалась слишком сильна. Ваши меридианы разорваны. Вы погибли.`, "system");
+      if (hasAdBuff) {
+        addLog(uiData.log_ad_saved, "secret");
       } else {
-        addLog(`[ПРОВАЛ] Прорыв не удался. Произошел откат энергии (Mana Burn), вы получили ${damage} урона.`, "secret");
+        const damage = 30; 
+        player.applyEffects({ health: -damage });
+        
+        if (damage >= player.health) {
+          addLog(uiData.log_fail_death, "system");
+        } else {
+          addLog(uiData.log_fail_damage.replace('{damage}', damage.toString()), "secret");
+        }
       }
     }
+    
+    // Снимаем бафф после попытки (успешной или нет)
+    if (hasAdBuff) clearBuff();
   };
 
   return { attemptBreakthrough, nextStage, calculateChance };

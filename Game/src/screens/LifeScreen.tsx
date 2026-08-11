@@ -57,6 +57,17 @@ export default function LifeScreen() {
   }, [player.isDead]);
 
   const handleGrowOlder = () => {
+    const now = Date.now();
+    
+    // Проверка жесткого кулдауна межстраничной рекламы (70 секунд)
+    if (!player.hasCultivatorPass) {
+      if (now - player.lastInterstitialTime > 70000) {
+        player.setLastInterstitialTime(now);
+        addLog(uiData.interstitial_log, "system");
+        // Здесь в будущем будет вызов реального SDK рекламы (AdMob/AppLovin)
+      }
+    }
+
     player.growOlder();
     
     let secretEventChance = 0.1; 

@@ -22,7 +22,8 @@
     "karma_accumulated": "Total Karma:",
     "karma_earned_last_life": "Legacy earned (Karma):",
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
-    "age_log": "You turned {age}."
+    "age_log": "You turned {age}.",
+    "interstitial_log": "[AD] Interstitial ad shown (70s cooldown)."
   },
   "store_screen": {
     "title": "Karma Shop",
@@ -31,11 +32,13 @@
     "btn_bought": "OWNED",
     "btn_no_karma": "SHORTFALL",
     "cost": "Cost: ",
-    "iap_section": "Premium & Ads (WIP)",
-    "iap_pass": "Cultivator Pass (Ad-Free)",
-    "iap_pass_desc": "Disables all ads forever and unlocks the dark theme (in development).",
+    "iap_section": "Premium & Monetization",
+    "iap_pass": "Cultivator Pass",
+    "iap_pass_desc": "Disables all interstitial ads forever and supports the developer.",
     "iap_ad": "Lifesaver Ad",
-    "iap_ad_desc": "Watch a short video to avoid permanent death during a failed breakthrough (in development).",
+    "iap_ad_desc": "Available on the Dao tab before a breakthrough (death protection).",
+    "btn_iap_buy": "BUY PASS",
+    "btn_iap_active": "ACTIVE",
     "items": {
       "buff_rich_family": {
         "name": "Rich Family",
@@ -50,5 +53,27 @@
         "desc": "Your spiritual root is naturally more receptive to Qi (+5 pts)."
       }
     }
+  },
+  "dao_screen": {
+    "title": "Dao Path",
+    "stage": "Stage:",
+    "unknown": "Unknown",
+    "qi_energy": "Qi Energy:",
+    "next_stage": "Next Step:",
+    "req_qi": "Required Qi:",
+    "success_chance": "Success Chance:",
+    "btn_breakthrough": "ATTEMPT BREAKTHROUGH",
+    "btn_no_qi": "INSUFFICIENT QI",
+    "max_stage": "You have reached the peak of cultivation. The Heavens no longer bind you.",
+    "dead_text": "The dead cannot cultivate.",
+    "btn_ad_buff": "WATCH AD (+15% & PROTECTION)",
+    "btn_ad_watched": "BUFF ACTIVE",
+    "alert_ad_title": "Advertisement",
+    "alert_ad_msg": "Video watched! You received a buff for the next breakthrough.",
+    "log_no_qi": "Insufficient Qi energy for breakthrough.",
+    "log_success": "[SUCCESS] Breakthrough successful! You reached stage: {name}. Meridians expanded.",
+    "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",
+    "log_fail_damage": "[FAILURE] Breakthrough failed. Mana Burn occurred, you took {damage} damage.",
+    "log_ad_saved": "[SAVED] Breakthrough failed, but the Ad Buff protected your meridians from damage!"
   }
 }

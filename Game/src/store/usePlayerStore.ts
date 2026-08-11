@@ -28,9 +28,13 @@ interface PlayerState {
   cultivationStage: string;
   activityFocus: 'mundane' | 'secret';
   hasHydrated: boolean;
+  hasCultivatorPass: boolean;
+  lastInterstitialTime: number;
   setHasHydrated: (state: boolean) => void;
   setActivityFocus: (focus: 'mundane' | 'secret') => void;
   setCultivationStage: (stage: string) => void;
+  setCultivatorPass: (status: boolean) => void;
+  setLastInterstitialTime: (time: number) => void;
   growOlder: () => void;
   addQi: (amount: string) => void;
   deductQi: (amount: string) => void;
@@ -53,6 +57,8 @@ const initialState = {
   spiritualRoot: 10,
   cultivationStage: 'mortal',
   activityFocus: 'mundane' as 'mundane' | 'secret',
+  hasCultivatorPass: false,
+  lastInterstitialTime: 0,
 };
 
 const getRandomInt = (min: number, max: number) => {
@@ -67,6 +73,8 @@ export const usePlayerStore = create<PlayerState>()(
       setHasHydrated: (state) => set({ hasHydrated: state }),
       setActivityFocus: (focus) => set({ activityFocus: focus }),
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
+      setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
+      setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
       growOlder: () => set((state) => ({ age: state.age + 1 })),
       addQi: (amount) => set((state) => {
         if (state.isDead) return state;
@@ -163,6 +171,8 @@ export const usePlayerStore = create<PlayerState>()(
           karma: state.karma,
           lastLifeKarmaEarned: "0",
           activityFocus: 'mundane',
+          hasCultivatorPass: state.hasCultivatorPass,
+          lastInterstitialTime: state.lastInterstitialTime,
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX) + bonusHealth,
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
           appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),

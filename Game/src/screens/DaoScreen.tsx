@@ -1,10 +1,13 @@
-import React from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useBreakthrough } from '../hooks/useBreakthrough';
+import { useLocaleStore } from '../store/useLocaleStore';
 import stagesData from '../data/stages.json';
 
-// Вспомогательная функция для форматирования больших чисел (K, M, B, T...)
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
+
 const formatLargeNumber = (value: string | number): string => {
   const strVal = value.toString();
   const isNegative = strVal.startsWith('-');
@@ -33,11 +36,15 @@ const formatLargeNumber = (value: string | number): string => {
 
 export default function DaoScreen() {
   const player = usePlayerStore();
+  const locale = useLocaleStore(state => state.locale);
   const { attemptBreakthrough, nextStage, calculateChance } = useBreakthrough();
+  
+  const [hasAdBuff, setHasAdBuff] = useState(false);
+  const uiData = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
 
   const currentStage = stagesData.find(s => s.id === player.cultivationStage);
   
-  const chance = calculateChance();
+  const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   
   const currentQiBig = BigInt(player.qi);
@@ -45,11 +52,21 @@ export default function DaoScreen() {
   
   const canBreakthrough = currentQiBig >= reqQiBig && nextStage !== undefined;
 
+  const handleWatchAd = () => {
+    // В будущем тут будет вызов SDK вознаграждаемой рекламы
+    setHasAdBuff(true);
+    Alert.alert(uiData.alert_ad_title, uiData.alert_ad_msg);
+  };
+
+  const handleBreakthrough = () => {
+    attemptBreakthrough(hasAdBuff, () => setHasAdBuff(false));
+  };
+
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centerContainer}>
-          <Text style={styles.deadText}>Мертвые не могут культивировать.</Text>
+          <Text style={styles.deadText}>{uiData.dead_text}</Text>
         </View>
       </SafeAreaView>
     );
@@ -58,40 +75,52 @@ export default function DaoScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Путь Дао</Text>
+        <Text style={styles.title}>{uiData.title}</Text>
         
         <View style={styles.stageCard}>
           <Text style={styles.stageTitle}>
-            Стадия: <Text style={styles.stageHighlight}>{currentStage?.name || 'Неизвестно'}</Text>
+            {uiData.stage} <Text style={styles.stageHighlight}>{currentStage?.name || uiData.unknown}</Text>
           </Text>
-          <Text style={styles.stageDesc}>Энергия Ци: {formatLargeNumber(player.qi)}</Text>
+          <Text style={styles.stageDesc}>{uiData.qi_energy} {formatLargeNumber(player.qi)}</Text>
           
           <View style={styles.divider} />
           
           {nextStage ? (
             <View style={styles.nextStageContainer}>
-              <Text style={styles.nextStageTitle}>Следующая ступень:</Text>
+              <Text style={styles.nextStageTitle}>{uiData.next_stage}</Text>
               <Text style={styles.nextStageText}>{nextStage.name}</Text>
               <Text style={styles.nextStageText}>
-                Требуется Ци: {formatLargeNumber(player.qi)} / {formatLargeNumber(nextStage.requiredQi)}
+                {uiData.req_qi} {formatLargeNumber(player.qi)} / {formatLargeNumber(nextStage.requiredQi)}
               </Text>
               <Text style={styles.nextStageText}>
-                Шанс успеха: {chancePercent}%
+                {uiData.success_chance} {chancePercent}%
               </Text>
+              
+              {!player.hasCultivatorPass && (
+                <TouchableOpacity 
+                  style={[styles.adBuffBtn, hasAdBuff ? styles.adBuffActive : styles.adBuffIdle]}
+                  onPress={handleWatchAd}
+                  disabled={hasAdBuff}
+                >
+                  <Text style={styles.adBuffText}>
+                    {hasAdBuff ? uiData.btn_ad_watched : uiData.btn_ad_buff}
+                  </Text>
+                </TouchableOpacity>
+              )}
               
               <TouchableOpacity 
                 style={[styles.breakthroughBtn, canBreakthrough ? styles.breakthroughBtnActive : styles.breakthroughBtnDisabled]}
-                onPress={attemptBreakthrough}
+                onPress={handleBreakthrough}
                 disabled={!canBreakthrough}
               >
                 <Text style={styles.breakthroughBtnText}>
-                  {canBreakthrough ? "ПОПЫТКА ПРОРЫВА" : "НЕДОСТАТОЧНО ЦИ"}
+                  {canBreakthrough ? uiData.btn_breakthrough : uiData.btn_no_qi}
                 </Text>
               </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.nextStageContainer}>
-              <Text style={styles.maxStageText}>Вы достигли пика культивации в этом мире. Небо больше не властно над вами.</Text>
+              <Text style={styles.maxStageText}>{uiData.max_stage}</Text>
             </View>
           )}
         </View>
@@ -175,8 +204,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontStyle: 'italic',
   },
+  adBuffBtn: {
+    marginTop: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  adBuffIdle: {
+    backgroundColor: '#e67e22',
+  },
+  adBuffActive: {
+    backgroundColor: '#27ae60',
+  },
+  adBuffText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
   breakthroughBtn: {
-    marginTop: 20,
+    marginTop: 15,
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
