@@ -3,7 +3,7 @@ chcp 65001 >nul
 
 :: Определяем пути
 set "ENGINE_DIR=%~dp0"
-set "GAME_DIR=%ENGINE_DIR%..\game"
+set "GAME_DIR=%ENGINE_DIR%..\Game"
 set "PATH=%ENGINE_DIR%.local-node;%PATH%"
 
 if not exist "%GAME_DIR%" (

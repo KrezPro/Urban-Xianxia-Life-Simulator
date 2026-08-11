@@ -11,9 +11,10 @@
     ".aicoder"
   ],
   "context_focus": [
+"Game/App.tsx",
+    "Game/package.json",
     "Game/app.json",
-    "Game/PlanOfDevelopment.txt",
-    "Game/Library.txt"
+    "Game/src/App.tsx"
   ],
   "max_file_size_kb": 100
 }

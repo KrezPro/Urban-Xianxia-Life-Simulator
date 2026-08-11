@@ -7,7 +7,7 @@
 - [x] Фикс точки входа Expo.
 
 ## Этап 2: Стейт-менеджмент (ТЕКУЩИЙ)
-- [ ] Настройка zustand и react-native-mmkv (usePlayerStore).
+- [x] Настройка zustand и react-native-mmkv (usePlayerStore).
 - [ ] Настройка useEventStore и useInventoryStore.
 
 ## Этап 3: Навигация и UI
