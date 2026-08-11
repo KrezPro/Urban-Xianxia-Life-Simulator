@@ -96,48 +96,50 @@
 Game/
 ├── package.json                   // Зависимости и скрипты
 ├── babel.config.js                // Настройки Babel
-├── app.json                       // Базовая Expo-конфигурация
+├── app.json                       // Expo-конфигурация, портретная ориентация
 ├── eas.json                       // EAS Build/Submit каналы
 ├── PlanOfDevelopment.txt          // План разработки
-├── Library.txt                    // Библиотека архитектурных решений
+├── Library.txt                    // Архитектурные решения
 ├── DataForAI.txt                  // Выученные уроки
 └── src/
-    ├── App.tsx                    // Корневой компонент, гидратация, навигация
+    ├── App.tsx                    // Гидратация, NavigationContainer
     ├── components/
     │   └── ui/
     │       └── index.tsx          // Button, Card, ProgressBar, StatRow
     ├── constants/
-    │   ├── GameConstants.ts       // Лимиты, кулдауны, социальные константы
-    │   └── Theme.ts               // Темная вовлекающая тема
+    │   ├── GameConstants.ts       // Лимиты, кулдауны, балансовые числа
+    │   └── Theme.ts               // Темная тема, цвета, отступы
     ├── data/
-    │   ├── events.json            // События
-    │   ├── items.json             // Предметы и баффы
+    │   ├── events.json            // Мирские/тайные события
+    │   ├── items.json             // Карма-баффы
     │   ├── stages.json            // Стадии культивации
-    │   ├── sects.json             // Шаблоны сект и NPC-имена
-    │   └── rankings.json          // Seed-данные локального рейтинга
+    │   ├── sects.json             // Шаблоны сект и NPC
+    │   └── rankings.json          // Seed-рейтинг
     ├── hooks/
-    │   ├── useIdleProgress.ts     // Оффлайн прогресс
+    │   ├── useIdleProgress.ts     // Offline-прогресс
     │   └── useBreakthrough.ts     // Логика прорыва
     ├── navigation/
-    │   └── TabNavigator.tsx       // Нижние табы: Life, Dao, Store, Log, Sect
+    │   ├── RootNavigator.tsx      // Корневой стек
+    │   └── TabNavigator.tsx       // Табы: Life, Dao, Store, Log, Sect
     ├── screens/
     │   ├── LifeScreen.tsx         // Мирская жизнь
     │   ├── DaoScreen.tsx          // Путь Дао
-    │   ├── LogScreen.tsx          // Журнал судьбы
     │   ├── StoreScreen.tsx        // Магазин Кармы
-    │   ├── ProfileScreen.tsx      // Служебный профиль
-    │   └── SectScreen.tsx         // Секта и локальный рейтинг
+    │   ├── LogScreen.tsx          // Журнал судьбы
+    │   ├── ProfileScreen.tsx      // Профиль
+    │   ├── SectScreen.tsx         // Секта и локальный рейтинг
+    │   └── LeaderboardScreen.tsx  // Полноэкранный рейтинг
     ├── services/
-    │   └── socialService.ts       // Инвайты, секты, NPC, рейтинг
+    │   └── socialService.ts       // Секты, инвайты, NPC, рейтинг
     ├── store/
     │   ├── mmkvStorage.ts         // MMKV адаптер
     │   ├── usePlayerStore.ts      // Игрок
     │   ├── useEventStore.ts       // Журнал
     │   ├── useInventoryStore.ts   // Инвентарь
     │   ├── useLocaleStore.ts      // Язык интерфейса
-    │   └── useSocialStore.ts      // Секты, инвайты, рейтинг
+    │   └── useSocialStore.ts      // Секты и рейтинг
     ├── types/
-    │   └── index.ts               // Интерфейсы игрока, сект, рейтинга
+    │   └── index.ts               // Интерфейсы
     └── utils/
         ├── timeUtils.ts           // Дельта времени
         └── helpers.ts             // Форматирование, BigInt, random

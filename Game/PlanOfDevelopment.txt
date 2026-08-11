@@ -1,109 +1,68 @@
-[СТАТУС]: ШАГ 8 (Отсутствующий UI-кит и helpers восстановлены. Следующий шаг: вовлечение)
+[СТАТУС]: ШАГ 7 (Локализация, навигация и гидратация)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
 === Фаза 1: Базовая архитектура (Завершено) ===
-1. [X] Expo, React Native, TypeScript.
-2. [X] Zustand + react-native-mmkv.
-3. [X] TabNavigator.
-4. [X] FlashList для журнала.
-5. [X] Базовые события взросления.
+1. [X] Инициализация Expo, React Native, TypeScript.
+2. [X] Интеграция Zustand и react-native-mmkv для синхронного сохранения.
+3. [X] Настройка навигации (TabNavigator: Мир, Дао, Журнал).
+4. [X] Создан FlashList для LogScreen (Журнал судьбы).
+5. [X] Базовая рандомизация событий при взрослении (LifeScreen).
 
-=== Фаза 2: Core Loop (Завершено) ===
-6. [X] Инкарнация и стартовые параметры.
-7. [X] Выбор фокуса года.
-8. [X] BigInt для Ци и денег.
-9. [X] Прорывы, смерть, карма.
+=== Фаза 2: Core Loop и Вычисления (Завершено) ===
+6. [X] Фаза инкарнации: генерация стартовых параметров при рождении.
+7. [X] Механика выбора активностей (мирские vs тайные дела) перед кнопкой "Повзрослеть".
+8. [X] Рефакторинг стора: внедрение string-представления BigInt для MMKV.
+9. [X] Фаза прорыва (Breakthrough): расчет вероятностей, риски и смерть.
 
-=== Фаза 3: Контент и локализация (Завершено базово) ===
-10. [X] RU/EN словари.
-11. [X] Абсурдные события и виральный тон.
+=== Фаза 3: Контент, Локализация и Виральность (Завершено базово) ===
+10. [X] Внедрение i18n (мультиязычность). Адаптация терминов для западного рынка.
+11. [X] Расширение базы событий абсурдными ситуациями.
 
-=== Фаза 4: Idle и реинкарнация (Завершено) ===
-12. [X] Offline progress.
-13. [X] Карма за смерть.
-14. [X] Магазин кармы.
+=== Фаза 4: Idle-механики и Реинкарнация (Завершено) ===
+12. [X] Фоновая прогрессия через дельту времени.
+13. [X] Механика наследия: конвертация достижений в Карму.
+14. [X] Магазин реинкарнации: покупка вечных улучшений за Карму.
 
-=== Фаза 5: Экономика, монетизация, социализация ===
-15. [X] IAP-заготовки.
-16. [X] Реклама и кулдауны.
-17. [X] Offline-first секты, инвайты, рейтинг.
+=== Фаза 5: Экономика, Монетизация и Социализация ===
+15. [X] IAP: Cultivator Pass, заготовка под God Mode, расширения, Машина времени.
+16. [X] Реклама: Rewarded Video и Interstitial Ads с кулдауном.
+17. [ ] Асинхронный мультиплеер: глобальные корпоративные секты и рейтинги.
 
-=== Фаза 6: LiveOps и деплой ===
-18. [ ] EAS Updates / OTA.
-19. [ ] Remote config.
-20. [ ] Сезонные LiveOps-флаги.
+=== Фаза 6: Деплой и LiveOps ===
+18. [ ] Настройка EAS Updates для облачного обновления контента.
 
-=== Фаза 7: UI-кит и восстановление отсутствующих файлов ===
-21. [X] Theme.ts: темная неоновая тема.
-22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
-23. [X] utils/helpers.ts: format, BigInt, random.
-24. [X] Экраны используют общий UI-кит.
-25. [X] Навигация использует стабильные route names.
-26. [X] Локализация вкладок и служебных экранов.
+=== Фаза 7: Техническая стабилизация и локализация ===
+19. [X] Создан useLocaleStore и стабильные английские route names.
+20. [X] Реальный MMKV-адаптер с memory-fallback для аварийных сред.
+21. [X] Локализованы App loading, LogScreen и useIdleProgress.
+22. [ ] Вынести formatLargeNumber в helpers и убрать дубли из экранов.
+23. [ ] Социальный слой: секты, инвайты, рейтинги.
 
-=== Фаза 8: Максимальное вовлечение (следующий блок) ===
-27. [ ] Daily Rewards: ежедневные награды и серия входов.
-28. [ ] Quests: короткие цели и быстрые награды.
-29. [ ] Achievements: достижения, тосты, бонусы.
-30. [ ] Choice Events: события с выбором и риском.
-31. [ ] Share: смерть, прорыв, рекорд, инвайт.
-32. [ ] Onboarding: первая сессия с быстрым вознаграждением.
-33. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
-
-=== Фаза 9: Техническая гигиена ===
-34. [X] AsyncStorage не используется.
-35. [X] MMKV-адаптер с memory-fallback.
-36. [X] BigInt хранится как string.
-37. [X] FlashList для больших списков.
-38. [ ] Автотесты BigInt/MMKV/FlashList.
-
-=== ОПИСАНИЕ структуры проекта (кратко) ===
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
-├── package.json                 // зависимости
-├── babel.config.js              // babel
-├── app.json                     // Expo config
-├── eas.json                     // EAS channels
-├── PlanOfDevelopment.txt        // текущий план
-├── Library.txt                  // архитектурные правила
-├── DataForAI.txt                // выученные уроки
-└── src/
-    ├── App.tsx                  // вход, гидратация, навигация
-    ├── components/
-    │   └── ui/
-    │       └── index.tsx        // Button, Card, ProgressBar, StatRow
-    ├── constants/
-    │   ├── GameConstants.ts     // лимиты, кулдауны, балансовые числа
-    │   └── Theme.ts             // цвета, отступы, тени
-    ├── data/
-    │   ├── events.json          // мирские/тайные события
-    │   ├── items.json           // карма-баффы
-    │   ├── stages.json          // стадии культивации
-    │   ├── sects.json           // шаблоны сект
-    │   └── rankings.json        // seed-рейтинг
-    ├── hooks/
-    │   ├── useIdleProgress.ts   // offline-прогресс
-    │   └── useBreakthrough.ts   // прорывы
-    ├── navigation/
-    │   └── TabNavigator.tsx     // нижние вкладки
-    ├── screens/
-    │   ├── LifeScreen.tsx       // мирская жизнь
-    │   ├── DaoScreen.tsx        // культивация
-    │   ├── StoreScreen.tsx      // магазин кармы
-    │   ├── LogScreen.tsx        // журнал
-    │   ├── ProfileScreen.tsx    // служебный профиль
-    │   └── SectScreen.tsx       // секта и рейтинг
-    ├── services/
-    │   └── socialService.ts     // секты, инвайты, рейтинг
-    ├── store/
-    │   ├── mmkvStorage.ts       // MMKV storage
-    │   ├── usePlayerStore.ts    // игрок
-    │   ├── useEventStore.ts     // журнал
-    │   ├── useInventoryStore.ts // инвентарь
-    │   ├── useLocaleStore.ts    // язык
-    │   └── useSocialStore.ts    // секты
-    ├── types/
-    │   └── index.ts             // интерфейсы
-    └── utils/
-        ├── timeUtils.ts         // дельта времени
-        └── helpers.ts           // format, BigInt, random
+├── package.json                   // Зависимости и скрипты
+├── babel.config.js                // Настройки Babel
+├── src/
+│   ├── App.tsx                    // Гидратация player/locale, NavigationContainer
+│   ├── navigation/
+│   │   └── TabNavigator.tsx       // Английские route names: Life, Dao, Store, Log
+│   ├── screens/
+│   │   ├── LifeScreen.tsx         // Мирская жизнь
+│   │   ├── DaoScreen.tsx          // Путь Дао
+│   │   ├── StoreScreen.tsx        // Магазин Кармы
+│   │   └── LogScreen.tsx          // Журнал судьбы, FlashList
+│   ├── store/
+│   │   ├── mmkvStorage.ts         // Реальный MMKV с memory-fallback
+│   │   ├── useLocaleStore.ts      // Язык интерфейса и гидратация
+│   │   ├── usePlayerStore.ts      // Игрок
+│   │   ├── useEventStore.ts       // Журнал
+│   │   └── useInventoryStore.ts   // Инвентарь
+│   ├── hooks/
+│   │   ├── useIdleProgress.ts     // Offline-прогресс с локализацией
+│   │   └── useBreakthrough.ts     // Логика прорыва
+│   ├── types/
+│   │   └── index.ts               // Locale, IPlayer, IEventLog, IItem
+│   └── locales/
+│       ├── ru/ui.json             // Русские строки интерфейса
+│       └── en/ui.json             // Английские строки интерфейса

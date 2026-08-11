@@ -12,7 +12,7 @@ export const useIdleProgress = () => {
   const { hasHydrated, isDead, spiritualRoot, activityFocus, addQi, applyEffects } = usePlayerStore();
   const { addLog } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const ui: any = locale === 'ru' ? ruUI : enUI;
 
   useEffect(() => {
     if (!hasHydrated || isDead) {
@@ -33,7 +33,7 @@ export const useIdleProgress = () => {
 
           addQi(earnedQi.toString());
 
-          const logMsg = uiData.idle.offline_secret
+          const logMsg = ui.idle.offline_secret
             .replace('{seconds}', deltaSeconds.toString())
             .replace('{amount}', earnedQi.toString());
 
@@ -43,7 +43,7 @@ export const useIdleProgress = () => {
 
           applyEffects({ money: earnedMoney.toString() });
 
-          const logMsg = uiData.idle.offline_mundane
+          const logMsg = ui.idle.offline_mundane
             .replace('{seconds}', deltaSeconds.toString())
             .replace('{amount}', earnedMoney.toString());
 

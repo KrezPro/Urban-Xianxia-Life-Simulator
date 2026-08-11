@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useEventStore, IEventLog } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { Theme } from '../constants/Theme';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -38,9 +37,11 @@ export default function LogScreen() {
         <FlashList
           data={logs}
           renderItem={renderItem}
-          estimatedItemSize={58}
+          estimatedItemSize={50}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text style={styles.emptyText}>{ui.log_screen.empty}</Text>}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>{ui.log_screen.empty}</Text>
+          }
         />
       </View>
     </SafeAreaView>
@@ -50,13 +51,13 @@ export default function LogScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
+    backgroundColor: '#121212',
     paddingTop: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: '900',
-    color: Theme.colors.text,
+    fontWeight: 'bold',
+    color: '#fff',
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -67,35 +68,32 @@ const styles = StyleSheet.create({
   logItem: {
     flexDirection: 'row',
     marginBottom: 8,
-    padding: 12,
-    backgroundColor: Theme.colors.surface,
-    borderRadius: Theme.radius.md,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderSoft,
+    padding: 10,
+    backgroundColor: '#1E1E1E',
+    borderRadius: 8,
   },
   logTime: {
-    color: Theme.colors.textDim,
+    color: '#888',
     marginRight: 8,
     fontSize: 12,
     marginTop: 2,
   },
   logText: {
-    color: Theme.colors.text,
+    color: '#DDD',
     fontSize: 14,
     flex: 1,
     flexWrap: 'wrap',
-    lineHeight: 20,
   },
   secretText: {
-    color: Theme.colors.info,
-    fontWeight: '700',
+    color: '#9b59b6',
+    fontWeight: '600',
   },
   systemText: {
-    color: Theme.colors.danger,
+    color: '#e74c3c',
     fontStyle: 'italic',
   },
   emptyText: {
-    color: Theme.colors.textDim,
+    color: '#888',
     textAlign: 'center',
     marginTop: 50,
     fontStyle: 'italic',
