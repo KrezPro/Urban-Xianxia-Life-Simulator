@@ -1,3 +1,4 @@
-[СТАТУС]: ШАГ 3.5 (Создание экрана логов)
-1. [X] Упрощен корень проекта (App.tsx напрямую рендерит интерфейс без кастомных оберток локализации, вызывавших TransformError).
-2. [ ] Создать FlashList для LogScreen (Журнал судьбы).
+[СТАТУС]: ШАГ 4 (Интеграция навигации)
+1. [X] Упрощен корень проекта, исправлена ошибка TransformError в babel.config.js.
+2. [X] Создан FlashList для LogScreen (Журнал судьбы).
+3. [ ] Настроить React Navigation (TabNavigator) для перехода между LifeScreen, DaoScreen и LogScreen.

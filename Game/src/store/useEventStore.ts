@@ -1,13 +1,17 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
-import { IEventLog } from '../types';
+
+export interface IEventLog {
+  id: string;
+  text: string;
+  timestamp: number;
+  type: 'mundane' | 'secret' | 'system';
+}
 
 interface EventState {
   logs: IEventLog[];
-  hasHydrated: boolean;
-  setHasHydrated: (state: boolean) => void;
-  addLog: (log: IEventLog) => void;
+  addLog: (text: string, type: IEventLog['type']) => void;
   clearLogs: () => void;
 }
 
@@ -15,20 +19,20 @@ export const useEventStore = create<EventState>()(
   persist(
     (set) => ({
       logs: [],
-      hasHydrated: false,
-      setHasHydrated: (state) => set({ hasHydrated: state }),
-      // Добавляем новые события в начало массива
-      addLog: (log) => set((state) => ({ logs: [log, ...state.logs] })),
+      addLog: (text, type) => set((state) => ({
+        // Добавляем новую запись в начало массива
+        logs: [{ 
+          id: Date.now().toString() + Math.random().toString(), 
+          text, 
+          timestamp: Date.now(), 
+          type 
+        }, ...state.logs]
+      })),
       clearLogs: () => set({ logs: [] }),
     }),
     {
-      name: 'events-storage',
+      name: 'event-storage',
       storage: createJSONStorage(() => zustandStorage),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.setHasHydrated(true);
-        }
-      },
     }
   )
 );
