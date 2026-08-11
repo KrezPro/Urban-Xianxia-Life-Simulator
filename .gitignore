@@ -1,0 +1,55 @@
+﻿# --- Секреты и ключи (Критично для безопасности) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# --- Node.js и Expo (Критично для React Native) ---
+node_modules/
+game/node_modules/
+.expo/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+web-build/
+cache/
+
+# --- Наша локальная инфраструктура (Чтобы не пушить сам движок) ---
+engine/.local-node/
+engine/node.zip
+engine/temp-app/
+
+# --- AiCoder ---
+# Игнорируем только генерируемый контекст, но оставляем prompt.md и настройки
+.aicoder/source.txt
+
+# --- Системные файлы (Windows, macOS, Linux) ---
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.gho
+*.ori
+*.tmp
+*.temp
+
+# --- Настройки редакторов и IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# --- Специфичные кэши ---
+.eslintcache
+.stylelintcache
