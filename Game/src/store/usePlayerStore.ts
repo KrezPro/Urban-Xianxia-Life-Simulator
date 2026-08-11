@@ -1,26 +1,31 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { zustandStorage, replacer, reviver } from './mmkvStorage';
-import { IPlayer } from '../types';
+import { zustandStorage } from './mmkvStorage';
 
-interface PlayerState extends IPlayer {
+interface PlayerState {
+  age: number;
+  qi: string; // Используем string для безопасной сериализации больших чисел (BigInt эквивалент) в MMKV
+  intelligence: number;
+  health: number;
+  appearance: number;
+  karma: number;
+  spiritualRoot: number;
+  cultivationStage: string;
   hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
   growOlder: () => void;
-  addQi: (amount: bigint) => void;
-  addMoney: (amount: bigint) => void;
+  addQi: (amount: string) => void;
   resetPlayer: () => void;
 }
 
-const initialState: IPlayer = {
+const initialState = {
   age: 0,
+  qi: "0",
   intelligence: 10,
   health: 100,
   appearance: 50,
-  money: 0n,
-  qi: 0n,
   karma: 0,
-  spiritualRoot: 10, // Базовая скорость накопления Ци
+  spiritualRoot: 10,
   cultivationStage: 'mortal',
 };
 
@@ -31,14 +36,16 @@ export const usePlayerStore = create<PlayerState>()(
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
       growOlder: () => set((state) => ({ age: state.age + 1 })),
-      addQi: (amount) => set((state) => ({ qi: state.qi + amount })),
-      addMoney: (amount) => set((state) => ({ money: state.money + amount })),
+      addQi: (amount) => set((state) => {
+        const current = BigInt(state.qi);
+        const add = BigInt(amount);
+        return { qi: (current + add).toString() };
+      }),
       resetPlayer: () => set({ ...initialState }),
     }),
     {
       name: 'player-storage',
-      // Используем кастомный storage с поддержкой BigInt
-      storage: createJSONStorage(() => zustandStorage, { replacer, reviver }),
+      storage: createJSONStorage(() => zustandStorage),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHasHydrated(true);
