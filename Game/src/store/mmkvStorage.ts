@@ -1,25 +1,34 @@
 import { MMKV } from 'react-native-mmkv';
 import { StateStorage } from 'zustand/middleware';
 
-// Создаем инстанс синхронного хранилища
-export const storage = new MMKV({
-  id: 'bitcultivator-storage',
-});
+// Безопасная инициализация MMKV с обработкой ошибок времени выполнения
+let storageInstance: MMKV | null = null;
 
-// Кастомный сериализатор для поддержки BigInt (так как JSON.stringify падает на BigInt)
-export const replacer = (key: string, value: any) => {
-  if (typeof value === 'bigint') {
-    return value.toString() + 'n'; // Сохраняем как строку с суффиксом 'n'
-  }
-  return value;
-};
+try {
+  storageInstance = new MMKV({
+    id: 'bitcultivator-storage',
+  });
+} catch (e) {
+  console.warn('MMKV initialization failed, fallback storage used', e);
+}
 
-// Кастомный десериализатор для восстановления BigInt
-export const reviver = (key: string, value: any) => {
-  if (typeof value === 'string' && /^-?\d+n$/.test(value)) {
-    return BigInt(value.slice(0, -1)); // Восстанавливаем BigInt из строки
-  }
-  return value;
+export const storage = {
+  set: (key: string, value: string) => {
+    if (storageInstance) {
+      storageInstance.set(key, value);
+    }
+  },
+  getString: (key: string) => {
+    if (storageInstance) {
+      return storageInstance.getString(key);
+    }
+    return undefined;
+  },
+  delete: (key: string) => {
+    if (storageInstance) {
+      storageInstance.delete(key);
+    }
+  },
 };
 
 // Адаптер для Zustand
