@@ -1,0 +1,56 @@
+[
+  {
+    "id": "mortal",
+    "name": "Смертный",
+    "requiredQi": "100",
+    "baseSuccessRate": 0.95
+  },
+  {
+    "id": "qi_condensation_1",
+    "name": "Конденсация Ци I",
+    "requiredQi": "500",
+    "baseSuccessRate": 0.85
+  },
+  {
+    "id": "qi_condensation_2",
+    "name": "Конденсация Ци II",
+    "requiredQi": "1500",
+    "baseSuccessRate": 0.75
+  },
+  {
+    "id": "qi_condensation_3",
+    "name": "Конденсация Ци III",
+    "requiredQi": "4500",
+    "baseSuccessRate": 0.65
+  },
+  {
+    "id": "foundation_1",
+    "name": "Возведение Основания I",
+    "requiredQi": "15000",
+    "baseSuccessRate": 0.50
+  },
+  {
+    "id": "foundation_2",
+    "name": "Возведение Основания II",
+    "requiredQi": "50000",
+    "baseSuccessRate": 0.35
+  },
+  {
+    "id": "foundation_3",
+    "name": "Возведение Основания III",
+    "requiredQi": "200000",
+    "baseSuccessRate": 0.25
+  },
+  {
+    "id": "core_formation",
+    "name": "Формирование Ядра",
+    "requiredQi": "1000000",
+    "baseSuccessRate": 0.10
+  },
+  {
+    "id": "immortal",
+    "name": "Истинный Бессмертный",
+    "requiredQi": "0",
+    "baseSuccessRate": 0
+  }
+]

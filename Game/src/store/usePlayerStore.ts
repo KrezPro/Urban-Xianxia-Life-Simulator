@@ -27,8 +27,10 @@ interface PlayerState {
   hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
   setActivityFocus: (focus: 'mundane' | 'secret') => void;
+  setCultivationStage: (stage: string) => void;
   growOlder: () => void;
   addQi: (amount: string) => void;
+  deductQi: (amount: string) => void;
   applyEffects: (effects: PlayerEffects) => void;
   reincarnate: () => void;
   resetPlayer: () => void;
@@ -59,12 +61,21 @@ export const usePlayerStore = create<PlayerState>()(
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
       setActivityFocus: (focus) => set({ activityFocus: focus }),
+      setCultivationStage: (stage) => set({ cultivationStage: stage }),
       growOlder: () => set((state) => ({ age: state.age + 1 })),
       addQi: (amount) => set((state) => {
         if (state.isDead) return state;
         const current = BigInt(state.qi);
         const add = BigInt(amount);
         return { qi: (current + add).toString() };
+      }),
+      deductQi: (amount) => set((state) => {
+        if (state.isDead) return state;
+        const current = BigInt(state.qi);
+        const deduct = BigInt(amount);
+        const result = current - deduct;
+        // Инвертировано условие
+        return { qi: 0n > result ? "0" : result.toString() };
       }),
       applyEffects: (effects) => set((state) => {
         if (state.isDead) return state;
@@ -90,7 +101,6 @@ export const usePlayerStore = create<PlayerState>()(
           const currentMoney = BigInt(state.money);
           const addMoney = BigInt(effects.money);
           const resultMoney = currentMoney + addMoney;
-          // Инвертировано условие, чтобы не использовать знак меньше
           newState.money = 0n > resultMoney ? "0" : resultMoney.toString();
         }
         
@@ -98,7 +108,6 @@ export const usePlayerStore = create<PlayerState>()(
           const currentQi = BigInt(state.qi);
           const addQi = BigInt(effects.qi);
           const resultQi = currentQi + addQi;
-          // Инвертировано условие, чтобы не использовать знак меньше
           newState.qi = 0n > resultQi ? "0" : resultQi.toString();
         }
         
@@ -111,7 +120,7 @@ export const usePlayerStore = create<PlayerState>()(
           age: 0,
           qi: "0",
           cultivationStage: 'mortal',
-          karma: state.karma, // Сохраняем карму между жизнями
+          karma: state.karma,
           activityFocus: 'mundane',
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX),
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
