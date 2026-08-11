@@ -1,4 +1,4 @@
-import { INotification, Locale } from '../types';
+import { Locale } from '../types';
 import ruNotifications from '../locales/ru/notifications.json';
 import enNotifications from '../locales/en/notifications.json';
 import ruEvents from '../locales/ru/events.json';
@@ -18,22 +18,30 @@ export const applyParams = (text: string, params?: Record<string, string>): stri
   return result;
 };
 
-export const getNotificationText = (notification: INotification, locale: Locale): string => {
-  if (notification.text) {
-    return applyParams(notification.text, notification.params);
-  }
-
+export const getNotificationText = (
+  notification: {
+    kind: 'ui' | 'event';
+    messageKey: string;
+    eventPool?: 'mundane' | 'secret';
+    params?: Record<string, string>;
+  },
+  locale: Locale
+): string => {
   if (notification.kind === 'event') {
-    const events = locale === 'ru' ? ruEvents : enEvents;
+    const events: any = locale === 'ru' ? ruEvents : enEvents;
     const pool = notification.eventPool || 'mundane';
-    const list = (events as any)[pool] || [];
+    const list = events[pool] || [];
     const found = list.find((event: any) => event.id === notification.messageKey);
 
-    return found ? applyParams(found.text, notification.params) : notification.messageKey;
+    if (found) {
+      return applyParams(found.text, notification.params);
+    }
+
+    return notification.messageKey;
   }
 
-  const dictionary = locale === 'ru' ? ruNotifications : enNotifications;
-  const raw = (dictionary as any)[notification.messageKey] || notification.messageKey;
+  const dictionary: any = locale === 'ru' ? ruNotifications : enNotifications;
+  const raw = dictionary[notification.messageKey] || notification.messageKey;
 
   return applyParams(raw, notification.params);
 };

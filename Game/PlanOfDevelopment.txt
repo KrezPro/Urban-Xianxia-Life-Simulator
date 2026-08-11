@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 10 (Исправление UX уведомлений, центровка возраста, добавление локализованных подсказок)
+[СТАТУС]: ШАГ 10 (Исправление UX уведомлений и основного экрана)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -42,7 +42,7 @@
 25. [X] Навигация использует стабильные route names.
 26. [X] Локализация вкладок и служебных экранов.
 
-=== Фаза 8: Максимальное вовлечение ===
+=== Фаза 8: Максимальное вовлечение (следующий блок) ===
 27. [ ] Daily Rewards: ежедневные награды и серия входов.
 28. [ ] Quests: короткие цели и быстрые награды.
 29. [ ] Achievements: достижения, тосты, бонусы.
@@ -58,55 +58,57 @@
 37. [X] FlashList для больших списков.
 38. [ ] Автотесты BigInt/MMKV/FlashList.
 
-=== Фаза 10: UX фикс текущего шага ===
-39. [X] Уведомления перенесены в нижний overlay и не смещают основной контент.
-40. [X] Текст уведомлений адаптирован под перенос и ограничен 3 строками.
-41. [X] Возраст на вкладке Мир снова центрирован.
-42. [X] Добавлены long-press подсказки для статов и фокусов на 2 языках.
-43. [X] Подсказки отображаются красивыми модальными карточками.
+=== Фаза 10: UX-исправления текущего шага ===
+39. [X] Уведомления видны вверху экрана.
+40. [X] Показывается только одно уведомление одновременно.
+41. [X] Старые/просроченные уведомления удаляются из очереди.
+42. [X] Возраст и кнопка "Повзрослеть" видны без прокрутки.
+43. [X] Прокручивается только второстепенный контент (статы и фокус).
+44. [X] Подсказки по long-press сохранены и локализованы.
 
-=== ОПИСАНИЕ структуры проекта (кратко) ===
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
-├── App.tsx                          // Гидратация, NavigationContainer, глобальный NotificationHost
+├── App.tsx                          // Гидратация и навигация
 ├── components/
 │   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow + onLongPress
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
 │   └── game/
-│       ├── NotificationHost.tsx     // Нижние overlay-уведомления
-│       └── NotificationToast.tsx    // Анимированный тост с countdown
+│       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
+│       └── NotificationToast.tsx    // Анимированный тост уведомления
 ├── constants/
-│   ├── GameConstants.ts             // Лимиты, кулдауны, уведомления
-│   └── Theme.ts                     // Цвета и стили
+│   ├── GameConstants.ts             // Длительность уведомлений, лимиты очереди
+│   └── Theme.ts                     // Цвета и стили уведомлений
 ├── data/
 │   └── events.json                  // id и эффекты событий
 ├── hooks/
-│   ├── useBreakthrough.ts           // Прорывы + уведомления
-│   └── useIdleProgress.ts           // Offline прогресс + уведомления
+│   ├── useBreakthrough.ts           // Прорывы, будет использовать уведомления
+│   └── useIdleProgress.ts           // Оффлайн прогресс, будет использовать уведомления
 ├── navigation/
-│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Log, Sect
+│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
 ├── screens/
-│   ├── LifeScreen.tsx               // Основной экран, центрированный возраст, long-press подсказки
+│   ├── LifeScreen.tsx               // Основной экран с уведомлениями
 │   ├── DaoScreen.tsx                // Путь Дао
 │   ├── StoreScreen.tsx              // Магазин Кармы
-│   ├── LogScreen.tsx                // Журнал
-│   └── SectScreen.tsx               // Секта и рейтинг
+│   ├── SectScreen.tsx               // Секта и рейтинг
+│   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
 ├── store/
-│   ├── useEventStore.ts             // Журнал
-│   ├── useNotificationStore.ts      // Очередь уведомлений
+│   ├── useEventStore.ts             // Старый журнал, будет заменяться
+│   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
 │   ├── usePlayerStore.ts            // Игрок
 │   ├── useLocaleStore.ts            // Язык интерфейса
 │   └── useSocialStore.ts            // Секты
 ├── types/
-│   └── index.ts                     // Типы уведомлений и сущностей
+│   └── index.ts                     // Типы уведомлений и событий
 ├── utils/
-│   ├── helpers.ts                   // Форматирование, BigInt, random
 │   └── notificationUtils.ts         // Локализованный текст уведомлений
 └── locales/
     ├── ru/
-    │   ├── ui.json                  // Интерфейс + подсказки
-    │   ├── events.json              // События
-    │   └── notifications.json       // Тексты уведомлений
+    │   ├── ui.json
+    │   ├── events.json
+    │   ├── social.json
+    │   └── notifications.json       // Русские тексты уведомлений
     └── en/
-        ├── ui.json                  // Интерфейс + подсказки
-        ├── events.json              // События
-        └── notifications.json       // Тексты уведомлений
+        ├── ui.json
+        ├── events.json
+        ├── social.json
+        └── notifications.json       // Английские тексты уведомлений
