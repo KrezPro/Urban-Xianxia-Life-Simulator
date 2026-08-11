@@ -13,7 +13,7 @@ export interface IPlayer {
 export interface IEventLog {
   id: string;
   age: number;
-  text: string; // В будущем здесь будет лежать ключ перевода (например, "events:mundane.boss_conflict")
+  text: string; // Ключ перевода (например, "events:mundane.boss_conflict")
   type: 'mundane' | 'cultivation' | 'system';
   timestamp: number;
 }
