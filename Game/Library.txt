@@ -1,18 +1,20 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-1. Стейт-менеджмент: Строго Zustand. Состояние разбивается на логические модули (Player, Event, Inventory, Locale, Social).
-2. Хранилище: Строго react-native-mmkv. Используется паттерн hasHydrated. В MMKV пишется через zustandStorage.
-3. Отрисовка списков: Использовать @shopify/flash-list. FlatList запрещен для логов и больших списков.
-4. Типизация: Strict TypeScript, интерфейсы лежат в src/types/.
-5. Большие числа: Использовать string для хранения в MMKV/JSON, парсить в BigInt через safeBigInt перед расчетами.
-6. UI: Functional Components + Hooks. Запрещен хардкод текста в .tsx, все строки берутся из locales/{lang}/.
-7. Баланс: Данные лежат в src/data/ (events.json, items.json, stages.json, sects.json, rankings.json).
-8. Навигация: Route names должны быть стабильными английскими ключами (Life, Dao, Store, Log, Sect), а видимые подписи локализуются через ui.json.tab_bar.
-9. Социальный слой: MVP работает offline-first. Секта создается локально, инвайт-код генерируется локально, рейтинг собирается из rankings.json и секты игрока.
-10. Рейтинги: Score хранится как string, сортировка выполняется через BigInt сравнения.
-11. Локализация: useLocaleStore хранит выбранный язык. Словари подключаются напрямую из locales/ru и locales/en до введения полноценного i18next-сервиса.
-12. Оффлайн симуляция секты: simulateNpcProgress начисляет фонды и влияние за время отсутствия, но ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV: основной storage. Допустим memory-fallback только для аварийных сред, где нативный модуль недоступен.
-14. Дизайн-система: Theme.ts задает темную неоновую палитру. Компоненты Button, Card, ProgressBar, StatRow находятся в src/components/ui/index.tsx.
-15. Вовлечение: использовать карточки, прогресс-бары, цветные статусы, иконки Ionicons, крупные CTA-кнопки, визуально отделять мирской и тайный прогресс.
-16. Форматирование чисел: использовать formatLargeNumber из utils/helpers.ts, не дублировать функцию по экранам.
-17. BigInt progress: для прогресс-баров использовать getBigIntProgress, который безопасно возвращает число от 0 до 1.
+
+1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social.
+2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
+3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
+4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
+5. Большие числа: хранить как string, считать через safeBigInt.
+6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
+7. Баланс и контент: data/*.json.
+8. Навигация: route names только английские: Life, Dao, Store, Log, Sect.
+9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
+10. Рейтинги: score как string, сортировка через BigInt.
+11. Локализация: useLocaleStore хранит ru/en.
+12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
+13. MMKV основной storage; memory-fallback только для аварийных сред.
+14. Theme.ts: единая темная тема для всего UI.
+15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
+16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит и random-утилит.
+17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
+18. Новые файлы всегда получать короткое описание в структуре проекта.

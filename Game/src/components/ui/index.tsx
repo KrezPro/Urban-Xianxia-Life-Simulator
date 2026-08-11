@@ -3,10 +3,12 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
 
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'gold' | 'ghost';
+
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'gold' | 'ghost';
+  variant?: ButtonVariant;
   disabled?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
   style?: any;
@@ -24,6 +26,8 @@ export const Button = ({
   textStyle,
   small = false,
 }: ButtonProps) => {
+  const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
@@ -41,7 +45,15 @@ export const Button = ({
         style,
       ]}
     >
-      {icon ? <Ionicons name={icon} size={small ? 16 : 20} style={styles.buttonIcon} /> : null}
+      {icon ? (
+        <Ionicons
+          name={icon}
+          size={small ? 16 : 20}
+          color={iconColor}
+          style={styles.buttonIcon}
+        />
+      ) : null}
+
       <Text
         style={[
           styles.buttonText,
@@ -56,9 +68,11 @@ export const Button = ({
   );
 };
 
+type CardVariant = 'default' | 'primary' | 'gold' | 'danger';
+
 interface CardProps {
   children: React.ReactNode;
-  variant?: 'default' | 'primary' | 'gold' | 'danger';
+  variant?: CardVariant;
   style?: any;
 }
 
@@ -118,6 +132,7 @@ export const StatRow = ({ icon, label, value, color }: StatRowProps) => {
       <View style={[styles.statIconBadge, color ? { borderColor: color } : null]}>
         <Ionicons name={icon} size={18} color={color || Theme.colors.secondary} />
       </View>
+
       <Text style={styles.statLabel}>{label}</Text>
       <Text style={[styles.statValue, color ? { color } : null]}>{value}</Text>
     </View>
@@ -164,7 +179,6 @@ const styles = StyleSheet.create({
     opacity: 0.45,
   },
   buttonIcon: {
-    color: Theme.colors.text,
     marginRight: 8,
   },
   buttonText: {
