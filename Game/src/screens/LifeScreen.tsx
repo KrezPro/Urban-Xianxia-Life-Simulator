@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
-import eventsData from '../data/events.json';
+import { useLocaleStore } from '../store/useLocaleStore';
+
+import ruEvents from '../locales/ru/events.json';
+import enEvents from '../locales/en/events.json';
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
 
 // Вспомогательная функция для форматирования больших чисел (K, M, B, T...)
 const formatLargeNumber = (value: string | number): string => {
@@ -11,13 +16,11 @@ const formatLargeNumber = (value: string | number): string => {
   const absVal = isNegative ? strVal.slice(1) : strVal;
   const len = absVal.length;
   
-  // Если длина числа меньше или равна 3 (до 999), возвращаем как есть
   if (len <= 3) return value.toString();
   
   const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
   const suffixIndex = Math.floor((len - 1) / 3);
   
-  // Если число слишком огромное даже для суффиксов, используем экспоненциальную запись
   if (suffixIndex >= suffixes.length) {
     return (isNegative ? "-" : "") + absVal[0] + "." + absVal.slice(1, 3) + "e" + (len - 1);
   }
@@ -36,18 +39,22 @@ const formatLargeNumber = (value: string | number): string => {
 export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
+  const { locale, setLocale } = useLocaleStore();
+
+  const eventsData = locale === 'ru' ? ruEvents : enEvents;
+  const uiData = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
 
   useEffect(() => {
     // Инициализация при первом запуске игры
     if (player.age === 0 && player.money === "0" && player.health === 100 && player.qi === "0" && !player.isDead) {
       player.reincarnate();
-      addLog("Вы родились в этом мире. Ваша история начинается...", "system");
+      addLog(uiData.born_log, "system");
     }
   }, []);
 
   useEffect(() => {
     if (player.isDead) {
-      addLog("Вы умерли. Ваша душа отправляется в бесконечный цикл Сансары...", "system");
+      addLog(uiData.death_log, "system");
     }
   }, [player.isDead]);
 
@@ -59,11 +66,10 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8; // Шанс повышается при тайном фокусе (80%)
       player.addQi(player.spiritualRoot.toString());
-      addLog(`Год прошел в тайной медитации. Накоплено ${player.spiritualRoot} энергии Ци.`, 'secret');
+      addLog(uiData.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
     }
 
     // Определяем, произойдет мирское или тайное событие
-    // Инвертировано условие, чтобы не использовать знак меньше
     const isSecretEvent = secretEventChance > Math.random();
     const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
     const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
@@ -72,27 +78,34 @@ export default function LifeScreen() {
     player.applyEffects(randomEvent.effects);
     
     // Записываем лог в Журнал
-    addLog(
-      `Вам исполнилось ${player.age + 1}. ${randomEvent.text}`, 
-      isSecretEvent ? 'secret' : 'mundane'
-    );
+    const ageString = uiData.age_log.replace('{age}', (player.age + 1).toString());
+    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
   };
 
   const handleReincarnate = () => {
     player.reincarnate();
-    addLog("Колесо Сансары совершило оборот. Вы переродились в новом теле.", "system");
+    addLog(uiData.reincarnate_log, "system");
+  };
+
+  const toggleLocale = () => {
+    setLocale(locale === 'ru' ? 'en' : 'ru');
   };
 
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
+        <View style={styles.headerRow}>
+          <TouchableOpacity onPress={toggleLocale} style={styles.langBtn}>
+            <Text style={styles.langBtnText}>{locale.toUpperCase()}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.deadContainer}>
-          <Text style={styles.deadTitle}>ВЫ МЕРТВЫ</Text>
-          <Text style={styles.deadSubtitle}>Ваш жизненный путь прерван.</Text>
-          <Text style={styles.karmaText}>Накоплено Кармы: {formatLargeNumber(player.karma)}</Text>
+          <Text style={styles.deadTitle}>{uiData.dead_title}</Text>
+          <Text style={styles.deadSubtitle}>{uiData.dead_subtitle}</Text>
+          <Text style={styles.karmaText}>{uiData.karma_accumulated} {formatLargeNumber(player.karma)}</Text>
           <View style={styles.buttonContainer}>
             <Button 
-              title="Реинкарнация (Новая жизнь)" 
+              title={uiData.btn_reincarnate} 
               color="#e74c3c"
               onPress={handleReincarnate} 
             />
@@ -105,28 +118,33 @@ export default function LifeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Urban Xianxia</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>{uiData.title}</Text>
+          <TouchableOpacity onPress={toggleLocale} style={styles.langBtn}>
+            <Text style={styles.langBtnText}>{locale.toUpperCase()}</Text>
+          </TouchableOpacity>
+        </View>
         
         <View style={styles.statsCard}>
-          <Text style={styles.statText}>Возраст: {player.age}</Text>
-          <Text style={styles.statText}>Здоровье: {player.health}</Text>
-          <Text style={styles.statText}>Интеллект: {player.intelligence}</Text>
-          <Text style={styles.statText}>Привлекательность: {player.appearance}</Text>
-          <Text style={styles.statText}>Деньги: ${formatLargeNumber(player.money)}</Text>
-          <Text style={styles.statText}>Духовный корень: {player.spiritualRoot}</Text>
-          <Text style={styles.statText}>Энергия Ци: {formatLargeNumber(player.qi)}</Text>
-          <Text style={styles.statText}>Карма: {formatLargeNumber(player.karma)}</Text>
+          <Text style={styles.statText}>{uiData.age}: {player.age}</Text>
+          <Text style={styles.statText}>{uiData.health}: {player.health}</Text>
+          <Text style={styles.statText}>{uiData.intelligence}: {player.intelligence}</Text>
+          <Text style={styles.statText}>{uiData.appearance}: {player.appearance}</Text>
+          <Text style={styles.statText}>{uiData.money}: ${formatLargeNumber(player.money)}</Text>
+          <Text style={styles.statText}>{uiData.spiritual_root}: {player.spiritualRoot}</Text>
+          <Text style={styles.statText}>{uiData.qi}: {formatLargeNumber(player.qi)}</Text>
+          <Text style={styles.statText}>{uiData.karma}: {formatLargeNumber(player.karma)}</Text>
         </View>
         
         <View style={styles.focusContainer}>
-          <Text style={styles.focusTitle}>Фокус на этот год:</Text>
+          <Text style={styles.focusTitle}>{uiData.focus_title}</Text>
           <View style={styles.focusButtons}>
             <TouchableOpacity 
               style={[styles.focusBtn, player.activityFocus === 'mundane' && styles.focusBtnActive]}
               onPress={() => player.setActivityFocus('mundane')}
             >
               <Text style={[styles.focusBtnText, player.activityFocus === 'mundane' && styles.focusBtnTextActive]}>
-                Мирские дела
+                {uiData.focus_mundane}
               </Text>
             </TouchableOpacity>
             
@@ -135,14 +153,14 @@ export default function LifeScreen() {
               onPress={() => player.setActivityFocus('secret')}
             >
               <Text style={[styles.focusBtnText, player.activityFocus === 'secret' && styles.focusBtnTextActive]}>
-                Тайный путь
+                {uiData.focus_secret}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Повзрослеть (+1 год)" onPress={handleGrowOlder} />
+          <Button title={uiData.btn_grow} onPress={handleGrowOlder} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -153,6 +171,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
+  },
+  headerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  langBtn: {
+    backgroundColor: '#3498db',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  langBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   scrollContent: {
     flexGrow: 1,
@@ -187,7 +223,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 20,
   },
   statsCard: {
     backgroundColor: '#1E1E1E',

@@ -1,0 +1,51 @@
+{
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "You studied hard all year. Your knowledge expanded.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "You caught a serious virus and stayed in the hospital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "You found a good part-time job and saved up some dollars.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Your boss turned out to be a disguised low-tier demon! You broke his printer, got fined, but tempered your spirit.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "You accidentally bought a 'glowing rock' on the darknet. It was radioactive ore. Health dropped, but you feel a strange energy.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "You stumbled upon a hidden spiritual vein in an old park. Qi energy fills you.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "During night meditation, a severe Mana Burn occurred. Your meridians are damaged.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "You helped a stray dog that turned out to be a guardian spirit. Your karma improved.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Street thugs who turned out to be rogue cultivators cornered you. You fought them off with the 'Iron Wind Palm' and took their cash.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "life_screen": {
+    "title": "Urban Xianxia",
+    "born_log": "You were born into this world. Your story begins...",
+    "death_log": "You have died. Your soul enters the endless cycle of Samsara...",
+    "reincarnate_log": "The Wheel of Samsara has turned. You are reborn in a new body.",
+    "age": "Age",
+    "health": "Health",
+    "intelligence": "Intelligence",
+    "appearance": "Appearance",
+    "money": "Money",
+    "spiritual_root": "Spiritual Root",
+    "qi": "Qi Energy",
+    "karma": "Karma",
+    "focus_title": "Focus for this year:",
+    "focus_mundane": "Mundane Life",
+    "focus_secret": "Secret Path",
+    "btn_grow": "Grow Older (+1 year)",
+    "btn_reincarnate": "Reincarnate (New Life)",
+    "dead_title": "YOU ARE DEAD",
+    "dead_subtitle": "Your life journey has been interrupted.",
+    "karma_accumulated": "Accumulated Karma:",
+    "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
+    "age_log": "You turned {age}."
+  }
+}
