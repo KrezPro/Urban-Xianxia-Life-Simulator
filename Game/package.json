@@ -4,8 +4,8 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -14,8 +14,10 @@
     "@react-navigation/native": "^7.3.16",
     "@shopify/flash-list": "2.0.2",
     "expo": "~54.0.35",
+    "expo-dev-client": "~6.0.21",
     "expo-status-bar": "~3.0.9",
     "i18next": "^26.3.6",
+    "intl-pluralrules": "^2.0.1",
     "react": "19.1.0",
     "react-i18next": "^17.0.11",
     "react-native": "0.81.5",

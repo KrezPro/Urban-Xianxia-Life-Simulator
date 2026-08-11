@@ -11,6 +11,12 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#121212"
+      },
+      "package": "com.krezpro.bitcultivator"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "652389a4-5853-4105-8682-d0abc38e4db5"
       }
     }
   }
