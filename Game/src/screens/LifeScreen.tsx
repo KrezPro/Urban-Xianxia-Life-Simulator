@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, Button, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView, Text, View, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import eventsData from '../data/events.json';
@@ -25,9 +25,17 @@ export default function LifeScreen() {
   const handleGrowOlder = () => {
     player.growOlder();
     
-    // Определяем, произойдет мирское или тайное событие (20% шанс тайного)
+    let secretEventChance = 0.1; // Базовый шанс для мирских дел (10%)
+    
+    if (player.activityFocus === 'secret') {
+      secretEventChance = 0.8; // Шанс повышается при тайном фокусе (80%)
+      player.addQi(player.spiritualRoot.toString());
+      addLog(`Год прошел в тайной медитации. Накоплено ${player.spiritualRoot} энергии Ци.`, 'secret');
+    }
+
+    // Определяем, произойдет мирское или тайное событие
     // Инвертировано условие, чтобы не использовать знак меньше
-    const isSecretEvent = 0.2 > Math.random();
+    const isSecretEvent = secretEventChance > Math.random();
     const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
     const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
 
@@ -81,6 +89,29 @@ export default function LifeScreen() {
           <Text style={styles.statText}>Карма: {player.karma}</Text>
         </View>
         
+        <View style={styles.focusContainer}>
+          <Text style={styles.focusTitle}>Фокус на этот год:</Text>
+          <View style={styles.focusButtons}>
+            <TouchableOpacity 
+              style={[styles.focusBtn, player.activityFocus === 'mundane' && styles.focusBtnActive]}
+              onPress={() => player.setActivityFocus('mundane')}
+            >
+              <Text style={[styles.focusBtnText, player.activityFocus === 'mundane' && styles.focusBtnTextActive]}>
+                Мирские дела
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.focusBtn, player.activityFocus === 'secret' && styles.focusBtnActive]}
+              onPress={() => player.setActivityFocus('secret')}
+            >
+              <Text style={[styles.focusBtnText, player.activityFocus === 'secret' && styles.focusBtnTextActive]}>
+                Тайный путь
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.buttonContainer}>
           <Button title="Повзрослеть (+1 год)" onPress={handleGrowOlder} />
         </View>
@@ -134,15 +165,51 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: '100%',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   statText: {
     fontSize: 16,
     color: '#DDD',
     marginBottom: 8,
   },
+  focusContainer: {
+    width: '100%',
+    backgroundColor: '#1E1E1E',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  focusTitle: {
+    fontSize: 16,
+    color: '#aaa',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  focusButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  focusBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 8,
+    backgroundColor: '#2C2C2C',
+    alignItems: 'center',
+  },
+  focusBtnActive: {
+    backgroundColor: '#3498db',
+  },
+  focusBtnText: {
+    color: '#888',
+    fontWeight: 'bold',
+  },
+  focusBtnTextActive: {
+    color: '#fff',
+  },
   buttonContainer: {
     width: '80%',
     marginTop: 10,
+    marginBottom: 30,
   }
 });

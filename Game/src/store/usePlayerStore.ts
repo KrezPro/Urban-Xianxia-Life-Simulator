@@ -23,8 +23,10 @@ interface PlayerState {
   karma: number;
   spiritualRoot: number;
   cultivationStage: string;
+  activityFocus: 'mundane' | 'secret';
   hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
+  setActivityFocus: (focus: 'mundane' | 'secret') => void;
   growOlder: () => void;
   addQi: (amount: string) => void;
   applyEffects: (effects: PlayerEffects) => void;
@@ -43,6 +45,7 @@ const initialState = {
   karma: 0,
   spiritualRoot: 10,
   cultivationStage: 'mortal',
+  activityFocus: 'mundane' as 'mundane' | 'secret',
 };
 
 const getRandomInt = (min: number, max: number) => {
@@ -55,6 +58,7 @@ export const usePlayerStore = create<PlayerState>()(
       ...initialState,
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
+      setActivityFocus: (focus) => set({ activityFocus: focus }),
       growOlder: () => set((state) => ({ age: state.age + 1 })),
       addQi: (amount) => set((state) => {
         if (state.isDead) return state;
@@ -96,6 +100,7 @@ export const usePlayerStore = create<PlayerState>()(
           qi: "0",
           cultivationStage: 'mortal',
           karma: state.karma,
+          activityFocus: 'mundane',
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX),
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
           appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),

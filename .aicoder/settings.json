@@ -12,9 +12,9 @@
   ],
   "context_focus": [
 "Game/PlanOfDevelopment.txt",
-    "Game/src/store/usePlayerStore.ts",
     "Game/src/screens/LifeScreen.tsx",
-    "Game/src/constants/GameConstants.ts"
+    "Game/src/store/usePlayerStore.ts",
+    "Game/src/data/events.json"
   ],
   "max_file_size_kb": 100
 }
