@@ -1,53 +1,56 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, Text, View, Button, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import './utils/i18n';
 import { usePlayerStore } from './store/usePlayerStore';
-import TabNavigator from './navigation/TabNavigator';
 
 export default function App() {
-  const { hasHydrated } = usePlayerStore();
+  const { t } = useTranslation('ui');
+  const { age, growOlder, hasHydrated } = usePlayerStore();
 
-  // Защита от гидратации: не рендерим навигацию, пока данные не загружены
   if (!hasHydrated) {
     return (
-      <SafeAreaProvider style={styles.safeArea}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Синхронизация с Дао...</Text>
-        </View>
-      </SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </SafeAreaView>
     );
   }
 
-  // SafeAreaProvider заменяет устаревший SafeAreaView из react-native
   return (
-    <SafeAreaProvider style={styles.safeArea}>
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
-      <StatusBar style="light" />
-    </SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Urban Xianxia</Text>
+      <Text style={styles.ageText}>{t('age')}: {age}</Text>
+      
+      <View style={styles.buttonContainer}>
+        <Button title={t('age_button')} onPress={growOlder} />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#0a0a0a',
-  },
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0a0a0a',
+    alignItems: 'center',
+    backgroundColor: '#121212',
+  },
+  loadingText: {
+    color: '#fff',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#00ffcc',
-    marginBottom: 10,
-    letterSpacing: 1,
-    textAlign: 'center',
+    color: '#fff',
+    marginBottom: 30,
   },
+  ageText: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: '60%',
+  }
 });
