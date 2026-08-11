@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 8 (Восстановление отсутствующего UI-кита и helpers. Следующий шаг: вовлечение)
+[СТАТУС]: ШАГ 8 (Отсутствующий UI-кит и helpers восстановлены. Следующий шаг: вовлечение)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -34,7 +34,7 @@
 19. [ ] Remote config.
 20. [ ] Сезонные LiveOps-флаги.
 
-=== Фаза 7: UI-кит и восстановление缺失 файлов ===
+=== Фаза 7: UI-кит и восстановление отсутствующих файлов ===
 21. [X] Theme.ts: темная неоновая тема.
 22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
 23. [X] utils/helpers.ts: format, BigInt, random.
@@ -94,9 +94,7 @@ Game/
     │   ├── ProfileScreen.tsx    // служебный профиль
     │   └── SectScreen.tsx       // секта и рейтинг
     ├── services/
-    │   ├── socialService.ts     // секты, инвайты, рейтинг
-    │   ├── leaderboardService.ts// рейтинг
-    │   └── inviteCodeService.ts // инвайт-коды
+    │   └── socialService.ts     // секты, инвайты, рейтинг
     ├── store/
     │   ├── mmkvStorage.ts       // MMKV storage
     │   ├── usePlayerStore.ts    // игрок

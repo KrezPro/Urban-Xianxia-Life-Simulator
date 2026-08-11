@@ -119,7 +119,16 @@ export const getBigIntProgress = (value: string, max: string): number => {
   }
 
   const ratio = valueNum / maxNum;
-  return clampProgress(ratio);
+
+  if (ratio > 1) {
+    return 1;
+  }
+
+  if (0 > ratio) {
+    return 0;
+  }
+
+  return ratio;
 };
 
 export const getRandomInt = (min: number, max: number): number => {
