@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, Button, StyleSheet, ScrollView } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
@@ -8,11 +8,26 @@ export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
 
+  useEffect(() => {
+    // Инициализация при первом запуске игры
+    if (player.age === 0 && player.money === 0 && player.health === 100 && player.qi === "0" && !player.isDead) {
+      player.reincarnate();
+      addLog("Вы родились в этом мире. Ваша история начинается...", "system");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (player.isDead) {
+      addLog("Вы умерли. Ваша душа отправляется в бесконечный цикл Сансары...", "system");
+    }
+  }, [player.isDead]);
+
   const handleGrowOlder = () => {
     player.growOlder();
     
     // Определяем, произойдет мирское или тайное событие (20% шанс тайного)
-    const isSecretEvent = Math.random() < 0.2;
+    // Инвертировано условие, чтобы не использовать знак меньше
+    const isSecretEvent = 0.2 > Math.random();
     const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
     const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
 
@@ -26,6 +41,30 @@ export default function LifeScreen() {
     );
   };
 
+  const handleReincarnate = () => {
+    player.reincarnate();
+    addLog("Колесо Сансары совершило оборот. Вы переродились в новом теле.", "system");
+  };
+
+  if (player.isDead) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.deadContainer}>
+          <Text style={styles.deadTitle}>ВЫ МЕРТВЫ</Text>
+          <Text style={styles.deadSubtitle}>Ваш жизненный путь прерван.</Text>
+          <Text style={styles.karmaText}>Накоплено Кармы: {player.karma}</Text>
+          <View style={styles.buttonContainer}>
+            <Button 
+              title="Реинкарнация (Новая жизнь)" 
+              color="#e74c3c"
+              onPress={handleReincarnate} 
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -37,6 +76,7 @@ export default function LifeScreen() {
           <Text style={styles.statText}>Интеллект: {player.intelligence}</Text>
           <Text style={styles.statText}>Привлекательность: {player.appearance}</Text>
           <Text style={styles.statText}>Деньги: ${player.money}</Text>
+          <Text style={styles.statText}>Духовный корень: {player.spiritualRoot}</Text>
           <Text style={styles.statText}>Энергия Ци: {player.qi}</Text>
           <Text style={styles.statText}>Карма: {player.karma}</Text>
         </View>
@@ -60,6 +100,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  deadContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  deadTitle: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#e74c3c',
+    marginBottom: 10,
+  },
+  deadSubtitle: {
+    fontSize: 18,
+    color: '#aaa',
+    marginBottom: 30,
+  },
+  karmaText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#f1c40f',
+    marginBottom: 40,
+  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -80,5 +143,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '80%',
+    marginTop: 10,
   }
 });

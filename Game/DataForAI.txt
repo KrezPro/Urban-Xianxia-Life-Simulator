@@ -2,3 +2,4 @@
 1. Ошибка Metro Bundler (TransformError Cannot find module 'babel-preset-expo') при использовании Custom Dev Client (APK) возникает, если пресет 'babel-preset-expo' отсутствует в devDependencies в package.json. Его всегда нужно добавлять, если проект создавался или мигрировал с вырезанными зависимостями Expo.
 2. При сборке custom dev client (expo-dev-client) с react-native-mmkv (v4+), плагин `react-native-mmkv/babel` больше не требуется, достаточно стандартного `babel-preset-expo`.
 3. Чтобы избежать дублирования точек входа, `Game/index.ts` должен указывать строго на `Game/src/App.tsx`, а `Game/App.tsx` нужно удалять из файловой системы.
+4. Ошибка "XML syntax error: expected element name after <" при генерации кода через AiCoder возникает из-за использования знака «меньше» в JS/TS коде (например `a < b`), что сбивает XML-парсер. Решение: инвертировать условия, используя строго знак «больше» (`b > a`).
