@@ -1,0 +1,23 @@
+{
+  "born": "You were born into this world. Your story begins...",
+  "death": "You have died. Your soul enters the endless cycle of Samsara...",
+  "reincarnate": "The Wheel of Samsara has turned. You are reborn in a new body.",
+  "age_up": "You turned {age}.",
+  "meditation": "A year passed in secret meditation. Gathered {amount} Qi.",
+  "interstitial": "[AD] Interstitial ad shown (70s cooldown).",
+  "idle_secret": "Offline progress: You meditated for {seconds}s. Earned Qi: {amount}.",
+  "idle_mundane": "Offline progress: You worked for {seconds}s. Earned: ${amount}.",
+  "breakthrough_no_qi": "Insufficient Qi for breakthrough.",
+  "breakthrough_success": "[SUCCESS] Breakthrough successful! You reached stage: {name}.",
+  "breakthrough_fail_damage": "[FAILURE] Breakthrough failed. Mana Burn, you took {damage} damage.",
+  "breakthrough_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You died.",
+  "breakthrough_saved": "[SAVED] Breakthrough failed, but the ad buff protected your meridians.",
+  "store_buy_success": "Purchase complete: {name}.",
+  "store_buy_error": "Not enough Karma to purchase.",
+  "store_pass_activated": "Cultivator Pass activated. Ads disabled.",
+  "sect_created": "You founded the sect {name}. The city felt your presence.",
+  "sect_joined": "You joined the sect {name}.",
+  "sect_donate_success": "You donated {amount} to the sect fund.",
+  "sect_donate_no_money": "Not enough money to contribute to the sect.",
+  "sect_left": "You left the sect. Its seals no longer protect you."
+}

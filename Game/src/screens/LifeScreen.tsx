@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useEventStore } from '../store/useEventStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
+import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
@@ -15,7 +16,8 @@ import enUI from '../locales/en/ui.json';
 
 export default function LifeScreen() {
   const player = usePlayerStore();
-  const { addLog } = useEventStore();
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+  const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
   const { locale, toggleLocale } = useLocaleStore();
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
@@ -24,13 +26,13 @@ export default function LifeScreen() {
   useEffect(() => {
     if (player.age === 0 && player.money === '0' && player.health === 100 && player.qi === '0' && !player.isDead) {
       player.reincarnate();
-      addLog(ui.born_log, 'system');
+      pushUiNotification('born', 'system');
     }
   }, []);
 
   useEffect(() => {
     if (player.isDead) {
-      addLog(ui.death_log, 'system');
+      pushUiNotification('death', 'danger');
     }
   }, [player.isDead]);
 
@@ -46,7 +48,7 @@ export default function LifeScreen() {
     if (!player.hasCultivatorPass) {
       if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         player.setLastInterstitialTime(now);
-        addLog(ui.interstitial_log, 'system');
+        pushUiNotification('interstitial', 'system');
       }
     }
 
@@ -57,7 +59,7 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
-      addLog(ui.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
+      pushUiNotification('meditation', 'secret', { amount: player.spiritualRoot.toString() });
     }
 
     const isSecretEvent = secretEventChance > Math.random();
@@ -66,18 +68,19 @@ export default function LifeScreen() {
 
     player.applyEffects(randomEvent.effects);
 
-    const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
-    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
+    pushUiNotification('age_up', 'mundane', { age: (player.age + 1).toString() });
+    pushEventNotification(randomEvent.id, isSecretEvent ? 'secret' : 'mundane', isSecretEvent ? 'secret' : 'mundane');
   };
 
   const handleReincarnate = () => {
     player.reincarnate();
-    addLog(ui.reincarnate_log, 'system');
+    pushUiNotification('reincarnate', 'system');
   };
 
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
+        <NotificationHost />
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
@@ -115,6 +118,7 @@ export default function LifeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <NotificationHost />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{ui.title}</Text>

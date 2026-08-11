@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 9 (Восстановлена вкладка Sect, создан полный offline-first социальный слой, UI-кит, навигация и локализация)
+[СТАТУС]: ШАГ 9 (Система вовлекающих анимированных уведомлений Notification UX. Журнал скрыт из навигации, секта сохранена.)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -42,77 +42,68 @@
 25. [X] Навигация использует стабильные route names.
 26. [X] Локализация вкладок и служебных экранов.
 
-=== Фаза 8: Максимальное вовлечение (следующий блок) ===
-27. [ ] Daily Rewards: ежедневные награды и серия входов.
-28. [ ] Quests: короткие цели и быстрые награды.
-29. [ ] Achievements: достижения, тосты, бонусы.
-30. [ ] Choice Events: события с выбором и риском.
-31. [ ] Share: смерть, прорыв, рекорд, инвайт.
-32. [ ] Onboarding: первая сессия с быстрым вознаграждением.
-33. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
+=== Фаза 8: Максимальное вовлечение ===
+27. [X] Notification UX: анимированные локализованные тосты на вкладке Мир.
+28. [ ] Daily Rewards: ежедневные награды и серия входов.
+29. [ ] Quests: короткие цели и быстрые награды.
+30. [ ] Achievements: достижения, тосты, бонусы.
+31. [ ] Choice Events: события с выбором и риском.
+32. [ ] Share: смерть, прорыв, рекорд, инвайт.
+33. [ ] Onboarding: первая сессия с быстрым вознаграждением.
+34. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
 
 === Фаза 9: Техническая гигиена ===
-34. [X] AsyncStorage не используется.
-35. [X] MMKV-адаптер с memory-fallback.
-36. [X] BigInt хранится как string.
-37. [X] FlashList для больших списков.
-38. [ ] Автотесты BigInt/MMKV/FlashList.
+35. [X] AsyncStorage не используется.
+36. [X] MMKV-адаптер с memory-fallback.
+37. [X] BigInt хранится как string.
+38. [X] FlashList для больших списков.
+39. [ ] Автотесты BigInt/MMKV/FlashList.
 
-=== ОПИСАНИЕ структуры проекта (кратко) ===
-Game/
-├── package.json                 // зависимости
-├── babel.config.js              // babel
-├── app.json                     // Expo config
-├── eas.json                     // EAS channels
-├── PlanOfDevelopment.txt        // текущий план
-├── Library.txt                  // архитектурные правила
-├── DataForAI.txt                // выученные уроки
-└── src/
-    ├── App.tsx                  // вход, гидратация, навигация
-    ├── components/
-    │   └── ui/
-    │       └── index.tsx        // Button, Card, ProgressBar, StatRow
-    ├── constants/
-    │   ├── GameConstants.ts     // лимиты, кулдауны, балансовые числа
-    │   └── Theme.ts             // цвета, отступы, тени
-    ├── data/
-    │   ├── events.json          // мирские/тайные события
-    │   ├── items.json           // карма-баффы
-    │   ├── stages.json          // стадии культивации
-    │   ├── sects.json           // шаблоны сект
-    │   └── rankings.json        // seed-рейтинг
-    ├── hooks/
-    │   ├── useIdleProgress.ts   // offline-прогресс
-    │   └── useBreakthrough.ts   // прорывы
-    ├── navigation/
-    │   └── TabNavigator.tsx     // нижние вкладки: Life, Dao, Store, Log, Sect
-    ├── screens/
-    │   ├── LifeScreen.tsx       // мирская жизнь
-    │   ├── DaoScreen.tsx        // культивация
-    │   ├── StoreScreen.tsx      // магазин кармы
-    │   ├── LogScreen.tsx        // журнал
-    │   ├── ProfileScreen.tsx    // служебный профиль
-    │   └── SectScreen.tsx       // секта и рейтинг
-    ├── services/
-    │   └── socialService.ts     // секты, инвайты, рейтинг
-    ├── store/
-    │   ├── mmkvStorage.ts       // MMKV storage
-    │   ├── usePlayerStore.ts    // игрок
-    │   ├── useEventStore.ts     // журнал
-    │   ├── useInventoryStore.ts // инвентарь
-    │   ├── useLocaleStore.ts    // язык
-    │   └── useSocialStore.ts    // секты
-    ├── types/
-    │   └── index.ts             // интерфейсы
-    └── utils/
-        ├── timeUtils.ts         // дельта времени
-        └── helpers.ts           // format, BigInt, random
-Game/src/locales/
-├── ru/
-│   ├── ui.json                  // интерфейс, вкладки, загрузка, журнал, профиль, idle
-│   ├── events.json              // события
-│   └── social.json              // секта и рейтинг
-└── en/
-    ├── ui.json                  // интерфейс, вкладки, загрузка, журнал, профиль, idle
-    ├── events.json              // события
-    └── social.json              // секта и рейтинг
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
+Game/src/
+├── App.tsx                          // Гидратация и навигация
+├── components/
+│   ├── ui/
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
+│   └── game/
+│       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
+│       └── NotificationToast.tsx    // Анимированный тост уведомления
+├── constants/
+│   ├── GameConstants.ts             // Лимиты, кулдауны, константы уведомлений
+│   └── Theme.ts                     // Цвета и стили
+├── data/
+│   └── events.json                  // id и эффекты событий
+├── hooks/
+│   ├── useBreakthrough.ts           // Прорывы, использует уведомления
+│   └── useIdleProgress.ts           // Оффлайн прогресс, использует уведомления
+├── navigation/
+│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
+├── screens/
+│   ├── LifeScreen.tsx               // Основной экран с уведомлениями
+│   ├── DaoScreen.tsx                // Путь Дао
+│   ├── StoreScreen.tsx              // Магазин Кармы
+│   ├── SectScreen.tsx               // Секта и рейтинг
+│   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
+├── store/
+│   ├── useEventStore.ts             // Старый журнал, legacy
+│   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
+│   ├── usePlayerStore.ts            // Игрок
+│   ├── useLocaleStore.ts            // Язык интерфейса
+│   └── useSocialStore.ts            // Секты
+├── types/
+│   └── index.ts                     // Типы уведомлений и событий
+├── utils/
+│   ├── notificationUtils.ts         // Получение текста уведомления по ключу
+│   ├── helpers.ts                   // Форматирование, BigInt, random
+│   └── timeUtils.ts                 // Дельта времени
+└── locales/
+    ├── ru/
+    │   ├── ui.json
+    │   ├── events.json
+    │   ├── social.json
+    │   └── notifications.json       // Русские тексты уведомлений
+    └── en/
+        ├── ui.json
+        ├── events.json
+        ├── social.json
+        └── notifications.json       // Английские тексты уведомлений

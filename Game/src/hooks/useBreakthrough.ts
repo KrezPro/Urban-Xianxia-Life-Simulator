@@ -1,15 +1,12 @@
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useEventStore } from '../store/useEventStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import stagesData from '../data/stages.json';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
 
 export const useBreakthrough = () => {
   const player = usePlayerStore();
-  const { addLog } = useEventStore();
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
 
   const currentStageIndex = stagesData.findIndex((s) => s.id === player.cultivationStage);
   const nextStage = stagesData[currentStageIndex + 1];
@@ -43,7 +40,7 @@ export const useBreakthrough = () => {
     const currentQi = BigInt(player.qi);
 
     if (reqQi > currentQi) {
-      addLog(uiData.log_no_qi, 'system');
+      pushUiNotification('breakthrough_no_qi', 'system');
       return;
     }
 
@@ -55,19 +52,19 @@ export const useBreakthrough = () => {
 
     if (isSuccess) {
       player.setCultivationStage(nextStage.id);
-      addLog(uiData.log_success.replace('{name}', nextStage.name), 'secret');
+      pushUiNotification('breakthrough_success', 'reward', { name: nextStage.name });
     } else {
       if (hasAdBuff) {
-        addLog(uiData.log_ad_saved, 'secret');
+        pushUiNotification('breakthrough_saved', 'reward');
       } else {
         const damage = 30;
 
         if (player.health > damage) {
           player.applyEffects({ health: -damage });
-          addLog(uiData.log_fail_damage.replace('{damage}', damage.toString()), 'secret');
+          pushUiNotification('breakthrough_fail_damage', 'danger', { damage: damage.toString() });
         } else {
           player.applyEffects({ health: -damage });
-          addLog(uiData.log_fail_death, 'system');
+          pushUiNotification('breakthrough_fail_death', 'danger');
         }
       }
     }

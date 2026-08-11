@@ -3,6 +3,7 @@ import { SafeAreaView, Text, View, StyleSheet, ScrollView } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
@@ -14,17 +15,25 @@ export default function StoreScreen() {
   const player = usePlayerStore();
   const inventory = useInventoryStore();
   const locale = useLocaleStore((state) => state.locale);
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+
   const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
 
   const handleBuy = (item: any) => {
+    const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
+
     if (isGreaterOrEqualBigInt(player.karma, item.cost) && !inventory.items[item.id]) {
       player.deductKarma(item.cost);
       inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
+      pushUiNotification('store_buy_success', 'reward', { name: itemUI.name });
+    } else {
+      pushUiNotification('store_buy_error', 'danger');
     }
   };
 
   const handleBuyPass = () => {
     player.setCultivatorPass(true);
+    pushUiNotification('store_pass_activated', 'reward');
   };
 
   return (
@@ -56,7 +65,7 @@ export default function StoreScreen() {
                 <Button
                   title={isBought ? ui.btn_bought : canAfford ? ui.btn_buy : ui.btn_no_karma}
                   onPress={() => handleBuy(item)}
-                  disabled={isBought || !canAfford}
+                  disabled={isBought}
                   variant={isBought ? 'secondary' : canAfford ? 'gold' : 'ghost'}
                   icon={isBought ? 'checkmark-circle' : 'cart'}
                   style={styles.itemButton}
@@ -70,6 +79,7 @@ export default function StoreScreen() {
         <Card variant="primary" style={styles.iapCard}>
           <Text style={styles.iapName}>{ui.iap_pass}</Text>
           <Text style={styles.iapDesc}>{ui.iap_pass_desc}</Text>
+
           <Button
             title={player.hasCultivatorPass ? ui.btn_iap_active : ui.btn_iap_buy}
             onPress={handleBuyPass}
@@ -83,6 +93,7 @@ export default function StoreScreen() {
         <Card style={styles.iapCard}>
           <Text style={styles.iapName}>{ui.iap_ad}</Text>
           <Text style={styles.iapDesc}>{ui.iap_ad_desc}</Text>
+
           <Button
             title={ui.btn_info}
             onPress={() => undefined}

@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useEventStore } from '../store/useEventStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { storage } from '../store/mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { calculateOfflineDelta } from '../utils/timeUtils';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
 
 export const useIdleProgress = () => {
-  const { hasHydrated, isDead, spiritualRoot, activityFocus, addQi, applyEffects } = usePlayerStore();
-  const { addLog } = useEventStore();
-  const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const hasHydrated = usePlayerStore((state) => state.hasHydrated);
+  const isDead = usePlayerStore((state) => state.isDead);
+  const spiritualRoot = usePlayerStore((state) => state.spiritualRoot);
+  const activityFocus = usePlayerStore((state) => state.activityFocus);
+  const addQi = usePlayerStore((state) => state.addQi);
+  const applyEffects = usePlayerStore((state) => state.applyEffects);
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
 
   useEffect(() => {
     if (!hasHydrated || isDead) {
@@ -33,21 +34,19 @@ export const useIdleProgress = () => {
 
           addQi(earnedQi.toString());
 
-          const logMsg = uiData.idle.offline_secret
-            .replace('{seconds}', deltaSeconds.toString())
-            .replace('{amount}', earnedQi.toString());
-
-          addLog(logMsg, 'system');
+          pushUiNotification('idle_secret', 'reward', {
+            seconds: deltaSeconds.toString(),
+            amount: earnedQi.toString(),
+          });
         } else {
           const earnedMoney = deltaSeconds * GameConstants.OFFLINE_MONEY_RATE;
 
           applyEffects({ money: earnedMoney.toString() });
 
-          const logMsg = uiData.idle.offline_mundane
-            .replace('{seconds}', deltaSeconds.toString())
-            .replace('{amount}', earnedMoney.toString());
-
-          addLog(logMsg, 'system');
+          pushUiNotification('idle_mundane', 'reward', {
+            seconds: deltaSeconds.toString(),
+            amount: earnedMoney.toString(),
+          });
         }
       }
     }

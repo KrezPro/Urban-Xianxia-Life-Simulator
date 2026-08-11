@@ -14,7 +14,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useSocialStore } from '../store/useSocialStore';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { useEventStore } from '../store/useEventStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, StatRow } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { GameConstants } from '../constants/GameConstants';
@@ -28,7 +28,7 @@ export default function SectScreen() {
   const social = useSocialStore();
   const player = usePlayerStore();
   const locale = useLocaleStore((state) => state.locale);
-  const { addLog } = useEventStore();
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
 
   const [mode, setMode] = useState<SectMode>('sect');
   const [inviteInput, setInviteInput] = useState('');
@@ -60,7 +60,7 @@ export default function SectScreen() {
 
   const handleCreate = () => {
     social.createSect(ui.default_name, ui.default_tag);
-    addLog(ui.log_created.replace('{name}', ui.default_name), 'system');
+    pushUiNotification('sect_created', 'social', { name: ui.default_name });
     setMode('sect');
   };
 
@@ -73,7 +73,7 @@ export default function SectScreen() {
     }
 
     const joinedName = useSocialStore.getState().sect?.name || '';
-    addLog(ui.log_joined.replace('{name}', joinedName), 'system');
+    pushUiNotification('sect_joined', 'social', { name: joinedName });
     setInviteInput('');
     setJoinError('');
     setMode('sect');
@@ -83,11 +83,11 @@ export default function SectScreen() {
     const result = social.contribute(minContribution);
 
     if (result === 'ok') {
-      addLog(ui.log_contribute.replace('{amount}', `$${minContributionLabel}`), 'system');
+      pushUiNotification('sect_donate_success', 'social', { amount: `$${minContributionLabel}` });
     }
 
     if (result === 'no_money') {
-      addLog(ui.log_no_money, 'system');
+      pushUiNotification('sect_donate_no_money', 'danger');
     }
   };
 
@@ -105,7 +105,7 @@ export default function SectScreen() {
           style: 'destructive',
           onPress: () => {
             social.leaveSect();
-            addLog(ui.log_left, 'system');
+            pushUiNotification('sect_left', 'social');
           },
         },
       ]

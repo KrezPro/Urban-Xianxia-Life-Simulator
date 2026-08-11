@@ -93,69 +93,49 @@
 2. Сверь структуру проекта с *ОПИСАНИЕ структуры проекта*. Если в *ОПИСАНИЕ структуры проекта* не хватает файлов, тебе нужно составить правильный, в формате *ОПИСАНИЕ структуры проекта*.
 
 *ОПИСАНИЕ структуры проекта*
-Game/
-├── package.json                   // Зависимости и скрипты
-├── babel.config.js                // Настройки Babel
-├── app.json                       // Expo-конфигурация, портретная ориентация
-├── eas.json                       // EAS Build/Submit каналы
-├── PlanOfDevelopment.txt          // План разработки
-├── Library.txt                    // Архитектурные решения
-├── DataForAI.txt                  // Выученные уроки
-└── src/
-    ├── App.tsx                    // Гидратация, NavigationContainer
-    ├── components/
-    │   └── ui/
-    │       └── index.tsx          // Button, Card, ProgressBar, StatRow
-    ├── constants/
-    │   ├── GameConstants.ts       // Лимиты, кулдауны, балансовые числа
-    │   └── Theme.ts               // Темная тема, цвета, отступы
-    ├── data/
-    │   ├── events.json            // Мирские/тайные события
-    │   ├── items.json             // Карма-баффы
-    │   ├── stages.json            // Стадии культивации
-    │   ├── sects.json             // Шаблоны сект и NPC
-    │   └── rankings.json          // Seed-рейтинг
-    ├── hooks/
-    │   ├── useIdleProgress.ts     // Offline-прогресс
-    │   └── useBreakthrough.ts     // Логика прорыва
-    ├── navigation/
-    │   ├── RootNavigator.tsx      // Корневой стек
-    │   └── TabNavigator.tsx       // Табы: Life, Dao, Store, Log, Sect
-    ├── screens/
-    │   ├── LifeScreen.tsx         // Мирская жизнь
-    │   ├── DaoScreen.tsx          // Путь Дао
-    │   ├── StoreScreen.tsx        // Магазин Кармы
-    │   ├── LogScreen.tsx          // Журнал судьбы
-    │   ├── ProfileScreen.tsx      // Профиль
-    │   ├── SectScreen.tsx         // Секта и локальный рейтинг
-    │   └── LeaderboardScreen.tsx  // Полноэкранный рейтинг
-    ├── services/
-    │   └── socialService.ts       // Секты, инвайты, NPC, рейтинг
-    ├── store/
-    │   ├── mmkvStorage.ts         // MMKV адаптер
-    │   ├── usePlayerStore.ts      // Игрок
-    │   ├── useEventStore.ts       // Журнал
-    │   ├── useInventoryStore.ts   // Инвентарь
-    │   ├── useLocaleStore.ts      // Язык интерфейса
-    │   └── useSocialStore.ts      // Секты и рейтинг
-    ├── types/
-    │   └── index.ts               // Интерфейсы
-    └── utils/
-        ├── timeUtils.ts           // Дельта времени
-        └── helpers.ts             // Форматирование, BigInt, random
-Game/src/locales/
-├── ru/
-│   ├── ui.json
-│   ├── events.json
-│   ├── items.json
-│   ├── stages.json
-│   └── social.json
-└── en/
-    ├── ui.json
-    ├── events.json
-    ├── items.json
-    ├── stages.json
-    └── social.json
+Game/src/
+├── App.tsx                          // Гидратация и навигация
+├── components/
+│   ├── ui/
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
+│   └── game/
+│       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
+│       └── NotificationToast.tsx    // Анимированный тост уведомления
+├── constants/
+│   ├── GameConstants.ts             // Длительность уведомлений, лимиты очереди
+│   └── Theme.ts                     // Цвета и стили уведомлений
+├── data/
+│   └── events.json                  // id и эффекты событий
+├── hooks/
+│   ├── useBreakthrough.ts           // Прорывы, будет использовать уведомления
+│   └── useIdleProgress.ts           // Оффлайн прогресс, будет использовать уведомления
+├── navigation/
+│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
+├── screens/
+│   ├── LifeScreen.tsx               // Основной экран с уведомлениями
+│   ├── DaoScreen.tsx                // Путь Дао
+│   ├── StoreScreen.tsx              // Магазин Кармы
+│   ├── SectScreen.tsx               // Секта и рейтинг
+│   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
+├── store/
+│   ├── useEventStore.ts             // Старый журнал, будет заменяться
+│   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
+│   ├── usePlayerStore.ts            // Игрок
+│   ├── useLocaleStore.ts            // Язык интерфейса
+│   └── useSocialStore.ts            // Секты
+├── types/
+│   └── index.ts                     // Типы уведомлений и событий
+└── locales/
+    ├── ru/
+    │   ├── ui.json
+    │   ├── events.json
+    │   ├── social.json
+    │   └── notifications.json       // Русские тексты уведомлений
+    └── en/
+        ├── ui.json
+        ├── events.json
+        ├── social.json
+        └── notifications.json       // Английские тексты уведомлений
 
 3. Проанализируй ОПИСАНИЕ структуры проекта и `Library.txt`, выбери нужные файлы для выполнения текущего задания.
 4. Сформируй JSON для обновления context_focus.
