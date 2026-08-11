@@ -4,7 +4,7 @@ import { useTranslation } from './utils/i18n';
 import { usePlayerStore } from './store/usePlayerStore';
 
 export default function App() {
-  const { t } = useTranslation('ui');
+  const { t } = useTranslation();
   const { age, growOlder, hasHydrated } = usePlayerStore();
 
   if (!hasHydrated) {
