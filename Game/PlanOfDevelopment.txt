@@ -1,0 +1,14 @@
+# ПЛАН РАЗРАБОТКИ: Urban Xianxia Life Simulator (BitCultivator)
+
+## Этап 1: Инициализация (ТЕКУЩИЙ)
+- [x] Базовая структура проекта и конфигурация.
+- [x] Настройка корневых типов (IPlayer).
+- [x] Корневой App.tsx.
+
+## Этап 2: Стейт-менеджмент
+- [ ] Настройка zustand и react-native-mmkv (usePlayerStore).
+- [ ] Настройка useEventStore и useInventoryStore.
+
+## Этап 3: Навигация и UI
+- [ ] Интеграция React Navigation (Bottom Tabs).
+- [ ] Базовые экраны (Profile, Life, Dao, Store, Log).

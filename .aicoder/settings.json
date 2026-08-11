@@ -1,0 +1,26 @@
+{
+  "project_name": "myproject",
+  "ignore_patterns": [
+"**",
+    "!**/",
+    "engine",
+    "game/node_modules",
+    ".expo",
+    "dist",
+    ".git",
+    ".aicoder",
+    "!game/**/*.ts",
+    "!game/**/*.tsx",
+    "!game/**/*.js",
+    "!game/**/*.jsx",
+    "!game/**/*.json",
+    "!game/**/*.md",
+    "!game/*.json",
+    "!game/*.js",
+    "!game/*.ts"
+  ],
+  "context_focus": [
+
+  ],
+  "max_file_size_kb": 100
+}
