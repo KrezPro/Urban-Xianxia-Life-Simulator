@@ -1,6 +1,6 @@
 {
   "app": {
-    "loading": "Loading data..."
+    "loading": "Awakening the soul..."
   },
   "tab_bar": {
     "life": "Life",
@@ -25,6 +25,8 @@
     "intelligence": "Intelligence",
     "appearance": "Appearance",
     "money": "Money",
+    "qi": "Qi",
+    "karma": "Karma",
     "btn_grow": "Grow Older (+1 year)"
   },
   "life_screen": {
@@ -44,7 +46,7 @@
     "focus_mundane": "Mundane Life",
     "focus_secret": "Secret Path",
     "btn_grow": "Grow Older (+1 year)",
-    "btn_reincarnate": "Reincarnate (New Life)",
+    "btn_reincarnate": "Reincarnate",
     "dead_title": "YOU ARE DEAD",
     "dead_subtitle": "Your life journey has been interrupted.",
     "karma_accumulated": "Total Karma:",
@@ -55,18 +57,19 @@
   },
   "store_screen": {
     "title": "Karma Shop",
-    "karma_balance": "Your Karma: ",
-    "btn_buy": "BUY",
-    "btn_bought": "OWNED",
-    "btn_no_karma": "SHORTFALL",
-    "cost": "Cost: ",
+    "karma_balance": "Your Karma",
+    "btn_buy": "Buy",
+    "btn_bought": "Owned",
+    "btn_no_karma": "Shortfall",
+    "cost": "Cost",
     "iap_section": "Premium & Monetization",
     "iap_pass": "Cultivator Pass",
     "iap_pass_desc": "Disables all interstitial ads forever and supports the developer.",
     "iap_ad": "Lifesaver Ad",
     "iap_ad_desc": "Available on the Dao tab before a breakthrough (death protection).",
-    "btn_iap_buy": "BUY PASS",
-    "btn_iap_active": "ACTIVE",
+    "btn_iap_buy": "Buy Pass",
+    "btn_iap_active": "Active",
+    "btn_info": "Info",
     "items": {
       "buff_rich_family": {
         "name": "Rich Family",
@@ -84,18 +87,18 @@
   },
   "dao_screen": {
     "title": "Dao Path",
-    "stage": "Stage:",
+    "stage": "Stage",
     "unknown": "Unknown",
-    "qi_energy": "Qi Energy:",
-    "next_stage": "Next Step:",
-    "req_qi": "Required Qi:",
-    "success_chance": "Success Chance:",
-    "btn_breakthrough": "ATTEMPT BREAKTHROUGH",
-    "btn_no_qi": "INSUFFICIENT QI",
+    "qi_energy": "Qi Energy",
+    "next_stage": "Next Step",
+    "req_qi": "Required Qi",
+    "success_chance": "Success Chance",
+    "btn_breakthrough": "Attempt Breakthrough",
+    "btn_no_qi": "Insufficient Qi",
     "max_stage": "You have reached the peak of cultivation. The Heavens no longer bind you.",
     "dead_text": "The dead cannot cultivate.",
-    "btn_ad_buff": "WATCH AD (+15% & PROTECTION)",
-    "btn_ad_watched": "BUFF ACTIVE",
+    "btn_ad_buff": "Watch Ad (+15% & Protection)",
+    "btn_ad_watched": "Buff Active",
     "alert_ad_title": "Advertisement",
     "alert_ad_msg": "Video watched! You received a buff for the next breakthrough.",
     "log_no_qi": "Insufficient Qi energy for breakthrough.",

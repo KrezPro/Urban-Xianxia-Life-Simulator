@@ -95,84 +95,62 @@
 *ОПИСАНИЕ структуры проекта*
 Game/
 ├── package.json                   // Зависимости и скрипты
-├── babel.config.js                // Настройки Babel (вкл. плагины для reanimated/mmkv)
-├── app.json                       // Базовая Expo-конфигурация, если используется
-├── app.config.ts                  // Расширенная Expo/EAS конфигурация для OTA
-├── eas.json                       // EAS Build/Submit/Update каналы
+├── babel.config.js                // Настройки Babel
+├── app.json                       // Базовая Expo-конфигурация
+├── eas.json                       // EAS Build/Submit каналы
 ├── PlanOfDevelopment.txt          // План разработки
-├── Library.txt                    // Библиотека логики и архитектурных решений
-├── DataForAI.txt                  // Выученные уроки и ошибки
-├── src/
-│   ├── App.tsx                    // Корневой компонент, точка входа, провайдеры, навигация
-│   ├── i18n/
-│   │   └── index.ts               // Инициализация i18next, подключение словарей
-│   ├── components/
-│   │   ├── ui/
-│   │   │   ├── Button.tsx
-│   │   │   ├── ProgressBar.tsx
-│   │   │   └── Card.tsx
-│   │   └── game/
-│   │       ├── StatRow.tsx
-│   │       ├── EventModal.tsx
-│   │       ├── BreakthroughAnim.tsx
-│   │       ├── SectInfoCard.tsx
-│   │       ├── InviteCodeCard.tsx
-│   │       └── LeaderboardRow.tsx
-│   ├── constants/
-│   │   ├── GameConstants.ts       // Лимиты, таймеры кулдауна, базовые шансы
-│   │   └── Theme.ts               // Цвета, шрифты (Темная/Светлая тема)
-│   ├── data/
-│   │   ├── events.json            // База случайных событий (мирские/тайные)
-│   │   ├── items.json             // Пилюли, артефакты, недвижимость
-│   │   ├── stages.json            // Стадии культивации и требуемая Ци
-│   │   ├── sects.json             // Шаблоны корпоративных сект и NPC-фракций
-│   │   ├── careers.json           // Работа, школа, офис, инвестиции
-│   │   └── rankings.json          // Локальные seed-данные рейтингов
-│   ├── hooks/
-│   │   ├── useIdleProgress.ts     // Расчет дельты времени для оффлайн прогресса
-│   │   ├── useBreakthrough.ts     // Логика прорыва и вероятностей
-│   │   ├── useSocialSeason.ts     // Сезоны сект, сброс рейтингов, награды
-│   │   └── useUpdates.ts          // Проверка OTA-версии контента
-│   ├── navigation/
-│   │   ├── RootNavigator.tsx      // Стек навигации (модалки, основной экран)
-│   │   └── TabNavigator.tsx       // Нижние табы (Мир, Дао, Магазин, Журнал, Секта)
-│   ├── screens/
-│   │   ├── ProfileScreen.tsx      // Общий статус, характеристики
-│   │   ├── LifeScreen.tsx         // Работа, учеба, инвестиции (Мирская вкладка)
-│   │   ├── DaoScreen.tsx          // Медитация, прорывы, алхимия (Тайная вкладка)
-│   │   ├── LogScreen.tsx          // Журнал судьбы (FlashList)
-│   │   ├── StoreScreen.tsx        // Магазин Кармы, реинкарнация, IAP/Ads
-│   │   ├── SectScreen.tsx         // Секта игрока, инвайт-код, участники
-│   │   └── LeaderboardScreen.tsx  // Глобальный/локальный рейтинг
-│   ├── services/
-│   │   ├── socialService.ts       // Логика сект, инвайтов, участников
-│   │   ├── leaderboardService.ts  // Расчет рейтингов, оффлайн-симуляция
-│   │   ├── inviteCodeService.ts   // Генерация и валидация инвайт-кодов
-│   │   └── updatesService.ts      // Обслуживание EAS Updates / OTA контента
-│   ├── store/
-│   │   ├── mmkvStorage.ts         // Адаптер MMKV для zustand/middleware
-│   │   ├── usePlayerStore.ts      // Возраст, деньги, Ци, статы
-│   │   ├── useEventStore.ts       // Логи событий
-│   │   ├── useInventoryStore.ts   // Предметы и баффы
-│   │   ├── useSocialStore.ts      // Секта, инвайт, рейтинг, вклад
-│   │   ├── useMonetizationStore.ts// IAP, pass, god mode, time machine
-│   │   └── useLiveOpsStore.ts     // Сезонные события, OTA-флаги
-│   ├── types/
-│   │   └── index.ts               // Интерфейсы (IPlayer, IEvent, IItem, ISect и др.)
-│   └── utils/
-│       ├── timeUtils.ts           // Конвертация времени, расчеты Idle
-│       ├── bigIntUtils.ts         // Безопасная сериализация BigInt
-│       └── randomUtils.ts         // Утилиты случайных событий
+├── Library.txt                    // Библиотека архитектурных решений
+├── DataForAI.txt                  // Выученные уроки
+└── src/
+    ├── App.tsx                    // Корневой компонент, гидратация, навигация
+    ├── components/
+    │   └── ui/
+    │       └── index.tsx          // Button, Card, ProgressBar, StatRow
+    ├── constants/
+    │   ├── GameConstants.ts       // Лимиты, кулдауны, социальные константы
+    │   └── Theme.ts               // Темная вовлекающая тема
+    ├── data/
+    │   ├── events.json            // События
+    │   ├── items.json             // Предметы и баффы
+    │   ├── stages.json            // Стадии культивации
+    │   ├── sects.json             // Шаблоны сект и NPC-имена
+    │   └── rankings.json          // Seed-данные локального рейтинга
+    ├── hooks/
+    │   ├── useIdleProgress.ts     // Оффлайн прогресс
+    │   └── useBreakthrough.ts     // Логика прорыва
+    ├── navigation/
+    │   └── TabNavigator.tsx       // Нижние табы: Life, Dao, Store, Log, Sect
+    ├── screens/
+    │   ├── LifeScreen.tsx         // Мирская жизнь
+    │   ├── DaoScreen.tsx          // Путь Дао
+    │   ├── LogScreen.tsx          // Журнал судьбы
+    │   ├── StoreScreen.tsx        // Магазин Кармы
+    │   ├── ProfileScreen.tsx      // Служебный профиль
+    │   └── SectScreen.tsx         // Секта и локальный рейтинг
+    ├── services/
+    │   └── socialService.ts       // Инвайты, секты, NPC, рейтинг
+    ├── store/
+    │   ├── mmkvStorage.ts         // MMKV адаптер
+    │   ├── usePlayerStore.ts      // Игрок
+    │   ├── useEventStore.ts       // Журнал
+    │   ├── useInventoryStore.ts   // Инвентарь
+    │   ├── useLocaleStore.ts      // Язык интерфейса
+    │   └── useSocialStore.ts      // Секты, инвайты, рейтинг
+    ├── types/
+    │   └── index.ts               // Интерфейсы игрока, сект, рейтинга
+    └── utils/
+        ├── timeUtils.ts           // Дельта времени
+        └── helpers.ts             // Форматирование, BigInt, random
 Game/src/locales/
 ├── ru/
-│   ├── ui.json                    // Тексты кнопок, вкладок, интерфейса
-│   ├── events.json                // Тексты мирских и тайных событий
-│   ├── items.json                 // Описания артефактов, пилюль, недвижимости
-│   ├── stages.json                // Описания стадий культивации и эффектов прорыва
-│   └── social.json                // Секты, рейтинги, инвайты, социальные квесты
+│   ├── ui.json
+│   ├── events.json
+│   ├── items.json
+│   ├── stages.json
+│   └── social.json
 └── en/
-    ├── ui.json                    // Адаптированные тексты для западного рынка
-    ├── events.json                // В т.ч. термины вроде "Mana Burn" вместо "Qi Deviation"
+    ├── ui.json
+    ├── events.json
     ├── items.json
     ├── stages.json
     └── social.json

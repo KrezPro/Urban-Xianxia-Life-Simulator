@@ -5,20 +5,20 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   Alert,
   Share,
+  TouchableOpacity,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSocialStore } from '../store/useSocialStore';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useEventStore } from '../store/useEventStore';
-import { GameConstants } from '../constants/GameConstants';
-import { formatLargeNumber } from '../utils/formatUtils';
-import { isGreaterOrEqualBigInt } from '../utils/bigIntUtils';
+import { Button, Card, StatRow } from '../components/ui';
 import { Theme } from '../constants/Theme';
+import { GameConstants } from '../constants/GameConstants';
+import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
 import ruSocial from '../locales/ru/social.json';
 import enSocial from '../locales/en/social.json';
 
@@ -137,10 +137,6 @@ export default function SectScreen() {
     );
   };
 
-  const renderEmptyLeaderboard = () => {
-    return <Text style={styles.emptyText}>{ui.leaderboard_empty}</Text>;
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -168,13 +164,17 @@ export default function SectScreen() {
       {mode === 'sect' ? (
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {!social.sect ? (
-            <View style={styles.card}>
+            <Card variant="primary" style={styles.emptyCard}>
               <Text style={styles.emptyTitle}>{ui.empty_title}</Text>
               <Text style={styles.emptyText}>{ui.empty_text}</Text>
 
-              <TouchableOpacity style={styles.primaryButton} onPress={handleCreate}>
-                <Text style={styles.primaryButtonText}>{ui.btn_create}</Text>
-              </TouchableOpacity>
+              <Button
+                title={ui.btn_create}
+                onPress={handleCreate}
+                variant="primary"
+                icon="add-circle"
+                style={styles.actionButton}
+              />
 
               <TextInput
                 style={styles.input}
@@ -188,46 +188,47 @@ export default function SectScreen() {
                 autoCapitalize="characters"
               />
 
-              <TouchableOpacity style={styles.secondaryButton} onPress={handleJoin}>
-                <Text style={styles.secondaryButtonText}>{ui.btn_join}</Text>
-              </TouchableOpacity>
+              <Button
+                title={ui.btn_join}
+                onPress={handleJoin}
+                variant="secondary"
+                icon="enter"
+                style={styles.actionButton}
+              />
 
               {joinError !== '' ? <Text style={styles.errorText}>{joinError}</Text> : null}
-            </View>
+            </Card>
           ) : (
-            <View style={styles.card}>
+            <Card variant="primary" style={styles.sectCard}>
               <Text style={styles.sectName}>
                 {social.sect.name} [{social.sect.tag}]
               </Text>
 
-              <Text style={styles.statText}>
-                {ui.season}: {social.seasonId}
-              </Text>
-              <Text style={styles.statText}>
-                {ui.funds}: ${formatLargeNumber(social.sect.funds)}
-              </Text>
-              <Text style={styles.statText}>
-                {ui.influence}: {formatLargeNumber(social.sect.influence)}
-              </Text>
+              <StatRow icon="calendar" label={ui.season} value={social.seasonId} color={Theme.colors.secondary} />
+              <StatRow icon="cash" label={ui.funds} value={`$${formatLargeNumber(social.sect.funds)}`} color={Theme.colors.gold} />
+              <StatRow icon="flame" label={ui.influence} value={formatLargeNumber(social.sect.influence)} color={Theme.colors.info} />
 
-              <View style={styles.inviteBlock}>
+              <Card style={styles.inviteCard}>
                 <Text style={styles.inviteLabel}>
                   {ui.invite_code}: {social.sect.inviteCode}
                 </Text>
-                <TouchableOpacity style={styles.shareButton} onPress={handleShareInvite}>
-                  <Text style={styles.shareButtonText}>{ui.share_invite}</Text>
-                </TouchableOpacity>
-              </View>
+                <Button
+                  title={ui.share_invite}
+                  onPress={handleShareInvite}
+                  variant="secondary"
+                  icon="share-social"
+                  small
+                />
+              </Card>
 
-              <TouchableOpacity
-                style={[styles.primaryButton, !canAffordDonation && styles.disabledButton]}
+              <Button
+                title={ui.donate.replace('{amount}', minContributionLabel)}
                 onPress={handleDonate}
                 disabled={!canAffordDonation}
-              >
-                <Text style={styles.primaryButtonText}>
-                  {ui.donate.replace('{amount}', minContributionLabel)}
-                </Text>
-              </TouchableOpacity>
+                variant="gold"
+                icon="cash"
+                style={styles.actionButton}
+              />
 
               {!canAffordDonation ? (
                 <Text style={styles.hintText}>
@@ -235,26 +236,28 @@ export default function SectScreen() {
                 </Text>
               ) : null}
 
-              <TouchableOpacity style={styles.dangerButton} onPress={handleLeave}>
-                <Text style={styles.dangerButtonText}>{ui.btn_leave}</Text>
-              </TouchableOpacity>
+              <Button
+                title={ui.btn_leave}
+                onPress={handleLeave}
+                variant="danger"
+                icon="exit"
+                style={styles.actionButton}
+              />
 
-              <View style={styles.membersBlock}>
-                <Text style={styles.sectionTitle}>{ui.members}</Text>
-                {social.sect.members.map((member) => {
-                  const displayName = member.id === 'player' ? ui.player_name : member.name;
+              <Text style={styles.sectionTitle}>{ui.members}</Text>
+              {social.sect.members.map((member) => {
+                const displayName = member.id === 'player' ? ui.player_name : member.name;
 
-                  return (
-                    <View key={member.id} style={styles.memberRow}>
-                      <Text style={styles.memberName}>{displayName}</Text>
-                      <Text style={styles.memberContribution}>
-                        {ui.contribution}: {formatLargeNumber(member.contribution)}
-                      </Text>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
+                return (
+                  <View key={member.id} style={styles.memberRow}>
+                    <Text style={styles.memberName}>{displayName}</Text>
+                    <Text style={styles.memberContribution}>
+                      {ui.contribution}: {formatLargeNumber(member.contribution)}
+                    </Text>
+                  </View>
+                );
+              })}
+            </Card>
           )}
         </ScrollView>
       ) : (
@@ -264,7 +267,7 @@ export default function SectScreen() {
             renderItem={renderLeaderboardItem}
             estimatedItemSize={72}
             keyExtractor={(item) => item.id}
-            ListEmptyComponent={renderEmptyLeaderboard}
+            ListEmptyComponent={<Text style={styles.emptyText}>{ui.leaderboard_empty}</Text>}
           />
         </View>
       )}
@@ -283,9 +286,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    color: Theme.colors.primary,
+    color: Theme.colors.primarySoft,
     fontSize: Theme.fontSize.lg,
-    fontWeight: 'bold',
+    fontWeight: '800',
   },
   headerContainer: {
     paddingHorizontal: Theme.spacing.md,
@@ -293,23 +296,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Theme.fontSize.xl,
-    fontWeight: 'bold',
+    fontWeight: '900',
     color: Theme.colors.text,
     textAlign: 'center',
     marginBottom: Theme.spacing.md,
   },
   segmentedControl: {
     flexDirection: 'row',
-    borderRadius: Theme.radius.md,
-    backgroundColor: Theme.colors.card,
+    borderRadius: Theme.radius.lg,
+    backgroundColor: Theme.colors.surface,
     borderWidth: 1,
-    borderColor: Theme.colors.border,
+    borderColor: Theme.colors.borderSoft,
     overflow: 'hidden',
     marginBottom: Theme.spacing.md,
   },
   segmentButton: {
     flex: 1,
-    paddingVertical: Theme.spacing.sm + 2,
+    paddingVertical: 12,
     alignItems: 'center',
   },
   segmentButtonActive: {
@@ -317,79 +320,45 @@ const styles = StyleSheet.create({
   },
   segmentText: {
     color: Theme.colors.textDim,
-    fontWeight: 'bold',
+    fontWeight: '800',
   },
   segmentTextActive: {
     color: Theme.colors.text,
   },
   scrollContent: {
     padding: Theme.spacing.md,
-    alignItems: 'center',
+    paddingBottom: 32,
   },
-  card: {
-    backgroundColor: Theme.colors.card,
-    borderRadius: Theme.radius.lg,
-    borderWidth: 1,
-    borderColor: Theme.colors.border,
-    padding: Theme.spacing.md,
-    width: '100%',
-    marginBottom: Theme.spacing.md,
+  emptyCard: {
+    alignItems: 'center',
   },
   emptyTitle: {
     color: Theme.colors.text,
-    fontSize: Theme.fontSize.lg,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: '900',
     marginBottom: Theme.spacing.sm,
+    textAlign: 'center',
   },
   emptyText: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
     marginBottom: Theme.spacing.md,
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: Theme.colors.cardAlt,
+    backgroundColor: Theme.colors.surfaceLight,
     color: Theme.colors.text,
-    borderRadius: Theme.radius.sm,
+    borderRadius: Theme.radius.md,
     borderWidth: 1,
-    borderColor: Theme.colors.border,
+    borderColor: Theme.colors.borderSoft,
     paddingHorizontal: Theme.spacing.md,
-    paddingVertical: Theme.spacing.sm + 2,
+    paddingVertical: 12,
     marginBottom: Theme.spacing.md,
+    width: '100%',
   },
-  primaryButton: {
-    backgroundColor: Theme.colors.primary,
-    borderRadius: Theme.radius.sm,
-    paddingVertical: Theme.spacing.sm + 4,
-    alignItems: 'center',
-    marginBottom: Theme.spacing.md,
-  },
-  primaryButtonText: {
-    color: Theme.colors.text,
-    fontWeight: 'bold',
-  },
-  secondaryButton: {
-    backgroundColor: Theme.colors.secondary,
-    borderRadius: Theme.radius.sm,
-    paddingVertical: Theme.spacing.sm + 4,
-    alignItems: 'center',
-  },
-  secondaryButtonText: {
-    color: Theme.colors.text,
-    fontWeight: 'bold',
-  },
-  disabledButton: {
-    backgroundColor: Theme.colors.textDim,
-  },
-  dangerButton: {
-    backgroundColor: Theme.colors.danger,
-    borderRadius: Theme.radius.sm,
-    paddingVertical: Theme.spacing.sm + 4,
-    alignItems: 'center',
+  actionButton: {
+    width: '100%',
     marginTop: Theme.spacing.sm,
-  },
-  dangerButtonText: {
-    color: Theme.colors.text,
-    fontWeight: 'bold',
   },
   errorText: {
     color: Theme.colors.danger,
@@ -397,64 +366,50 @@ const styles = StyleSheet.create({
   },
   hintText: {
     color: Theme.colors.warning,
-    marginBottom: Theme.spacing.sm,
+    marginTop: Theme.spacing.sm,
+  },
+  sectCard: {
+    marginBottom: Theme.spacing.md,
   },
   sectName: {
     color: Theme.colors.info,
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: Theme.spacing.sm,
-  },
-  statText: {
-    color: Theme.colors.text,
-    fontSize: Theme.fontSize.md,
-    marginBottom: Theme.spacing.xs,
-  },
-  inviteBlock: {
-    marginTop: Theme.spacing.md,
+    fontSize: 28,
+    fontWeight: '900',
     marginBottom: Theme.spacing.md,
-    backgroundColor: Theme.colors.cardAlt,
-    borderRadius: Theme.radius.md,
-    padding: Theme.spacing.md,
+  },
+  inviteCard: {
+    marginTop: Theme.spacing.md,
+    marginBottom: Theme.spacing.sm,
+    alignItems: 'flex-start',
   },
   inviteLabel: {
     color: Theme.colors.gold,
-    fontWeight: 'bold',
+    fontWeight: '800',
     marginBottom: Theme.spacing.sm,
-  },
-  shareButton: {
-    backgroundColor: Theme.colors.secondary,
-    borderRadius: Theme.radius.sm,
-    paddingVertical: Theme.spacing.sm,
-    alignItems: 'center',
-  },
-  shareButtonText: {
-    color: Theme.colors.text,
-    fontWeight: 'bold',
-  },
-  membersBlock: {
-    marginTop: Theme.spacing.md,
   },
   sectionTitle: {
     color: Theme.colors.text,
-    fontSize: Theme.fontSize.lg,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '900',
+    marginTop: Theme.spacing.lg,
     marginBottom: Theme.spacing.sm,
   },
   memberRow: {
-    backgroundColor: Theme.colors.cardAlt,
-    borderRadius: Theme.radius.sm,
-    padding: Theme.spacing.sm + 2,
-    marginBottom: Theme.spacing.sm,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderRadius: Theme.radius.md,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
   },
   memberName: {
     color: Theme.colors.text,
     fontSize: Theme.fontSize.md,
-    fontWeight: '600',
+    fontWeight: '800',
   },
   memberContribution: {
     color: Theme.colors.gold,
-    marginTop: Theme.spacing.xs,
+    marginTop: 4,
   },
   listContainer: {
     flex: 1,
@@ -464,19 +419,19 @@ const styles = StyleSheet.create({
   leaderboardRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Theme.colors.cardAlt,
-    borderRadius: Theme.radius.sm,
-    padding: Theme.spacing.sm + 2,
-    marginBottom: Theme.spacing.sm,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderRadius: Theme.radius.md,
+    padding: 12,
+    marginBottom: 8,
     borderWidth: 1,
-    borderColor: Theme.colors.border,
+    borderColor: Theme.colors.borderSoft,
   },
   leaderboardRowPlayer: {
-    borderColor: Theme.colors.primary,
+    borderColor: Theme.colors.primarySoft,
   },
   leaderboardRank: {
     color: Theme.colors.secondary,
-    fontWeight: 'bold',
+    fontWeight: '900',
     width: 42,
   },
   leaderboardInfo: {
@@ -484,7 +439,7 @@ const styles = StyleSheet.create({
   },
   leaderboardName: {
     color: Theme.colors.text,
-    fontWeight: '600',
+    fontWeight: '800',
   },
   leaderboardTag: {
     color: Theme.colors.textDim,
@@ -492,6 +447,6 @@ const styles = StyleSheet.create({
   },
   leaderboardScore: {
     color: Theme.colors.success,
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
 });

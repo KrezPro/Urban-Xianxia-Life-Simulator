@@ -29,20 +29,18 @@ const renderItem = ({ item }: { item: IEventLog }) => {
 export default function LogScreen() {
   const { logs } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const ui: any = locale === 'ru' ? ruUI : enUI;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>{uiData.log_screen.title}</Text>
+      <Text style={styles.title}>{ui.log_screen.title}</Text>
       <View style={styles.listContainer}>
         <FlashList
           data={logs}
           renderItem={renderItem}
-          estimatedItemSize={50}
+          estimatedItemSize={58}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>{uiData.log_screen.empty}</Text>
-          }
+          ListEmptyComponent={<Text style={styles.emptyText}>{ui.log_screen.empty}</Text>}
         />
       </View>
     </SafeAreaView>
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '900',
     color: Theme.colors.text,
     textAlign: 'center',
     marginBottom: 10,
@@ -69,9 +67,11 @@ const styles = StyleSheet.create({
   logItem: {
     flexDirection: 'row',
     marginBottom: 8,
-    padding: 10,
-    backgroundColor: Theme.colors.card,
-    borderRadius: 8,
+    padding: 12,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
   },
   logTime: {
     color: Theme.colors.textDim,
@@ -80,14 +80,15 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   logText: {
-    color: '#DDD',
+    color: Theme.colors.text,
     fontSize: 14,
     flex: 1,
     flexWrap: 'wrap',
+    lineHeight: 20,
   },
   secretText: {
     color: Theme.colors.info,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   systemText: {
     color: Theme.colors.danger,

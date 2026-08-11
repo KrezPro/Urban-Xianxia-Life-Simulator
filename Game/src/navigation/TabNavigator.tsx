@@ -8,6 +8,7 @@ import LogScreen from '../screens/LogScreen';
 import StoreScreen from '../screens/StoreScreen';
 import SectScreen from '../screens/SectScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { Theme } from '../constants/Theme';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -21,9 +22,15 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: { backgroundColor: '#1E1E1E', borderTopColor: '#333' },
-        tabBarActiveTintColor: '#fff',
-        tabBarInactiveTintColor: '#888',
+        tabBarStyle: {
+          backgroundColor: Theme.colors.surface,
+          borderTopColor: Theme.colors.borderSoft,
+          borderTopWidth: 1,
+          height: 64,
+          paddingTop: 6,
+        },
+        tabBarActiveTintColor: Theme.colors.text,
+        tabBarInactiveTintColor: Theme.colors.textDim,
         tabBarLabel: ({ color }) => {
           let key = 'life';
 
@@ -44,7 +51,7 @@ export default function TabNavigator() {
           }
 
           return (
-            <Text style={{ color, fontSize: 12 }}>
+            <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
               {(uiData.tab_bar as any)[key]}
             </Text>
           );
@@ -57,7 +64,7 @@ export default function TabNavigator() {
           } else if (route.name === 'Dao') {
             iconName = focused ? 'leaf' : 'leaf-outline';
           } else if (route.name === 'Store') {
-            iconName = focused ? 'cart' : 'cart-outline';
+            iconName = focused ? 'diamond' : 'diamond-outline';
           } else if (route.name === 'Log') {
             iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Sect') {

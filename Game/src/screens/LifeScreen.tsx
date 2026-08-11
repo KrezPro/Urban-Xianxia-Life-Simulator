@@ -1,81 +1,63 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, Button, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-
+import { Button, Card, ProgressBar, StatRow } from '../components/ui';
+import { Theme } from '../constants/Theme';
+import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { GameConstants } from '../constants/GameConstants';
+import stagesData from '../data/stages.json';
 import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
-const formatLargeNumber = (value: string | number): string => {
-  const strVal = value.toString();
-  const isNegative = strVal.startsWith('-');
-  const absVal = isNegative ? strVal.slice(1) : strVal;
-  const len = absVal.length;
-  
-  if (len <= 3) return value.toString();
-  
-  const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
-  const suffixIndex = Math.floor((len - 1) / 3);
-  
-  if (suffixIndex >= suffixes.length) {
-    return (isNegative ? "-" : "") + absVal[0] + "." + absVal.slice(1, 3) + "e" + (len - 1);
-  }
-  
-  const remainder = len % 3 === 0 ? 3 : len % 3;
-  const mainPart = absVal.slice(0, remainder);
-  const decimalPart = absVal.slice(remainder, remainder + 1);
-  
-  const result = decimalPart === "0" 
-    ? `${mainPart}${suffixes[suffixIndex]}` 
-    : `${mainPart}.${decimalPart}${suffixes[suffixIndex]}`;
-    
-  return (isNegative ? "-" : "") + result;
-};
-
 export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
-  const { locale, setLocale } = useLocaleStore();
+  const { locale, toggleLocale } = useLocaleStore();
 
-  const eventsData = locale === 'ru' ? ruEvents : enEvents;
-  const uiData = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
+  const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
+  const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
 
   useEffect(() => {
-    if (player.age === 0 && player.money === "0" && player.health === 100 && player.qi === "0" && !player.isDead) {
+    if (player.age === 0 && player.money === '0' && player.health === 100 && player.qi === '0' && !player.isDead) {
       player.reincarnate();
-      addLog(uiData.born_log, "system");
+      addLog(ui.born_log, 'system');
     }
   }, []);
 
   useEffect(() => {
     if (player.isDead) {
-      addLog(uiData.death_log, "system");
+      addLog(ui.death_log, 'system');
     }
   }, [player.isDead]);
 
+  const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
+  const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
+  const nextStage = stagesData[currentStageIndex + 1];
+  const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
+  const healthProgress = player.health / 100;
+
   const handleGrowOlder = () => {
     const now = Date.now();
-    
-    // Проверка жесткого кулдауна межстраничной рекламы (70 секунд)
+
     if (!player.hasCultivatorPass) {
-      if (now - player.lastInterstitialTime > 70000) {
+      if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         player.setLastInterstitialTime(now);
-        addLog(uiData.interstitial_log, "system");
-        // Здесь в будущем будет вызов реального SDK рекламы (AdMob/AppLovin)
+        addLog(ui.interstitial_log, 'system');
       }
     }
 
     player.growOlder();
-    
-    let secretEventChance = 0.1; 
-    
+
+    let secretEventChance = 0.1;
+
     if (player.activityFocus === 'secret') {
-      secretEventChance = 0.8; 
+      secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
-      addLog(uiData.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
+      addLog(ui.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
     }
 
     const isSecretEvent = secretEventChance > Math.random();
@@ -83,100 +65,116 @@ export default function LifeScreen() {
     const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
 
     player.applyEffects(randomEvent.effects);
-    
-    const ageString = uiData.age_log.replace('{age}', (player.age + 1).toString());
+
+    const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
     addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
   };
 
   const handleReincarnate = () => {
     player.reincarnate();
-    addLog(uiData.reincarnate_log, "system");
-  };
-
-  const toggleLocale = () => {
-    setLocale(locale === 'ru' ? 'en' : 'ru');
+    addLog(ui.reincarnate_log, 'system');
   };
 
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={toggleLocale} style={styles.langBtn}>
-            <Text style={styles.langBtnText}>{locale.toUpperCase()}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.deadContainer}>
-          <Text style={styles.deadTitle}>{uiData.dead_title}</Text>
-          <Text style={styles.deadSubtitle}>{uiData.dead_subtitle}</Text>
-          
-          <View style={styles.karmaBlock}>
-            <Text style={styles.legacyText}>
-              {uiData.karma_earned_last_life} <Text style={styles.karmaHighlight}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
-            </Text>
-            <Text style={styles.karmaText}>
-              {uiData.karma_accumulated} {formatLargeNumber(player.karma)}
-            </Text>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>{ui.title}</Text>
+            <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+              <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
+            </TouchableOpacity>
           </View>
-          
-          <View style={styles.buttonContainer}>
-            <Button 
-              title={uiData.btn_reincarnate} 
-              color="#e74c3c"
-              onPress={handleReincarnate} 
+
+          <Card variant="danger" style={styles.deadCard}>
+            <Text style={styles.deadTitle}>{ui.dead_title}</Text>
+            <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
+
+            <View style={styles.karmaRow}>
+              <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
+              <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
+            </View>
+
+            <View style={styles.karmaRow}>
+              <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
+              <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
+            </View>
+
+            <Button
+              title={ui.btn_reincarnate}
+              onPress={handleReincarnate}
+              variant="danger"
+              icon="refresh"
+              style={styles.reincarnateButton}
             />
-          </View>
-        </View>
+          </Card>
+        </ScrollView>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerRow}>
-          <Text style={styles.title}>{uiData.title}</Text>
-          <TouchableOpacity onPress={toggleLocale} style={styles.langBtn}>
-            <Text style={styles.langBtnText}>{locale.toUpperCase()}</Text>
+          <Text style={styles.title}>{ui.title}</Text>
+          <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+            <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
           </TouchableOpacity>
         </View>
-        
-        <View style={styles.statsCard}>
-          <Text style={styles.statText}>{uiData.age}: {player.age}</Text>
-          <Text style={styles.statText}>{uiData.health}: {player.health}</Text>
-          <Text style={styles.statText}>{uiData.intelligence}: {player.intelligence}</Text>
-          <Text style={styles.statText}>{uiData.appearance}: {player.appearance}</Text>
-          <Text style={styles.statText}>{uiData.money}: ${formatLargeNumber(player.money)}</Text>
-          <Text style={styles.statText}>{uiData.spiritual_root}: {player.spiritualRoot}</Text>
-          <Text style={styles.statText}>{uiData.qi}: {formatLargeNumber(player.qi)}</Text>
-          <Text style={styles.statText}>{uiData.karma}: {formatLargeNumber(player.karma)}</Text>
-        </View>
-        
-        <View style={styles.focusContainer}>
-          <Text style={styles.focusTitle}>{uiData.focus_title}</Text>
-          <View style={styles.focusButtons}>
-            <TouchableOpacity 
-              style={[styles.focusBtn, player.activityFocus === 'mundane' && styles.focusBtnActive]}
+
+        <Card variant="primary" style={styles.heroCard}>
+          <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+          <Text style={styles.heroAgeValue}>{player.age}</Text>
+          <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
+          <Text style={styles.heroProgressLabel}>
+            {ui.health}: {player.health}/100
+          </Text>
+          <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
+          <Text style={styles.heroProgressLabel}>
+            {ui.qi}: {formatLargeNumber(player.qi)}
+          </Text>
+        </Card>
+
+        <Card style={styles.statsCard}>
+          <StatRow icon="school" label={ui.intelligence} value={player.intelligence.toString()} color={Theme.colors.secondary} />
+          <StatRow icon="heart" label={ui.health} value={player.health.toString()} color={Theme.colors.success} />
+          <StatRow icon="diamond" label={ui.appearance} value={player.appearance.toString()} color={Theme.colors.warning} />
+          <StatRow icon="cash" label={ui.money} value={`$${formatLargeNumber(player.money)}`} color={Theme.colors.gold} />
+          <StatRow icon="flame" label={ui.spiritual_root} value={player.spiritualRoot.toString()} color={Theme.colors.info} />
+          <StatRow icon="sparkles" label={ui.karma} value={formatLargeNumber(player.karma)} color={Theme.colors.primarySoft} />
+        </Card>
+
+        <Card style={styles.focusCard}>
+          <Text style={styles.focusTitle}>{ui.focus_title}</Text>
+          <View style={styles.focusRow}>
+            <TouchableOpacity
+              style={[styles.focusChip, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
               onPress={() => player.setActivityFocus('mundane')}
             >
-              <Text style={[styles.focusBtnText, player.activityFocus === 'mundane' && styles.focusBtnTextActive]}>
-                {uiData.focus_mundane}
+              <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
+                {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.focusBtn, player.activityFocus === 'secret' && styles.focusBtnActive]}
+
+            <TouchableOpacity
+              style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
               onPress={() => player.setActivityFocus('secret')}
             >
-              <Text style={[styles.focusBtnText, player.activityFocus === 'secret' && styles.focusBtnTextActive]}>
-                {uiData.focus_secret}
+              <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
+                {ui.focus_secret}
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Card>
 
-        <View style={styles.buttonContainer}>
-          <Button title={uiData.btn_grow} onPress={handleGrowOlder} />
-        </View>
+        <Button
+          title={ui.btn_grow}
+          onPress={handleGrowOlder}
+          variant="primary"
+          icon="hourglass"
+          style={styles.mainActionButton}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -185,129 +183,130 @@ export default function LifeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: Theme.colors.background,
+  },
+  content: {
+    padding: Theme.spacing.md,
+    paddingBottom: 32,
   },
   headerRow: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: Theme.spacing.md,
   },
-  langBtn: {
-    backgroundColor: '#3498db',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
+  title: {
+    fontSize: Theme.fontSize.xl,
+    fontWeight: '900',
+    color: Theme.colors.text,
+    letterSpacing: 1,
   },
-  langBtnText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  langChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderWidth: 1,
+    borderColor: Theme.colors.secondary,
   },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
+  langChipText: {
+    color: Theme.colors.text,
+    fontWeight: '800',
+  },
+  heroCard: {
     alignItems: 'center',
-    padding: 20,
+    marginBottom: Theme.spacing.md,
   },
-  deadContainer: {
+  heroAgeLabel: {
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.sm,
+    marginBottom: 4,
+  },
+  heroAgeValue: {
+    color: Theme.colors.text,
+    fontSize: Theme.fontSize.hero,
+    fontWeight: '900',
+    marginBottom: Theme.spacing.md,
+  },
+  heroProgress: {
+    marginBottom: 8,
+  },
+  heroProgressLabel: {
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: Theme.spacing.sm,
+  },
+  statsCard: {
+    marginBottom: Theme.spacing.md,
+  },
+  focusCard: {
+    marginBottom: Theme.spacing.md,
+  },
+  focusTitle: {
+    color: Theme.colors.textMuted,
+    textAlign: 'center',
+    marginBottom: Theme.spacing.sm,
+  },
+  focusRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  focusChip: {
     flex: 1,
-    justifyContent: 'center',
+    borderRadius: Theme.radius.md,
+    paddingVertical: 14,
     alignItems: 'center',
-    padding: 20,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
+  },
+  focusChipActiveMundane: {
+    borderColor: Theme.colors.secondary,
+    backgroundColor: 'rgba(56, 189, 248, 0.16)',
+  },
+  focusChipActiveSecret: {
+    borderColor: Theme.colors.primarySoft,
+    backgroundColor: 'rgba(168, 85, 247, 0.18)',
+  },
+  focusChipText: {
+    color: Theme.colors.textDim,
+    fontWeight: '800',
+  },
+  focusChipTextActive: {
+    color: Theme.colors.text,
+  },
+  mainActionButton: {
+    marginTop: Theme.spacing.sm,
+  },
+  deadCard: {
+    alignItems: 'center',
+    marginTop: Theme.spacing.xl,
   },
   deadTitle: {
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#e74c3c',
-    marginBottom: 10,
-  },
-  deadSubtitle: {
-    fontSize: 18,
-    color: '#aaa',
-    marginBottom: 30,
-  },
-  karmaBlock: {
-    backgroundColor: '#1E1E1E',
-    padding: 20,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 40,
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  karmaText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#f1c40f',
-    marginTop: 15,
-  },
-  legacyText: {
-    fontSize: 16,
-    color: '#ddd',
-  },
-  karmaHighlight: {
-    color: '#2ecc71',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  statsCard: {
-    backgroundColor: '#1E1E1E',
-    padding: 20,
-    borderRadius: 10,
-    width: '100%',
-    marginBottom: 20,
-  },
-  statText: {
-    fontSize: 16,
-    color: '#DDD',
+    fontWeight: '900',
+    color: Theme.colors.danger,
     marginBottom: 8,
   },
-  focusContainer: {
+  deadSubtitle: {
+    color: Theme.colors.textMuted,
+    marginBottom: Theme.spacing.lg,
+  },
+  karmaRow: {
     width: '100%',
-    backgroundColor: '#1E1E1E',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  focusTitle: {
-    fontSize: 16,
-    color: '#aaa',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  focusButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
-  focusBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    marginHorizontal: 5,
-    borderRadius: 8,
-    backgroundColor: '#2C2C2C',
-    alignItems: 'center',
+  karmaLabel: {
+    color: Theme.colors.textMuted,
   },
-  focusBtnActive: {
-    backgroundColor: '#3498db',
+  karmaValue: {
+    color: Theme.colors.gold,
+    fontWeight: '900',
   },
-  focusBtnText: {
-    color: '#888',
-    fontWeight: 'bold',
+  reincarnateButton: {
+    marginTop: Theme.spacing.md,
+    width: '100%',
   },
-  focusBtnTextActive: {
-    color: '#fff',
-  },
-  buttonContainer: {
-    width: '80%',
-    marginTop: 10,
-    marginBottom: 30,
-  }
 });

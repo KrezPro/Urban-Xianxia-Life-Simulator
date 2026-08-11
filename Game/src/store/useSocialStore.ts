@@ -2,10 +2,17 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { ILeaderboardEntry, ISect } from '../types';
-import { generateInviteCode, isValidInviteCode, normalizeInviteCode } from '../services/inviteCodeService';
-import { createNpcSectFromCode, createPlayerSect, getCurrentSeasonId, simulateNpcProgress } from '../services/socialService';
-import { buildLeaderboard } from '../services/leaderboardService';
-import { addBigIntStrings, divideBigIntStringByNumber, safeBigInt } from '../utils/bigIntUtils';
+import {
+  buildLeaderboard,
+  createNpcSectFromCode,
+  createPlayerSect,
+  getCurrentSeasonId,
+  generateInviteCode,
+  isValidInviteCode,
+  normalizeInviteCode,
+  simulateNpcProgress,
+} from '../services/socialService';
+import { addBigIntStrings, divideBigIntStringByNumber, safeBigInt } from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
 import { usePlayerStore } from './usePlayerStore';
 
@@ -33,7 +40,7 @@ export const useSocialStore = create<SocialState>()(
       hasHydrated: false,
       sect: null,
       inviteCode: '',
-      leaderboard: [],
+      leaderboard: buildLeaderboard(null),
       seasonId: getCurrentSeasonId(),
       lastOfflineSimulationAt: Date.now(),
       setHasHydrated: (state) => set({ hasHydrated: state }),

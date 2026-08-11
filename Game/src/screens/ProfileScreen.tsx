@@ -1,44 +1,42 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { formatLargeNumber } from '../utils/formatUtils';
+import { Button, Card, StatRow } from '../components/ui';
+import { Theme } from '../constants/Theme';
+import { formatLargeNumber } from '../utils/helpers';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
 export default function ProfileScreen() {
   const player = usePlayerStore();
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const ui: any = locale === 'ru' ? ruUI : enUI;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>{uiData.profile_screen.title}</Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.header}>{ui.profile_screen.title}</Text>
 
-      <View style={styles.statsCard}>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.age}: {player.age}
-        </Text>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.stage}: {player.cultivationStage}
-        </Text>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.health}: {player.health}
-        </Text>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.intelligence}: {player.intelligence}
-        </Text>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.appearance}: {player.appearance}
-        </Text>
-        <Text style={styles.statText}>
-          {uiData.profile_screen.money}: ${formatLargeNumber(player.money)}
-        </Text>
-      </View>
+        <Card>
+          <StatRow icon="hourglass" label={ui.profile_screen.age} value={player.age.toString()} />
+          <StatRow icon="flash" label={ui.profile_screen.stage} value={player.cultivationStage} />
+          <StatRow icon="heart" label={ui.profile_screen.health} value={player.health.toString()} color={Theme.colors.success} />
+          <StatRow icon="school" label={ui.profile_screen.intelligence} value={player.intelligence.toString()} color={Theme.colors.secondary} />
+          <StatRow icon="diamond" label={ui.profile_screen.appearance} value={player.appearance.toString()} color={Theme.colors.warning} />
+          <StatRow icon="cash" label={ui.profile_screen.money} value={`$${formatLargeNumber(player.money)}`} color={Theme.colors.gold} />
+          <StatRow icon="flame" label={ui.profile_screen.qi} value={formatLargeNumber(player.qi)} color={Theme.colors.info} />
+          <StatRow icon="sparkles" label={ui.profile_screen.karma} value={formatLargeNumber(player.karma)} color={Theme.colors.primarySoft} />
+        </Card>
 
-      <TouchableOpacity style={styles.button} onPress={player.growOlder} activeOpacity={0.8}>
-        <Text style={styles.buttonText}>{uiData.profile_screen.btn_grow}</Text>
-      </TouchableOpacity>
+        <Button
+          title={ui.profile_screen.btn_grow}
+          onPress={player.growOlder}
+          variant="primary"
+          icon="hourglass"
+          style={styles.button}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -46,40 +44,19 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
-    alignItems: 'center',
+    backgroundColor: Theme.colors.background,
+  },
+  content: {
     padding: 20,
   },
   header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00ffcc',
+    fontSize: 28,
+    fontWeight: '900',
+    color: Theme.colors.text,
     marginBottom: 20,
-    marginTop: 10,
-  },
-  statsCard: {
-    backgroundColor: '#1a1a1a',
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#333',
-    width: '100%',
-    marginBottom: 30,
-  },
-  statText: {
-    color: '#fff',
-    fontSize: 16,
-    marginVertical: 4,
+    textAlign: 'center',
   },
   button: {
-    backgroundColor: '#00ffcc',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
+    marginTop: 20,
   },
 });

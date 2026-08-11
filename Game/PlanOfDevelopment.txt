@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 7 (Социальный слой: offline-first MVP, навигация, локализация, базовый usability)
+[СТАТУС]: ШАГ 7 (Социальный слой: offline-first MVP, вовлекающий UI-кит, локализация, рефакторинг навигации)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -30,14 +30,11 @@
 17. [X] Асинхронный мультиплеер (Социальный слой): минимальный offline-first слой реализован.
     17.1. [X] Создан useLocaleStore для безопасного переключения языка.
     17.2. [X] Создан useSocialStore с persist через MMKV.
-    17.3. [X] Создан inviteCodeService для локальных инвайт-кодов.
-    17.4. [X] Создан socialService для создания сект и NPC-симуляции.
-    17.5. [X] Создан leaderboardService для локального рейтинга.
-    17.6. [X] Добавлен SectScreen с режимами "Моя секта" и "Рейтинг".
-    17.7. [X] Добавлены social.json словари для RU/EN.
-    17.8. [ ] Реальный серверный API, глобальные рейтинги и валидация инвайтов на сервере.
-    17.9. [ ] Социальные сезонные награды и автоматический сброс сезонов.
-    17.10. [ ] Расширенные компоненты UI: SectInfoCard, InviteCodeCard, LeaderboardRow.
+    17.3. [X] Создан socialService: инвайт-коды, секты, NPC-симуляция, рейтинг.
+    17.4. [X] Добавлен SectScreen с режимами "Моя секта" и "Рейтинг".
+    17.5. [X] Добавлены social.json словари для RU/EN.
+    17.6. [ ] Реальный серверный API, глобальные рейтинги и валидация инвайтов на сервере.
+    17.7. [ ] Социальные сезонные награды и автоматический сброс сезонов.
 
 === Фаза 6: Деплой и LiveOps ===
 18. [ ] Настройка EAS Updates для облачного обновления текстовых квестов и баланса "по воздуху" (OTA).
@@ -46,18 +43,89 @@
     18.3. [ ] Создать updatesService.ts и useUpdates.ts.
     18.4. [ ] Добавить contentVersion и remote flags в useLiveOpsStore.ts.
 
-=== Фаза 7: Технические и продуктовые задачи, вынесенные для следующих шагов ===
-19. [ ] Серверный мультиплеер: реальные инвайты, синхронизация сект, анти-чит.
-20. [ ] Карьера и экономика: careers.json, школы, офисы, инвестиции, боссы-демоны.
-21. [ ] Monetization store: вынести Cultivator Pass, God Mode, Time Machine в useMonetizationStore.
-22. [ ] Рефакторинг LifeScreen/DaoScreen/StoreScreen под Theme, formatUtils и ProgressBar.
-23. [ ] Глоссарий терминов и адаптация Mana Burn / Qi Deviation.
-24. [ ] Share-функция для абсурдных смертей и виральных ситуаций.
-25. [ ] Ручные и автотесты для BigInt-сериализации, MMKV-гидратации и FlashList.
+=== Фаза 7: Вовлекающий UI и дизайн-система ===
+19. [X] Создан Theme.ts с темной неоновой палитрой, отступами, радиусами и тенями.
+20. [X] Создан единый UI-кит: Button, Card, ProgressBar, StatRow.
+21. [X] LifeScreen, DaoScreen, StoreScreen, LogScreen, SectScreen переведены на UI-кит.
+22. [X] Навигация использует стабильные английские route names и локализованные подписи.
+23. [X] Убран хардкод из служебных экранов: App, LogScreen, ProfileScreen, TabNavigator.
+24. [ ] Дальнейшая полировка: анимации кнопок, градиенты, skeletons, haptic feedback.
+25. [ ] Добавить тематические пакеты интерфейса (Cultivator Pass dark/neon themes).
 
-=== Фаза 8: Техническая гигиена ===
-26. [X] Удалить @react-native-async-storage/async-storage из package.json.
-27. [X] Создать useLocaleStore и убрать часть хардкода из служебных экранов.
-28. [X] Стабильные английские route names в TabNavigator.
-29. [X] Реальный MMKV-адаптер с memory-fallback для аварийных сред.
-30. [X] Утилиты formatUtils, bigIntUtils, randomUtils для повторного использования.
+=== Фаза 8: Технические и продуктовые задачи на следующие шаги ===
+26. [ ] Серверный мультиплеер: реальные инвайты, синхронизация сект, анти-чит.
+27. [ ] Карьера и экономика: careers.json, школы, офисы, инвестиции, боссы-демоны.
+28. [ ] Monetization store: вынести Cultivator Pass, God Mode, Time Machine в useMonetizationStore.
+29. [ ] Глоссарий терминов и адаптация Mana Burn / Qi Deviation.
+30. [ ] Share-функция для абсурдных смертей и виральных ситуаций.
+31. [ ] Ручные и автотесты для BigInt-сериализации, MMKV-гидратации и FlashList.
+
+=== Фаза 9: Техническая гигиена ===
+32. [X] Удалить @react-native-async-storage/async-storage из package.json.
+33. [X] Создать useLocaleStore и убрать часть хардкода из служебных экранов.
+34. [X] Реальный MMKV-адаптер с memory-fallback для аварийных сред.
+35. [X] Утилиты helpers.ts: formatLargeNumber, BigInt utils, random utils.
+36. [X] Исправлены route names в TabNavigator.
+
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
+Game/
+├── package.json                   // Зависимости и скрипты
+├── babel.config.js                // Настройки Babel
+├── app.json                       // Базовая Expo-конфигурация
+├── eas.json                       // EAS Build/Submit каналы
+├── PlanOfDevelopment.txt          // План разработки
+├── Library.txt                    // Библиотека архитектурных решений
+├── DataForAI.txt                  // Выученные уроки
+└── src/
+    ├── App.tsx                    // Корневой компонент, гидратация, навигация
+    ├── components/
+    │   └── ui/
+    │       └── index.tsx          // Button, Card, ProgressBar, StatRow
+    ├── constants/
+    │   ├── GameConstants.ts       // Лимиты, кулдауны, социальные константы
+    │   └── Theme.ts               // Темная вовлекающая тема
+    ├── data/
+    │   ├── events.json            // События
+    │   ├── items.json             // Предметы и баффы
+    │   ├── stages.json            // Стадии культивации
+    │   ├── sects.json             // Шаблоны сект и NPC-имена
+    │   └── rankings.json          // Seed-данные локального рейтинга
+    ├── hooks/
+    │   ├── useIdleProgress.ts     // Оффлайн прогресс
+    │   └── useBreakthrough.ts     // Логика прорыва
+    ├── navigation/
+    │   └── TabNavigator.tsx       // Нижние табы: Life, Dao, Store, Log, Sect
+    ├── screens/
+    │   ├── LifeScreen.tsx         // Мирская жизнь
+    │   ├── DaoScreen.tsx          // Путь Дао
+    │   ├── LogScreen.tsx          // Журнал судьбы
+    │   ├── StoreScreen.tsx        // Магазин Кармы
+    │   ├── ProfileScreen.tsx      // Служебный профиль
+    │   └── SectScreen.tsx         // Секта и локальный рейтинг
+    ├── services/
+    │   └── socialService.ts       // Инвайты, секты, NPC, рейтинг
+    ├── store/
+    │   ├── mmkvStorage.ts         // MMKV адаптер
+    │   ├── usePlayerStore.ts      // Игрок
+    │   ├── useEventStore.ts       // Журнал
+    │   ├── useInventoryStore.ts   // Инвентарь
+    │   ├── useLocaleStore.ts      // Язык интерфейса
+    │   └── useSocialStore.ts      // Секты, инвайты, рейтинг
+    ├── types/
+    │   └── index.ts               // Интерфейсы игрока, сект, рейтинга
+    └── utils/
+        ├── timeUtils.ts           // Дельта времени
+        └── helpers.ts             // Форматирование, BigInt, random
+Game/src/locales/
+├── ru/
+│   ├── ui.json
+│   ├── events.json
+│   ├── items.json
+│   ├── stages.json
+│   └── social.json
+└── en/
+    ├── ui.json
+    ├── events.json
+    ├── items.json
+    ├── stages.json
+    └── social.json

@@ -1,11 +1,12 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
 import { useSocialStore } from './store/useSocialStore';
 import { useIdleProgress } from './hooks/useIdleProgress';
+import { Theme } from './constants/Theme';
 import ruUI from './locales/ru/ui.json';
 import enUI from './locales/en/ui.json';
 
@@ -21,7 +22,10 @@ export default function App() {
   if (!playerHydrated || !localeHydrated || !socialHydrated) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.loadingText}>{uiData.app.loading}</Text>
+        <View style={styles.loadingCard}>
+          <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
+          <Text style={styles.loadingText}>{uiData.app.loading}</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -38,11 +42,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#121212',
+    backgroundColor: Theme.colors.background,
+  },
+  loadingCard: {
+    backgroundColor: Theme.colors.surface,
+    borderColor: Theme.colors.borderSoft,
+    borderWidth: 1,
+    borderRadius: Theme.radius.xl,
+    paddingVertical: Theme.spacing.xl,
+    paddingHorizontal: Theme.spacing.xl,
+    alignItems: 'center',
+    ...Theme.shadow,
   },
   loadingText: {
-    color: '#8e44ad',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.md,
+    fontWeight: '700',
+    marginTop: Theme.spacing.md,
   },
 });

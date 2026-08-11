@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { useInventoryStore } from './useInventoryStore';
+import { getRandomInt } from '../utils/helpers';
 import itemsData from '../data/items.json';
 
 interface PlayerEffects {
@@ -61,10 +62,6 @@ const initialState = {
   lastInterstitialTime: 0,
 };
 
-const getRandomInt = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 export const usePlayerStore = create<PlayerState>()(
   persist(
     (set) => ({
@@ -75,6 +72,7 @@ export const usePlayerStore = create<PlayerState>()(
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
       setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
       setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
+
       growOlder: () => set((state) => {
         if (state.isDead) {
           return state;
@@ -82,6 +80,7 @@ export const usePlayerStore = create<PlayerState>()(
 
         return { age: state.age + 1 };
       }),
+
       addQi: (amount) => set((state) => {
         if (state.isDead) {
           return state;
@@ -91,6 +90,7 @@ export const usePlayerStore = create<PlayerState>()(
         const add = BigInt(amount);
         return { qi: (current + add).toString() };
       }),
+
       deductQi: (amount) => set((state) => {
         if (state.isDead) {
           return state;
@@ -101,12 +101,14 @@ export const usePlayerStore = create<PlayerState>()(
         const result = current - deduct;
         return { qi: 0n > result ? '0' : result.toString() };
       }),
+
       deductKarma: (amount) => set((state) => {
         const current = BigInt(state.karma);
         const deduct = BigInt(amount);
         const result = current - deduct;
         return { karma: 0n > result ? '0' : result.toString() };
       }),
+
       applyEffects: (effects) => set((state) => {
         if (state.isDead) {
           return state;
@@ -166,6 +168,7 @@ export const usePlayerStore = create<PlayerState>()(
 
         return newState;
       }),
+
       reincarnate: () => set((state) => {
         const { STARTING_STATS } = GameConstants;
         const inventory = useInventoryStore.getState().items;
@@ -197,7 +200,7 @@ export const usePlayerStore = create<PlayerState>()(
           cultivationStage: 'mortal',
           karma: state.karma,
           lastLifeKarmaEarned: '0',
-          activityFocus: 'mundane',
+          activityFocus: 'mundane' as 'mundane' | 'secret',
           hasCultivatorPass: state.hasCultivatorPass,
           lastInterstitialTime: state.lastInterstitialTime,
           health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX) + bonusHealth,
@@ -207,6 +210,7 @@ export const usePlayerStore = create<PlayerState>()(
           spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + bonusRoot,
         };
       }),
+
       resetPlayer: () => set({ ...initialState }),
     }),
     {
