@@ -95,10 +95,9 @@
 *ОПИСАНИЕ структуры проекта*
 Game/
 ├── package.json                   // Зависимости и скрипты
-├── app.json                       // Конфигурация Expo (версия, иконки, splash)
 ├── babel.config.js                // Настройки Babel (вкл. плагины для reanimated/mmkv)
 ├── src/
-│   ├── App.tsx                    // Корневой компонент, точка входа (провайдеры, навигация)
+│   ├── App.tsx                    // Корневой компонент, точка входа (провайдеры, навигация), Конфигурация Expo (версия, иконки, splash)
 │   ├── components/                // UI компоненты
 │   │   ├── ui/                    // Базовые (Button.tsx, ProgressBar.tsx, Card.tsx)
 │   │   └── game/                  // Специфичные (StatRow.tsx, EventModal.tsx, BreakthroughAnim.tsx)

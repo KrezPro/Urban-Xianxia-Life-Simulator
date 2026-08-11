@@ -11,12 +11,11 @@
     ".aicoder"
   ],
   "context_focus": [
-   "Game/PlanOfDevelopment.txt",
-  "Game/index.ts",
-  "Game/App.tsx",
-  "Game/src/App.tsx",
-  "Game/babel.config.js",
-  "Game/package.json"
+"Game/PlanOfDevelopment.txt",
+    "Game/src/navigation/TabNavigator.tsx",
+    "Game/src/screens/LifeScreen.tsx",
+    "Game/src/store/usePlayerStore.ts",
+    "Game/src/data/events.json"
   ],
   "max_file_size_kb": 100
 }
