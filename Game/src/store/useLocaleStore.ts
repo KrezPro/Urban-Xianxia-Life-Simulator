@@ -1,21 +1,31 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
+import { Locale } from '../types';
 
 interface LocaleState {
-  locale: 'ru' | 'en';
-  setLocale: (locale: 'ru' | 'en') => void;
+  locale: Locale;
+  hasHydrated: boolean;
+  setLocale: (locale: Locale) => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useLocaleStore = create<LocaleState>()(
   persist(
     (set) => ({
       locale: 'ru',
+      hasHydrated: false,
       setLocale: (locale) => set({ locale }),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: 'locale-storage',
       storage: createJSONStorage(() => zustandStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.setHasHydrated(true);
+        }
+      },
     }
   )
 );

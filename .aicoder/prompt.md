@@ -96,50 +96,86 @@
 Game/
 ├── package.json                   // Зависимости и скрипты
 ├── babel.config.js                // Настройки Babel (вкл. плагины для reanimated/mmkv)
+├── app.json                       // Базовая Expo-конфигурация, если используется
+├── app.config.ts                  // Расширенная Expo/EAS конфигурация для OTA
+├── eas.json                       // EAS Build/Submit/Update каналы
+├── PlanOfDevelopment.txt          // План разработки
+├── Library.txt                    // Библиотека логики и архитектурных решений
+├── DataForAI.txt                  // Выученные уроки и ошибки
 ├── src/
-│   ├── App.tsx                    // Корневой компонент, точка входа (провайдеры, навигация), Конфигурация Expo (версия, иконки, splash)
-│   ├── components/                // UI компоненты
-│   │   ├── ui/                    // Базовые (Button.tsx, ProgressBar.tsx, Card.tsx)
-│   │   └── game/                  // Специфичные (StatRow.tsx, EventModal.tsx, BreakthroughAnim.tsx)
-│   ├── constants/                 // Баланс и константы
+│   ├── App.tsx                    // Корневой компонент, точка входа, провайдеры, навигация
+│   ├── i18n/
+│   │   └── index.ts               // Инициализация i18next, подключение словарей
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx
+│   │   │   ├── ProgressBar.tsx
+│   │   │   └── Card.tsx
+│   │   └── game/
+│   │       ├── StatRow.tsx
+│   │       ├── EventModal.tsx
+│   │       ├── BreakthroughAnim.tsx
+│   │       ├── SectInfoCard.tsx
+│   │       ├── InviteCodeCard.tsx
+│   │       └── LeaderboardRow.tsx
+│   ├── constants/
 │   │   ├── GameConstants.ts       // Лимиты, таймеры кулдауна, базовые шансы
-│   │   ├── Theme.ts               // Цвета, шрифты (Темная/Светлая тема)
-│   ├── data/                      // Статические базы
+│   │   └── Theme.ts               // Цвета, шрифты (Темная/Светлая тема)
+│   ├── data/
 │   │   ├── events.json            // База случайных событий (мирские/тайные)
 │   │   ├── items.json             // Пилюли, артефакты, недвижимость
 │   │   ├── stages.json            // Стадии культивации и требуемая Ци
-│   ├── hooks/                     // Кастомные хуки
+│   │   ├── sects.json             // Шаблоны корпоративных сект и NPC-фракций
+│   │   ├── careers.json           // Работа, школа, офис, инвестиции
+│   │   └── rankings.json          // Локальные seed-данные рейтингов
+│   ├── hooks/
 │   │   ├── useIdleProgress.ts     // Расчет дельты времени для оффлайн прогресса
 │   │   ├── useBreakthrough.ts     // Логика прорыва и вероятностей
-│   ├── navigation/                // Маршрутизация (React Navigation)
-│   │   ├── RootNavigator.tsx      // Стек навигации (Модалки, Основной экран)
-│   │   ├── TabNavigator.tsx       // Нижние табы (Profile, Life, Dao, Shop)
-│   ├── screens/                   // Экраны
+│   │   ├── useSocialSeason.ts     // Сезоны сект, сброс рейтингов, награды
+│   │   └── useUpdates.ts          // Проверка OTA-версии контента
+│   ├── navigation/
+│   │   ├── RootNavigator.tsx      // Стек навигации (модалки, основной экран)
+│   │   └── TabNavigator.tsx       // Нижние табы (Мир, Дао, Магазин, Журнал, Секта)
+│   ├── screens/
 │   │   ├── ProfileScreen.tsx      // Общий статус, характеристики
 │   │   ├── LifeScreen.tsx         // Работа, учеба, инвестиции (Мирская вкладка)
 │   │   ├── DaoScreen.tsx          // Медитация, прорывы, алхимия (Тайная вкладка)
-│   │   ├── LogScreen.tsx          // Журнал судьбы (Список событий - FlashList)
+│   │   ├── LogScreen.tsx          // Журнал судьбы (FlashList)
 │   │   ├── StoreScreen.tsx        // Магазин Кармы, реинкарнация, IAP/Ads
-│   ├── store/                     // Zustand State
+│   │   ├── SectScreen.tsx         // Секта игрока, инвайт-код, участники
+│   │   └── LeaderboardScreen.tsx  // Глобальный/локальный рейтинг
+│   ├── services/
+│   │   ├── socialService.ts       // Логика сект, инвайтов, участников
+│   │   ├── leaderboardService.ts  // Расчет рейтингов, оффлайн-симуляция
+│   │   ├── inviteCodeService.ts   // Генерация и валидация инвайт-кодов
+│   │   └── updatesService.ts      // Обслуживание EAS Updates / OTA контента
+│   ├── store/
 │   │   ├── mmkvStorage.ts         // Адаптер MMKV для zustand/middleware
 │   │   ├── usePlayerStore.ts      // Возраст, деньги, Ци, статы
-│   │   ├── useEventStore.ts       // Логи событий (массивы)
+│   │   ├── useEventStore.ts       // Логи событий
 │   │   ├── useInventoryStore.ts   // Предметы и баффы
-│   ├── types/                     // Глобальные типы TypeScript
-│   │   ├── index.ts               // Интерфейсы (IPlayer, IEvent, IItem)
-│   └── utils/                     // Утилиты
-│       └── timeUtils.ts           // Конвертация времени, расчеты Idle
+│   │   ├── useSocialStore.ts      // Секта, инвайт, рейтинг, вклад
+│   │   ├── useMonetizationStore.ts// IAP, pass, god mode, time machine
+│   │   └── useLiveOpsStore.ts     // Сезонные события, OTA-флаги
+│   ├── types/
+│   │   └── index.ts               // Интерфейсы (IPlayer, IEvent, IItem, ISect и др.)
+│   └── utils/
+│       ├── timeUtils.ts           // Конвертация времени, расчеты Idle
+│       ├── bigIntUtils.ts         // Безопасная сериализация BigInt
+│       └── randomUtils.ts         // Утилиты случайных событий
 Game/src/locales/
 ├── ru/
-│   ├── ui.json       // Тексты кнопок, вкладок, интерфейса
-│   ├── events.json   // Тексты мирских и тайных событий
-│   ├── items.json    // Описания артефактов, пилюль, недвижимости
-│   └── stages.json   // Описания стадий культивации и эффектов прорыва
+│   ├── ui.json                    // Тексты кнопок, вкладок, интерфейса
+│   ├── events.json                // Тексты мирских и тайных событий
+│   ├── items.json                 // Описания артефактов, пилюль, недвижимости
+│   ├── stages.json                // Описания стадий культивации и эффектов прорыва
+│   └── social.json                // Секты, рейтинги, инвайты, социальные квесты
 └── en/
-    ├── ui.json       // Адаптированные тексты для западного рынка
-    ├── events.json   // (в т.ч. термины вроде "Mana Burn" вместо "Qi Deviation")
+    ├── ui.json                    // Адаптированные тексты для западного рынка
+    ├── events.json                // В т.ч. термины вроде "Mana Burn" вместо "Qi Deviation"
     ├── items.json
-    └── stages.json
+    ├── stages.json
+    └── social.json
 
 3. Проанализируй ОПИСАНИЕ структуры проекта и `Library.txt`, выбери нужные файлы для выполнения текущего задания.
 4. Сформируй JSON для обновления context_focus.

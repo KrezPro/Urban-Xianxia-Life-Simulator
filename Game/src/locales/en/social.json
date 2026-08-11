@@ -1,0 +1,28 @@
+{
+  "sect_screen": {
+    "title": "Sect",
+    "loading": "Loading social layer...",
+    "empty_title": "Corporate Sect",
+    "empty_text": "Create a hidden corporate sect or enter an invite code to join the asynchronous struggle for influence.",
+    "invite_input_placeholder": "Invite code",
+    "btn_create": "Create Sect",
+    "btn_join": "Join by Code",
+    "invite_code": "Invite Code",
+    "funds": "Funds",
+    "influence": "Influence",
+    "members": "Members",
+    "contribution": "Contribution",
+    "leaderboard_title": "Sect Leaderboard",
+    "leaderboard_empty": "Leaderboard is empty for now.",
+    "btn_contribute": "Donate $100",
+    "btn_leave": "Leave Sect",
+    "player_name": "You",
+    "default_name": "Neo Lotus Syndicate",
+    "default_tag": "NLS",
+    "log_created": "You founded the sect {name}. The city felt your presence.",
+    "log_joined": "You joined the sect {name}. Your name was added to the secret registry.",
+    "log_contribute": "You donated $100 to the sect fund. Your influence grows.",
+    "log_no_money": "Not enough money to contribute to the sect.",
+    "log_left": "You left the sect. Its seals no longer protect you."
+  }
+}

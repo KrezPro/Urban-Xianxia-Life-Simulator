@@ -1,0 +1,56 @@
+{
+  "npcNames": [
+    "Neo Salaryman",
+    "Night Intern",
+    "Daemon HR",
+    "WiFi Alchemist",
+    "Subway Daoist",
+    "Corporate Reaper",
+    "Night Analyst",
+    "Lotus Intern",
+    "Pager Sentinel",
+    "Data Ascetic"
+  ],
+  "templates": [
+    {
+      "id": "neon_lotus",
+      "name": "Neon Lotus Capital",
+      "tag": "NLC",
+      "focus": "hybrid",
+      "baseFunds": "12000",
+      "baseInfluence": "850"
+    },
+    {
+      "id": "midnight_meridian",
+      "name": "Midnight Meridian Logistics",
+      "tag": "MML",
+      "focus": "secret",
+      "baseFunds": "9000",
+      "baseInfluence": "980"
+    },
+    {
+      "id": "heavenly_hr",
+      "name": "Heavenly HR Solutions",
+      "tag": "HHR",
+      "focus": "mundane",
+      "baseFunds": "16000",
+      "baseInfluence": "620"
+    },
+    {
+      "id": "iron_wifi",
+      "name": "Iron WiFi Temple",
+      "tag": "IWT",
+      "focus": "secret",
+      "baseFunds": "7000",
+      "baseInfluence": "1200"
+    },
+    {
+      "id": "black_market_alchemy",
+      "name": "Black Market Alchemy Group",
+      "tag": "BMG",
+      "focus": "secret",
+      "baseFunds": "20000",
+      "baseInfluence": "400"
+    }
+  ]
+}

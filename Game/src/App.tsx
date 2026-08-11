@@ -4,17 +4,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useIdleProgress } from './hooks/useIdleProgress';
+import { useLocaleStore } from './store/useLocaleStore';
+import ruUI from './locales/ru/ui.json';
+import enUI from './locales/en/ui.json';
 
 export default function App() {
   const { hasHydrated } = usePlayerStore();
-  
-  // Инициализация хука для расчета оффлайн прогресса
-  useIdleProgress(); 
+  const locale = useLocaleStore((state) => state.locale);
+  const uiData: any = locale === 'ru' ? ruUI : enUI;
+
+  useIdleProgress();
 
   if (!hasHydrated) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.loadingText}>Loading Data...</Text>
+        <Text style={styles.loadingText}>{uiData.app.loading}</Text>
       </SafeAreaView>
     );
   }

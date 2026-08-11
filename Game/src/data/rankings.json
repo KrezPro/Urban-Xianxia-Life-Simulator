@@ -1,0 +1,32 @@
+[
+  {
+    "id": "seed_heavenly_hr",
+    "name": "Heavenly HR Conglomerate",
+    "tag": "HHR",
+    "score": "95000"
+  },
+  {
+    "id": "seed_neon_lotus",
+    "name": "Neon Lotus Capital",
+    "tag": "NLC",
+    "score": "72000"
+  },
+  {
+    "id": "seed_midnight_meridian",
+    "name": "Midnight Meridian Logistics",
+    "tag": "MML",
+    "score": "51000"
+  },
+  {
+    "id": "seed_iron_wifi",
+    "name": "Iron WiFi Temple",
+    "tag": "IWT",
+    "score": "33000"
+  },
+  {
+    "id": "seed_black_market",
+    "name": "Black Market Alchemy Group",
+    "tag": "BMG",
+    "score": "18000"
+  }
+]

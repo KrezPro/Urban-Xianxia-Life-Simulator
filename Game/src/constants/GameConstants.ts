@@ -1,12 +1,13 @@
 export const GameConstants = {
-  IDLE_MIN_TIME_MS: 60000, // Минимальное время оффлайна (1 минута) для начисления ресурсов
-  BASE_BREAKTHROUGH_CHANCE: 0.3, // Базовый шанс прорыва (30%)
-  QI_BASE_MULTIPLIER: 10, // Делитель для расчета притока Ци от Духовного корня
-  OFFLINE_MONEY_RATE: 2, // Пассивный доход ($2/сек) при мирском фокусе
+  IDLE_MIN_TIME_MS: 60000,
+  BASE_BREAKTHROUGH_CHANCE: 0.3,
+  QI_BASE_MULTIPLIER: 10,
+  OFFLINE_MONEY_RATE: 2,
+  AD_INTERSTITIAL_COOLDOWN_MS: 70000,
   KARMA_RATES: {
-    AGE_MULTIPLIER: BigInt(2), // 2 кармы за каждый прожитый год
-    QI_DIVISOR: BigInt(10000), // 1 кармы за каждые 10к Ци
-    MONEY_DIVISOR: BigInt(5000), // 1 кармы за каждые $5к
+    AGE_MULTIPLIER: BigInt(2),
+    QI_DIVISOR: BigInt(10000),
+    MONEY_DIVISOR: BigInt(5000),
   },
   STARTING_STATS: {
     HEALTH_MIN: 80,
@@ -19,5 +20,9 @@ export const GameConstants = {
     MONEY_MAX: 500,
     ROOT_MIN: 1,
     ROOT_MAX: 15,
-  }
+  },
+  SOCIAL_INVITE_CODE_LENGTH: 8,
+  SOCIAL_MIN_CONTRIBUTION_MONEY: '100',
+  SOCIAL_MAX_OFFLINE_SECONDS: 604800,
+  SOCIAL_LEADERBOARD_LIMIT: 100,
 };

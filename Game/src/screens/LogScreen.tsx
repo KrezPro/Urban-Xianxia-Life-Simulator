@@ -2,17 +2,23 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useEventStore, IEventLog } from '../store/useEventStore';
+import { useLocaleStore } from '../store/useLocaleStore';
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
 
 const renderItem = ({ item }: { item: IEventLog }) => {
   const date = new Date(item.timestamp).toLocaleTimeString();
+
   return (
     <View style={styles.logItem}>
       <Text style={styles.logTime}>[{date}]</Text>
-      <Text style={[
-        styles.logText, 
-        item.type === 'secret' && styles.secretText, 
-        item.type === 'system' && styles.systemText
-      ]}>
+      <Text
+        style={[
+          styles.logText,
+          item.type === 'secret' && styles.secretText,
+          item.type === 'system' && styles.systemText,
+        ]}
+      >
         {item.text}
       </Text>
     </View>
@@ -21,10 +27,12 @@ const renderItem = ({ item }: { item: IEventLog }) => {
 
 export default function LogScreen() {
   const { logs } = useEventStore();
+  const locale = useLocaleStore((state) => state.locale);
+  const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Журнал судьбы</Text>
+      <Text style={styles.title}>{uiData.log_screen.title}</Text>
       <View style={styles.listContainer}>
         <FlashList
           data={logs}
@@ -32,7 +40,7 @@ export default function LogScreen() {
           estimatedItemSize={50}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>Ваш жизненный путь только начинается...</Text>
+            <Text style={styles.emptyText}>{uiData.log_screen.empty}</Text>
           }
         />
       </View>
@@ -89,5 +97,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
     fontStyle: 'italic',
-  }
+  },
 });

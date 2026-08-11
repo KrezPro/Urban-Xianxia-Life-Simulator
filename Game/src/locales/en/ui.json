@@ -75,5 +75,23 @@
     "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",
     "log_fail_damage": "[FAILURE] Breakthrough failed. Mana Burn occurred, you took {damage} damage.",
     "log_ad_saved": "[SAVED] Breakthrough failed, but the Ad Buff protected your meridians from damage!"
+  },
+  "app": {
+    "loading": "Loading data..."
+  },
+  "tab_bar": {
+    "life": "Life",
+    "dao": "Dao",
+    "store": "Store",
+    "log": "Log",
+    "sect": "Sect"
+  },
+  "log_screen": {
+    "title": "Destiny Log",
+    "empty": "Your life path is only beginning..."
+  },
+  "idle": {
+    "offline_secret": "Offline progress: You meditated for {seconds}s. Earned Qi: {amount}.",
+    "offline_mundane": "Offline progress: You worked for {seconds}s. Earned: ${amount}."
   }
 }
