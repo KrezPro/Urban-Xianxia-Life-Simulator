@@ -4,24 +4,27 @@ import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
+import { useSocialStore } from './store/useSocialStore';
 import { useIdleProgress } from './hooks/useIdleProgress';
+import { Theme } from './constants/Theme';
 import ruUI from './locales/ru/ui.json';
 import enUI from './locales/en/ui.json';
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
   const localeHydrated = useLocaleStore((state) => state.hasHydrated);
+  const socialHydrated = useSocialStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
-  const ui: any = locale === 'ru' ? ruUI : enUI;
+  const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useIdleProgress();
 
-  if (!playerHydrated || !localeHydrated) {
+  if (!playerHydrated || !localeHydrated || !socialHydrated) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingCard}>
-          <ActivityIndicator size="large" color="#8e44ad" />
-          <Text style={styles.loadingText}>{ui.app.loading}</Text>
+          <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
+          <Text style={styles.loadingText}>{uiData.app.loading}</Text>
         </View>
       </SafeAreaView>
     );
@@ -39,21 +42,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#121212',
+    backgroundColor: Theme.colors.background,
   },
   loadingCard: {
-    backgroundColor: '#1E1E1E',
-    borderColor: '#333',
+    backgroundColor: Theme.colors.surface,
+    borderColor: Theme.colors.borderSoft,
     borderWidth: 1,
-    borderRadius: 16,
-    paddingVertical: 32,
-    paddingHorizontal: 32,
+    borderRadius: Theme.radius.xl,
+    paddingVertical: Theme.spacing.xl,
+    paddingHorizontal: Theme.spacing.xl,
     alignItems: 'center',
+    ...Theme.shadow,
   },
   loadingText: {
-    color: '#aaa',
-    fontSize: 16,
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.md,
     fontWeight: '700',
-    marginTop: 16,
+    marginTop: Theme.spacing.md,
   },
 });

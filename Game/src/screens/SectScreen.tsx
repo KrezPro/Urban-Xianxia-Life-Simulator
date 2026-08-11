@@ -36,6 +36,7 @@ export default function SectScreen() {
 
   const socialData: any = locale === 'ru' ? ruSocial : enSocial;
   const ui = socialData.sect_screen;
+
   const minContribution = GameConstants.SOCIAL_MIN_CONTRIBUTION_MONEY;
   const minContributionLabel = formatLargeNumber(minContribution);
   const canAffordDonation = isGreaterOrEqualBigInt(player.money, minContribution);
@@ -141,6 +142,7 @@ export default function SectScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.title}>{ui.title}</Text>
+
         <View style={styles.segmentedControl}>
           <TouchableOpacity
             style={[styles.segmentButton, mode === 'sect' && styles.segmentButtonActive]}
@@ -150,6 +152,7 @@ export default function SectScreen() {
               {ui.tab_my_sect}
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.segmentButton, mode === 'leaderboard' && styles.segmentButtonActive]}
             onPress={() => setMode('leaderboard')}
@@ -212,6 +215,7 @@ export default function SectScreen() {
                 <Text style={styles.inviteLabel}>
                   {ui.invite_code}: {social.sect.inviteCode}
                 </Text>
+
                 <Button
                   title={ui.share_invite}
                   onPress={handleShareInvite}
@@ -245,6 +249,7 @@ export default function SectScreen() {
               />
 
               <Text style={styles.sectionTitle}>{ui.members}</Text>
+
               {social.sect.members.map((member) => {
                 const displayName = member.id === 'player' ? ui.player_name : member.name;
 

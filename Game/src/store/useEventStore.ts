@@ -20,12 +20,12 @@ export const useEventStore = create<EventState>()(
     (set) => ({
       logs: [],
       addLog: (text, type) => set((state) => ({
-        logs: [{ 
-          id: Date.now().toString() + Math.random().toString(), 
-          text, 
-          timestamp: Date.now(), 
-          type 
-        }, ...state.logs]
+        logs: [{
+          id: Date.now().toString() + Math.random().toString(),
+          text,
+          timestamp: Date.now(),
+          type,
+        }, ...state.logs],
       })),
       clearLogs: () => set({ logs: [] }),
     }),

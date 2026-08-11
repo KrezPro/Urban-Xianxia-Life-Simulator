@@ -1,6 +1,12 @@
 import { ILeaderboardEntry, ISect, ISectMember } from '../types';
 import { GameConstants } from '../constants/GameConstants';
-import { addBigIntStrings, divideBigIntStringByNumber, getRandomInt, pickRandom, safeBigInt } from '../utils/helpers';
+import {
+  addBigIntStrings,
+  divideBigIntStringByNumber,
+  getRandomInt,
+  pickRandom,
+  safeBigInt,
+} from '../utils/helpers';
 import sectsData from '../data/sects.json';
 import rankingsData from '../data/rankings.json';
 

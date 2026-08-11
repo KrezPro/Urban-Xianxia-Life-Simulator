@@ -18,6 +18,7 @@ export default function DaoScreen() {
 
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
   const currentStage = stagesData.find((stage) => stage.id === player.cultivationStage);
+
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;

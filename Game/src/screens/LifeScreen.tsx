@@ -126,10 +126,12 @@ export default function LifeScreen() {
         <Card variant="primary" style={styles.heroCard}>
           <Text style={styles.heroAgeLabel}>{ui.age}</Text>
           <Text style={styles.heroAgeValue}>{player.age}</Text>
+
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.health}: {player.health}/100
           </Text>
+
           <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.qi}: {formatLargeNumber(player.qi)}
@@ -149,7 +151,7 @@ export default function LifeScreen() {
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
           <View style={styles.focusRow}>
             <TouchableOpacity
-              style={[styles.focusChip, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
+              style={[styles.focusChip, styles.focusChipLeft, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
               onPress={() => player.setActivityFocus('mundane')}
             >
               <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
@@ -249,7 +251,6 @@ const styles = StyleSheet.create({
   },
   focusRow: {
     flexDirection: 'row',
-    gap: 10,
   },
   focusChip: {
     flex: 1,
@@ -259,6 +260,9 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
     borderColor: Theme.colors.borderSoft,
+  },
+  focusChipLeft: {
+    marginRight: 10,
   },
   focusChipActiveMundane: {
     borderColor: Theme.colors.secondary,
