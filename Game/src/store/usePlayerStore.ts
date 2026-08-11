@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
+import { useInventoryStore } from './useInventoryStore';
+import itemsData from '../data/items.json';
 
 interface PlayerEffects {
   intelligence?: number;
@@ -21,7 +23,7 @@ interface PlayerState {
   health: number;
   appearance: number;
   karma: string;
-  lastLifeKarmaEarned: string; // Новое поле для фиксации кармы за последнюю жизнь
+  lastLifeKarmaEarned: string;
   spiritualRoot: number;
   cultivationStage: string;
   activityFocus: 'mundane' | 'secret';
@@ -32,6 +34,7 @@ interface PlayerState {
   growOlder: () => void;
   addQi: (amount: string) => void;
   deductQi: (amount: string) => void;
+  deductKarma: (amount: string) => void;
   applyEffects: (effects: PlayerEffects) => void;
   reincarnate: () => void;
   resetPlayer: () => void;
@@ -76,8 +79,13 @@ export const usePlayerStore = create<PlayerState>()(
         const current = BigInt(state.qi);
         const deduct = BigInt(amount);
         const result = current - deduct;
-        // Инвертировано условие
         return { qi: 0n > result ? "0" : result.toString() };
+      }),
+      deductKarma: (amount) => set((state) => {
+        const current = BigInt(state.karma);
+        const deduct = BigInt(amount);
+        const result = current - deduct;
+        return { karma: 0n > result ? "0" : result.toString() };
       }),
       applyEffects: (effects) => set((state) => {
         if (state.isDead) return state;
@@ -111,7 +119,6 @@ export const usePlayerStore = create<PlayerState>()(
           newState.qi = 0n > resultQi ? "0" : resultQi.toString();
         }
 
-        // Логика Наследия при смерти (Механика Престижа)
         if (newState.health !== undefined && newState.health <= 0) {
           newState.isDead = true;
           
@@ -134,6 +141,20 @@ export const usePlayerStore = create<PlayerState>()(
       }),
       reincarnate: () => set((state) => {
         const { STARTING_STATS } = GameConstants;
+        const inventory = useInventoryStore.getState().items;
+
+        let bonusMoney = 0;
+        let bonusHealth = 0;
+        let bonusRoot = 0;
+
+        itemsData.forEach((item: any) => {
+          if (item.type === 'karma_buff' && inventory[item.id]) {
+            if (item.effects.money) bonusMoney += item.effects.money;
+            if (item.effects.health) bonusHealth += item.effects.health;
+            if (item.effects.spiritualRoot) bonusRoot += item.effects.spiritualRoot;
+          }
+        });
+
         return {
           isDead: false,
           age: 0,
@@ -142,11 +163,11 @@ export const usePlayerStore = create<PlayerState>()(
           karma: state.karma,
           lastLifeKarmaEarned: "0",
           activityFocus: 'mundane',
-          health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX),
+          health: getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX) + bonusHealth,
           intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
           appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),
-          money: getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX).toString(),
-          spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX),
+          money: (getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX) + bonusMoney).toString(),
+          spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + bonusRoot,
         };
       }),
       resetPlayer: () => set({ ...initialState }),

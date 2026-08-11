@@ -23,5 +23,32 @@
     "karma_earned_last_life": "Legacy earned (Karma):",
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
     "age_log": "You turned {age}."
+  },
+  "store_screen": {
+    "title": "Karma Shop",
+    "karma_balance": "Your Karma: ",
+    "btn_buy": "BUY",
+    "btn_bought": "OWNED",
+    "btn_no_karma": "SHORTFALL",
+    "cost": "Cost: ",
+    "iap_section": "Premium & Ads (WIP)",
+    "iap_pass": "Cultivator Pass (Ad-Free)",
+    "iap_pass_desc": "Disables all ads forever and unlocks the dark theme (in development).",
+    "iap_ad": "Lifesaver Ad",
+    "iap_ad_desc": "Watch a short video to avoid permanent death during a failed breakthrough (in development).",
+    "items": {
+      "buff_rich_family": {
+        "name": "Rich Family",
+        "desc": "Upon each reincarnation, you will be born with an extra $5000."
+      },
+      "buff_strong_meridians": {
+        "name": "Strong Meridians",
+        "desc": "Your meridian walls are fortified. Base health is increased by 50."
+      },
+      "buff_pure_root": {
+        "name": "Pure Root",
+        "desc": "Your spiritual root is naturally more receptive to Qi (+5 pts)."
+      }
+    }
   }
 }

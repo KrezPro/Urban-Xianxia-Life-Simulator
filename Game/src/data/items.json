@@ -1,0 +1,20 @@
+[
+  {
+    "id": "buff_rich_family",
+    "type": "karma_buff",
+    "cost": "50",
+    "effects": { "money": 5000 }
+  },
+  {
+    "id": "buff_strong_meridians",
+    "type": "karma_buff",
+    "cost": "150",
+    "effects": { "health": 50 }
+  },
+  {
+    "id": "buff_pure_root",
+    "type": "karma_buff",
+    "cost": "300",
+    "effects": { "spiritualRoot": 5 }
+  }
+]
