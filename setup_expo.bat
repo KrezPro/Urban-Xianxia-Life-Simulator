@@ -1,80 +1,68 @@
 @echo off
 chcp 65001 >nul
 
-:: Определяем папку со скриптами (engine) и папку с игрой (game)
-set "ENGINE_DIR=%~dp0"
-if "%ENGINE_DIR:~-1%"=="\" set "ENGINE_DIR=%ENGINE_DIR:~0,-1%"
-set "PROJECT_ROOT=%ENGINE_DIR%\.."
-set "GAME_DIR=%PROJECT_ROOT%\game"
+:: Определяем корневую папку проекта
+set "ROOT_DIR=%~dp0"
+if "%ROOT_DIR:~-1%"=="\" set "ROOT_DIR=%ROOT_DIR:~0,-1%"
 
-:: Создаем папку game, если ее нет
-if not exist "%GAME_DIR%" mkdir "%GAME_DIR%"
+:: Устанавливаем правильные пути внутри корня (с заглавной G)
+set "GAME_DIR=%ROOT_DIR%\Game"
+set "LOCAL_NODE_DIR=%ROOT_DIR%\.local-node"
 
 echo =======================================================
-echo Инициализация среды Expo (Раздельная структура)
+echo Инициализация среды Expo (Локальная структура)
 echo =======================================================
 echo.
 
-echo [1/6] Очистка старых файлов в папке game...
-cd /d "%GAME_DIR%"
-if exist "node_modules" rd /s /q "node_modules"
-if exist "assets" rd /s /q "assets"
-if exist "app" rd /s /q "app"
-if exist "components" rd /s /q "components"
-if exist "package.json" del /q "package.json"
-if exist "package-lock.json" del /q "package-lock.json"
-if exist "app.json" del /q "app.json"
-if exist "App.tsx" del /q "App.tsx"
-if exist "tsconfig.json" del /q "tsconfig.json"
-if exist "babel.config.js" del /q "babel.config.js"
-
-:: Шаг 2: ПОДКЛЮЧЕНИЕ ДВИЖКА (в папке engine)
+:: Шаг 1: ПОДКЛЮЧЕНИЕ ДВИЖКА
 set "NODE_VERSION=v22.13.1"
-set "LOCAL_NODE_DIR=%ENGINE_DIR%\.local-node"
 
-cd /d "%ENGINE_DIR%"
 if not exist "%LOCAL_NODE_DIR%\node.exe" (
-    echo [2/6] Движок не найден. Скачиваем в папку engine...
+    echo [1/5] Движок не найден. Скачиваем Node.js %NODE_VERSION% локально...
+    cd /d "%ROOT_DIR%"
     curl -# -o "node.zip" "https://nodejs.org/dist/%NODE_VERSION%/node-%NODE_VERSION%-win-x64.zip"
     tar -xf "node.zip"
     move "node-%NODE_VERSION%-win-x64" ".local-node" >nul
     del "node.zip"
 ) else (
-    echo [2/6] Локальный Node.js на месте.
+    echo [1/5] Локальный Node.js на месте.
 )
 
-:: Временно подключаем Node.js
+:: Подключаем Node.js в текущую сессию
 set "PATH=%LOCAL_NODE_DIR%;%PATH%"
 
-echo [3/6] Проверка готовности...
+echo [2/5] Проверка готовности Node.js:
 call node -v
+call npm -v
 
 echo.
-echo [4/6] Установка стабильной версии Expo (SDK 54)...
-cd /d "%PROJECT_ROOT%"
-if exist "temp-app" rd /s /q "temp-app"
-call npx create-expo-app@latest temp-app --template expo-template-blank-typescript@54 --yes
+echo [3/5] Подготовка директории Game...
+cd /d "%ROOT_DIR%"
+if exist "Game" rd /s /q "Game"
+if exist "game" rd /s /q "game"
+:: Даем Windows секунду на освобождение файловых хэндлов
+timeout /t 2 /nobreak >nul
+
+echo.
+echo [4/5] Установка стабильной версии Expo (SDK 54)...
+call npx --yes create-expo-app@latest Game --template expo-template-blank-typescript@54 --yes
 
 if %errorlevel% neq 0 (
     echo.
-    echo [ОШИБКА] Установка прервалась.
+    echo [ОШИБКА] Установка Expo прервалась.
     pause
     exit /b
 )
 
 echo.
-echo [5/6] Перенос файлов проекта в папку game...
-robocopy temp-app "%GAME_DIR%" /E /MOVE >nul
-if exist "temp-app" rd /s /q "temp-app"
-
-echo.
-echo [6/6] Финальная синхронизация пакетов...
+echo [5/5] Установка дополнительных игровых библиотек...
 cd /d "%GAME_DIR%"
-call npm install
+call npm install zustand react-native-mmkv @shopify/flash-list @react-navigation/native @react-navigation/bottom-tabs react-native-screens react-native-safe-area-context
 
 echo.
 echo =======================================================
 echo ГОТОВО! Проект успешно развернут.
-echo Движок лежит в \engine, игра лежит в \game.
+echo Папка игры: \Game
+echo Теперь вы можете использовать start.bat
 echo =======================================================
 pause
