@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
-import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
@@ -16,9 +16,9 @@ import enUI from '../locales/en/ui.json';
 
 export default function LifeScreen() {
   const player = usePlayerStore();
+  const { locale, toggleLocale } = useLocaleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
-  const { locale, toggleLocale } = useLocaleStore();
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
@@ -30,15 +30,10 @@ export default function LifeScreen() {
     }
   }, []);
 
-  useEffect(() => {
-    if (player.isDead) {
-      pushUiNotification('death', 'danger');
-    }
-  }, [player.isDead]);
-
   const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
   const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
   const nextStage = stagesData[currentStageIndex + 1];
+
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.health / 100;
 
@@ -48,7 +43,6 @@ export default function LifeScreen() {
     if (!player.hasCultivatorPass) {
       if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         player.setLastInterstitialTime(now);
-        pushUiNotification('interstitial', 'system');
       }
     }
 
@@ -59,7 +53,6 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
-      pushUiNotification('meditation', 'secret', { amount: player.spiritualRoot.toString() });
     }
 
     const isSecretEvent = secretEventChance > Math.random();
@@ -68,8 +61,11 @@ export default function LifeScreen() {
 
     player.applyEffects(randomEvent.effects);
 
-    pushUiNotification('age_up', 'mundane', { age: (player.age + 1).toString() });
-    pushEventNotification(randomEvent.id, isSecretEvent ? 'secret' : 'mundane', isSecretEvent ? 'secret' : 'mundane');
+    pushEventNotification(
+      randomEvent.id,
+      isSecretEvent ? 'secret' : 'mundane',
+      isSecretEvent ? 'secret' : 'mundane'
+    );
   };
 
   const handleReincarnate = () => {
@@ -81,7 +77,8 @@ export default function LifeScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <NotificationHost />
-        <ScrollView contentContainerStyle={styles.content}>
+
+        <ScrollView contentContainerStyle={styles.deadScrollContent}>
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
             <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
@@ -119,55 +116,99 @@ export default function LifeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <NotificationHost />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title}>{ui.title}</Text>
+
+      <View style={styles.statusHeader}>
+        <View style={styles.statusTopRow}>
+          <View style={styles.ageBlock}>
+            <Text style={styles.ageLabel}>{ui.age}</Text>
+            <Text style={styles.ageValue}>{player.age}</Text>
+          </View>
+
           <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
             <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
           </TouchableOpacity>
         </View>
 
-        <Card variant="primary" style={styles.heroCard}>
-          <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-          <Text style={styles.heroAgeValue}>{player.age}</Text>
+        <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} />
+        <Text style={styles.barLabel}>
+          {ui.health}: {player.health}/100
+        </Text>
 
-          <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.health}: {player.health}/100
-          </Text>
+        <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.qiBar} />
+        <Text style={styles.barLabel}>
+          {ui.qi}: {formatLargeNumber(player.qi)}
+        </Text>
+      </View>
 
-          <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.qi}: {formatLargeNumber(player.qi)}
-          </Text>
-        </Card>
-
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <Card style={styles.statsCard}>
-          <StatRow icon="school" label={ui.intelligence} value={player.intelligence.toString()} color={Theme.colors.secondary} />
-          <StatRow icon="heart" label={ui.health} value={player.health.toString()} color={Theme.colors.success} />
-          <StatRow icon="diamond" label={ui.appearance} value={player.appearance.toString()} color={Theme.colors.warning} />
-          <StatRow icon="cash" label={ui.money} value={`$${formatLargeNumber(player.money)}`} color={Theme.colors.gold} />
-          <StatRow icon="flame" label={ui.spiritual_root} value={player.spiritualRoot.toString()} color={Theme.colors.info} />
-          <StatRow icon="sparkles" label={ui.karma} value={formatLargeNumber(player.karma)} color={Theme.colors.primarySoft} />
+          <StatRow
+            icon="school"
+            label={ui.intelligence}
+            value={player.intelligence.toString()}
+            color={Theme.colors.secondary}
+          />
+          <StatRow
+            icon="diamond"
+            label={ui.appearance}
+            value={player.appearance.toString()}
+            color={Theme.colors.warning}
+          />
+          <StatRow
+            icon="cash"
+            label={ui.money}
+            value={`$${formatLargeNumber(player.money)}`}
+            color={Theme.colors.gold}
+          />
+          <StatRow
+            icon="flame"
+            label={ui.spiritual_root}
+            value={player.spiritualRoot.toString()}
+            color={Theme.colors.info}
+          />
+          <StatRow
+            icon="sparkles"
+            label={ui.karma}
+            value={formatLargeNumber(player.karma)}
+            color={Theme.colors.primarySoft}
+          />
         </Card>
 
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
+
           <View style={styles.focusRow}>
             <TouchableOpacity
-              style={[styles.focusChip, styles.focusChipLeft, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
+              style={[
+                styles.focusChip,
+                styles.focusChipLeft,
+                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+              ]}
               onPress={() => player.setActivityFocus('mundane')}
             >
-              <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'mundane' && styles.focusChipTextActive,
+                ]}
+              >
                 {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
+              style={[
+                styles.focusChip,
+                player.activityFocus === 'secret' && styles.focusChipActiveSecret,
+              ]}
               onPress={() => player.setActivityFocus('secret')}
             >
-              <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'secret' && styles.focusChipTextActive,
+                ]}
+              >
                 {ui.focus_secret}
               </Text>
             </TouchableOpacity>
@@ -191,7 +232,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Theme.colors.background,
   },
-  content: {
+  deadScrollContent: {
+    flexGrow: 1,
     padding: Theme.spacing.md,
     paddingBottom: 32,
   },
@@ -219,28 +261,49 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontWeight: '800',
   },
-  heroCard: {
-    alignItems: 'center',
-    marginBottom: Theme.spacing.md,
+  statusHeader: {
+    backgroundColor: Theme.colors.surface,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: Theme.colors.borderSoft,
+    paddingHorizontal: Theme.spacing.md,
+    paddingTop: Theme.spacing.sm,
+    paddingBottom: Theme.spacing.md,
+    ...Theme.shadow,
   },
-  heroAgeLabel: {
+  statusTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Theme.spacing.sm,
+  },
+  ageBlock: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 8,
+  },
+  ageLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
-    marginBottom: 4,
+    fontWeight: '700',
   },
-  heroAgeValue: {
+  ageValue: {
     color: Theme.colors.text,
-    fontSize: Theme.fontSize.hero,
+    fontSize: 34,
     fontWeight: '900',
-    marginBottom: Theme.spacing.md,
   },
-  heroProgress: {
-    marginBottom: 8,
-  },
-  heroProgressLabel: {
+  barLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
-    marginBottom: Theme.spacing.sm,
+    marginTop: 4,
+    marginBottom: 6,
+  },
+  qiBar: {
+    marginTop: 2,
+  },
+  scrollContent: {
+    padding: Theme.spacing.md,
+    paddingBottom: 32,
   },
   statsCard: {
     marginBottom: Theme.spacing.md,

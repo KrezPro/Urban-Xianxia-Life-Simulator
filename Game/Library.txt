@@ -1,14 +1,14 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
 
 1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification.
-2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен. NotificationStore не персистится (временные тосты).
-3. Списки: FlashList для журнала и рейтингов. FlatList для логов не использовать.
+2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен. NotificationStore не персистится, так как уведомления временные.
+3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
 4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Store, Sect. Журнал скрыт из навигации.
-9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг. Секта обязательна и не удаляется.
+8. Навигация: route names только английские: Life, Dao, Store, Log, Sect.
+9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
@@ -20,7 +20,10 @@
 18. Новые файлы всегда получать короткое описание в структуре проекта.
 19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled и icon.
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
-21. Вкладка Sect обязательна в TabNavigator как отдельный английский route name "Sect".
-22. Notification UX: уведомления хранят messageKey и params, текст вычисляется при рендере через текущий locale, что обеспечивает перевод при смене языка.
-23. NotificationHost отображается на вкладке Мир и показывает максимум NOTIFICATION_MAX_VISIBLE тостов.
-24. NotificationToast анимируется через Animated (opacity + translateY), автоматически исчезает через durationMs, скрывается по тапу.
+21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
+22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
+23. Уведомления нельзя делать абсолютным overlay поверх контента, если они перекрывают важные игровые данные.
+24. NotificationHost должен находиться в нормальном потоке экрана (не absolute), чтобы контент смещался, а не перекрывался.
+25. LifeScreen обязан иметь sticky status header с возрастом, здоровьем и Ци, чтобы ключевые статы были видны даже при прокрутке.
+26. Уведомления хранят messageKey и params, а финальный текст вычисляется в момент рендера через текущий locale.
+27. NotificationToast показывает тонкую countdown-полосу, чтобы игрок понимал, сколько уведомление будет видно.

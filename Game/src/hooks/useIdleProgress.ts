@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { useLocaleStore } from '../store/useLocaleStore';
 import { storage } from '../store/mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { calculateOfflineDelta } from '../utils/timeUtils';

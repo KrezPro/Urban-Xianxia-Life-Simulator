@@ -5,11 +5,16 @@ import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 
 export const applyParams = (text: string, params?: Record<string, string>): string => {
-  if (!params) return text;
+  if (!params) {
+    return text;
+  }
+
   let result = text;
+
   Object.keys(params).forEach((key) => {
-    result = result.replace(`{${key}}`, params[key]);
+    result = result.split(`{${key}}`).join(params[key]);
   });
+
   return result;
 };
 
@@ -18,11 +23,13 @@ export const getNotificationText = (notification: INotification, locale: Locale)
     const events = locale === 'ru' ? ruEvents : enEvents;
     const pool = notification.eventPool || 'mundane';
     const list = (events as any)[pool] || [];
-    const found = list.find((e: any) => e.id === notification.messageKey);
+    const found = list.find((event: any) => event.id === notification.messageKey);
+
     return found ? found.text : notification.messageKey;
   }
 
-  const dict = locale === 'ru' ? ruNotifications : enNotifications;
-  const raw = (dict as any)[notification.messageKey] || notification.messageKey;
+  const dictionary = locale === 'ru' ? ruNotifications : enNotifications;
+  const raw = (dictionary as any)[notification.messageKey] || notification.messageKey;
+
   return applyParams(raw, notification.params);
 };

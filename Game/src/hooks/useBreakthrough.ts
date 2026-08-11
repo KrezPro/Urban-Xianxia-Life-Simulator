@@ -1,12 +1,10 @@
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { useLocaleStore } from '../store/useLocaleStore';
 import stagesData from '../data/stages.json';
 
 export const useBreakthrough = () => {
   const player = usePlayerStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const locale = useLocaleStore((state) => state.locale);
 
   const currentStageIndex = stagesData.findIndex((s) => s.id === player.cultivationStage);
   const nextStage = stagesData[currentStageIndex + 1];

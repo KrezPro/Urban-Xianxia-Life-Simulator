@@ -4,6 +4,7 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useBreakthrough } from '../hooks/useBreakthrough';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Button, Card, ProgressBar } from '../components/ui';
+import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import stagesData from '../data/stages.json';
@@ -36,6 +37,7 @@ export default function DaoScreen() {
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
+        <NotificationHost />
         <View style={styles.centerContainer}>
           <Card variant="danger" style={styles.deadCard}>
             <Text style={styles.deadText}>{ui.dead_text}</Text>
@@ -47,6 +49,7 @@ export default function DaoScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <NotificationHost />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{ui.title}</Text>
 

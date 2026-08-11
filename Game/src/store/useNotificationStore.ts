@@ -20,41 +20,55 @@ interface NotificationState {
   clearAll: () => void;
 }
 
+let notificationCounter = 0;
+
+const createId = (): string => {
+  notificationCounter += 1;
+  return `${Date.now().toString()}_${notificationCounter.toString()}`;
+};
+
 export const useNotificationStore = create<NotificationState>()((set) => ({
   notifications: [],
-  pushUiNotification: (messageKey, type, params, durationMs) =>
+
+  pushUiNotification: (messageKey, type, params, durationMs) => {
+    const notification: INotification = {
+      id: createId(),
+      kind: 'ui' as NotificationKind,
+      messageKey,
+      params,
+      type,
+      createdAt: Date.now(),
+      durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
+    };
+
     set((state) => ({
-      notifications: [
-        {
-          id: Date.now().toString() + Math.random().toString(),
-          kind: 'ui' as NotificationKind,
-          messageKey,
-          params,
-          type,
-          createdAt: Date.now(),
-          durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
-        },
-        ...state.notifications,
-      ].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
-    })),
-  pushEventNotification: (eventId, eventPool, type, durationMs) =>
+      notifications: [notification, ...state.notifications].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+    }));
+  },
+
+  pushEventNotification: (eventId, eventPool, type, durationMs) => {
+    const notification: INotification = {
+      id: createId(),
+      kind: 'event' as NotificationKind,
+      messageKey: eventId,
+      eventPool,
+      type,
+      createdAt: Date.now(),
+      durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
+    };
+
     set((state) => ({
-      notifications: [
-        {
-          id: Date.now().toString() + Math.random().toString(),
-          kind: 'event' as NotificationKind,
-          messageKey: eventId,
-          eventPool,
-          type,
-          createdAt: Date.now(),
-          durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
-        },
-        ...state.notifications,
-      ].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
-    })),
-  dismissNotification: (id) =>
+      notifications: [notification, ...state.notifications].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+    }));
+  },
+
+  dismissNotification: (id) => {
     set((state) => ({
-      notifications: state.notifications.filter((n) => n.id !== id),
-    })),
-  clearAll: () => set({ notifications: [] }),
+      notifications: state.notifications.filter((item) => item.id !== id),
+    }));
+  },
+
+  clearAll: () => {
+    set({ notifications: [] });
+  },
 }));
