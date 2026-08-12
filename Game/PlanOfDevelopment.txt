@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 15 (Реализованы единые приоритетные уведомления в один тост, language-independent генератор событий, survival cost, детская смертность и баланс денег)
+[СТАТУС]: ШАГ 16 (Исправлены критические падения DaoScreen из-за undefined forEach и SafeAreaView deprecation warning)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -36,7 +36,7 @@
 
 === Фаза 7: UI-кит и восстановление отсутствующих файлов ===
 21. [X] Theme.ts: темная неоновая тема.
-22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow, IconButton.
+22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
 23. [X] utils/helpers.ts: format, BigInt, random, bps.
 24. [X] Экраны используют общий UI-кит.
 25. [X] Навигация использует стабильные route names.
@@ -62,82 +62,38 @@
 41. [ ] Автотесты BigInt/MMKV/FlashList.
 
 === Фаза 10: UX улучшения ===
-42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, вкладка Log скрыта из tab bar.
+42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, журнал открывается модально.
 43. [X] Grow Older заменен перетаскиваемой DraggableGrowButton (FAB в стиле корзины).
 44. [X] Убран скролл во вкладке Мир, так как контент размещается без прокрутки.
 
-=== Фаза 11: Генератор событий, уведомления и выживание ===
-45. [X] Уведомления показываются строго одним тостом, без увеличения видимого количества.
-46. [X] Добавлены приоритеты уведомлений и замена только более важным событием.
-47. [X] NotificationToast использует таймер от момента показа.
-48. [X] Создан language-independent генератор событий через eventRules.json и eventGenerator.json.
-49. [X] События зависят от возраста, фокуса, стадии Дао и выбранных активностей.
-50. [X] Добавлен survival cost по возрасту и урон за нехватку денег.
-51. [X] Детство стало опаснее: болезни, буллинг, голод и unpaid survival.
-52. [X] Баланс денег: события не дают процентный snowball, введён EVENT_MONEY_CAP.
-53. [X] Журнал поддерживает generated-события и effect chips.
+=== Фаза 11: Геймплейные системы MAX-здоровья, техник, активностей, старения и подписок ===
+45. [X] Здоровье разделено на current/max, в списке характеристик отображается MAX.
+46. [X] Добавлены техники Дао с уровнями, стоимостью, требованиями и эффектами.
+47. [X] Карма-магазин переведен на уровни 1-10 с растущей стоимостью и эффектами.
+48. [X] Добавлена вкладка Activities с работами, спортом, едой, жильем и порталами.
+49. [X] Годовой цикл учитывает подписки, доход, траты, здоровье, Ци и порталы.
+50. [X] При нехватке денег активности автоматически отключаются в порядке приоритета.
+51. [X] Techniques и Lifestyle сбрасываются при реинкарнации, карма-баффы остаются.
+52. [X] Добавлены maxAge/softAge стадий и шанс смерти от старости.
+53. [X] Нижняя навигация содержит только 5 видимых вкладок без лишнего пустого слота.
+54. [X] Кнопка прорыва во вкладке Дао закреплена внизу и всегда видна.
 
-=== ОПИСАНИЕ структуры проекта (обновлено) ===
-Game/src/
-├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
-├── components/
-│   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
-│   └── game/
-│       ├── NotificationHost.tsx     // Показывает строго одно уведомление
-│       ├── NotificationToast.tsx    // Rich-тост: title, body, effects, rarity
-│       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
-│       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
-├── constants/
-│   ├── GameConstants.ts             // Приоритеты уведомлений, survival, event money/qi caps
-│   └── Theme.ts                     // Темная тема
-├── data/
-│   ├── events.json                  // Legacy-события для обратной совместимости
-│   ├── eventRules.json              // Правила генератора событий
-│   ├── items.json                   // Карма-баффы магазина
-│   ├── stages.json                  // Стадии культивации, maxAge/softAge
-│   ├── lifestyle.json               // Работы, спорт, еда, жильё, порталы
-│   ├── sects.json                   // Шаблоны сект
-│   └── rankings.json                // Seed-рейтинг
-├── hooks/
-│   ├── useIdleProgress.ts           // Offline-прогресс
-│   ├── useBreakthrough.ts           // Прорывы
-│   └── useYearlyCycle.ts            // Годовой цикл: survival, lifestyle, событие, один тост
-├── navigation/
-│   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Store/Sect, Log скрыт
-├── screens/
-│   ├── LifeScreen.tsx               // Основной экран, MAX-здоровье, годовой цикл
-│   ├── DaoScreen.tsx                // Путь Дао
-│   ├── StoreScreen.tsx              // Магазин Кармы
-│   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips
-├── store/
-│   ├── mmkvStorage.ts               // MMKV storage
-│   ├── usePlayerStore.ts            // Игрок: current/max health, карма, реинкарнация
-│   ├── useEventStore.ts             // Журнал, addGeneratedLog
-│   ├── useInventoryStore.ts         // Инвентарь
-│   ├── useLocaleStore.ts            // Язык
-│   ├── useSocialStore.ts            // Секты
-│   ├── useLifestyleStore.ts         // Выбранные активности
-│   └── useNotificationStore.ts      // Приоритетная очередь из одного видимого уведомления
-├── types/
-│   └── index.ts                     // Интерфейсы: INotification priority, GeneratedEvent, EffectChip
-├── utils/
-│   ├── notificationUtils.ts         // Безопасный локализованный резолвинг уведомлений и логов
-│   ├── timeUtils.ts                 // Дельта времени
-│   ├── helpers.ts                   // Форматирование, BigInt, random, bps
-│   ├── yearlyUtils.ts               // Survival, lifestyle, old age, life phase
-│   └── eventGenerator.ts            // Генератор событий
-└── locales/
-    ├── ru/
-    │   ├── ui.json
-    │   ├── events.json
-    │   ├── social.json
-    │   ├── notifications.json
-    │   └── eventGenerator.json
-    └── en/
-        ├── ui.json
-        ├── events.json
-        ├── social.json
-        ├── notifications.json
-        └── eventGenerator.json
+=== Фаза 12: Генератор событий и последствия смерти ===
+55. [X] Создан eventGenerator.ts: события зависят от возраста, фокуса, стадии Дао и активностей.
+56. [X] Создан eventRules.json: data-driven правила и эффекты событий.
+57. [X] Созданы локали eventGenerator.json для RU/EN: шаблоны, пулы слов, заголовки, статы.
+58. [X] Уведомления стали rich: title, body, rarity, effects chips.
+59. [X] Журнал поддерживает generated-события с ключами и параметрами.
+60. [X] Созданы локали stages.json и stageUtils.ts для человекочитаемых стадий.
+61. [X] Добавлены причины смерти: old_age, health, breakthrough, portal, event.
+62. [X] Создан rebirthPenalties.json и rebirthUtils.ts: денежные потери, слабое здоровье, проклятия.
+63. [X] LifeScreen показывает модальное окно последствий перерождения.
+64. [X] activeCurses влияют на модификаторы годового цикла и прорывов.
+
+=== Фаза 13: Исправление критических багов ===
+65. [X] Исправлен crash DaoScreen "Cannot read property 'forEach' of undefined" из-за undefined activeCurses/levels/items после гидратации старых сохранений.
+66. [X] Добавлены защитные fallback в getCurseModifiers, getTechniqueModifiers, getKarmaTotalEffects, combineModifiers.
+67. [X] Добавлена миграция в usePlayerStore для нормализации activeCurses и lastDeathCause из старых MMKV-сохранений.
+68. [X] Добавлена нормализация levels в useTechniquesStore и items в useInventoryStore при rehydrate.
+69. [X] Исправлен SafeAreaView deprecation warning в StoreScreen.tsx (переведён на react-native-safe-area-context).
+70. [X] Добавлена защита от undefined techniquesData в DaoScreen через Array.isArray проверку.

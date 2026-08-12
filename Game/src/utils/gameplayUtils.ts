@@ -17,10 +17,14 @@ export const emptyModifiers = (): ModifierSet => ({
   portalMoneyBps: 0,
 });
 
-export const combineModifiers = (...mods: Array<Partial<ModifierSet>>): ModifierSet => {
+export const combineModifiers = (...mods: Array<Partial<ModifierSet> | undefined | null>): ModifierSet => {
   const result = emptyModifiers();
 
   mods.forEach((modifier) => {
+    if (!modifier) {
+      return;
+    }
+
     (Object.keys(result) as Array<keyof ModifierSet>).forEach((key) => {
       result[key] += (modifier as any)[key] || 0;
     });
@@ -34,7 +38,11 @@ export const getStageIndex = (stageId: string): number => {
   return 0 > index ? 0 : index;
 };
 
-export const getKarmaItemLevel = (items: Record<string, any>, itemId: string): number => {
+export const getKarmaItemLevel = (items: Record<string, any> | undefined | null, itemId: string): number => {
+  if (!items) {
+    return 0;
+  }
+
   const item = items[itemId];
 
   if (!item) {
@@ -65,7 +73,7 @@ export const getKarmaLevelEffects = (itemId: string, level: number): Record<stri
   return levelData ? levelData.effects : {};
 };
 
-export const getKarmaTotalEffects = (items: Record<string, any>): ModifierSet & {
+export const getKarmaTotalEffects = (items: Record<string, any> | undefined | null): ModifierSet & {
   startMoney: string;
   startMaxHealth: number;
   startSpiritualRoot: number;
@@ -75,12 +83,14 @@ export const getKarmaTotalEffects = (items: Record<string, any>): ModifierSet & 
   let startMaxHealth = 0;
   let startSpiritualRoot = 0;
 
+  const safeItems = items || {};
+
   (itemsData as any[]).forEach((item) => {
     if (item.type !== 'karma_buff') {
       return;
     }
 
-    const level = getKarmaItemLevel(items, item.id);
+    const level = getKarmaItemLevel(safeItems, item.id);
 
     if (0 >= level) {
       return;
@@ -146,11 +156,12 @@ export const getTechniqueCost = (techniqueId: string, currentLevel: number): str
   return cost.toString();
 };
 
-export const getTechniqueModifiers = (levels: Record<string, number>): ModifierSet => {
+export const getTechniqueModifiers = (levels: Record<string, number> | undefined | null): ModifierSet => {
   const mods = emptyModifiers();
+  const safeLevels = levels || {};
 
   (techniquesData as any[]).forEach((technique) => {
-    const level = levels[technique.id] || 0;
+    const level = safeLevels[technique.id] || 0;
 
     if (0 >= level) {
       return;
@@ -499,7 +510,11 @@ export const processLifestyleYear = (
       const rawMoney = safeBigInt(portal.moneyMin) + ((safeBigInt(portal.moneyMax) - safeBigInt(portal.moneyMin)) / 2n);
       const rawQi = safeBigInt(portal.qiMin) + ((safeBigInt(portal.qiMax) - safeBigInt(portal.qiMin)) / 2n);
 
-      const moneyBonusBps = clampInt(modifiers.moneyGainBps + modifiers.portalMoneyBps, 0, GameConstants.MONEY_BONUS_CAP_BPS);
+      const moneyBonusBps = clampInt(
+        modifiers.moneyGainBps + modifiers.portalMoneyBps,
+        0,
+        GameConstants.MONEY_BONUS_CAP_BPS
+      );
       const qiBonusBps = clampInt(modifiers.qiGainBps, 0, GameConstants.QI_BONUS_CAP_BPS);
 
       portalMoney = increaseBigIntByBps(rawMoney.toString(), moneyBonusBps);
@@ -507,7 +522,12 @@ export const processLifestyleYear = (
     } else {
       portalResult = 'fail';
 
-      const damageReductionBps = clampInt(modifiers.damageReductionBps, 0, GameConstants.DAMAGE_REDUCTION_CAP_BPS);
+      const damageReductionBps = clampInt(
+        modifiers.damageReductionBps,
+        0,
+        GameConstants.DAMAGE_REDUCTION_CAP_BPS
+      );
+
       const reducedDamage = reduceBigIntByBps(portal.failDamage.toString(), damageReductionBps);
       portalDamage = Math.max(1, Number(reducedDamage));
     }

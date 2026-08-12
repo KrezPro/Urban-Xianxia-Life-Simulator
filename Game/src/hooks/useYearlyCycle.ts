@@ -3,25 +3,32 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { useTechniquesStore } from '../store/useTechniquesStore';
+import { useInventoryStore } from '../store/useInventoryStore';
 import { useLifestyleStore } from '../store/useLifestyleStore';
 import { GameConstants } from '../constants/GameConstants';
-import { safeBigInt, getRandomInt, increaseBigIntByBps } from '../utils/helpers';
-import { calculateOldAgeDeathBps, processLifestyleYear, getSurvivalCost } from '../utils/yearlyUtils';
+import {
+  combineModifiers,
+  getTechniqueModifiers,
+  getKarmaTotalEffects,
+  processLifestyleYear,
+  calculateOldAgeDeathBps,
+} from '../utils/gameplayUtils';
+import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
+import { increaseBigIntByBps, getRandomInt } from '../utils/helpers';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruNotifications from '../locales/ru/notifications.json';
 import enNotifications from '../locales/en/notifications.json';
 
-interface YearHighlight {
-  priority: number;
-  options: any;
-}
-
 export const useYearlyCycle = () => {
   const { addLog, addGeneratedLog } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
-  const pushRichNotification = useNotificationStore((state) => state.pushRichNotification);
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+  const pushGeneratedEventNotification = useNotificationStore((state) => state.pushGeneratedEventNotification);
+  const techniques = useTechniquesStore();
+  const inventory = useInventoryStore();
   const lifestyle = useLifestyleStore();
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
@@ -34,14 +41,13 @@ export const useYearlyCycle = () => {
       return;
     }
 
-    const highlights: YearHighlight[] = [];
-
     const now = Date.now();
 
     if (!current.hasCultivatorPass) {
       if (now - current.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         current.setLastInterstitialTime(now);
         addLog(ui.interstitial_log, 'system');
+        pushUiNotification('interstitial', 'system');
       }
     }
 
@@ -52,59 +58,18 @@ export const useYearlyCycle = () => {
 
     if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
       addLog(notifications.old_age_death, 'system');
+      pushUiNotification('old_age_death', 'danger');
+      current.setDeathCause('old_age');
       current.applyEffects({ health: -current.health });
       return;
     }
 
-    const survivalCost = getSurvivalCost(current.age);
-
-    if (survivalCost > 0n) {
-      const money = safeBigInt(current.money);
-
-      if (money >= survivalCost) {
-        current.applyEffects({ money: (-survivalCost).toString() });
-        current = usePlayerStore.getState();
-      } else {
-        const unpaid = survivalCost - money;
-
-        if (money > 0n) {
-          current.applyEffects({ money: (-money).toString() });
-          current = usePlayerStore.getState();
-        }
-
-        const unpaidBps = Number((unpaid * 10000n) / survivalCost);
-        const damageBps = Math.floor((GameConstants.SURVIVAL_UNPAID_DAMAGE_BPS * unpaidBps) / 10000);
-        let damage = Math.max(1, Math.floor((current.maxHealth * damageBps) / 10000));
-
-        if (current.age < 12) {
-          damage += GameConstants.SURVIVAL_CHILD_EXTRA_DAMAGE;
-        }
-
-        current.applyEffects({ health: -damage });
-        current = usePlayerStore.getState();
-
-        addLog(notifications.survival_unpaid, 'system');
-
-        if (unpaidBps >= 5000) {
-          highlights.push({
-            priority: GameConstants.NOTIFICATION_PRIORITY.survival,
-            options: {
-              kind: 'ui',
-              messageKey: 'survival_unpaid',
-              type: 'danger',
-              priority: GameConstants.NOTIFICATION_PRIORITY.survival,
-              group: 'year',
-              dictionary: 'notifications',
-              durationMs: GameConstants.NOTIFICATION_DURATION_MS,
-            },
-          });
-        }
-
-        if (current.isDead) {
-          return;
-        }
-      }
-    }
+    const curseModifiers = getCurseModifiers(current.activeCurses || []);
+    const baseModifiers = combineModifiers(
+      getTechniqueModifiers(techniques.levels || {}),
+      getKarmaTotalEffects(inventory.items || {}),
+      curseModifiers
+    );
 
     const report = processLifestyleYear(
       {
@@ -117,48 +82,25 @@ export const useYearlyCycle = () => {
         cultivationStage: current.cultivationStage,
         age: current.age,
       },
-      lifestyle.selected
+      lifestyle.selected,
+      baseModifiers
     );
 
     if (report.disabled.length > 0) {
       report.disabled.forEach((category) => lifestyle.disableOption(category));
-      addLog(notifications.lifestyle_disabled_no_money, 'system');
+      pushUiNotification('lifestyle_disabled_no_money', 'danger');
     }
 
     if (report.portalResult === 'success') {
-      highlights.push({
-        priority: GameConstants.NOTIFICATION_PRIORITY.portal,
-        options: {
-          kind: 'ui',
-          messageKey: 'portal_success',
-          type: 'reward',
-          priority: GameConstants.NOTIFICATION_PRIORITY.portal,
-          group: 'year',
-          params: {
-            money: report.portalMoney,
-            qi: report.portalQi,
-          },
-          dictionary: 'notifications',
-          durationMs: GameConstants.NOTIFICATION_DURATION_MS,
-        },
+      pushUiNotification('portal_success', 'reward', {
+        money: report.portalMoney,
+        qi: report.portalQi,
       });
     }
 
     if (report.portalResult === 'fail') {
-      highlights.push({
-        priority: GameConstants.NOTIFICATION_PRIORITY.portal,
-        options: {
-          kind: 'ui',
-          messageKey: 'portal_fail',
-          type: 'danger',
-          priority: GameConstants.NOTIFICATION_PRIORITY.portal,
-          group: 'year',
-          params: {
-            damage: report.portalDamage.toString(),
-          },
-          dictionary: 'notifications',
-          durationMs: GameConstants.NOTIFICATION_DURATION_MS,
-        },
+      pushUiNotification('portal_fail', 'danger', {
+        damage: report.portalDamage.toString(),
       });
     }
 
@@ -167,9 +109,16 @@ export const useYearlyCycle = () => {
         maxHealth: report.maxHealthDelta,
         health: report.healthDelta,
       });
+
       current = usePlayerStore.getState();
 
       if (current.isDead) {
+        if (report.portalResult === 'fail') {
+          current.setDeathCause('portal');
+        } else {
+          current.setDeathCause('health');
+        }
+
         return;
       }
     }
@@ -193,14 +142,21 @@ export const useYearlyCycle = () => {
       return;
     }
 
+    let secretEventChance = 0.1;
+
     if (current.activityFocus === 'secret') {
+      secretEventChance = 0.8;
+
       const baseQi = current.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER;
-      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), 0));
+      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), baseModifiers.qiGainBps));
 
       current.addQi(qiGain.toString());
       current = usePlayerStore.getState();
 
       addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
+      pushUiNotification('meditation', 'secret', {
+        amount: qiGain.toString(),
+      });
     }
 
     if (current.isDead) {
@@ -225,42 +181,16 @@ export const useYearlyCycle = () => {
     });
 
     addGeneratedLog(generatedEvent);
+    pushGeneratedEventNotification(generatedEvent);
 
     current.applyEffects(generatedEvent.effects);
-    current = usePlayerStore.getState();
 
-    if (!current.isDead) {
-      const params: Record<string, string> = {};
+    const afterEvent = usePlayerStore.getState();
 
-      Object.entries(generatedEvent.params).forEach(([key, value]) => {
-        params[key] = String(value);
-      });
-
-      highlights.push({
-        priority: GameConstants.NOTIFICATION_PRIORITY.generatedEvent,
-        options: {
-          kind: 'generated',
-          messageKey: 'generated_event',
-          type: generatedEvent.logType === 'secret' ? 'secret' : 'mundane',
-          priority: GameConstants.NOTIFICATION_PRIORITY.generatedEvent,
-          group: 'year',
-          titleKey: generatedEvent.titleKey,
-          textKey: generatedEvent.textKey,
-          params,
-          effects: generatedEvent.displayEffects,
-          rarity: generatedEvent.rarity,
-          tone: generatedEvent.tone,
-          dictionary: 'eventGenerator',
-          durationMs: GameConstants.EVENT_NOTIFICATION_DURATION_MS,
-        },
-      });
+    if (afterEvent.isDead) {
+      afterEvent.setDeathCause('event');
     }
-
-    if (!current.isDead && highlights.length > 0) {
-      const best = highlights.sort((a, b) => b.priority - a.priority)[0];
-      pushRichNotification(best.options);
-    }
-  }, [lifestyle.selected, locale]);
+  }, [techniques.levels, inventory.items, lifestyle.selected, locale]);
 
   return { handleGrowOlder };
 };

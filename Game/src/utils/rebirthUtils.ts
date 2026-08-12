@@ -9,7 +9,7 @@ export const getCurseById = (curseId: string): any => {
   return (data.curses || []).find((curse: any) => curse.id === curseId);
 };
 
-export const getCurseModifiers = (activeCurses: string[]): ModifierSet => {
+export const getCurseModifiers = (activeCurses: string[] | undefined | null): ModifierSet => {
   const modifiers: ModifierSet = {
     moneyGainBps: 0,
     jobIncomeBps: 0,
@@ -21,7 +21,9 @@ export const getCurseModifiers = (activeCurses: string[]): ModifierSet => {
     portalMoneyBps: 0,
   };
 
-  activeCurses.forEach((curseId) => {
+  const safeCurses = Array.isArray(activeCurses) ? activeCurses : [];
+
+  safeCurses.forEach((curseId) => {
     const curse = getCurseById(curseId);
 
     if (!curse || !curse.modifiers) {

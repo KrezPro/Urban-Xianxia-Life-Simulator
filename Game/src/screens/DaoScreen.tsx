@@ -72,7 +72,7 @@ export default function DaoScreen() {
   };
 
   const handleUpgradeTechnique = (technique: any) => {
-    const currentLevel = techniques.levels[technique.id] || 0;
+    const currentLevel = techniques.levels?.[technique.id] || 0;
     const cost = getTechniqueCost(technique.id, currentLevel);
     const meets = meetsTechniqueRequirements(technique.id, player);
     const canAfford = isGreaterOrEqualBigInt(player.money, cost);
@@ -90,6 +90,8 @@ export default function DaoScreen() {
       level: (currentLevel + 1).toString(),
     });
   };
+
+  const safeTechniques = Array.isArray(techniquesData) ? techniquesData : [];
 
   if (player.isDead) {
     return (
@@ -154,8 +156,8 @@ export default function DaoScreen() {
 
         <Text style={styles.sectionTitle}>{techniquesUI.title}</Text>
 
-        {(techniquesData as any[]).map((technique) => {
-          const currentLevel = techniques.levels[technique.id] || 0;
+        {safeTechniques.map((technique: any) => {
+          const currentLevel = techniques.levels?.[technique.id] || 0;
           const isMax = currentLevel >= technique.maxLevel;
           const meets = meetsTechniqueRequirements(technique.id, player);
           const cost = getTechniqueCost(technique.id, currentLevel);

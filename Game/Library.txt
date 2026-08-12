@@ -1,19 +1,19 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Lifestyle.
+1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Techniques, Lifestyle.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
 4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Store, Log, Sect.
+8. Навигация: route names только английские: Life, Dao, Activities, Store, Sect.
 9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
 13. MMKV основной storage; memory-fallback только для аварийных сред.
 14. Theme.ts: единая темная тема для всего UI.
-15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, IconButton.
+15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
 17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
 18. Новые файлы всегда получать короткое описание в структуре проекта.
@@ -21,23 +21,31 @@
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
 22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
-23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
+23. SafeAreaView использовать ТОЛЬКО из react-native-safe-area-context, SafeAreaProvider оборачивает App. Импорт из 'react-native' запрещён — вызывает deprecation warning и краш на новых версиях.
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
-27. Кнопка журнала размещается в шапке LifeScreen рядом с переключателем языка. Маршрут Log сохраняется в TabNavigator, но скрыт из tab bar через tabBarButton: () => null.
+27. Журнал открывается модально из LifeScreen, LogScreen принимает onClose.
 28. DraggableGrowButton — перетаскиваемая кнопка взросления. Короткое нажатие вызывает growOlder, перетаскивание выполняется PanResponder в пределах LifeScreen.
 29. IconButton добавлен в UI-кит для компактных кнопок без текста.
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
 31. LifeScreen использует обычный View вместо ScrollView, если прокрутка не требуется; DraggableGrowButton остается абсолютным overlay.
 32. Здоровье игрока разделено на health (текущее) и maxHealth (максимальное). Во вкладке Мир в списке характеристик отображается maxHealth.
-33. Уведомления показываются строго по одному: NOTIFICATION_MAX_VISIBLE = 1 и NOTIFICATION_MAX_QUEUE = 1.
-34. useNotificationStore использует приоритеты и group. Новое уведомление заменяет текущее только если приоритет выше или та же группа.
-35. NotificationToast запускает автоскрытие от момента монтирования, а не от createdAt, чтобы уведомления в очереди не пропадали.
-36. События генерируются через utils/eventGenerator.ts на основе data/eventRules.json и locales/{lang}/eventGenerator.json.
-37. Генератор событий возвращает только ключи локализации и параметры, не готовые тексты.
-38. Годовой цикл реализован в hooks/useYearlyCycle.ts: survival cost, lifestyle, медитация, генератор событий, один приоритетный тост.
-39. Survival cost рассчитывается по возрасту. Нехватка денег наносит урон здоровью и может привести к смерти в детстве.
-40. Деньги событий ограничены EVENT_MONEY_CAP и мягкой формулой currentMoney/2 + base, чтобы избежать процентного snowball-роста.
-41. Журнал поддерживает generated-события через IEventLog.generated, textKey, params, effects.
-42. EffectChips отображают эффекты событий в уведомлениях и журнале, максимум 4 видимых чипа.
+33. Техники Дао хранятся в useTechniquesStore как levels: Record<string, number>, сбрасываются при реинкарнации.
+34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection, сбрасываются при реинкарнации.
+35. Годовой цикл рассчитывается в useYearlyCycle и использует processLifestyleYear из utils/gameplayUtils.ts.
+36. Карма-баффы стали многоуровневыми: quantity в useInventoryStore означает текущий уровень баффа.
+37. Локализация дополнительных вкладок, техник, магазина и активностей вынесена в locales/{lang}/extras.json.
+38. Все проценты в игре хранятся как basis points (bps): 1% = 100 bps, 100% = 10000 bps.
+39. Стадии культивации имеют maxAge и softAge. Смертный не может жить бесконечно: после maxAge применяется шанс смерти от старости.
+40. useYearlyCycle обрабатывает: подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
+41. При реинкарнации техники и активности сбрасываются, карма-баффы сохраняются с уровнями.
+42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
+43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
+44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.
+45. КРИТИЧНО: Все функции, принимающие массивы/объекты из Zustand сторов (activeCurses, levels, items), должны иметь fallback на пустые значения (|| [], || {}), так как старые MMKV-сохранения могут не содержать новых полей после миграции схемы.
+46. rebirthUtils.ts:getCurseModifiers, gameplayUtils.ts:getTechniqueModifiers и getKarmaTotalEffects защищают от undefined через (input || defaultValue) паттерн.
+47. combineModifiers принимает Partial<ModifierSet> | undefined | null и безопасно пропускает nullish значения.
+48. usePlayerStore.normalizeHealth при rehydrate гарантирует, что activeCurses это массив, а lastDeathCause это валидный DeathCause.
+49. useTechniquesStore и useInventoryStore при onRehydrateStorage проверяют что levels/items это объекты, и сбрасывают их если нет.
+50. При работе с импортированными JSON-массивами (techniquesData, itemsData) всегда использовать Array.isArray() проверку перед .map/.forEach/.filter.

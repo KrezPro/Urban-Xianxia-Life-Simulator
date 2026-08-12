@@ -7,7 +7,7 @@ import {
 } from '../types';
 import { GameConstants } from '../constants/GameConstants';
 import { getRandomInt, safeBigInt } from './helpers';
-import { getLifePhase, getStageIndex, LifePhase } from './yearlyUtils';
+import { getStageIndex } from './gameplayUtils';
 import eventRulesData from '../data/eventRules.json';
 import stagesData from '../data/stages.json';
 
@@ -50,6 +50,24 @@ const getAgeGroup = (age: number): AgeGroup => {
   }
 
   return 'elder';
+};
+
+const getEventTier = (age: number, stageId: string): number => {
+  const ageTier = age < 12 ? 0 : age < 18 ? 1 : 2;
+
+  let stageTier = 0;
+
+  if (stageId.startsWith('qi_condensation')) {
+    stageTier = 3;
+  } else if (stageId.startsWith('foundation')) {
+    stageTier = 4;
+  } else if (stageId === 'core_formation') {
+    stageTier = 5;
+  } else if (stageId === 'immortal') {
+    stageTier = 6;
+  }
+
+  return Math.max(ageTier, stageTier);
 };
 
 const chooseWeighted = <T,>(items: Array<{ weight: number; value: T }>): T | null => {
@@ -103,7 +121,7 @@ const getNextStageQi = (stageId: string): bigint => {
 const calculateEffectValue = (
   effectDef: any,
   ctx: GeneratorContext,
-  phase: LifePhase,
+  tier: number,
   rarity: EventRarity
 ): { stat: string; amount: bigint | number; positive: boolean } | null => {
   const sign = effectDef.sign || 'positive';
@@ -111,33 +129,23 @@ const calculateEffectValue = (
   const scale = effectDef.scale || 'stat';
 
   if (scale === 'money') {
-    const base = Number((GameConstants.EVENT_MONEY_BASE_BY_PHASE as any)[phase] || 0);
-    const mult = Number((GameConstants.EVENT_RARITY_MONEY_MULTIPLIER as any)[rarity] || 1);
-    const min = base * mult;
-    const max = base * mult * 4;
+    const base =
+      GameConstants.EVENT_MONEY_BASE_BY_TIER[tier] *
+      GameConstants.EVENT_RARITY_MONEY_MULTIPLIER[rarity];
 
-    if (max <= 0) {
-      return null;
-    }
+    let amount = BigInt(getRandomInt(base, base * 4));
 
-    let amount = BigInt(getRandomInt(min, max));
     const currentMoney = safeBigInt(ctx.player.money);
-    const globalCap = safeBigInt(GameConstants.EVENT_MONEY_CAP);
 
     if (positive) {
-      const softCap = currentMoney / 2n + BigInt(min);
-      if (amount > softCap) {
-        amount = softCap;
-      }
-      if (amount > globalCap) {
-        amount = globalCap;
+      const cap = currentMoney / 2n + BigInt(base);
+
+      if (amount > cap) {
+        amount = cap;
       }
     } else {
       if (amount > currentMoney) {
         amount = currentMoney;
-      }
-      if (amount > globalCap) {
-        amount = globalCap;
       }
     }
 
@@ -149,24 +157,19 @@ const calculateEffectValue = (
   }
 
   if (scale === 'qi') {
-    const base = Number((GameConstants.EVENT_QI_BASE_BY_PHASE as any)[phase] || 0);
-    const mult = Number((GameConstants.EVENT_RARITY_QI_MULTIPLIER as any)[rarity] || 1);
-    const min = base * mult;
-    const max = base * mult * 4;
+    const base =
+      GameConstants.EVENT_QI_BASE_BY_TIER[tier] *
+      GameConstants.EVENT_RARITY_QI_MULTIPLIER[rarity];
 
-    if (max <= 0) {
-      return null;
-    }
-
-    let amount = BigInt(getRandomInt(min, max));
+    let amount = BigInt(getRandomInt(base, base * 4));
     const currentQi = safeBigInt(ctx.player.qi);
 
     if (positive) {
       const nextQi = getNextStageQi(ctx.cultivationStage);
 
       if (nextQi > 0n) {
-        const divisor = BigInt((GameConstants.EVENT_QI_CAP_DIVISOR as any)[rarity] || 10);
-        const cap = nextQi / divisor + BigInt(min);
+        const divisor = BigInt(GameConstants.EVENT_QI_CAP_DIVISOR[rarity] || 10);
+        const cap = nextQi / divisor + BigInt(base);
 
         if (amount > cap) {
           amount = cap;
@@ -186,18 +189,13 @@ const calculateEffectValue = (
   }
 
   if (scale === 'healthDamage') {
-    const bps = (GameConstants.EVENT_HEALTH_DAMAGE_BPS_BY_RARITY as any)[rarity] || 600;
-    let amount = Math.max(1, Math.floor((ctx.player.maxHealth * bps) / 10000));
-
-    if (ctx.player.age < 12 || ctx.player.age >= 65) {
-      amount = Math.floor(amount * 1.25);
-    }
-
+    const bps = GameConstants.EVENT_HEALTH_DAMAGE_BPS_BY_RARITY[rarity] || 400;
+    const amount = Math.max(1, Math.floor((ctx.player.maxHealth * bps) / 10000));
     return { stat: 'health', amount, positive: false };
   }
 
   if (scale === 'healthHeal') {
-    const bps = (GameConstants.EVENT_HEALTH_HEAL_BPS_BY_RARITY as any)[rarity] || 300;
+    const bps = GameConstants.EVENT_HEALTH_HEAL_BPS_BY_RARITY[rarity] || 300;
     const maxHeal = ctx.player.maxHealth - ctx.player.health;
 
     if (maxHeal <= 0) {
@@ -209,7 +207,7 @@ const calculateEffectValue = (
   }
 
   if (scale === 'karma') {
-    const base = (GameConstants.EVENT_KARMA_CHANGE_BY_RARITY as any)[rarity] || 1;
+    const base = GameConstants.EVENT_KARMA_CHANGE_BY_RARITY[rarity] || 1;
     let amount = getRandomInt(1, base);
 
     if (!positive) {
@@ -227,7 +225,7 @@ const calculateEffectValue = (
     return { stat: 'karma', amount, positive };
   }
 
-  const base = (GameConstants.EVENT_STAT_CHANGE_BY_RARITY as any)[rarity] || 1;
+  const base = GameConstants.EVENT_STAT_CHANGE_BY_RARITY[rarity] || 1;
   let amount = getRandomInt(1, base);
 
   if (!positive) {
@@ -253,14 +251,13 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
 
   const ageGroup = getAgeGroup(ctx.age);
   const stageIndex = getStageIndex(ctx.cultivationStage);
-  const phase = getLifePhase(ctx.age, ctx.cultivationStage);
 
   let eligible = rules.filter((rule) => {
-    if (!Array.isArray(rule.pool) || !rule.pool.includes(chosenPool)) {
+    if (!rule.pool || !rule.pool.includes(chosenPool)) {
       return false;
     }
 
-    if (Array.isArray(rule.age) && !rule.age.includes(ageGroup)) {
+    if (rule.age && !rule.age.includes(ageGroup)) {
       return false;
     }
 
@@ -283,25 +280,17 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
     return meetsActivities(rule, ctx.lifestyle);
   });
 
-  const hardship =
-    ctx.player.money === '0' ||
-    ctx.player.health * 100 < ctx.player.maxHealth * 30;
-
-  if (hardship) {
-    const negativeEligible = eligible.filter((rule) => rule.tone === 'negative');
-
-    if (negativeEligible.length > 0) {
-      eligible = negativeEligible;
-    }
-  }
-
   if (!eligible.length) {
     eligible = rules.filter((rule) => rule.id === 'generic_common');
   }
 
   if (!eligible.length) {
+    eligible = rules;
+  }
+
+  if (!eligible.length) {
     return {
-      id: 'generic_common',
+      id: 'fallback',
       pool: chosenPool,
       category: 'generic',
       rarity: 'common',
@@ -317,10 +306,7 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
 
   const rule = chooseWeighted(eligible.map((r) => ({ weight: r.weight || 10, value: r }))) || eligible[0];
 
-  const rarityOptions: EventRarity[] = Array.isArray(rule.rarity) && rule.rarity.length > 0
-    ? rule.rarity
-    : ['common'];
-
+  const rarityOptions: EventRarity[] = rule.rarity?.length ? rule.rarity : ['common'];
   const rarity =
     chooseWeighted(
       rarityOptions.map((r) => ({
@@ -339,6 +325,7 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
     }
   });
 
+  const tier = getEventTier(ctx.age, ctx.cultivationStage);
   const effects: any = {};
 
   (rule.effects || []).forEach((effectDef: any) => {
@@ -348,7 +335,7 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
       return;
     }
 
-    const calculated = calculateEffectValue(effectDef, ctx, phase, rarity);
+    const calculated = calculateEffectValue(effectDef, ctx, tier, rarity);
 
     if (!calculated) {
       return;

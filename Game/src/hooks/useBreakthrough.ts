@@ -38,9 +38,9 @@ export const useBreakthrough = () => {
     }
 
     const modifiers = combineModifiers(
-      getTechniqueModifiers(techniques.levels),
-      getKarmaTotalEffects(inventory.items),
-      getCurseModifiers(player.activeCurses)
+      getTechniqueModifiers(techniques.levels || {}),
+      getKarmaTotalEffects(inventory.items || {}),
+      getCurseModifiers(player.activeCurses || [])
     );
 
     let chanceBps =
@@ -97,9 +97,9 @@ export const useBreakthrough = () => {
         const rawDamage = Math.max(baseDamage, maxHealthDamage);
 
         const modifiers = combineModifiers(
-          getTechniqueModifiers(techniques.levels),
-          getKarmaTotalEffects(inventory.items),
-          getCurseModifiers(player.activeCurses)
+          getTechniqueModifiers(techniques.levels || {}),
+          getKarmaTotalEffects(inventory.items || {}),
+          getCurseModifiers(player.activeCurses || [])
         );
 
         const damageReductionBps = clampInt(

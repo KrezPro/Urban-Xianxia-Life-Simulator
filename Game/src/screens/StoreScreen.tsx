@@ -1,5 +1,6 @@
 import React from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -56,6 +57,8 @@ export default function StoreScreen() {
     pushUiNotification('store_pass_activated', 'reward');
   };
 
+  const safeItems = Array.isArray(itemsData) ? itemsData : [];
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -66,7 +69,7 @@ export default function StoreScreen() {
           <Text style={styles.balanceValue}>{formatLargeNumber(player.karma)}</Text>
         </Card>
 
-        {(itemsData as any[])
+        {safeItems
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
             const rawLevel = inventory.items[item.id]?.quantity || 0;

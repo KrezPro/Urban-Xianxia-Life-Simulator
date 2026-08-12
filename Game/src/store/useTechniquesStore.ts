@@ -18,11 +18,11 @@ export const useTechniquesStore = create<TechniquesState>()(
       setHasHydrated: (state) => set({ hasHydrated: state }),
       incrementTechnique: (id) =>
         set((state) => {
-          const currentLevel = state.levels[id] || 0;
+          const currentLevel = state.levels?.[id] || 0;
 
           return {
             levels: {
-              ...state.levels,
+              ...(state.levels || {}),
               [id]: currentLevel + 1,
             },
           };
@@ -34,6 +34,9 @@ export const useTechniquesStore = create<TechniquesState>()(
       storage: createJSONStorage(() => zustandStorage),
       onRehydrateStorage: () => (state) => {
         if (state) {
+          if (!state.levels || typeof state.levels !== 'object') {
+            state.levels = {};
+          }
           state.setHasHydrated(true);
         }
       },
