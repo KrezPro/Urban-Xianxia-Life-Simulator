@@ -5,6 +5,8 @@ import stagesData from '../../data/stages.json';
 
 export type AvatarAgeGroup = 'child' | 'teen' | 'adult' | 'mature' | 'elder';
 
+type MotionKind = 'crawl' | 'breathe' | 'levitate';
+
 interface LifeAvatarProps {
   age: number;
   cultivationStage: string;
@@ -41,6 +43,23 @@ const getStageIndex = (stageId: string): number => {
   return found < 0 ? 0 : found;
 };
 
+// Тир стадии Дао: 0 Смертный, 1 Ци I-III, 2 Основание I-III, 3 Ядро, 4 Бессмертный.
+const getStageTier = (stageIndex: number): number => {
+  if (stageIndex <= 0) {
+    return 0;
+  }
+  if (stageIndex <= 3) {
+    return 1;
+  }
+  if (stageIndex <= 6) {
+    return 2;
+  }
+  if (stageIndex === 7) {
+    return 3;
+  }
+  return 4;
+};
+
 // Цвет ауры по стадии культивации: смертный без ауры, Ци — голубой,
 // Основание — фиолетовый, Ядро — золотой, Бессмертный — сияющий белый.
 const getAuraColor = (stageIndex: number): string | null => {
@@ -59,17 +78,54 @@ const getAuraColor = (stageIndex: number): string | null => {
   return '#F4F4FF';
 };
 
-const getCharacterEmoji = (group: AvatarAgeGroup, stageIndex: number): string => {
+// Матрица эмодзи "возраст x стадия Дао": персонаж меняется и с возрастом, и с прорывами.
+const getCharacterEmoji = (group: AvatarAgeGroup, tier: number): string => {
+  // Смертный (tier 0): облик зависит только от возраста.
+  if (tier === 0) {
+    if (group === 'child') {
+      return '👶'; // ползающий младенец
+    }
+    if (group === 'teen') {
+      return '🧒'; // отрок
+    }
+    if (group === 'adult') {
+      return '🧑'; // взрослый смертный
+    }
+    if (group === 'mature') {
+      return '🧔'; // зрелый муж
+    }
+    return '🧓'; // старец
+  }
+  // Бессмертный (tier 4): дракон-первообраз вне возраста.
+  if (tier === 4) {
+    return '🐉';
+  }
+  // Ребёнок-культиватор: юный адепт до Ци, малый маг с Основания.
   if (group === 'child') {
-    return '👶';
+    return tier === 1 ? '🧒' : '🧙';
   }
-  if (group === 'teen') {
-    return '🧒';
+  // Ци (tier 1): медитация в лотосе.
+  if (tier === 1) {
+    return group === 'elder' ? '🧘‍️' : '🧘';
   }
-  if (group === 'adult' || group === 'mature') {
-    return '🧘';
+  // Основание (tier 2): коленопреклонённое накопление основы.
+  if (tier === 2) {
+    return group === 'elder' ? '🧎‍♂️' : '🧎';
   }
-  return stageIndex >= 1 ? '🧙‍♂️' : '🧓';
+  // Ядро (tier 3): даос с посохом.
+  return group === 'elder' ? '🧙' : '🧙‍♂️';
+};
+
+// Вид движения: младенец-смертный ползает, tier 2+ и все elder левитируют,
+// остальные дышат в медитации.
+const getMotionKind = (group: AvatarAgeGroup, tier: number): MotionKind => {
+  if (group === 'child' && tier === 0) {
+    return 'crawl';
+  }
+  if (tier >= 2 || group === 'elder') {
+    return 'levitate';
+  }
+  return 'breathe';
 };
 
 // Всплывающая частица Ци внутри бейджа: поднимается снизу вверх, появляется и гаснет.
@@ -125,10 +181,9 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
   );
 };
 
-// Аватар-бейдж взросления персонажа во вкладке Мир.
-// Круглая «монета» размером size (76 / 64 / 54): эмодзи по центру, пульсирующее
-// кольцо ауры и частицы Ци внутри бейджа. Ребёнок ползает, подросток и взрослый
-// медитируют, старейшина-даос левитирует. Всё на встроенном Animated API и emoji.
+// Анимированный бейдж-аватар взросления персонажа во вкладке Мир.
+// Эмодзи подбирается матрицей "возраст x стадия Дао", движение — по смыслу
+// (ползание / медитация-дыхание / левитация). Всё на встроенном Animated API и emoji.
 export const LifeAvatar = ({
   age,
   cultivationStage,
@@ -137,9 +192,11 @@ export const LifeAvatar = ({
 }: LifeAvatarProps) => {
   const group = getAvatarAgeGroup(age);
   const stageIndex = getStageIndex(cultivationStage);
+  const tier = getStageTier(stageIndex);
   const auraColor = getAuraColor(stageIndex);
-  const showParticles = stageIndex >= 1;
-  const emoji = getCharacterEmoji(group, stageIndex);
+  const showParticles = tier >= 1;
+  const emoji = getCharacterEmoji(group, tier);
+  const motionKind = getMotionKind(group, tier);
 
   const auraSize = Math.round(size * 0.76);
   const emojiSize = Math.round(size * 0.45);
@@ -147,7 +204,7 @@ export const LifeAvatar = ({
   const motion = useRef(new Animated.Value(0)).current;
   const aura = useRef(new Animated.Value(0)).current;
 
-  // Основная анимация персонажа перезапускается при смене возрастной группы.
+  // Основная анимация персонажа перезапускается при смене вида движения.
   useEffect(() => {
     motion.setValue(0);
     const timingOptions = {
@@ -165,7 +222,7 @@ export const LifeAvatar = ({
     return () => {
       animation.stop();
     };
-  }, [group]);
+  }, [motionKind]);
 
   // Пульсация ауры: включается только для культиваторов (индекс стадии больше либо равен 1).
   useEffect(() => {
@@ -195,9 +252,9 @@ export const LifeAvatar = ({
     };
   }, [auraColor]);
 
-  // Трансформации персонажа по возрастной группе (амплитуда уменьшена под бейдж).
+  // Трансформации персонажа по виду движения.
   let characterTransform: any[] = [];
-  if (group === 'child') {
+  if (motionKind === 'crawl') {
     // Ползание: покачивание влево-вправо с лёгким наклоном.
     const translateX = motion.interpolate({
       inputRange: [0, 1],
@@ -208,7 +265,7 @@ export const LifeAvatar = ({
       outputRange: ['-5deg', '5deg', '-5deg'],
     });
     characterTransform = [{ translateX }, { rotate }];
-  } else if (group === 'elder') {
+  } else if (motionKind === 'levitate') {
     // Левитация: плавное парение вверх-вниз.
     const translateY = motion.interpolate({
       inputRange: [0, 1],

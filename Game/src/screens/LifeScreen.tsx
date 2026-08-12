@@ -49,7 +49,9 @@ export default function LifeScreen() {
 
   // Адаптивный дизайн: единый непрерывный коэффициент масштаба от высоты окна.
   // 800pt — базовый телефон (scale 1), маленькие экраны сжимаются (до 0.75),
-  // планшеты растут (до 1.35). Все метрики_layout вычисляются через sw().
+  // планшеты растут (до 1.35). Все метрики вычисляются через sw().
+  // DraggableGrowButton (FAB) в вертикальной компоновке НЕ участвует:
+  // paddingBottom равен боковым отступам, кнопка — абсолютный overlay.
   const { height: windowHeight } = useWindowDimensions();
   const scale = Math.min(1.35, Math.max(0.75, windowHeight / 800));
   const sw = (v: number) => Math.round(v * scale);
@@ -285,7 +287,7 @@ export default function LifeScreen() {
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={[styles.content, { padding: sw(16), paddingBottom: sw(72) }]}>
+        <View style={[styles.content, { padding: sw(16) }]}>
           <View style={[styles.headerRow, { marginBottom: sw(12) }]}>
             {titleBlock}
             <View style={styles.headerActions}>
@@ -327,7 +329,7 @@ export default function LifeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.content, { padding: sw(16), paddingBottom: sw(72) }]}>
+      <View style={[styles.content, { padding: sw(16) }]}>
         <View style={[styles.headerRow, { marginBottom: sw(12) }]}>
           {titleBlock}
           <View style={styles.headerActions}>
