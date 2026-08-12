@@ -58,9 +58,11 @@
             "moneyMax": "1000",
             "qiMin": "3",
             "qiMax": "8",
-            "failDamage": 8
+            "failDamage": 8,
+            "breakthroughBlessingBps": 350,
+            "failDamageBps": 1200
           },
-          "balanceNote": "Subway portal: attempt $80, 60% base success, reward $400-$1000 and 3-8 Qi, fail damage 8."
+          "balanceNote": "Subway portal: risky early trial. Success grants +3.5% breakthrough blessing. Failure deals flat damage plus 12% Max Health."
         },
         {
           "id": "portal_market",
@@ -76,9 +78,11 @@
             "moneyMax": "5000",
             "qiMin": "15",
             "qiMax": "40",
-            "failDamage": 14
+            "failDamage": 14,
+            "breakthroughBlessingBps": 700,
+            "failDamageBps": 1800
           },
-          "balanceNote": "Market portal: attempt $300, 52% base success, reward $2k-$5k and 15-40 Qi, fail damage 14."
+          "balanceNote": "Market portal: dangerous Qi trial. Success grants +7% breakthrough blessing. Failure deals flat damage plus 18% Max Health."
         },
         {
           "id": "portal_club",
@@ -94,9 +98,11 @@
             "moneyMax": "22000",
             "qiMin": "70",
             "qiMax": "160",
-            "failDamage": 24
+            "failDamage": 24,
+            "breakthroughBlessingBps": 1200,
+            "failDamageBps": 2500
           },
-          "balanceNote": "Club portal: attempt $1200, 48% base success, reward $9k-$22k and 70-160 Qi, fail damage 24."
+          "balanceNote": "Club portal: high-risk trial. Success grants +12% breakthrough blessing. Failure deals flat damage plus 25% Max Health."
         },
         {
           "id": "portal_tower",
@@ -112,9 +118,11 @@
             "moneyMax": "120000",
             "qiMin": "400",
             "qiMax": "900",
-            "failDamage": 45
+            "failDamage": 45,
+            "breakthroughBlessingBps": 2000,
+            "failDamageBps": 3500
           },
-          "balanceNote": "Tower portal: attempt $4000, 42% base success, reward $50k-$120k and 400-900 Qi, fail damage 45."
+          "balanceNote": "Tower portal: deadly late-game trial. Success grants +20% breakthrough blessing. Failure deals flat damage plus 35% Max Health."
         }
       ]
     }

@@ -26,6 +26,7 @@ export const useBreakthrough = () => {
   const locale = useLocaleStore((state) => state.locale);
   const techniques = useTechniquesStore();
   const inventory = useInventoryStore();
+
   const uiData: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
 
   const currentStageIndex = getStageIndex(player.cultivationStage);
@@ -36,18 +37,23 @@ export const useBreakthrough = () => {
     if (!nextStage) {
       return 0;
     }
+
     const modifiers = combineModifiers(
       getTechniqueModifiers(techniques.levels || {}),
       getKarmaTotalEffects(inventory.items || {}),
       getCurseModifiers(player.activeCurses || [])
     );
+
     let chanceBps =
       Math.floor(nextStage.baseSuccessRate * 10000) +
       player.spiritualRoot * 40 +
       (player.bodyTempering || 0) * 25 +
       player.intelligence * 15 +
-      modifiers.breakthroughChanceBps;
+      modifiers.breakthroughChanceBps +
+      (player.portalBlessingBps || 0);
+
     chanceBps = clampInt(chanceBps, 0, GameConstants.BREAKTHROUGH_MAX_CHANCE_BPS);
+
     if (hasAdBuff) {
       chanceBps = clampInt(
         chanceBps + GameConstants.BREAKTHROUGH_AD_BONUS_BPS,
@@ -55,6 +61,7 @@ export const useBreakthrough = () => {
         GameConstants.BREAKTHROUGH_AD_MAX_CHANCE_BPS
       );
     }
+
     return chanceBps;
   };
 
@@ -66,8 +73,10 @@ export const useBreakthrough = () => {
     if (!nextStage || player.isDead) {
       return;
     }
+
     const reqQi = BigInt(nextStage.requiredQi);
     const currentQi = BigInt(player.qi);
+
     if (reqQi > currentQi) {
       addLog(uiData.log_no_qi, 'system');
       pushUiNotification('breakthrough_no_qi', 'system');
@@ -75,7 +84,11 @@ export const useBreakthrough = () => {
     }
 
     player.deductQi(nextStage.requiredQi);
+
     const chanceBps = getChanceBps(hasAdBuff);
+
+    player.consumePortalBlessing();
+
     const roll = getRandomInt(0, 9999);
     const isSuccess = roll < chanceBps;
 
@@ -91,33 +104,42 @@ export const useBreakthrough = () => {
         pushUiNotification('breakthrough_saved', 'reward');
       } else {
         const nextStageIndex = Math.max(1, currentStageIndex + 1);
+
         const stageDamageBps =
           typeof (nextStage as any).breakthroughDamageBps === 'number'
             ? (nextStage as any).breakthroughDamageBps
             : 2000;
+
         const baseDamage = 40 + nextStageIndex * 30;
         const maxHealthDamage = Math.floor(
           (player.maxHealth * Math.min(5000, stageDamageBps)) / 10000
         );
         const rawDamage = Math.max(baseDamage, maxHealthDamage);
+
         const modifiers = combineModifiers(
           getTechniqueModifiers(techniques.levels || {}),
           getKarmaTotalEffects(inventory.items || {}),
           getCurseModifiers(player.activeCurses || [])
         );
+
         const bodyReduction = getBodyBreakthroughReductionBps(player.bodyTempering || 0);
         const damageReductionBps = clampInt(
           modifiers.damageReductionBps + bodyReduction,
           0,
           GameConstants.DAMAGE_REDUCTION_CAP_BPS
         );
+
         const damage = Math.max(
           1,
           Number(reduceBigIntByBps(rawDamage.toString(), damageReductionBps))
         );
+
         const willDie = player.health <= damage;
+
         player.applyEffects({ health: -damage });
+
         const after = usePlayerStore.getState();
+
         if (after.isDead) {
           after.setDeathCause('breakthrough');
           addLog(uiData.log_fail_death, 'system');

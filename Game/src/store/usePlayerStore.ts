@@ -47,6 +47,7 @@ interface PlayerState {
   activeCurses: string[];
   lastDeathCause: DeathCause;
   lastRebirthReport: RebirthReport | null;
+  portalBlessingBps: number;
   setHasHydrated: (state: boolean) => void;
   setActivityFocus: (focus: 'mundane' | 'secret') => void;
   setCultivationStage: (stage: string) => void;
@@ -64,6 +65,8 @@ interface PlayerState {
   temperBody: () => boolean;
   reincarnate: () => void;
   resetPlayer: () => void;
+  addPortalBlessing: (bps: number) => void;
+  consumePortalBlessing: () => number;
 }
 
 const initialState = {
@@ -88,6 +91,7 @@ const initialState = {
   activeCurses: [] as string[],
   lastDeathCause: 'none' as DeathCause,
   lastRebirthReport: null as RebirthReport | null,
+  portalBlessingBps: 0,
 };
 
 export const usePlayerStore = create<PlayerState>()(
@@ -127,6 +131,9 @@ export const usePlayerStore = create<PlayerState>()(
             ? state.lastBodyTemperAge
             : -1;
           const interstitialShownThisLife = !!state.interstitialShownThisLife;
+          const portalBlessingBps = Number.isFinite(state.portalBlessingBps)
+            ? Math.max(0, Math.floor(state.portalBlessingBps))
+            : 0;
 
           return {
             health,
@@ -136,6 +143,7 @@ export const usePlayerStore = create<PlayerState>()(
             bodyTempering,
             lastBodyTemperAge,
             interstitialShownThisLife,
+            portalBlessingBps,
           };
         }),
       growOlder: () =>
@@ -379,10 +387,32 @@ export const usePlayerStore = create<PlayerState>()(
             activeCurses: report.curses || [],
             lastDeathCause: 'none',
             lastRebirthReport: report,
+            portalBlessingBps: 0,
           };
         });
       },
       resetPlayer: () => set({ ...initialState }),
+      addPortalBlessing: (bps) =>
+        set((state) => {
+          const add = Number.isFinite(bps) && bps > 0 ? Math.floor(bps) : 0;
+          if (add <= 0) {
+            return state;
+          }
+
+          const next = Math.min(
+            GameConstants.PORTAL_BLESSING_CAP_BPS,
+            state.portalBlessingBps + add
+          );
+
+          return { portalBlessingBps: next };
+        }),
+      consumePortalBlessing: () => {
+        const consumed = get().portalBlessingBps || 0;
+        if (consumed > 0) {
+          set({ portalBlessingBps: 0 });
+        }
+        return consumed;
+      },
     }),
     {
       name: 'player-storage',

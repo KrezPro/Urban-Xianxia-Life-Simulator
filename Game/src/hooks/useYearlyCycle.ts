@@ -18,6 +18,7 @@ import {
   getSurvivalCost,
   calculateUnpaidSurvivalDamage,
   calculateMeditationQi,
+  getOptionById,
 } from '../utils/gameplayUtils';
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
@@ -233,6 +234,28 @@ export const useYearlyCycle = () => {
       pushUiNotification('portal_fail', 'danger', {
         damage: report.portalDamage.toString(),
       });
+    }
+
+    const activePortalOption = getOptionById(lifestyle.selected.portal);
+
+    if (report.portalResult === 'success' && activePortalOption?.portal?.breakthroughBlessingBps) {
+      current.addPortalBlessing(activePortalOption.portal.breakthroughBlessingBps);
+      current = usePlayerStore.getState();
+    }
+
+    if (report.portalResult === 'fail' && activePortalOption?.portal?.failDamageBps) {
+      const extraDamage = Math.max(
+        1,
+        Math.floor((current.maxHealth * activePortalOption.portal.failDamageBps) / 10000)
+      );
+
+      current.applyEffects({ health: -extraDamage });
+      current = usePlayerStore.getState();
+
+      if (current.isDead) {
+        current.setDeathCause('portal');
+        return;
+      }
     }
 
     if (current.isDead) {
