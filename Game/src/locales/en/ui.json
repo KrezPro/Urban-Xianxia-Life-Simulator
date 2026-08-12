@@ -64,6 +64,13 @@
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
     "age_log": "You turned {age}.",
     "interstitial_log": "[AD] Interstitial ad shown after reincarnation at age 1.",
+    "avatar": {
+      "aria_child": "A baby crawls along the path of life",
+      "aria_teen": "A youth taking their first steps",
+      "aria_adult": "An adult deep in meditation",
+      "aria_mature": "A master in deep meditation",
+      "aria_elder": "An elder at the sunset of their path"
+    },
     "hints": {
       "close": "Got it",
       "intelligence": {

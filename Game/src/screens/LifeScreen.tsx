@@ -8,6 +8,7 @@ import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
+import { LifeAvatar, getAvatarAgeGroup } from '../components/game/LifeAvatar';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
@@ -31,7 +32,6 @@ export default function LifeScreen() {
   const missedNotifications = useNotificationStore((state) => state.missedCount);
   const clearMissedNotifications = useNotificationStore((state) => state.clearMissedNotifications);
   const { handleGrowOlder } = useYearlyCycle();
-
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
@@ -39,7 +39,6 @@ export default function LifeScreen() {
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
   const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
-
   const deathCauses: any = (ui as any).death_causes || {};
   const deathCauseText = deathCauses[player.lastDeathCause] || deathCauses.none || '';
 
@@ -85,12 +84,15 @@ export default function LifeScreen() {
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
   const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
 
+  const avatarLabels: any = (ui as any).avatar || {};
+  const avatarGroup = getAvatarAgeGroup(player.age);
+  const avatarAria = avatarLabels['aria_' + avatarGroup] || '';
+
   const openHint = (key: string) => {
     const hintData = hints[key];
     if (!hintData) {
       return;
     }
-
     setHint({
       title: hintData.title || key,
       text: hintData.text || '',
@@ -101,17 +103,14 @@ export default function LifeScreen() {
     const stage: any =
       (stagesData as any[]).find((item) => item.id === player.cultivationStage) ||
       (stagesData as any[])[0];
-
     if (!stage) {
       return;
     }
-
     if (stage.maxAge > 0) {
       const ageHint = hints.age;
       if (!ageHint) {
         return;
       }
-
       setHint({
         title: ageHint.title || '',
         text: (ageHint.text || '')
@@ -120,12 +119,10 @@ export default function LifeScreen() {
       });
       return;
     }
-
     const immortalHint = hints.age_immortal;
     if (!immortalHint) {
       return;
     }
-
     setHint({
       title: immortalHint.title || '',
       text: immortalHint.text || '',
@@ -168,9 +165,7 @@ export default function LifeScreen() {
     if (!rebirthReport || !hasRebirthPenalties) {
       return null;
     }
-
     const tierData = rebirth.tiers?.[rebirthReport.fortuneTier] || {};
-
     return (
       <Modal visible transparent animationType="fade" onRequestClose={closeRebirthReport}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeRebirthReport}>
@@ -178,21 +173,17 @@ export default function LifeScreen() {
             <Text style={styles.modalTitle}>{rebirth.title}</Text>
             <Text style={styles.rebirthTierTitle}>{tierData.title}</Text>
             <Text style={styles.modalText}>{tierData.desc}</Text>
-
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.money?.[rebirthReport.moneyPenaltyKey]}</Text>
             </View>
-
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.health?.[rebirthReport.healthStartKey]}</Text>
             </View>
-
             {(rebirthReport.curses || []).map((curseId) => {
               const curseData = rebirth.curses?.[curseId];
               if (!curseData) {
                 return null;
               }
-
               return (
                 <View key={curseId} style={styles.curseRow}>
                   <Text style={styles.curseName}>{curseData.name}</Text>
@@ -200,7 +191,6 @@ export default function LifeScreen() {
                 </View>
               );
             })}
-
             <Button
               title={rebirth.accept}
               onPress={closeRebirthReport}
@@ -250,26 +240,21 @@ export default function LifeScreen() {
               </TouchableOpacity>
             </View>
           </View>
-
           <Card variant="danger" style={styles.deadCard}>
             <Text style={styles.deadTitle}>{ui.dead_title}</Text>
             <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
-
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.death_cause_label}</Text>
               <Text style={styles.karmaValue}>{deathCauseText}</Text>
             </View>
-
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
               <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
             </View>
-
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
               <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
             </View>
-
             <Button
               title={ui.btn_reincarnate}
               onPress={handleReincarnate}
@@ -279,7 +264,6 @@ export default function LifeScreen() {
             />
           </Card>
         </View>
-
         {logModal}
         {hintModal}
       </SafeAreaView>
@@ -298,25 +282,26 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
         <Card variant="primary" style={styles.heroCard}>
+          <LifeAvatar
+            age={player.age}
+            cultivationStage={player.cultivationStage}
+            activityFocus={player.activityFocus}
+            accessibilityLabel={avatarAria}
+          />
           <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-
           <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
             <Text style={styles.heroAgeValue}>{player.age}</Text>
           </TouchableOpacity>
-
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
           </Text>
-
           <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.qi}: {formatLargeNumber(player.qi)}
           </Text>
         </Card>
-
         <Card style={styles.statsCard}>
           <StatRow
             icon="school"
@@ -361,7 +346,6 @@ export default function LifeScreen() {
             onLongPress={() => openHint('karma')}
           />
         </Card>
-
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
           <View style={styles.focusRow}>
@@ -383,7 +367,6 @@ export default function LifeScreen() {
                 {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={[
                 styles.focusChip,
@@ -404,13 +387,11 @@ export default function LifeScreen() {
           </View>
         </Card>
       </View>
-
       <DraggableGrowButton
         age={player.age}
         onPress={handleGrowOlder}
         accessibilityLabel={ui.btn_grow}
       />
-
       {logModal}
       {hintModal}
       {renderRebirthReport()}
@@ -494,13 +475,13 @@ const styles = StyleSheet.create({
   heroAgeLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   heroAgeValue: {
     color: Theme.colors.text,
-    fontSize: Theme.fontSize.hero,
+    fontSize: 34,
     fontWeight: '900',
-    marginBottom: Theme.spacing.md,
+    marginBottom: Theme.spacing.sm,
   },
   heroProgress: {
     marginBottom: 8,

@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 24 (Порталы: отображение наград и активное благословение прорыва)
+[СТАТУС]: ШАГ 25 (Визуализация взросления персонажа — LifeAvatar)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -152,6 +152,12 @@
 109. [X] DaoScreen показывает активное благословение портала, если portalBlessingBps > 0.
 110. [X] Локализация RU/EN и документация обновлены под награды порталов и благословение прорыва.
 
+=== Фаза 21: Визуализация взросления персонажа (LifeAvatar) ===
+111. [X] Создан components/game/LifeAvatar.tsx: анимированная сцена персонажа на встроенном Animated API и emoji, без графических ассетов.
+112. [X] Персонаж меняется с возрастом: младенец ползает, подросток и взрослый медитируют, старейшина-даос левитирует; аура и частицы Ци зависят от стадии культивации.
+113. [X] LifeScreen отображает сцену в hero-карточке; фон сцены реагирует на фокус года (мирские дела — день, тайный путь — ночь).
+114. [X] Локализация RU/EN accessibility-подписей сцены и документация (Library, структура проекта) обновлены.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -164,6 +170,7 @@ Game/
     │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
     │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
     │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
+    │       ├── LifeAvatar.tsx           // Анимированная сцена взросления персонажа (emoji + Animated API, без ассетов)
     │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
     ├── constants/
     │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
@@ -185,7 +192,7 @@ Game/
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста, сцена взросления LifeAvatar
     │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела, активное благословение портала
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы и награды порталов
     │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press
@@ -214,7 +221,7 @@ Game/
     │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality, порталы и благословение
     └── locales/
         ├── ru/
-        │   ├── ui.json                  // Базовые тексты UI
+        │   ├── ui.json                  // Базовые тексты UI, accessibility-подписи LifeAvatar
         │   ├── events.json              // Legacy-события
         │   ├── social.json              // Секты
         │   ├── notifications.json       // Уведомления
@@ -223,7 +230,7 @@ Game/
         │   ├── rebirth.json             // Последствия перерождения
         │   └── eventGenerator.json      // Шаблоны и пулы событий
         └── en/
-            ├── ui.json                  // Базовые тексты UI
+            ├── ui.json                  // Базовые тексты UI, accessibility-подписи LifeAvatar
             ├── events.json              // Legacy-события
             ├── social.json              // Секты
             ├── notifications.json       // Уведомления

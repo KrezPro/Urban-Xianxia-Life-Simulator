@@ -1,5 +1,4 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-
 1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Techniques, Lifestyle.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
@@ -59,3 +58,6 @@
 57. processLifestyleYear возвращает portalBlessingGainedBps; при успехе портала portalQi добавляется к qiDelta, portalMoney добавляется к moneyDelta.
 58. useYearlyCycle применяет report.portalBlessingGainedBps через player.addPortalBlessing и пишет лог extras.logs.portal_blessing_gained.
 59. DaoScreen показывает активное благословение портала только при player.portalBlessingBps > 0. Благословение накапливается до PORTAL_BLESSING_CAP_BPS и списывается useBreakthrough после реальной попытки прорыва.
+60. LifeAvatar строится только на встроенном Animated API (import { Animated } from 'react-native') и emoji, без графических ассетов и без react-native-reanimated. Все анимации используют useNativeDriver: true.
+61. Возрастные группы LifeAvatar синхронизированы с порогами eventGenerator.ts: child < 12, teen < 18, adult < 50, mature < 80, elder >= 80. Функция getAvatarAgeGroup экспортируется из LifeAvatar.tsx.
+62. LifeAvatar рендерится только в живой ветке LifeScreen; на экране смерти сцена не отображается. Цвет ауры по стадии: Ци — secondary, Основание — primarySoft, Ядро — gold, Бессмертный — белый; смертный без ауры. Частицы Ци показываются при индексе стадии >= 1. Фон сцены зависит от activityFocus: мирские дела — холодный день, тайный путь — фиолетовая ночь.
