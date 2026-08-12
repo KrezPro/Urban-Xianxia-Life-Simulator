@@ -53,7 +53,11 @@ export default function LifeScreen() {
   const { height: windowHeight } = useWindowDimensions();
   const compact = windowHeight < 900;
   const tiny = windowHeight < 700;
-  const avatarSize = tiny ? 54 : compact ? 64 : 76;
+  // Непрерывное автомасштабирование hero-блока под высоту окна (телефон/планшет):
+  // layoutScale 0.8 на маленьких экранах и до 1.25 на планшетах.
+  const layoutScale = Math.min(1.25, Math.max(0.8, windowHeight / 800));
+  const avatarSize = Math.round(Math.min(96, Math.max(54, 76 * layoutScale)));
+  const ageFontSize = Math.round(Math.min(40, Math.max(24, 32 * layoutScale)));
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
@@ -348,19 +352,17 @@ export default function LifeScreen() {
             tiny && styles.mbTiny,
           ]}
         >
-          <View style={[styles.heroTopRow, tiny && styles.heroTopRowTiny]}>
-            <View style={styles.heroAvatarWrap}>
-              <LifeAvatar
-                age={player.age}
-                cultivationStage={player.cultivationStage}
-                accessibilityLabel={avatarAria}
-                size={avatarSize}
-              />
-            </View>
+          <View style={styles.heroTopRow}>
+            <LifeAvatar
+              age={player.age}
+              cultivationStage={player.cultivationStage}
+              accessibilityLabel={avatarAria}
+              size={avatarSize}
+            />
             <View style={styles.heroAgeBlock}>
               <Text style={styles.heroAgeLabel}>{ui.age}</Text>
               <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
-                <Text style={[styles.heroAgeValue, compact && styles.heroAgeValueCompact, tiny && styles.heroAgeValueTiny]}>
+                <Text style={[styles.heroAgeValue, { fontSize: ageFontSize }]}>
                   {player.age}
                 </Text>
               </TouchableOpacity>
@@ -645,22 +647,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Theme.spacing.md,
   },
+  // Бейдж-аватар центрируется по всей ширине карточки; блок возраста
+  // закреплён absolute справа и не сбивает центровку эмодзи.
   heroTopRow: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: Theme.spacing.sm,
   },
-  heroTopRowTiny: {
-    marginBottom: 4,
-  },
-  heroAvatarWrap: {
-    flex: 1,
-    alignItems: 'center',
-  },
   heroAgeBlock: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
     alignItems: 'center',
-    minWidth: 90,
+    justifyContent: 'center',
+    minWidth: 80,
   },
   heroAgeLabel: {
     color: Theme.colors.textMuted,
@@ -669,14 +672,7 @@ const styles = StyleSheet.create({
   },
   heroAgeValue: {
     color: Theme.colors.text,
-    fontSize: 32,
     fontWeight: '900',
-  },
-  heroAgeValueCompact: {
-    fontSize: 26,
-  },
-  heroAgeValueTiny: {
-    fontSize: 22,
   },
   heroProgress: {
     marginBottom: 8,
