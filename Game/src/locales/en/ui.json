@@ -39,6 +39,7 @@
     "intelligence": "Intelligence",
     "appearance": "Appearance",
     "money": "Money",
+    "expenses_year": "Yearly expenses",
     "spiritual_root": "Spiritual Root",
     "qi": "Qi Energy",
     "karma": "Karma",
@@ -88,6 +89,10 @@
       "money": {
         "title": "Money",
         "text": "Needed for living, sect contributions and future opportunities."
+      },
+      "expenses": {
+        "title": "Yearly expenses",
+        "text": "Living cost: {survival} per year. Lifestyle (work, sport, food, housing, portals): {lifestyle} per year. If you cannot pay the living cost, your health suffers."
       },
       "spiritual_root": {
         "title": "Spiritual Root",

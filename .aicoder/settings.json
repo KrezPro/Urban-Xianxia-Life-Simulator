@@ -12,17 +12,7 @@
   ],
   "context_focus": [
 
-"Game/src/screens/LifeScreen.tsx",
- "Game/src/components/ui/index.tsx", 
- "Game/src/constants/Theme.ts", 
- "Game/src/data/stages.json", 
- "Game/src/utils/stageUtils.ts",
-  "Game/src/utils/helpers.ts",
-   "Game/src/types/index.ts", 
-   "Game/src/locales/ru/ui.json", 
-   "Game/src/locales/en/ui.json", 
-   "Game/PlanOfDevelopment.txt", 
-   "Game/Library.txt"
+"Game/src/screens/LifeScreen.tsx", "Game/src/components/game/LifeAvatar.tsx", "Game/src/utils/gameplayUtils.ts", "Game/src/store/useLifestyleStore.ts", "Game/src/data/lifestyle.json", "Game/src/locales/ru/ui.json", "Game/src/locales/en/ui.json", "Game/PlanOfDevelopment.txt", "Game/Library.txt"
   ],
   "max_file_size_kb": 100
 }

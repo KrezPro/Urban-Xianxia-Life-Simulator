@@ -6,12 +6,15 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { useLifestyleStore } from '../store/useLifestyleStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { LifeAvatar, getAvatarAgeGroup } from '../components/game/LifeAvatar';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils/gameplayUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
+import { LifestyleCategory } from '../types';
 import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
@@ -28,6 +31,7 @@ export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
+  const lifestyle = useLifestyleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const missedNotifications = useNotificationStore((state) => state.missedCount);
   const clearMissedNotifications = useNotificationStore((state) => state.clearMissedNotifications);
@@ -88,6 +92,17 @@ export default function LifeScreen() {
   const avatarGroup = getAvatarAgeGroup(player.age);
   const avatarAria = avatarLabels['aria_' + avatarGroup] || '';
 
+  // Ежегодные расходы: стоимость жизни по возрасту/стадии + траты выбранных активностей.
+  const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
+  let lifestyleCost = 0n;
+  (Object.keys(lifestyle.selected) as LifestyleCategory[]).forEach((category) => {
+    const option = getOptionById(lifestyle.selected[category]);
+    if (option) {
+      lifestyleCost += getLifestyleAnnualCost(option);
+    }
+  });
+  const totalAnnualExpenses = (survivalCost + lifestyleCost).toString();
+
   const openHint = (key: string) => {
     const hintData = hints[key];
     if (!hintData) {
@@ -126,6 +141,19 @@ export default function LifeScreen() {
     setHint({
       title: immortalHint.title || '',
       text: immortalHint.text || '',
+    });
+  };
+
+  const openExpensesHint = () => {
+    const expensesHint = hints.expenses;
+    if (!expensesHint) {
+      return;
+    }
+    setHint({
+      title: expensesHint.title || '',
+      text: (expensesHint.text || '')
+        .replace('{survival}', `$${formatLargeNumber(survivalCost.toString())}`)
+        .replace('{lifestyle}', `$${formatLargeNumber(lifestyleCost.toString())}`),
     });
   };
 
@@ -283,16 +311,21 @@ export default function LifeScreen() {
           </View>
         </View>
         <Card variant="primary" style={styles.heroCard}>
-          <LifeAvatar
-            age={player.age}
-            cultivationStage={player.cultivationStage}
-            activityFocus={player.activityFocus}
-            accessibilityLabel={avatarAria}
-          />
-          <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-          <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
-            <Text style={styles.heroAgeValue}>{player.age}</Text>
-          </TouchableOpacity>
+          <View style={styles.heroTopRow}>
+            <View style={styles.heroAvatarWrap}>
+              <LifeAvatar
+                age={player.age}
+                cultivationStage={player.cultivationStage}
+                accessibilityLabel={avatarAria}
+              />
+            </View>
+            <View style={styles.heroAgeBlock}>
+              <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+              <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
+                <Text style={styles.heroAgeValue}>{player.age}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
@@ -330,6 +363,13 @@ export default function LifeScreen() {
             value={`$${formatLargeNumber(player.money)}`}
             color={Theme.colors.gold}
             onLongPress={() => openHint('money')}
+          />
+          <StatRow
+            icon="wallet-outline"
+            label={ui.expenses_year}
+            value={`-$${formatLargeNumber(totalAnnualExpenses)}`}
+            color={Theme.colors.danger}
+            onLongPress={openExpensesHint}
           />
           <StatRow
             icon="flame"
@@ -472,6 +512,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Theme.spacing.md,
   },
+  heroTopRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Theme.spacing.sm,
+  },
+  heroAvatarWrap: {
+    flex: 1,
+  },
+  heroAgeBlock: {
+    alignItems: 'center',
+    minWidth: 90,
+  },
   heroAgeLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
@@ -481,7 +534,6 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontSize: 34,
     fontWeight: '900',
-    marginBottom: Theme.spacing.sm,
   },
   heroProgress: {
     marginBottom: 8,

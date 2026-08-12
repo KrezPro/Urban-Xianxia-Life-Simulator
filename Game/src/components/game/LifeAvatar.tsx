@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 import { Theme } from '../../constants/Theme';
-import { ActivityFocus } from '../../types';
 import stagesData from '../../data/stages.json';
 
 export type AvatarAgeGroup = 'child' | 'teen' | 'adult' | 'mature' | 'elder';
@@ -9,7 +8,6 @@ export type AvatarAgeGroup = 'child' | 'teen' | 'adult' | 'mature' | 'elder';
 interface LifeAvatarProps {
   age: number;
   cultivationStage: string;
-  activityFocus: ActivityFocus;
   accessibilityLabel: string;
 }
 
@@ -128,13 +126,9 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
 
 // Анимированная сцена взросления персонажа во вкладке Мир.
 // Ребёнок ползает, подросток и взрослый медитируют, старейшина-даос левитирует.
-// Всё построено на встроенном Animated API и emoji, без графических ассетов.
-export const LifeAvatar = ({
-  age,
-  cultivationStage,
-  activityFocus,
-  accessibilityLabel,
-}: LifeAvatarProps) => {
+// Сцена полностью прозрачная: только эмодзи персонажа, аура и частицы Ци,
+// без фона, рамки и декоративных элементов.
+export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAvatarProps) => {
   const group = getAvatarAgeGroup(age);
   const stageIndex = getStageIndex(cultivationStage);
   const auraColor = getAuraColor(stageIndex);
@@ -230,25 +224,13 @@ export const LifeAvatar = ({
     outputRange: [0.9, 1.1],
   });
 
-  // Фон сцены зависит от фокуса года: мирские дела — холодный день,
-  // тайный путь — фиолетовая ночь.
-  const isSecret = activityFocus === 'secret';
-  const sceneBackground = isSecret ? '#17102A' : '#101826';
-  const orbColor = isSecret ? '#E2E8F0' : Theme.colors.gold;
-  const orbOpacity = isSecret ? 0.8 : 0.65;
-
   return (
-    <View
-      style={[styles.scene, { backgroundColor: sceneBackground }]}
-      accessibilityLabel={accessibilityLabel}
-    >
-      <View style={[styles.orb, { backgroundColor: orbColor, opacity: orbOpacity }]} />
-      <View style={styles.ground} />
+    <View style={styles.scene} accessibilityLabel={accessibilityLabel}>
       {showParticles && auraColor ? (
         <View pointerEvents="none" style={styles.particlesLayer}>
-          <QiParticle delay={0} left={26} color={auraColor} />
-          <QiParticle delay={800} left={96} color={auraColor} />
-          <QiParticle delay={1600} left={150} color={auraColor} />
+          <QiParticle delay={0} left={18} color={auraColor} />
+          <QiParticle delay={800} left={70} color={auraColor} />
+          <QiParticle delay={1600} left={120} color={auraColor} />
         </View>
       ) : null}
       <View style={styles.center}>
@@ -276,30 +258,9 @@ const styles = StyleSheet.create({
   scene: {
     width: '100%',
     height: 88,
-    borderRadius: Theme.radius.md,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderSoft,
     overflow: 'hidden',
-    marginBottom: Theme.spacing.sm,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  orb: {
-    position: 'absolute',
-    top: 10,
-    right: 14,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  ground: {
-    position: 'absolute',
-    bottom: 10,
-    left: Theme.spacing.lg,
-    right: Theme.spacing.lg,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: Theme.colors.borderSoft,
   },
   particlesLayer: {
     ...StyleSheet.absoluteFillObject,
