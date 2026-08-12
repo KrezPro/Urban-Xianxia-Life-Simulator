@@ -175,8 +175,12 @@ interface StatRowProps {
   onPress?: () => void;
   onLongPress?: () => void;
   dense?: boolean;
+  scale?: number;
 }
 
+// StatRow поддерживает адаптивное масштабирование: проп scale (дефолт 1)
+// умножает бейдж, иконку, шрифты и отступы; dense (дефолт false) дополнительно
+// сжимает строку для совместимости со старыми вызовами.
 export const StatRow = ({
   icon,
   label,
@@ -185,20 +189,28 @@ export const StatRow = ({
   onPress,
   onLongPress,
   dense = false,
+  scale = 1,
 }: StatRowProps) => {
+  const k = scale * (dense ? 0.75 : 1);
+  const badge = Math.round(34 * k);
   const content = (
-    <View style={[styles.statRow, dense && styles.statRowDense]}>
+    <View style={[styles.statRow, { paddingVertical: Math.round(6 * k) }]}>
       <View
         style={[
           styles.statIconBadge,
-          dense && styles.statIconBadgeDense,
+          {
+            width: badge,
+            height: badge,
+            borderRadius: Math.round(badge * 0.36),
+            marginRight: Math.round(12 * k),
+          },
           color ? { borderColor: color } : null,
         ]}
       >
-        <Ionicons name={icon} size={dense ? 14 : 18} color={color || Theme.colors.secondary} />
+        <Ionicons name={icon} size={Math.round(18 * k)} color={color || Theme.colors.secondary} />
       </View>
-      <Text style={[styles.statLabel, dense && styles.statLabelDense]}>{label}</Text>
-      <Text style={[styles.statValue, dense && styles.statValueDense, color ? { color } : null]}>
+      <Text style={[styles.statLabel, { fontSize: Math.round(14 * k) }]}>{label}</Text>
+      <Text style={[styles.statValue, { fontSize: Math.round(16 * k) }, color ? { color } : null]}>
         {value}
       </Text>
     </View>
@@ -354,45 +366,23 @@ const styles = StyleSheet.create({
   statRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Theme.colors.borderSoft,
   },
-  statRowDense: {
-    paddingVertical: 4,
-  },
   statIconBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 12,
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
     borderColor: Theme.colors.borderSoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
-  },
-  statIconBadgeDense: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    marginRight: 10,
   },
   statLabel: {
     flex: 1,
     color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.sm,
-  },
-  statLabelDense: {
-    fontSize: Theme.fontSize.xs,
   },
   statValue: {
     color: Theme.colors.text,
     fontWeight: '800',
-    fontSize: Theme.fontSize.md,
-  },
-  statValueDense: {
-    fontSize: Theme.fontSize.sm,
   },
   detailsBackdrop: {
     flex: 1,
