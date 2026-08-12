@@ -29,7 +29,6 @@ export const Button = ({
   small = false,
 }: ButtonProps) => {
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
-
   return (
     <TouchableOpacity
       activeOpacity={0.85}
@@ -90,7 +89,6 @@ export const IconButton = ({
   accessibilityLabel,
 }: IconButtonProps) => {
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
-
   return (
     <TouchableOpacity
       activeOpacity={0.85}
@@ -154,7 +152,6 @@ export const ProgressBar = ({ progress, color, height = 12, style }: ProgressBar
   const safe = 0 > progress ? 0 : progress;
   const clamped = 1 > safe ? safe : 1;
   const widthPercent = `${Math.floor(clamped * 100)}%`;
-
   return (
     <View style={[styles.progressContainer, { height }, style]}>
       <View
@@ -177,23 +174,38 @@ interface StatRowProps {
   color?: string;
   onPress?: () => void;
   onLongPress?: () => void;
+  dense?: boolean;
 }
 
-export const StatRow = ({ icon, label, value, color, onPress, onLongPress }: StatRowProps) => {
+export const StatRow = ({
+  icon,
+  label,
+  value,
+  color,
+  onPress,
+  onLongPress,
+  dense = false,
+}: StatRowProps) => {
   const content = (
-    <View style={styles.statRow}>
-      <View style={[styles.statIconBadge, color ? { borderColor: color } : null]}>
-        <Ionicons name={icon} size={18} color={color || Theme.colors.secondary} />
+    <View style={[styles.statRow, dense && styles.statRowDense]}>
+      <View
+        style={[
+          styles.statIconBadge,
+          dense && styles.statIconBadgeDense,
+          color ? { borderColor: color } : null,
+        ]}
+      >
+        <Ionicons name={icon} size={dense ? 14 : 18} color={color || Theme.colors.secondary} />
       </View>
-      <Text style={styles.statLabel}>{label}</Text>
-      <Text style={[styles.statValue, color ? { color } : null]}>{value}</Text>
+      <Text style={[styles.statLabel, dense && styles.statLabelDense]}>{label}</Text>
+      <Text style={[styles.statValue, dense && styles.statValueDense, color ? { color } : null]}>
+        {value}
+      </Text>
     </View>
   );
-
   if (!onPress && !onLongPress) {
     return content;
   }
-
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={onPress} onLongPress={onLongPress} delayLongPress={300}>
       {content}
@@ -215,13 +227,11 @@ export const DetailsModal = ({ visible, title, lines, closeLabel, onClose }: Det
       <TouchableOpacity style={styles.detailsBackdrop} activeOpacity={1} onPress={onClose}>
         <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.detailsCard}>
           <Text style={styles.detailsTitle}>{title}</Text>
-
           {lines.map((line, index) => (
             <Text key={`details_line_${index}`} style={styles.detailsLine}>
               {line}
             </Text>
           ))}
-
           <Button title={closeLabel} onPress={onClose} variant="primary" small style={styles.detailsButton} />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -348,6 +358,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Theme.colors.borderSoft,
   },
+  statRowDense: {
+    paddingVertical: 4,
+  },
   statIconBadge: {
     width: 34,
     height: 34,
@@ -359,15 +372,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
+  statIconBadgeDense: {
+    width: 26,
+    height: 26,
+    borderRadius: 8,
+    marginRight: 10,
+  },
   statLabel: {
     flex: 1,
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
   },
+  statLabelDense: {
+    fontSize: Theme.fontSize.xs,
+  },
   statValue: {
     color: Theme.colors.text,
     fontWeight: '800',
     fontSize: Theme.fontSize.md,
+  },
+  statValueDense: {
+    fontSize: Theme.fontSize.sm,
   },
   detailsBackdrop: {
     flex: 1,

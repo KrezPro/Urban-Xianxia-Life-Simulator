@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { usePlayerStore } from '../store/usePlayerStore';
@@ -11,7 +19,7 @@ import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { LifeAvatar, getAvatarAgeGroup } from '../components/game/LifeAvatar';
 import { Theme } from '../constants/Theme';
-import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { formatLargeNumber, getBigIntProgress, safeBigInt } from '../utils/helpers';
 import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils/gameplayUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import { LifestyleCategory } from '../types';
@@ -39,6 +47,13 @@ export default function LifeScreen() {
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
+
+  // Адаптивная компоновка: compact для невысоких экранов, auto-scroll если контент не влезает.
+  const { height: windowHeight } = useWindowDimensions();
+  const compact = windowHeight < 780;
+  const [availableHeight, setAvailableHeight] = useState(0);
+  const [innerHeight, setInnerHeight] = useState(0);
+  const needsScroll = availableHeight > 0 && innerHeight > availableHeight;
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
@@ -101,7 +116,9 @@ export default function LifeScreen() {
       lifestyleCost += getLifestyleAnnualCost(option);
     }
   });
-  const totalAnnualExpenses = (survivalCost + lifestyleCost).toString();
+  const totalExpensesBig = safeBigInt(survivalCost.toString()) + lifestyleCost;
+  const expensesValue =
+    totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : `$0`;
 
   const openHint = (key: string) => {
     const hintData = hints[key];
@@ -171,6 +188,15 @@ export default function LifeScreen() {
   const closeRebirthReport = () => {
     player.clearRebirthReport();
   };
+
+  const titleBlock = (
+    <View style={styles.titleRow}>
+      <Text style={[styles.title, compact && styles.titleCompact]}>{ui.title}</Text>
+      <View style={styles.versionChip}>
+        <Text style={styles.versionChipText}>{ui.title_version}</Text>
+      </View>
+    </View>
+  );
 
   const logButton = (
     <TouchableOpacity
@@ -258,9 +284,9 @@ export default function LifeScreen() {
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.headerRow}>
-            <Text style={styles.title}>{ui.title}</Text>
+        <View style={[styles.content, compact && styles.contentCompact]}>
+          <View style={[styles.headerRow, compact && styles.headerRowCompact]}>
+            {titleBlock}
             <View style={styles.headerActions}>
               {logButton}
               <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
@@ -298,11 +324,157 @@ export default function LifeScreen() {
     );
   }
 
+  const cardsBlock = (
+    <View onLayout={(event) => setInnerHeight(event.nativeEvent.layout.height)}>
+      <Card
+        variant="primary"
+        style={[styles.heroCard, compact && styles.cardCompact, compact && styles.mbCompact]}
+      >
+        <View style={styles.heroTopRow}>
+          <View style={styles.heroAvatarWrap}>
+            <LifeAvatar
+              age={player.age}
+              cultivationStage={player.cultivationStage}
+              accessibilityLabel={avatarAria}
+              compact={compact}
+            />
+          </View>
+          <View style={styles.heroAgeBlock}>
+            <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+            <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
+              <Text style={[styles.heroAgeValue, compact && styles.heroAgeValueCompact]}>
+                {player.age}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <ProgressBar
+          progress={healthProgress}
+          color={Theme.colors.success}
+          height={compact ? 8 : 10}
+          style={compact ? styles.heroProgressCompact : styles.heroProgress}
+        />
+        <Text style={[styles.heroProgressLabel, compact && styles.mb4]}>
+          {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
+        </Text>
+        <ProgressBar
+          progress={qiProgress}
+          color={Theme.colors.info}
+          height={compact ? 8 : 10}
+          style={compact ? styles.heroProgressCompact : styles.heroProgress}
+        />
+        <Text style={[styles.heroProgressLabel, compact && styles.mb4]}>
+          {ui.qi}: {formatLargeNumber(player.qi)}
+        </Text>
+      </Card>
+      <Card style={[styles.statsCard, compact && styles.cardCompact, compact && styles.mbCompact]}>
+        <StatRow
+          icon="school"
+          label={ui.intelligence}
+          value={player.intelligence.toString()}
+          color={Theme.colors.secondary}
+          dense={compact}
+          onLongPress={() => openHint('intelligence')}
+        />
+        <StatRow
+          icon="heart"
+          label={ui.health}
+          value={formatLargeNumber(player.maxHealth)}
+          color={Theme.colors.success}
+          dense={compact}
+          onLongPress={() => openHint('health')}
+        />
+        <StatRow
+          icon="diamond"
+          label={ui.appearance}
+          value={player.appearance.toString()}
+          color={Theme.colors.warning}
+          dense={compact}
+          onLongPress={() => openHint('appearance')}
+        />
+        <StatRow
+          icon="cash"
+          label={ui.money}
+          value={`$${formatLargeNumber(player.money)}`}
+          color={Theme.colors.gold}
+          dense={compact}
+          onLongPress={() => openHint('money')}
+        />
+        <StatRow
+          icon="wallet-outline"
+          label={ui.expenses_year}
+          value={expensesValue}
+          color={Theme.colors.danger}
+          dense={compact}
+          onLongPress={openExpensesHint}
+        />
+        <StatRow
+          icon="flame"
+          label={ui.spiritual_root}
+          value={player.spiritualRoot.toString()}
+          color={Theme.colors.info}
+          dense={compact}
+          onLongPress={() => openHint('spiritual_root')}
+        />
+        <StatRow
+          icon="sparkles"
+          label={ui.karma}
+          value={formatLargeNumber(player.karma)}
+          color={Theme.colors.primarySoft}
+          dense={compact}
+          onLongPress={() => openHint('karma')}
+        />
+      </Card>
+      <Card style={[styles.focusCard, compact && styles.cardCompact, compact && styles.mbCompact]}>
+        <Text style={[styles.focusTitle, compact && styles.mb4]}>{ui.focus_title}</Text>
+        <View style={styles.focusRow}>
+          <TouchableOpacity
+            style={[
+              styles.focusChip,
+              styles.focusChipLeft,
+              compact && styles.focusChipCompact,
+              player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+            ]}
+            onPress={() => player.setActivityFocus('mundane')}
+            onLongPress={() => openHint('focus_mundane')}
+          >
+            <Text
+              style={[
+                styles.focusChipText,
+                player.activityFocus === 'mundane' && styles.focusChipTextActive,
+              ]}
+            >
+              {ui.focus_mundane}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.focusChip,
+              compact && styles.focusChipCompact,
+              player.activityFocus === 'secret' && styles.focusChipActiveSecret,
+            ]}
+            onPress={() => player.setActivityFocus('secret')}
+            onLongPress={() => openHint('focus_secret')}
+          >
+            <Text
+              style={[
+                styles.focusChipText,
+                player.activityFocus === 'secret' && styles.focusChipTextActive,
+              ]}
+            >
+              {ui.focus_secret}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title}>{ui.title}</Text>
+      <View style={[styles.content, compact && styles.contentCompact]}>
+        <View style={[styles.headerRow, compact && styles.headerRowCompact]}>
+          {titleBlock}
           <View style={styles.headerActions}>
             {logButton}
             <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
@@ -310,122 +482,18 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-        <Card variant="primary" style={styles.heroCard}>
-          <View style={styles.heroTopRow}>
-            <View style={styles.heroAvatarWrap}>
-              <LifeAvatar
-                age={player.age}
-                cultivationStage={player.cultivationStage}
-                accessibilityLabel={avatarAria}
-              />
-            </View>
-            <View style={styles.heroAgeBlock}>
-              <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-              <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
-                <Text style={styles.heroAgeValue}>{player.age}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
-          </Text>
-          <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.qi}: {formatLargeNumber(player.qi)}
-          </Text>
-        </Card>
-        <Card style={styles.statsCard}>
-          <StatRow
-            icon="school"
-            label={ui.intelligence}
-            value={player.intelligence.toString()}
-            color={Theme.colors.secondary}
-            onLongPress={() => openHint('intelligence')}
-          />
-          <StatRow
-            icon="heart"
-            label={ui.health}
-            value={formatLargeNumber(player.maxHealth)}
-            color={Theme.colors.success}
-            onLongPress={() => openHint('health')}
-          />
-          <StatRow
-            icon="diamond"
-            label={ui.appearance}
-            value={player.appearance.toString()}
-            color={Theme.colors.warning}
-            onLongPress={() => openHint('appearance')}
-          />
-          <StatRow
-            icon="cash"
-            label={ui.money}
-            value={`$${formatLargeNumber(player.money)}`}
-            color={Theme.colors.gold}
-            onLongPress={() => openHint('money')}
-          />
-          <StatRow
-            icon="wallet-outline"
-            label={ui.expenses_year}
-            value={`-$${formatLargeNumber(totalAnnualExpenses)}`}
-            color={Theme.colors.danger}
-            onLongPress={openExpensesHint}
-          />
-          <StatRow
-            icon="flame"
-            label={ui.spiritual_root}
-            value={player.spiritualRoot.toString()}
-            color={Theme.colors.info}
-            onLongPress={() => openHint('spiritual_root')}
-          />
-          <StatRow
-            icon="sparkles"
-            label={ui.karma}
-            value={formatLargeNumber(player.karma)}
-            color={Theme.colors.primarySoft}
-            onLongPress={() => openHint('karma')}
-          />
-        </Card>
-        <Card style={styles.focusCard}>
-          <Text style={styles.focusTitle}>{ui.focus_title}</Text>
-          <View style={styles.focusRow}>
-            <TouchableOpacity
-              style={[
-                styles.focusChip,
-                styles.focusChipLeft,
-                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
-              ]}
-              onPress={() => player.setActivityFocus('mundane')}
-              onLongPress={() => openHint('focus_mundane')}
-            >
-              <Text
-                style={[
-                  styles.focusChipText,
-                  player.activityFocus === 'mundane' && styles.focusChipTextActive,
-                ]}
-              >
-                {ui.focus_mundane}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.focusChip,
-                player.activityFocus === 'secret' && styles.focusChipActiveSecret,
-              ]}
-              onPress={() => player.setActivityFocus('secret')}
-              onLongPress={() => openHint('focus_secret')}
-            >
-              <Text
-                style={[
-                  styles.focusChipText,
-                  player.activityFocus === 'secret' && styles.focusChipTextActive,
-                ]}
-              >
-                {ui.focus_secret}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Card>
+        <View
+          style={styles.cardsArea}
+          onLayout={(event) => setAvailableHeight(event.nativeEvent.layout.height)}
+        >
+          {needsScroll ? (
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollArea}>
+              {cardsBlock}
+            </ScrollView>
+          ) : (
+            cardsBlock
+          )}
+        </View>
       </View>
       <DraggableGrowButton
         age={player.age}
@@ -447,13 +515,20 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: Theme.spacing.md,
-    paddingBottom: 120,
+    paddingBottom: 96,
+  },
+  contentCompact: {
+    padding: 10,
+    paddingBottom: 84,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: Theme.spacing.md,
+  },
+  headerRowCompact: {
+    marginBottom: 8,
   },
   headerActions: {
     flexDirection: 'row',
@@ -490,11 +565,35 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     fontWeight: '900',
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
+  },
   title: {
     fontSize: Theme.fontSize.xl,
     fontWeight: '900',
-    color: Theme.colors.text,
+    color: Theme.colors.gold,
     letterSpacing: 1,
+  },
+  titleCompact: {
+    fontSize: 22,
+  },
+  versionChip: {
+    marginLeft: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: Theme.colors.gold,
+    backgroundColor: 'rgba(251, 191, 36, 0.12)',
+  },
+  versionChipText: {
+    color: Theme.colors.gold,
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 0.5,
   },
   langChip: {
     paddingHorizontal: 14,
@@ -508,6 +607,21 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontWeight: '800',
   },
+  cardsArea: {
+    flex: 1,
+  },
+  scrollArea: {
+    flex: 1,
+  },
+  cardCompact: {
+    padding: 10,
+  },
+  mbCompact: {
+    marginBottom: 8,
+  },
+  mb4: {
+    marginBottom: Theme.spacing.xs,
+  },
   heroCard: {
     alignItems: 'center',
     marginBottom: Theme.spacing.md,
@@ -520,6 +634,7 @@ const styles = StyleSheet.create({
   },
   heroAvatarWrap: {
     flex: 1,
+    alignItems: 'center',
   },
   heroAgeBlock: {
     alignItems: 'center',
@@ -532,11 +647,17 @@ const styles = StyleSheet.create({
   },
   heroAgeValue: {
     color: Theme.colors.text,
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: '900',
+  },
+  heroAgeValueCompact: {
+    fontSize: 26,
   },
   heroProgress: {
     marginBottom: 8,
+  },
+  heroProgressCompact: {
+    marginBottom: 4,
   },
   heroProgressLabel: {
     color: Theme.colors.textMuted,
@@ -565,6 +686,9 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
     borderColor: Theme.colors.borderSoft,
+  },
+  focusChipCompact: {
+    paddingVertical: 10,
   },
   focusChipLeft: {
     marginRight: 10,

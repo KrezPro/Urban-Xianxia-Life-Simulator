@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 26 (Эмодзи рядом с возрастом, прозрачная сцена, возврат блока расходов)
+[СТАТУС]: ШАГ 27 (Вкладка Мир влезает на любой экран, бейдж-аватар, переименование в GoodLife v.2)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -164,6 +164,12 @@
 117. [X] В карточку статов возвращена строка «Расходы в год»: стоимость жизни + траты выбранных активностей (BigInt), long-press показывает разбивку.
 118. [X] Локализация RU/EN (expenses_year, hints.expenses) и документация обновлены.
 
+=== Фаза 23: Вкладка Мир влезает на любой экран, бейдж-аватар, переименование в GoodLife v.2 ===
+119. [X] LifeAvatar стал круглым бейджем 76/64px с кольцом ауры и частицами внутри; добавлен проп compact.
+120. [X] UI-кит: StatRow получил опциональный dense-режим (компактные строки) без поломки других экранов.
+121. [X] LifeScreen: адаптивный compact-режим по высоте окна, auto-ScrollView fallback через onLayout при нехватке места, уменьшен paddingBottom под FAB.
+122. [X] Переименование: шапка GoodLife + версионный чип v.2 (ключи title/title_version RU/EN), формат расходов "$0"/"-$X".
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -171,12 +177,12 @@ Game/
     ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
     ├── components/
     │   ├── ui/
-    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton, DetailsModal
+    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow (dense), IconButton, DetailsModal
     │   └── game/
     │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
     │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
     │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
-    │       ├── LifeAvatar.tsx           // Анимированная сцена взросления персонажа (emoji + Animated API, прозрачная, без ассетов)
+    │       ├── LifeAvatar.tsx           // Анимированный бейдж-аватар взросления (emoji + Animated API, круглый бейдж, compact)
     │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
     ├── constants/
     │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
@@ -198,7 +204,7 @@ Game/
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста, LifeAvatar рядом с возрастом, строка расходов в год
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста, бейдж-аватар рядом с возрастом, расходы в год, adaptive compact/auto-scroll, шапка GoodLife v.2
     │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела, активное благословение портала
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы и награды порталов
     │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press
@@ -227,7 +233,7 @@ Game/
     │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality, порталы и благословение
     └── locales/
         ├── ru/
-        │   ├── ui.json                  // Базовые тексты UI, accessibility-подписи LifeAvatar, расходы в год
+        │   ├── ui.json                  // Базовые тексты UI, GoodLife v.2, accessibility-подписи LifeAvatar, расходы в год
         │   ├── events.json              // Legacy-события
         │   ├── social.json              // Секты
         │   ├── notifications.json       // Уведомления
@@ -236,7 +242,7 @@ Game/
         │   ├── rebirth.json             // Последствия перерождения
         │   └── eventGenerator.json      // Шаблоны и пулы событий
         └── en/
-            ├── ui.json                  // Базовые тексты UI, accessibility-подписи LifeAvatar, расходы в год
+            ├── ui.json                  // Базовые тексты UI, GoodLife v.2, accessibility-подписи LifeAvatar, расходы в год
             ├── events.json              // Legacy-события
             ├── social.json              // Секты
             ├── notifications.json       // Уведомления

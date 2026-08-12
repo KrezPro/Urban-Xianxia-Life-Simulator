@@ -30,7 +30,8 @@
     "btn_grow": "Grow Older (+1 year)"
   },
   "life_screen": {
-    "title": "Urban Xianxia",
+    "title": "GoodLife",
+    "title_version": "v.2",
     "born_log": "You were born into this world. Your story begins...",
     "death_log": "You have died. Your soul enters the endless cycle of Samsara...",
     "reincarnate_log": "The Wheel of Samsara has turned. You are reborn in a new body.",

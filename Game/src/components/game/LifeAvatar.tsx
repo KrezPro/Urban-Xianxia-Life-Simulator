@@ -9,6 +9,7 @@ interface LifeAvatarProps {
   age: number;
   cultivationStage: string;
   accessibilityLabel: string;
+  compact?: boolean;
 }
 
 interface QiParticleProps {
@@ -68,10 +69,10 @@ const getCharacterEmoji = (group: AvatarAgeGroup, stageIndex: number): string =>
   if (group === 'adult' || group === 'mature') {
     return '🧘';
   }
-  return stageIndex >= 1 ? '🧙‍♂️' : '🧓';
+  return stageIndex >= 1 ? '🧙♂️' : '';
 };
 
-// Всплывающая частица Ци: поднимается снизу вверх, появляется и гаснет.
+// Всплывающая частица Ци внутри бейджа: поднимается снизу вверх, появляется и гаснет.
 const QiParticle = ({ delay, left, color }: QiParticleProps) => {
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -100,7 +101,7 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
 
   const translateY = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: [26, -30],
+    outputRange: [18, -22],
   });
   const opacity = progress.interpolate({
     inputRange: [0, 0.2, 0.75, 1],
@@ -124,16 +125,25 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
   );
 };
 
-// Анимированная сцена взросления персонажа во вкладке Мир.
-// Ребёнок ползает, подросток и взрослый медитируют, старейшина-даос левитирует.
-// Сцена полностью прозрачная: только эмодзи персонажа, аура и частицы Ци,
-// без фона, рамки и декоративных элементов.
-export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAvatarProps) => {
+// Аватар-бейдж взросления персонажа во вкладке Мир.
+// Круглая «монета» 76px (compact 64px): эмодзи по центру, пульсирующее кольцо ауры
+// и частицы Ци внутри бейджа. Ребёнок ползает, подросток и взрослый медитируют,
+// старейшина-даос левитирует. Всё на встроенном Animated API и emoji, без ассетов.
+export const LifeAvatar = ({
+  age,
+  cultivationStage,
+  accessibilityLabel,
+  compact = false,
+}: LifeAvatarProps) => {
   const group = getAvatarAgeGroup(age);
   const stageIndex = getStageIndex(cultivationStage);
   const auraColor = getAuraColor(stageIndex);
   const showParticles = stageIndex >= 1;
   const emoji = getCharacterEmoji(group, stageIndex);
+
+  const size = compact ? 64 : 76;
+  const auraSize = compact ? 48 : 58;
+  const emojiSize = compact ? 28 : 34;
 
   const motion = useRef(new Animated.Value(0)).current;
   const aura = useRef(new Animated.Value(0)).current;
@@ -186,24 +196,24 @@ export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAv
     };
   }, [auraColor]);
 
-  // Трансформации персонажа по возрастной группе.
+  // Трансформации персонажа по возрастной группе (амплитуда уменьшена под бейдж).
   let characterTransform: any[] = [];
   if (group === 'child') {
     // Ползание: покачивание влево-вправо с лёгким наклоном.
     const translateX = motion.interpolate({
       inputRange: [0, 1],
-      outputRange: [-12, 12],
+      outputRange: [-8, 8],
     });
     const rotate = motion.interpolate({
       inputRange: [0, 0.5, 1],
-      outputRange: ['-7deg', '7deg', '-7deg'],
+      outputRange: ['-5deg', '5deg', '-5deg'],
     });
     characterTransform = [{ translateX }, { rotate }];
   } else if (group === 'elder') {
     // Левитация: плавное парение вверх-вниз.
     const translateY = motion.interpolate({
       inputRange: [0, 1],
-      outputRange: [3, -5],
+      outputRange: [2, -4],
     });
     characterTransform = [{ translateY }];
   } else {
@@ -225,12 +235,23 @@ export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAv
   });
 
   return (
-    <View style={styles.scene} accessibilityLabel={accessibilityLabel}>
+    <View
+      style={[
+        styles.badge,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderColor: auraColor || Theme.colors.borderSoft,
+        },
+      ]}
+      accessibilityLabel={accessibilityLabel}
+    >
       {showParticles && auraColor ? (
         <View pointerEvents="none" style={styles.particlesLayer}>
-          <QiParticle delay={0} left={18} color={auraColor} />
-          <QiParticle delay={800} left={70} color={auraColor} />
-          <QiParticle delay={1600} left={120} color={auraColor} />
+          <QiParticle delay={0} left={size * 0.14} color={auraColor} />
+          <QiParticle delay={800} left={size * 0.46} color={auraColor} />
+          <QiParticle delay={1600} left={size * 0.74} color={auraColor} />
         </View>
       ) : null}
       <View style={styles.center}>
@@ -239,6 +260,9 @@ export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAv
             style={[
               styles.aura,
               {
+                width: auraSize,
+                height: auraSize,
+                borderRadius: auraSize / 2,
                 borderColor: auraColor,
                 opacity: auraOpacity,
                 transform: [{ scale: auraScale }],
@@ -246,7 +270,16 @@ export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAv
             ]}
           />
         ) : null}
-        <Animated.Text style={[styles.character, { transform: characterTransform }]}>
+        <Animated.Text
+          style={[
+            styles.character,
+            {
+              fontSize: emojiSize,
+              lineHeight: emojiSize + 8,
+              transform: characterTransform,
+            },
+          ]}
+        >
           {emoji}
         </Animated.Text>
       </View>
@@ -255,20 +288,20 @@ export const LifeAvatar = ({ age, cultivationStage, accessibilityLabel }: LifeAv
 };
 
 const styles = StyleSheet.create({
-  scene: {
-    width: '100%',
-    height: 88,
-    overflow: 'hidden',
+  badge: {
+    backgroundColor: Theme.colors.surfaceLight,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   particlesLayer: {
     ...StyleSheet.absoluteFillObject,
   },
   particle: {
     position: 'absolute',
-    bottom: 14,
-    fontSize: 10,
+    bottom: 6,
+    fontSize: 8,
     fontWeight: '900',
   },
   center: {
@@ -277,13 +310,10 @@ const styles = StyleSheet.create({
   },
   aura: {
     position: 'absolute',
-    width: 62,
-    height: 62,
-    borderRadius: 31,
     borderWidth: 2,
   },
   character: {
-    fontSize: 36,
-    lineHeight: 44,
+    fontSize: 34,
+    lineHeight: 42,
   },
 });
