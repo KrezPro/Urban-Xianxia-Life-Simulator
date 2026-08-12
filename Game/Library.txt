@@ -1,19 +1,24 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-
-1. Стейт-менеджмент: строго Zustand. Сторы: Player, Event, Inventory, Locale, Social.
-2. Хранилище: строго react-native-mmkv через zustandStorage. Использовать паттерн hasHydrated.
-3. Отрисовка списков: FlashList для журнала и рейтингов. FlatList для больших списков не использовать.
-4. Типизация: strict TypeScript, интерфейсы лежат в src/types/index.ts.
-5. Большие числа: хранить как string, парсить в BigInt через safeBigInt.
+1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social.
+2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
+3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
+4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
+5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
-7. Баланс и контент: данные лежат в src/data/*.json.
+7. Баланс и контент: data/*.json.
 8. Навигация: route names только английские: Life, Dao, Store, Log, Sect.
 9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
-10. Рейтинги: score хранится как string, сортировка выполняется через BigInt.
-11. Локализация: useLocaleStore хранит выбранный язык ru/en.
+10. Рейтинги: score как string, сортировка через BigInt.
+11. Локализация: useLocaleStore хранит ru/en.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV основной storage; memory-fallback допустим только для аварийных сред.
+13. MMKV основной storage; memory-fallback только для аварийных сред.
 14. Theme.ts: единая темная тема для всего UI.
-15. helpers.ts: единый модуль для форматирования, BigInt-утилит и random-утилит.
-16. socialService.ts: генерация инвайтов, создание сект, NPC-участники, offline-прогресс, рейтинг.
-17. SectScreen содержит два режима: "Моя секта" и "Рейтинг".
+15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
+16. utils/helpers.ts: единый самодостаточный модуль. Обязан экспортировать: formatLargeNumber, safeBigInt, addBigIntStrings, subtractBigIntStrings, compareBigIntStrings, isGreaterOrEqualBigInt, divideBigIntStringByNumber, clampProgress, getBigIntProgress, getRandomInt, pickRandom, chance. Никаких внешних импортов внутри helpers.ts.
+17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
+18. Новые файлы всегда получать короткое описание в структуре проекта.
+19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled и icon.
+20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
+21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
+22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
+23. После изменения экспортов в utils обязательно перезапускать Metro с очисткой кэша (npx expo start --clear), иначе рантайм получит старый модуль и упадет с "is not a function".
