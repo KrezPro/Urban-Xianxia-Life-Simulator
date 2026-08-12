@@ -9,7 +9,7 @@ interface LifeAvatarProps {
   age: number;
   cultivationStage: string;
   accessibilityLabel: string;
-  compact?: boolean;
+  size?: number;
 }
 
 interface QiParticleProps {
@@ -19,7 +19,7 @@ interface QiParticleProps {
 }
 
 // Пороги возрастных групп синхронизированы с eventGenerator.ts:
-// child < 12, teen < 18, adult < 50, mature < 80, elder >= 80.
+// child меньше 12, teen меньше 18, adult меньше 50, mature меньше 80, elder от 80.
 export const getAvatarAgeGroup = (age: number): AvatarAgeGroup => {
   if (age < 12) {
     return 'child';
@@ -69,7 +69,7 @@ const getCharacterEmoji = (group: AvatarAgeGroup, stageIndex: number): string =>
   if (group === 'adult' || group === 'mature') {
     return '🧘';
   }
-  return stageIndex >= 1 ? '🧙♂️' : '';
+  return stageIndex >= 1 ? '🧙‍♂️' : '🧓';
 };
 
 // Всплывающая частица Ци внутри бейджа: поднимается снизу вверх, появляется и гаснет.
@@ -126,14 +126,14 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
 };
 
 // Аватар-бейдж взросления персонажа во вкладке Мир.
-// Круглая «монета» 76px (compact 64px): эмодзи по центру, пульсирующее кольцо ауры
-// и частицы Ци внутри бейджа. Ребёнок ползает, подросток и взрослый медитируют,
-// старейшина-даос левитирует. Всё на встроенном Animated API и emoji, без ассетов.
+// Круглая «монета» размером size (76 / 64 / 54): эмодзи по центру, пульсирующее
+// кольцо ауры и частицы Ци внутри бейджа. Ребёнок ползает, подросток и взрослый
+// медитируют, старейшина-даос левитирует. Всё на встроенном Animated API и emoji.
 export const LifeAvatar = ({
   age,
   cultivationStage,
   accessibilityLabel,
-  compact = false,
+  size = 76,
 }: LifeAvatarProps) => {
   const group = getAvatarAgeGroup(age);
   const stageIndex = getStageIndex(cultivationStage);
@@ -141,9 +141,8 @@ export const LifeAvatar = ({
   const showParticles = stageIndex >= 1;
   const emoji = getCharacterEmoji(group, stageIndex);
 
-  const size = compact ? 64 : 76;
-  const auraSize = compact ? 48 : 58;
-  const emojiSize = compact ? 28 : 34;
+  const auraSize = Math.round(size * 0.76);
+  const emojiSize = Math.round(size * 0.45);
 
   const motion = useRef(new Animated.Value(0)).current;
   const aura = useRef(new Animated.Value(0)).current;
@@ -168,7 +167,7 @@ export const LifeAvatar = ({
     };
   }, [group]);
 
-  // Пульсация ауры: включается только для культиваторов (индекс стадии >= 1).
+  // Пульсация ауры: включается только для культиваторов (индекс стадии больше либо равен 1).
   useEffect(() => {
     aura.setValue(0);
     if (!auraColor) {

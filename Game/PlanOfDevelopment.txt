@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 27 (Вкладка Мир влезает на любой экран, бейдж-аватар, переименование в GoodLife v.2)
+[СТАТУС]: ШАГ 28 (Hotfix вкладки Мир: без скролла, тирсы плотности compact/tiny, устранена чёрная полоса)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -165,14 +165,21 @@
 118. [X] Локализация RU/EN (expenses_year, hints.expenses) и документация обновлены.
 
 === Фаза 23: Вкладка Мир влезает на любой экран, бейдж-аватар, переименование в GoodLife v.2 ===
-119. [X] LifeAvatar стал круглым бейджем 76/64px с кольцом ауры и частицами внутри; добавлен проп compact.
+119. [X] LifeAvatar стал круглым бейджем с кольцом ауры и частицами внутри; добавлен проп compact.
 120. [X] UI-кит: StatRow получил опциональный dense-режим (компактные строки) без поломки других экранов.
 121. [X] LifeScreen: адаптивный compact-режим по высоте окна, auto-ScrollView fallback через onLayout при нехватке места, уменьшен paddingBottom под FAB.
 122. [X] Переименование: шапка GoodLife + версионный чип v.2 (ключи title/title_version RU/EN), формат расходов "$0"/"-$X".
 
+=== Фаза 24: Hotfix вкладки Мир — без скролла, тирсы плотности, устранена чёрная полоса ===
+123. [X] Убран auto-ScrollView: скролл во вкладке Мир отсутствует полностью, контент закреплён.
+124. [X] Тирсы плотности: compact при высоте окна ниже 900pt и tiny ниже 700pt — контент сжимается и влазит на телефонах 800-844pt (ранее порог 780pt не срабатывал).
+125. [X] LifeAvatar: числовой проп size (76/64/54) вместо булева compact; бейдж, аура и эмодзи масштабируются пропорционально.
+126. [X] Устранена чёрная полоса снизу: paddingBottom уменьшен до клиренса под FAB (96/72/64), убран flex-остаток cardsArea.
+127. [X] Уроки записаны в DataForAI.txt (пороги адаптивности по реальным окнам устройств, запрет скролла в Мир, XML-безопасность commit_message).
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
-├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
+├── DataForAI.txt                       // Выученные уроки по крашам Hermes, навигации, адаптивности и XML
 └── src/
     ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
     ├── components/
@@ -182,7 +189,7 @@ Game/
     │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
     │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
     │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
-    │       ├── LifeAvatar.tsx           // Анимированный бейдж-аватар взросления (emoji + Animated API, круглый бейдж, compact)
+    │       ├── LifeAvatar.tsx           // Анимированный бейдж-аватар взросления (emoji + Animated API, проп size 76/64/54)
     │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
     ├── constants/
     │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
@@ -204,7 +211,7 @@ Game/
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста, бейдж-аватар рядом с возрастом, расходы в год, adaptive compact/auto-scroll, шапка GoodLife v.2
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста, бейдж-аватар рядом с возрастом, расходы в год, тирсы compact/tiny без скролла, шапка GoodLife v.2
     │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела, активное благословение портала
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы и награды порталов
     │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press

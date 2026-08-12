@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  ScrollView,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,12 +47,13 @@ export default function LifeScreen() {
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
 
-  // Адаптивная компоновка: compact для невысоких экранов, auto-scroll если контент не влезает.
+  // Адаптивная плотность: compact для телефонов (порог 900pt), tiny для очень
+  // маленьких экранов (порог 700pt). Скролла во вкладке Мир НЕТ: контент
+  // сжимается и закрепляется на экране.
   const { height: windowHeight } = useWindowDimensions();
-  const compact = windowHeight < 780;
-  const [availableHeight, setAvailableHeight] = useState(0);
-  const [innerHeight, setInnerHeight] = useState(0);
-  const needsScroll = availableHeight > 0 && innerHeight > availableHeight;
+  const compact = windowHeight < 900;
+  const tiny = windowHeight < 700;
+  const avatarSize = tiny ? 54 : compact ? 64 : 76;
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
@@ -191,7 +191,9 @@ export default function LifeScreen() {
 
   const titleBlock = (
     <View style={styles.titleRow}>
-      <Text style={[styles.title, compact && styles.titleCompact]}>{ui.title}</Text>
+      <Text style={[styles.title, compact && styles.titleCompact, tiny && styles.titleTiny]}>
+        {ui.title}
+      </Text>
       <View style={styles.versionChip}>
         <Text style={styles.versionChipText}>{ui.title_version}</Text>
       </View>
@@ -284,8 +286,8 @@ export default function LifeScreen() {
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={[styles.content, compact && styles.contentCompact]}>
-          <View style={[styles.headerRow, compact && styles.headerRowCompact]}>
+        <View style={[styles.content, compact && styles.contentCompact, tiny && styles.contentTiny]}>
+          <View style={[styles.headerRow, compact && styles.headerRowCompact, tiny && styles.headerRowTiny]}>
             {titleBlock}
             <View style={styles.headerActions}>
               {logButton}
@@ -324,156 +326,10 @@ export default function LifeScreen() {
     );
   }
 
-  const cardsBlock = (
-    <View onLayout={(event) => setInnerHeight(event.nativeEvent.layout.height)}>
-      <Card
-        variant="primary"
-        style={[styles.heroCard, compact && styles.cardCompact, compact && styles.mbCompact]}
-      >
-        <View style={styles.heroTopRow}>
-          <View style={styles.heroAvatarWrap}>
-            <LifeAvatar
-              age={player.age}
-              cultivationStage={player.cultivationStage}
-              accessibilityLabel={avatarAria}
-              compact={compact}
-            />
-          </View>
-          <View style={styles.heroAgeBlock}>
-            <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-            <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
-              <Text style={[styles.heroAgeValue, compact && styles.heroAgeValueCompact]}>
-                {player.age}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <ProgressBar
-          progress={healthProgress}
-          color={Theme.colors.success}
-          height={compact ? 8 : 10}
-          style={compact ? styles.heroProgressCompact : styles.heroProgress}
-        />
-        <Text style={[styles.heroProgressLabel, compact && styles.mb4]}>
-          {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
-        </Text>
-        <ProgressBar
-          progress={qiProgress}
-          color={Theme.colors.info}
-          height={compact ? 8 : 10}
-          style={compact ? styles.heroProgressCompact : styles.heroProgress}
-        />
-        <Text style={[styles.heroProgressLabel, compact && styles.mb4]}>
-          {ui.qi}: {formatLargeNumber(player.qi)}
-        </Text>
-      </Card>
-      <Card style={[styles.statsCard, compact && styles.cardCompact, compact && styles.mbCompact]}>
-        <StatRow
-          icon="school"
-          label={ui.intelligence}
-          value={player.intelligence.toString()}
-          color={Theme.colors.secondary}
-          dense={compact}
-          onLongPress={() => openHint('intelligence')}
-        />
-        <StatRow
-          icon="heart"
-          label={ui.health}
-          value={formatLargeNumber(player.maxHealth)}
-          color={Theme.colors.success}
-          dense={compact}
-          onLongPress={() => openHint('health')}
-        />
-        <StatRow
-          icon="diamond"
-          label={ui.appearance}
-          value={player.appearance.toString()}
-          color={Theme.colors.warning}
-          dense={compact}
-          onLongPress={() => openHint('appearance')}
-        />
-        <StatRow
-          icon="cash"
-          label={ui.money}
-          value={`$${formatLargeNumber(player.money)}`}
-          color={Theme.colors.gold}
-          dense={compact}
-          onLongPress={() => openHint('money')}
-        />
-        <StatRow
-          icon="wallet-outline"
-          label={ui.expenses_year}
-          value={expensesValue}
-          color={Theme.colors.danger}
-          dense={compact}
-          onLongPress={openExpensesHint}
-        />
-        <StatRow
-          icon="flame"
-          label={ui.spiritual_root}
-          value={player.spiritualRoot.toString()}
-          color={Theme.colors.info}
-          dense={compact}
-          onLongPress={() => openHint('spiritual_root')}
-        />
-        <StatRow
-          icon="sparkles"
-          label={ui.karma}
-          value={formatLargeNumber(player.karma)}
-          color={Theme.colors.primarySoft}
-          dense={compact}
-          onLongPress={() => openHint('karma')}
-        />
-      </Card>
-      <Card style={[styles.focusCard, compact && styles.cardCompact, compact && styles.mbCompact]}>
-        <Text style={[styles.focusTitle, compact && styles.mb4]}>{ui.focus_title}</Text>
-        <View style={styles.focusRow}>
-          <TouchableOpacity
-            style={[
-              styles.focusChip,
-              styles.focusChipLeft,
-              compact && styles.focusChipCompact,
-              player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
-            ]}
-            onPress={() => player.setActivityFocus('mundane')}
-            onLongPress={() => openHint('focus_mundane')}
-          >
-            <Text
-              style={[
-                styles.focusChipText,
-                player.activityFocus === 'mundane' && styles.focusChipTextActive,
-              ]}
-            >
-              {ui.focus_mundane}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.focusChip,
-              compact && styles.focusChipCompact,
-              player.activityFocus === 'secret' && styles.focusChipActiveSecret,
-            ]}
-            onPress={() => player.setActivityFocus('secret')}
-            onLongPress={() => openHint('focus_secret')}
-          >
-            <Text
-              style={[
-                styles.focusChipText,
-                player.activityFocus === 'secret' && styles.focusChipTextActive,
-              ]}
-            >
-              {ui.focus_secret}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.content, compact && styles.contentCompact]}>
-        <View style={[styles.headerRow, compact && styles.headerRowCompact]}>
+      <View style={[styles.content, compact && styles.contentCompact, tiny && styles.contentTiny]}>
+        <View style={[styles.headerRow, compact && styles.headerRowCompact, tiny && styles.headerRowTiny]}>
           {titleBlock}
           <View style={styles.headerActions}>
             {logButton}
@@ -482,18 +338,171 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </View>
-        <View
-          style={styles.cardsArea}
-          onLayout={(event) => setAvailableHeight(event.nativeEvent.layout.height)}
+        <Card
+          variant="primary"
+          style={[
+            styles.heroCard,
+            compact && styles.cardCompact,
+            tiny && styles.cardTiny,
+            compact && styles.mbCompact,
+            tiny && styles.mbTiny,
+          ]}
         >
-          {needsScroll ? (
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollArea}>
-              {cardsBlock}
-            </ScrollView>
-          ) : (
-            cardsBlock
-          )}
-        </View>
+          <View style={[styles.heroTopRow, tiny && styles.heroTopRowTiny]}>
+            <View style={styles.heroAvatarWrap}>
+              <LifeAvatar
+                age={player.age}
+                cultivationStage={player.cultivationStage}
+                accessibilityLabel={avatarAria}
+                size={avatarSize}
+              />
+            </View>
+            <View style={styles.heroAgeBlock}>
+              <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+              <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
+                <Text style={[styles.heroAgeValue, compact && styles.heroAgeValueCompact, tiny && styles.heroAgeValueTiny]}>
+                  {player.age}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <ProgressBar
+            progress={healthProgress}
+            color={Theme.colors.success}
+            height={tiny ? 6 : compact ? 8 : 10}
+            style={compact ? styles.heroProgressCompact : styles.heroProgress}
+          />
+          <Text style={[styles.heroProgressLabel, compact && styles.heroProgressLabelCompact, tiny && styles.heroProgressLabelTiny]}>
+            {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
+          </Text>
+          <ProgressBar
+            progress={qiProgress}
+            color={Theme.colors.info}
+            height={tiny ? 6 : compact ? 8 : 10}
+            style={compact ? styles.heroProgressCompact : styles.heroProgress}
+          />
+          <Text style={[styles.heroProgressLabel, compact && styles.heroProgressLabelCompact, tiny && styles.heroProgressLabelTiny]}>
+            {ui.qi}: {formatLargeNumber(player.qi)}
+          </Text>
+        </Card>
+        <Card
+          style={[
+            styles.statsCard,
+            compact && styles.cardCompact,
+            tiny && styles.cardTiny,
+            compact && styles.mbCompact,
+            tiny && styles.mbTiny,
+          ]}
+        >
+          <StatRow
+            icon="school"
+            label={ui.intelligence}
+            value={player.intelligence.toString()}
+            color={Theme.colors.secondary}
+            dense={compact}
+            onLongPress={() => openHint('intelligence')}
+          />
+          <StatRow
+            icon="heart"
+            label={ui.health}
+            value={formatLargeNumber(player.maxHealth)}
+            color={Theme.colors.success}
+            dense={compact}
+            onLongPress={() => openHint('health')}
+          />
+          <StatRow
+            icon="diamond"
+            label={ui.appearance}
+            value={player.appearance.toString()}
+            color={Theme.colors.warning}
+            dense={compact}
+            onLongPress={() => openHint('appearance')}
+          />
+          <StatRow
+            icon="cash"
+            label={ui.money}
+            value={`$${formatLargeNumber(player.money)}`}
+            color={Theme.colors.gold}
+            dense={compact}
+            onLongPress={() => openHint('money')}
+          />
+          <StatRow
+            icon="wallet-outline"
+            label={ui.expenses_year}
+            value={expensesValue}
+            color={Theme.colors.danger}
+            dense={compact}
+            onLongPress={openExpensesHint}
+          />
+          <StatRow
+            icon="flame"
+            label={ui.spiritual_root}
+            value={player.spiritualRoot.toString()}
+            color={Theme.colors.info}
+            dense={compact}
+            onLongPress={() => openHint('spiritual_root')}
+          />
+          <StatRow
+            icon="sparkles"
+            label={ui.karma}
+            value={formatLargeNumber(player.karma)}
+            color={Theme.colors.primarySoft}
+            dense={compact}
+            onLongPress={() => openHint('karma')}
+          />
+        </Card>
+        <Card
+          style={[
+            styles.focusCard,
+            compact && styles.cardCompact,
+            tiny && styles.cardTiny,
+            compact && styles.mbCompact,
+            tiny && styles.mbTiny,
+          ]}
+        >
+          <Text style={[styles.focusTitle, compact && styles.mb4]}>{ui.focus_title}</Text>
+          <View style={styles.focusRow}>
+            <TouchableOpacity
+              style={[
+                styles.focusChip,
+                styles.focusChipLeft,
+                compact && styles.focusChipCompact,
+                tiny && styles.focusChipTiny,
+                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+              ]}
+              onPress={() => player.setActivityFocus('mundane')}
+              onLongPress={() => openHint('focus_mundane')}
+            >
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'mundane' && styles.focusChipTextActive,
+                ]}
+              >
+                {ui.focus_mundane}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.focusChip,
+                compact && styles.focusChipCompact,
+                tiny && styles.focusChipTiny,
+                player.activityFocus === 'secret' && styles.focusChipActiveSecret,
+              ]}
+              onPress={() => player.setActivityFocus('secret')}
+              onLongPress={() => openHint('focus_secret')}
+            >
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'secret' && styles.focusChipTextActive,
+                ]}
+              >
+                {ui.focus_secret}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
       </View>
       <DraggableGrowButton
         age={player.age}
@@ -519,7 +528,11 @@ const styles = StyleSheet.create({
   },
   contentCompact: {
     padding: 10,
-    paddingBottom: 84,
+    paddingBottom: 72,
+  },
+  contentTiny: {
+    padding: 8,
+    paddingBottom: 64,
   },
   headerRow: {
     flexDirection: 'row',
@@ -529,6 +542,9 @@ const styles = StyleSheet.create({
   },
   headerRowCompact: {
     marginBottom: 8,
+  },
+  headerRowTiny: {
+    marginBottom: 6,
   },
   headerActions: {
     flexDirection: 'row',
@@ -580,6 +596,9 @@ const styles = StyleSheet.create({
   titleCompact: {
     fontSize: 22,
   },
+  titleTiny: {
+    fontSize: 20,
+  },
   versionChip: {
     marginLeft: 8,
     paddingHorizontal: 8,
@@ -607,17 +626,17 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontWeight: '800',
   },
-  cardsArea: {
-    flex: 1,
-  },
-  scrollArea: {
-    flex: 1,
-  },
   cardCompact: {
     padding: 10,
   },
+  cardTiny: {
+    padding: 8,
+  },
   mbCompact: {
     marginBottom: 8,
+  },
+  mbTiny: {
+    marginBottom: 6,
   },
   mb4: {
     marginBottom: Theme.spacing.xs,
@@ -631,6 +650,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Theme.spacing.sm,
+  },
+  heroTopRowTiny: {
+    marginBottom: 4,
   },
   heroAvatarWrap: {
     flex: 1,
@@ -653,6 +675,9 @@ const styles = StyleSheet.create({
   heroAgeValueCompact: {
     fontSize: 26,
   },
+  heroAgeValueTiny: {
+    fontSize: 22,
+  },
   heroProgress: {
     marginBottom: 8,
   },
@@ -663,6 +688,12 @@ const styles = StyleSheet.create({
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
     marginBottom: Theme.spacing.sm,
+  },
+  heroProgressLabelCompact: {
+    marginBottom: 4,
+  },
+  heroProgressLabelTiny: {
+    marginBottom: 2,
   },
   statsCard: {
     marginBottom: Theme.spacing.md,
@@ -689,6 +720,9 @@ const styles = StyleSheet.create({
   },
   focusChipCompact: {
     paddingVertical: 10,
+  },
+  focusChipTiny: {
+    paddingVertical: 8,
   },
   focusChipLeft: {
     marginRight: 10,
