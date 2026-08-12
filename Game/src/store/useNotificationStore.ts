@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { GeneratedEvent, INotification, NotificationKind, NotificationType } from '../types';
 import { GameConstants } from '../constants/GameConstants';
 
+const NOTIFICATION_MISSED_CAP = 99;
+
 interface NotificationState {
   notifications: INotification[];
   missedCount: number;
@@ -46,11 +48,11 @@ const appendNotification = (
   state: NotificationState,
   notification: INotification
 ): Partial<NotificationState> => {
-  // Если видимый слот уже занят, уведомление считается пропущенным
-  // и добавляет счётчик на кнопку уведомлений в LifeScreen.
+  // Если видимый слот занят, уведомление считается пропущенным.
+  // Счётчик пропущенных уведомлений отображается на кнопке журнала в LifeScreen.
   const isMissed = state.notifications.length >= GameConstants.NOTIFICATION_MAX_VISIBLE;
   const nextMissedCount = isMissed
-    ? Math.min(state.missedCount + 1, GameConstants.NOTIFICATION_MISSED_CAP)
+    ? Math.min(state.missedCount + 1, NOTIFICATION_MISSED_CAP)
     : state.missedCount;
 
   return {

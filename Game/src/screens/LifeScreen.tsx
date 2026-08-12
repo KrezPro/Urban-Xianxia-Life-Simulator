@@ -6,10 +6,9 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card, ProgressBar, StatRow, IconButton } from '../components/ui';
+import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
-import { GameConstants } from '../constants/GameConstants';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import LogScreen from './LogScreen';
@@ -72,10 +71,7 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
 
-  const missedBadgeText =
-    missedNotifications > GameConstants.NOTIFICATION_MISSED_CAP
-      ? `${GameConstants.NOTIFICATION_MISSED_CAP}+`
-      : missedNotifications.toString();
+  const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
 
   const openHint = (key: string) => {
     const hintData = hints[key];
@@ -90,8 +86,10 @@ export default function LifeScreen() {
 
   // УРОК (DataForAI): журнал открывается модально (LogScreen с onClose),
   // navigation.navigate('Log') НЕ используем — маршрута Log в TabNavigator нет.
+  // Счётчик пропущенных уведомлений висит на кнопке журнала, отдельный колокольчик не нужен.
   const openLog = () => {
     setLogVisible(true);
+    clearMissedNotifications();
   };
 
   const handleReincarnate = () => {
@@ -104,17 +102,18 @@ export default function LifeScreen() {
     player.clearRebirthReport();
   };
 
-  const notificationsButton = (
+  const logButton = (
     <TouchableOpacity
-      style={styles.notificationsButton}
-      onPress={clearMissedNotifications}
+      style={styles.logButton}
+      onPress={openLog}
       activeOpacity={0.85}
       accessibilityRole="button"
+      accessibilityLabel={ui.btn_log}
     >
-      <Ionicons name="notifications" size={20} color={Theme.colors.text} />
+      <Ionicons name="book-outline" size={20} color={Theme.colors.text} />
       {missedNotifications > 0 ? (
-        <View style={styles.notificationsBadge}>
-          <Text style={styles.notificationsBadgeText}>{missedBadgeText}</Text>
+        <View style={styles.logBadge}>
+          <Text style={styles.logBadgeText}>{missedBadgeText}</Text>
         </View>
       ) : null}
     </TouchableOpacity>
@@ -193,15 +192,7 @@ export default function LifeScreen() {
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
             <View style={styles.headerActions}>
-              <IconButton
-                icon="book-outline"
-                onPress={openLog}
-                accessibilityLabel={ui.btn_log}
-                variant="secondary"
-                size={38}
-                style={styles.headerIconButton}
-              />
-              {notificationsButton}
+              {logButton}
               <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
                 <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
               </TouchableOpacity>
@@ -239,15 +230,7 @@ export default function LifeScreen() {
         <View style={styles.headerRow}>
           <Text style={styles.title}>{ui.title}</Text>
           <View style={styles.headerActions}>
-            <IconButton
-              icon="book-outline"
-              onPress={openLog}
-              accessibilityLabel={ui.btn_log}
-              variant="secondary"
-              size={38}
-              style={styles.headerIconButton}
-            />
-            {notificationsButton}
+            {logButton}
             <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
               <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
             </TouchableOpacity>
@@ -382,10 +365,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  headerIconButton: {
-    marginRight: 10,
-  },
-  notificationsButton: {
+  logButton: {
     width: 38,
     height: 38,
     borderRadius: 12,
@@ -396,7 +376,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 10,
   },
-  notificationsBadge: {
+  logBadge: {
     position: 'absolute',
     top: -6,
     right: -8,
@@ -410,7 +390,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Theme.colors.background,
   },
-  notificationsBadgeText: {
+  logBadgeText: {
     color: Theme.colors.text,
     fontSize: 10,
     lineHeight: 12,

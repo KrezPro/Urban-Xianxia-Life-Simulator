@@ -1,31 +1,26 @@
 # ВЫУЧЕННЫЕ УРОКИ (Шаг 4)
-
 1. Hermes: "Cannot convert undefined value to object" возникает при чтении свойства из undefined.
-   В eventGenerator.ts ВСЕ таблицы GameConstants читаем только через tableNumber(table, key, fallback).
-   Никогда не писать GameConstants.X[key] без защиты, если X может отсутствовать в старых сборках.
-
+В eventGenerator.ts ВСЕ таблицы GameConstants читаем только через tableNumber(table, key, fallback).
+Никогда не писать GameConstants.X[key] без защиты, если X может отсутствовать в старых сборках.
 2. GameConstants.ts должен СОДЕРЖАТЬ все EVENT_* таблицы:
-   EVENT_MONEY_BASE_BY_TIER, EVENT_QI_BASE_BY_TIER, EVENT_RARITY_MONEY_MULTIPLIER,
-   EVENT_RARITY_QI_MULTIPLIER, EVENT_QI_CAP_DIVISOR, EVENT_HEALTH_DAMAGE_BPS_BY_RARITY,
-   EVENT_HEALTH_HEAL_BPS_BY_RARITY, EVENT_STAT_CHANGE_BY_RARITY, EVENT_KARMA_CHANGE_BY_RARITY,
-   EVENT_RARITY_WEIGHTS, EVENT_SECRET_FOCUS_CHANCE_BPS, EVENT_MUNDANE_SECRET_CHANCE_BPS.
-   При изменении eventGenerator всегда синхронизировать GameConstants.
-
+EVENT_MONEY_BASE_BY_TIER, EVENT_QI_BASE_BY_TIER, EVENT_RARITY_MONEY_MULTIPLIER,
+EVENT_RARITY_QI_MULTIPLIER, EVENT_QI_CAP_DIVISOR, EVENT_HEALTH_DAMAGE_BPS_BY_RARITY,
+EVENT_HEALTH_HEAL_BPS_BY_RARITY, EVENT_STAT_CHANGE_BY_RARITY, EVENT_KARMA_CHANGE_BY_RARITY,
+EVENT_RARITY_WEIGHTS, EVENT_SECRET_FOCUS_CHANCE_BPS, EVENT_MUNDANE_SECRET_CHANCE_BPS.
+При изменении eventGenerator всегда синхронизировать GameConstants.
 3. NAVIGATE 'Log' error: в TabNavigator НЕТ маршрута Log (5 вкладок: Life/Dao/Activities/Store/Sect).
-   Журнал открываем ТОЛЬКО модально: <Modal><LogScreen onClose={...} /></Modal>.
-   Не использовать navigation.navigate('Log') ни в одном файле.
-
+Журнал открываем ТОЛЬКО модально: <Modal><LogScreen onClose={...} /></Modal>.
+Не использовать navigation.navigate('Log') ни в одном файле.
 4. Уведомления: таймер тоста запускается от момента монтирования (useEffect [notification.id]),
-   а не от notification.createdAt, иначе уведомления из очереди "протухают" и исчезают мгновенно.
-
+а не от notification.createdAt, иначе уведомления из очереди "протухают" и исчезают мгновенно.
 5. useNotificationStore обязан иметь pushGeneratedEventNotification(event) и очередь
-   NOTIFICATION_MAX_QUEUE = 3, NOTIFICATION_MAX_VISIBLE = 1.
-
+NOTIFICATION_MAX_QUEUE = 3, NOTIFICATION_MAX_VISIBLE = 1.
 6. generateYearEvent оборачиваем в try/catch в useYearlyCycle: при любом сбое генерируем
-   buildFallbackEvent() (нейтральное событие), чтобы год never крашил приложение.
-
+buildFallbackEvent() (нейтральное событие), чтобы год never крашил приложение.
 7. Все обращения к данным (rule.effects, rule.params, ctx.player, lifestyle) защищаем
-   fallback-значениями: Array.isArray(...), (x || {}), (x || []).
-
+fallback-значениями: Array.isArray(...), (x || {}), (x || []).
 8. Журнал: addGeneratedLog пишет generated-записи с textKey/params/effects;
-   LogScreen рендерит текст через getEventLogText и чипы через EffectChips.
+LogScreen рендерит текст через getEventLogText и чипы через EffectChips.
+9. UX-урока по уведомлениям: счётчик пропущенных уведомлений должен находиться НА КНОПКЕ ЖУРНАЛА
+(book-outline) в LifeScreen, рядом с переключателем языка. Отдельная кнопка-колокольчик ЗАПРЕЩЕНА.
+Открытие журнала вызывает clearMissedNotifications().
