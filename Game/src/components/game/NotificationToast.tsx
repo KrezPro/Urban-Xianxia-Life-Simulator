@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
-import { INotificationItem } from '../../store/useNotificationStore';
+import { INotification, NotificationType } from '../../types';
 import { useLocaleStore } from '../../store/useLocaleStore';
 import { getNotificationText } from '../../utils/notificationUtils';
 
 interface NotificationToastProps {
-  notification: INotificationItem;
+  notification: INotification;
   onDismiss: (id: string) => void;
 }
 
-const iconByType: Record<string, keyof typeof Ionicons.glyphMap> = {
+const iconByType: Record<NotificationType, keyof typeof Ionicons.glyphMap> = {
   mundane: 'earth',
   secret: 'sparkles',
   system: 'information-circle',
@@ -20,7 +20,7 @@ const iconByType: Record<string, keyof typeof Ionicons.glyphMap> = {
   social: 'people',
 };
 
-const colorByType: Record<string, string> = {
+const colorByType: Record<NotificationType, string> = {
   mundane: Theme.colors.secondary,
   secret: Theme.colors.info,
   system: Theme.colors.textMuted,
@@ -33,15 +33,15 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
   const locale = useLocaleStore((state) => state.locale);
 
   const opacity = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(-16)).current;
-  const dismissedRef = useRef(false);
+  const translateY = useRef(new Animated.Value(-12)).current;
+  const leavingRef = useRef(false);
 
   const dismiss = () => {
-    if (dismissedRef.current) {
+    if (leavingRef.current) {
       return;
     }
 
-    dismissedRef.current = true;
+    leavingRef.current = true;
 
     Animated.parallel([
       Animated.timing(opacity, {
@@ -50,7 +50,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
-        toValue: -16,
+        toValue: -12,
         duration: 180,
         useNativeDriver: true,
       }),
@@ -92,7 +92,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
 
   const text = getNotificationText(notification, locale);
   const icon = iconByType[notification.type] || 'information-circle';
-  const accent = colorByType[notification.type] || Theme.colors.secondary;
+  const accent = colorByType[notification.type] || Theme.colors.textMuted;
 
   return (
     <Animated.View
@@ -105,28 +105,32 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
         },
       ]}
     >
-      <View style={[styles.iconBadge, { backgroundColor: `${accent}22` }]}> 
-        <Ionicons name={icon} size={16} color={accent} />
-      </View>
+      <TouchableOpacity activeOpacity={0.9} onPress={dismiss} style={styles.inner}>
+        <View style={[styles.iconBadge, { backgroundColor: `${accent}22` }]}> 
+          <Ionicons name={icon} size={16} color={accent} />
+        </View>
 
-      <Text style={styles.text} numberOfLines={2}>
-        {text}
-      </Text>
+        <Text style={styles.text} numberOfLines={2}>
+          {text}
+        </Text>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: Theme.colors.surface,
     borderRadius: Theme.radius.md,
     borderWidth: 1,
-    paddingHorizontal: Theme.spacing.sm + 2,
-    paddingVertical: Theme.spacing.sm,
     marginBottom: Theme.spacing.sm,
     ...Theme.shadow,
+  },
+  inner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Theme.spacing.sm + 2,
+    paddingVertical: Theme.spacing.sm,
   },
   iconBadge: {
     width: 28,

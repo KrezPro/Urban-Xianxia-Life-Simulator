@@ -1,5 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -15,14 +23,19 @@ import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
+interface HintData {
+  title: string;
+  text: string;
+}
+
 export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
-
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
 
+  const [hint, setHint] = useState<HintData | null>(null);
   const deathNotifiedRef = useRef(false);
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
@@ -55,6 +68,19 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.health / 100;
 
+  const openHint = (key: string) => {
+    const hintData = ui.hints[key];
+
+    if (!hintData) {
+      return;
+    }
+
+    setHint({
+      title: hintData.title,
+      text: hintData.text,
+    });
+  };
+
   const handleGrowOlder = () => {
     const now = Date.now();
 
@@ -62,6 +88,7 @@ export default function LifeScreen() {
       if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
         player.setLastInterstitialTime(now);
         addLog(ui.interstitial_log, 'system');
+        pushUiNotification('interstitial', 'system');
       }
     }
 
@@ -72,7 +99,13 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
-      addLog(ui.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
+
+      const meditationText = ui.meditation_log.replace('{amount}', player.spiritualRoot.toString());
+
+      addLog(meditationText, 'secret');
+      pushUiNotification('meditation', 'secret', {
+        amount: player.spiritualRoot.toString(),
+      });
     }
 
     const isSecretEvent = secretEventChance > Math.random();
@@ -82,8 +115,8 @@ export default function LifeScreen() {
     player.applyEffects(randomEvent.effects);
 
     const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
-    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
 
+    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
     pushEventNotification(
       randomEvent.id,
       isSecretEvent ? 'secret' : 'mundane',
@@ -128,15 +161,31 @@ export default function LifeScreen() {
             </Card>
           </View>
 
-          <View style={styles.footer}>
-            <Button
-              title={ui.btn_reincarnate}
-              onPress={handleReincarnate}
-              variant="danger"
-              icon="refresh"
-            />
-          </View>
+          <Button
+            title={ui.btn_reincarnate}
+            onPress={handleReincarnate}
+            variant="danger"
+            icon="refresh"
+            style={styles.mainActionButton}
+          />
         </View>
+
+        <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
+            <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
+              <Text style={styles.modalTitle}>{hint?.title}</Text>
+              <Text style={styles.modalText}>{hint?.text}</Text>
+
+              <Button
+                title={ui.hints.close}
+                onPress={() => setHint(null)}
+                variant="primary"
+                small
+                style={styles.modalButton}
+              />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
       </SafeAreaView>
     );
   }
@@ -169,50 +218,110 @@ export default function LifeScreen() {
           </Text>
         </Card>
 
-        <ScrollView style={styles.middleScroll} contentContainerStyle={styles.middleContent}>
-          <Card style={styles.statsCard}>
-            <StatRow icon="school" label={ui.intelligence} value={player.intelligence.toString()} color={Theme.colors.secondary} />
-            <StatRow icon="heart" label={ui.health} value={player.health.toString()} color={Theme.colors.success} />
-            <StatRow icon="diamond" label={ui.appearance} value={player.appearance.toString()} color={Theme.colors.warning} />
-            <StatRow icon="cash" label={ui.money} value={`$${formatLargeNumber(player.money)}`} color={Theme.colors.gold} />
-            <StatRow icon="flame" label={ui.spiritual_root} value={player.spiritualRoot.toString()} color={Theme.colors.info} />
-            <StatRow icon="sparkles" label={ui.karma} value={formatLargeNumber(player.karma)} color={Theme.colors.primarySoft} />
-          </Card>
-
-          <Card style={styles.focusCard}>
-            <Text style={styles.focusTitle}>{ui.focus_title}</Text>
-
-            <View style={styles.focusRow}>
-              <TouchableOpacity
-                style={[styles.focusChip, styles.focusChipLeft, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
-                onPress={() => player.setActivityFocus('mundane')}
-              >
-                <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
-                  {ui.focus_mundane}
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
-                onPress={() => player.setActivityFocus('secret')}
-              >
-                <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
-                  {ui.focus_secret}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Card>
-        </ScrollView>
-
-        <View style={styles.footer}>
-          <Button
-            title={ui.btn_grow}
-            onPress={handleGrowOlder}
-            variant="primary"
-            icon="hourglass"
-          />
+        <View style={styles.statsWrapper}>
+          <ScrollView contentContainerStyle={styles.statsScroll} showsVerticalScrollIndicator={false}>
+            <Card style={styles.statsCard}>
+              <StatRow
+                icon="school"
+                label={ui.intelligence}
+                value={player.intelligence.toString()}
+                color={Theme.colors.secondary}
+                onPress={() => openHint('intelligence')}
+              />
+              <StatRow
+                icon="heart"
+                label={ui.health}
+                value={player.health.toString()}
+                color={Theme.colors.success}
+                onPress={() => openHint('health')}
+              />
+              <StatRow
+                icon="diamond"
+                label={ui.appearance}
+                value={player.appearance.toString()}
+                color={Theme.colors.warning}
+                onPress={() => openHint('appearance')}
+              />
+              <StatRow
+                icon="cash"
+                label={ui.money}
+                value={`$${formatLargeNumber(player.money)}`}
+                color={Theme.colors.gold}
+                onPress={() => openHint('money')}
+              />
+              <StatRow
+                icon="flame"
+                label={ui.spiritual_root}
+                value={player.spiritualRoot.toString()}
+                color={Theme.colors.info}
+                onPress={() => openHint('spiritual_root')}
+              />
+              <StatRow
+                icon="sparkles"
+                label={ui.karma}
+                value={formatLargeNumber(player.karma)}
+                color={Theme.colors.primarySoft}
+                onPress={() => openHint('karma')}
+              />
+            </Card>
+          </ScrollView>
         </View>
+
+        <Card style={styles.focusCard}>
+          <Text style={styles.focusTitle}>{ui.focus_title}</Text>
+
+          <View style={styles.focusRow}>
+            <TouchableOpacity
+              style={[
+                styles.focusChip,
+                styles.focusChipLeft,
+                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+              ]}
+              onPress={() => player.setActivityFocus('mundane')}
+              onLongPress={() => openHint('focus_mundane')}
+            >
+              <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
+                {ui.focus_mundane}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
+              onPress={() => player.setActivityFocus('secret')}
+              onLongPress={() => openHint('focus_secret')}
+            >
+              <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
+                {ui.focus_secret}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
+
+        <Button
+          title={ui.btn_grow}
+          onPress={handleGrowOlder}
+          variant="primary"
+          icon="hourglass"
+          style={styles.mainActionButton}
+        />
       </View>
+
+      <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
+        <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
+          <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
+            <Text style={styles.modalTitle}>{hint?.title}</Text>
+            <Text style={styles.modalText}>{hint?.text}</Text>
+
+            <Button
+              title={ui.hints.close}
+              onPress={() => setHint(null)}
+              variant="primary"
+              small
+              style={styles.modalButton}
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -224,8 +333,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: Theme.spacing.md,
-    paddingTop: Theme.spacing.sm,
+    padding: Theme.spacing.md,
     paddingBottom: Theme.spacing.sm,
   },
   headerRow: {
@@ -265,29 +373,31 @@ const styles = StyleSheet.create({
   },
   heroAgeValue: {
     color: Theme.colors.text,
-    fontSize: 36,
+    fontSize: 34,
     fontWeight: '900',
     marginBottom: Theme.spacing.xs,
   },
   heroProgress: {
-    marginBottom: 4,
+    marginBottom: 6,
   },
   heroProgressLabel: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
     marginBottom: Theme.spacing.xs,
   },
-  middleScroll: {
+  statsWrapper: {
     flex: 1,
+    marginBottom: Theme.spacing.sm,
   },
-  middleContent: {
-    paddingBottom: Theme.spacing.sm,
+  statsScroll: {
+    paddingBottom: 2,
   },
   statsCard: {
-    marginBottom: Theme.spacing.sm,
+    paddingVertical: Theme.spacing.sm,
   },
   focusCard: {
     marginBottom: Theme.spacing.sm,
+    paddingVertical: Theme.spacing.sm,
   },
   focusTitle: {
     color: Theme.colors.textMuted,
@@ -326,8 +436,8 @@ const styles = StyleSheet.create({
   focusChipTextActive: {
     color: Theme.colors.text,
   },
-  footer: {
-    paddingTop: Theme.spacing.xs,
+  mainActionButton: {
+    marginTop: Theme.spacing.xs,
   },
   deadCenter: {
     flex: 1,
@@ -340,8 +450,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '900',
     color: Theme.colors.danger,
-    marginBottom: 6,
-    textAlign: 'center',
+    marginBottom: 8,
   },
   deadSubtitle: {
     color: Theme.colors.textMuted,
@@ -352,15 +461,48 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   karmaLabel: {
     color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.sm,
   },
   karmaValue: {
     color: Theme.colors.gold,
     fontWeight: '900',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Theme.spacing.lg,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
+    borderWidth: 1,
+    borderColor: Theme.colors.primarySoft,
+    padding: Theme.spacing.lg,
+    alignItems: 'center',
+    ...Theme.shadow,
+  },
+  modalTitle: {
+    color: Theme.colors.text,
+    fontSize: Theme.fontSize.lg,
+    fontWeight: '900',
+    marginBottom: Theme.spacing.sm,
+    textAlign: 'center',
+  },
+  modalText: {
+    color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
+    lineHeight: 20,
+    marginBottom: Theme.spacing.md,
+    textAlign: 'center',
+  },
+  modalButton: {
+    minWidth: 160,
   },
 });

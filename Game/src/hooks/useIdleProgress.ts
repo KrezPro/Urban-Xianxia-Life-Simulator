@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
-import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { storage } from '../store/mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { calculateOfflineDelta } from '../utils/timeUtils';
@@ -14,7 +14,6 @@ export const useIdleProgress = () => {
   const { addLog } = useEventStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const locale = useLocaleStore((state) => state.locale);
-
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useEffect(() => {

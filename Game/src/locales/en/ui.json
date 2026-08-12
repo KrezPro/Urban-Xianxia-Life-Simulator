@@ -56,14 +56,13 @@
     "interstitial_log": "[AD] Interstitial ad shown (70s cooldown).",
     "hints": {
       "close": "Got it",
-      "long_press_hint": "Long-press a stat to learn what it affects",
-      "health": {
-        "title": "Health",
-        "text": "If health reaches 0, you die and reincarnate. Protect it."
-      },
       "intelligence": {
         "title": "Intelligence",
         "text": "Increases breakthrough success chance and helps with study, work and mundane events."
+      },
+      "health": {
+        "title": "Health",
+        "text": "If health reaches 0, you die and reincarnate. Protect it."
       },
       "appearance": {
         "title": "Appearance",

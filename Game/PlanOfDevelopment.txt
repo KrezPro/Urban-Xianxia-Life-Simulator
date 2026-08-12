@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 10 (Исправление UX уведомлений и основного экрана)
+[СТАТУС]: ШАГ 10 (Исправление UX: стабильный интерфейс, overlay-уведомления, возвращение подсказок)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -42,7 +42,7 @@
 25. [X] Навигация использует стабильные route names.
 26. [X] Локализация вкладок и служебных экранов.
 
-=== Фаза 8: Максимальное вовлечение (следующий блок) ===
+=== Фаза 8: Максимальное вовлечение ===
 27. [ ] Daily Rewards: ежедневные награды и серия входов.
 28. [ ] Quests: короткие цели и быстрые награды.
 29. [ ] Achievements: достижения, тосты, бонусы.
@@ -59,40 +59,39 @@
 38. [ ] Автотесты BigInt/MMKV/FlashList.
 
 === Фаза 10: UX-исправления текущего шага ===
-39. [X] Уведомления видны вверху экрана.
-40. [X] Показывается только одно уведомление одновременно.
-41. [X] Старые/просроченные уведомления удаляются из очереди.
-42. [X] Возраст и кнопка "Повзрослеть" видны без прокрутки.
-43. [X] Прокручивается только второстепенный контент (статы и фокус).
-44. [X] Подсказки по long-press сохранены и локализованы.
+39. [X] Уведомления переведены в absolute overlay и больше не смещают layout.
+40. [X] Очередь уведомлений ограничена одним активным сообщением, старые удаляются автоматически.
+41. [X] LifeScreen использует фиксированные зоны: возраст, статы, фокус и CTA не прыгают.
+42. [X] Возвращены подсказки по нажатию на статы и long-press на фокус.
+43. [X] Подсказки локализованы на RU/EN и показываются модально.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
 ├── App.tsx                          // Гидратация и навигация
 ├── components/
 │   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow + onPress/onLongPress
 │   └── game/
-│       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
+│       ├── NotificationHost.tsx     // Absolute overlay очередь уведомлений
 │       └── NotificationToast.tsx    // Анимированный тост уведомления
 ├── constants/
 │   ├── GameConstants.ts             // Длительность уведомлений, лимиты очереди
-│   └── Theme.ts                     // Цвета и стили уведомлений
+│   └── Theme.ts                     // Цвета и стили
 ├── data/
 │   └── events.json                  // id и эффекты событий
 ├── hooks/
-│   ├── useBreakthrough.ts           // Прорывы, будет использовать уведомления
-│   └── useIdleProgress.ts           // Оффлайн прогресс, будет использовать уведомления
+│   ├── useBreakthrough.ts           // Прорывы
+│   └── useIdleProgress.ts           // Оффлайн прогресс + уведомления
 ├── navigation/
-│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
+│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Log, Sect
 ├── screens/
-│   ├── LifeScreen.tsx               // Основной экран с уведомлениями
+│   ├── LifeScreen.tsx               // Стабильный основной экран с уведомлениями и подсказками
 │   ├── DaoScreen.tsx                // Путь Дао
 │   ├── StoreScreen.tsx              // Магазин Кармы
 │   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
+│   └── LogScreen.tsx                // Журнал
 ├── store/
-│   ├── useEventStore.ts             // Старый журнал, будет заменяться
+│   ├── useEventStore.ts             // Журнал
 │   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
 │   ├── usePlayerStore.ts            // Игрок
 │   ├── useLocaleStore.ts            // Язык интерфейса
@@ -100,15 +99,17 @@ Game/src/
 ├── types/
 │   └── index.ts                     // Типы уведомлений и событий
 ├── utils/
-│   └── notificationUtils.ts         // Локализованный текст уведомлений
+│   ├── helpers.ts                   // Форматирование, BigInt, random
+│   ├── notificationUtils.ts         // Локализованный текст уведомлений
+│   └── timeUtils.ts                 // Дельта времени
 └── locales/
     ├── ru/
-    │   ├── ui.json
-    │   ├── events.json
-    │   ├── social.json
-    │   └── notifications.json       // Русские тексты уведомлений
+    │   ├── ui.json                  // Интерфейс + подсказки
+    │   ├── events.json              // События
+    │   ├── social.json              // Секта и рейтинг
+    │   └── notifications.json       // Тексты уведомлений
     └── en/
-        ├── ui.json
-        ├── events.json
-        ├── social.json
-        └── notifications.json       // Английские тексты уведомлений
+        ├── ui.json                  // Интерфейс + подсказки
+        ├── events.json              // События
+        ├── social.json              // Секта и рейтинг
+        └── notifications.json       // Тексты уведомлений

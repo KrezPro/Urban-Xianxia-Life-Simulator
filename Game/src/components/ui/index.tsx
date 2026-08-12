@@ -124,10 +124,11 @@ interface StatRowProps {
   label: string;
   value: string;
   color?: string;
+  onPress?: () => void;
   onLongPress?: () => void;
 }
 
-export const StatRow = ({ icon, label, value, color, onLongPress }: StatRowProps) => {
+export const StatRow = ({ icon, label, value, color, onPress, onLongPress }: StatRowProps) => {
   const content = (
     <View style={styles.statRow}>
       <View style={[styles.statIconBadge, color ? { borderColor: color } : null]}>
@@ -139,12 +140,12 @@ export const StatRow = ({ icon, label, value, color, onLongPress }: StatRowProps
     </View>
   );
 
-  if (!onLongPress) {
+  if (!onPress && !onLongPress) {
     return content;
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.9} onLongPress={onLongPress}>
+    <TouchableOpacity activeOpacity={0.85} onPress={onPress} onLongPress={onLongPress}>
       {content}
     </TouchableOpacity>
   );
@@ -239,20 +240,20 @@ const styles = StyleSheet.create({
   statRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: Theme.colors.borderSoft,
   },
   statIconBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 12,
+    width: 30,
+    height: 30,
+    borderRadius: 10,
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
     borderColor: Theme.colors.borderSoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 10,
   },
   statLabel: {
     flex: 1,
@@ -262,6 +263,6 @@ const styles = StyleSheet.create({
   statValue: {
     color: Theme.colors.text,
     fontWeight: '800',
-    fontSize: Theme.fontSize.md,
+    fontSize: Theme.fontSize.sm,
   },
 });

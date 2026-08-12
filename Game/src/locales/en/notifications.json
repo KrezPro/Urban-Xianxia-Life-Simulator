@@ -1,8 +1,14 @@
 {
   "born": "You were born into this world. Your story begins.",
-  "death": "You have died. Your soul enters the endless Samsara.",
+  "death": "You have died. Your soul enters endless Samsara.",
   "reincarnate": "The Wheel of Samsara turned. You were reborn.",
   "meditation": "Secret meditation: +{amount} Qi.",
   "interstitial": "Interstitial ad shown.",
-  "age_up": "You turned {age}."
+  "idle_secret": "Offline meditation: {seconds}s. Earned Qi: {amount}.",
+  "idle_mundane": "Offline work: {seconds}s. Earned: ${amount}.",
+  "breakthrough_no_qi": "Insufficient Qi for breakthrough.",
+  "breakthrough_success": "[SUCCESS] Breakthrough complete! Stage: {name}.",
+  "breakthrough_fail_damage": "[FAILURE] Mana Burn. You took {damage} damage.",
+  "breakthrough_fail_death": "[CRITICAL FAILURE] Heavenly Tribulation destroyed you.",
+  "breakthrough_saved": "[SAVED] Ad buff protected your meridians."
 }

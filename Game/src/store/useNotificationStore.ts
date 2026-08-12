@@ -1,21 +1,18 @@
 import { create } from 'zustand';
+import { INotification, NotificationKind, NotificationType } from '../types';
 import { GameConstants } from '../constants/GameConstants';
 
-export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
-
-export interface INotificationItem {
-  id: string;
-  kind: 'ui' | 'event';
+interface CreateNotificationInput {
+  kind: NotificationKind;
   messageKey: string;
   eventPool?: 'mundane' | 'secret';
   params?: Record<string, string>;
   type: NotificationType;
-  createdAt: number;
-  durationMs: number;
+  durationMs?: number;
 }
 
 interface NotificationState {
-  notifications: INotificationItem[];
+  notifications: INotification[];
   pushUiNotification: (
     messageKey: string,
     type: NotificationType,
@@ -32,39 +29,52 @@ interface NotificationState {
   pruneExpired: () => void;
 }
 
-const createId = (): string => {
-  return `${Date.now().toString()}_${Math.random().toString(36).slice(2)}`;
+let notificationCounter = 0;
+
+const createNotification = (input: CreateNotificationInput): INotification => {
+  notificationCounter += 1;
+
+  return {
+    id: `notification_${Date.now().toString()}_${notificationCounter.toString()}`,
+    kind: input.kind,
+    messageKey: input.messageKey,
+    eventPool: input.eventPool,
+    params: input.params,
+    type: input.type,
+    createdAt: Date.now(),
+    durationMs: input.durationMs || GameConstants.NOTIFICATION_DURATION_MS,
+  };
 };
 
-export const useNotificationStore = create<NotificationState>()((set) => ({
+export const useNotificationStore = create<NotificationState>()((set, get) => ({
   notifications: [],
 
   pushUiNotification: (messageKey, type, params, durationMs) => {
-    const notification: INotificationItem = {
-      id: createId(),
+    const notification = createNotification({
       kind: 'ui',
       messageKey,
-      params,
       type,
-      createdAt: Date.now(),
-      durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
-    };
+      params,
+      durationMs,
+    });
 
-    set({ notifications: [notification] });
+    set({
+      notifications: [notification].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+    });
   },
 
   pushEventNotification: (eventId, eventPool, type, durationMs) => {
-    const notification: INotificationItem = {
-      id: createId(),
+    const notification = createNotification({
       kind: 'event',
       messageKey: eventId,
       eventPool,
       type,
-      createdAt: Date.now(),
-      durationMs: durationMs || GameConstants.NOTIFICATION_DEFAULT_DURATION_MS,
-    };
+      durationMs,
+    });
 
-    set({ notifications: [notification] });
+    set({
+      notifications: [notification].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+    });
   },
 
   dismissNotification: (id) => {

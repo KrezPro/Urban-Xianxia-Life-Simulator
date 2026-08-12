@@ -2,7 +2,6 @@ export type Locale = 'ru' | 'en';
 export type ActivityFocus = 'mundane' | 'secret';
 export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
-
 export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
 export type NotificationKind = 'ui' | 'event';
 
@@ -12,7 +11,6 @@ export interface INotification {
   messageKey: string;
   eventPool?: 'mundane' | 'secret';
   params?: Record<string, string>;
-  text?: string;
   type: NotificationType;
   createdAt: number;
   durationMs: number;
