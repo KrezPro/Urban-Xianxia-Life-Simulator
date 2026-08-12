@@ -1,7 +1,7 @@
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
-import { useNotificationStore } from '../store/useNotificationStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';

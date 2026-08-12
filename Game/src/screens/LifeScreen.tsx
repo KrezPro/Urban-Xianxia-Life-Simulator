@@ -1,32 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
-  SafeAreaView,
+  ScrollView,
   Text,
+  TouchableOpacity,
   View,
   StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
+  useWindowDimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card, ProgressBar, StatRow } from '../components/ui';
-import { NotificationHost } from '../components/game/NotificationHost';
+import { Button, Card, ProgressBar } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
+import {
+  getContentMaxWidth,
+  getHorizontalPadding,
+  getNotificationAreaHeight,
+  isTablet,
+  scaleFont,
+  scaleSize,
+} from '../utils/layout';
 import stagesData from '../data/stages.json';
 import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
-
-interface HintData {
-  title: string;
-  text: string;
-}
 
 export default function LifeScreen() {
   const player = usePlayerStore();
@@ -35,14 +38,30 @@ export default function LifeScreen() {
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
 
-  const [hint, setHint] = useState<HintData | null>(null);
+  const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
+
   const deathNotifiedRef = useRef(false);
+  const bornNotifiedRef = useRef(false);
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
 
+  const styles = useMemo(() => createStyles(), [width, height, insets.top, insets.bottom]);
+
+  const topPadding = insets.top + getNotificationAreaHeight() + scaleSize(8);
+  const bottomPadding = insets.bottom + scaleSize(24);
+
   useEffect(() => {
-    if (player.age === 0 && player.money === '0' && player.health === 100 && player.qi === '0' && !player.isDead) {
+    if (
+      !bornNotifiedRef.current &&
+      player.age === 0 &&
+      player.money === '0' &&
+      player.health === 100 &&
+      player.qi === '0' &&
+      !player.isDead
+    ) {
+      bornNotifiedRef.current = true;
       player.reincarnate();
       addLog(ui.born_log, 'system');
       pushUiNotification('born', 'system');
@@ -68,19 +87,6 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.health / 100;
 
-  const openHint = (key: string) => {
-    const hintData = ui.hints[key];
-
-    if (!hintData) {
-      return;
-    }
-
-    setHint({
-      title: hintData.title,
-      text: hintData.text,
-    });
-  };
-
   const handleGrowOlder = () => {
     const now = Date.now();
 
@@ -99,10 +105,7 @@ export default function LifeScreen() {
     if (player.activityFocus === 'secret') {
       secretEventChance = 0.8;
       player.addQi(player.spiritualRoot.toString());
-
-      const meditationText = ui.meditation_log.replace('{amount}', player.spiritualRoot.toString());
-
-      addLog(meditationText, 'secret');
+      addLog(ui.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
       pushUiNotification('meditation', 'secret', {
         amount: player.spiritualRoot.toString(),
       });
@@ -115,8 +118,8 @@ export default function LifeScreen() {
     player.applyEffects(randomEvent.effects);
 
     const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
-
     addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
+
     pushEventNotification(
       randomEvent.id,
       isSecretEvent ? 'secret' : 'mundane',
@@ -132,19 +135,26 @@ export default function LifeScreen() {
 
   if (player.isDead) {
     return (
-      <SafeAreaView style={styles.container}>
-        <NotificationHost />
+      <View style={styles.container}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            styles.deadScrollContent,
+            {
+              paddingTop: topPadding,
+              paddingBottom: bottomPadding,
+            },
+          ]}
+        >
+          <View style={styles.contentColumn}>
+            <View style={styles.headerRow}>
+              <Text style={styles.title}>{ui.title}</Text>
 
-        <View style={styles.content}>
-          <View style={styles.headerRow}>
-            <Text style={styles.title}>{ui.title}</Text>
+              <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+                <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
-              <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.deadCenter}>
             <Card variant="danger" style={styles.deadCard}>
               <Text style={styles.deadTitle}>{ui.dead_title}</Text>
               <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
@@ -158,351 +168,375 @@ export default function LifeScreen() {
                 <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
                 <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
               </View>
-            </Card>
-          </View>
-
-          <Button
-            title={ui.btn_reincarnate}
-            onPress={handleReincarnate}
-            variant="danger"
-            icon="refresh"
-            style={styles.mainActionButton}
-          />
-        </View>
-
-        <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
-          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
-            <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
-              <Text style={styles.modalTitle}>{hint?.title}</Text>
-              <Text style={styles.modalText}>{hint?.text}</Text>
 
               <Button
-                title={ui.hints.close}
-                onPress={() => setHint(null)}
-                variant="primary"
-                small
-                style={styles.modalButton}
+                title={ui.btn_reincarnate}
+                onPress={handleReincarnate}
+                variant="danger"
+                icon="refresh"
+                style={styles.reincarnateButton}
               />
-            </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
-      </SafeAreaView>
+            </Card>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <NotificationHost />
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: topPadding,
+            paddingBottom: bottomPadding,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.contentColumn}>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>{ui.title}</Text>
 
-      <View style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title}>{ui.title}</Text>
-
-          <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
-            <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Card variant="primary" style={styles.heroCard}>
-          <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-          <Text style={styles.heroAgeValue}>{player.age}</Text>
-
-          <ProgressBar progress={healthProgress} color={Theme.colors.success} height={8} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.health}: {player.health}/100
-          </Text>
-
-          <ProgressBar progress={qiProgress} color={Theme.colors.info} height={8} style={styles.heroProgress} />
-          <Text style={styles.heroProgressLabel}>
-            {ui.qi}: {formatLargeNumber(player.qi)}
-          </Text>
-        </Card>
-
-        <View style={styles.statsWrapper}>
-          <ScrollView contentContainerStyle={styles.statsScroll} showsVerticalScrollIndicator={false}>
-            <Card style={styles.statsCard}>
-              <StatRow
-                icon="school"
-                label={ui.intelligence}
-                value={player.intelligence.toString()}
-                color={Theme.colors.secondary}
-                onPress={() => openHint('intelligence')}
-              />
-              <StatRow
-                icon="heart"
-                label={ui.health}
-                value={player.health.toString()}
-                color={Theme.colors.success}
-                onPress={() => openHint('health')}
-              />
-              <StatRow
-                icon="diamond"
-                label={ui.appearance}
-                value={player.appearance.toString()}
-                color={Theme.colors.warning}
-                onPress={() => openHint('appearance')}
-              />
-              <StatRow
-                icon="cash"
-                label={ui.money}
-                value={`$${formatLargeNumber(player.money)}`}
-                color={Theme.colors.gold}
-                onPress={() => openHint('money')}
-              />
-              <StatRow
-                icon="flame"
-                label={ui.spiritual_root}
-                value={player.spiritualRoot.toString()}
-                color={Theme.colors.info}
-                onPress={() => openHint('spiritual_root')}
-              />
-              <StatRow
-                icon="sparkles"
-                label={ui.karma}
-                value={formatLargeNumber(player.karma)}
-                color={Theme.colors.primarySoft}
-                onPress={() => openHint('karma')}
-              />
-            </Card>
-          </ScrollView>
-        </View>
-
-        <Card style={styles.focusCard}>
-          <Text style={styles.focusTitle}>{ui.focus_title}</Text>
-
-          <View style={styles.focusRow}>
-            <TouchableOpacity
-              style={[
-                styles.focusChip,
-                styles.focusChipLeft,
-                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
-              ]}
-              onPress={() => player.setActivityFocus('mundane')}
-              onLongPress={() => openHint('focus_mundane')}
-            >
-              <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
-                {ui.focus_mundane}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
-              onPress={() => player.setActivityFocus('secret')}
-              onLongPress={() => openHint('focus_secret')}
-            >
-              <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
-                {ui.focus_secret}
-              </Text>
+            <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+              <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
-        </Card>
 
-        <Button
-          title={ui.btn_grow}
-          onPress={handleGrowOlder}
-          variant="primary"
-          icon="hourglass"
-          style={styles.mainActionButton}
-        />
-      </View>
+          <Card variant="primary" style={styles.heroCard}>
+            <Text style={styles.heroAgeLabel}>{ui.age}</Text>
+            <Text style={styles.heroAgeValue}>{player.age}</Text>
 
-      <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
-        <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
-          <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
-            <Text style={styles.modalTitle}>{hint?.title}</Text>
-            <Text style={styles.modalText}>{hint?.text}</Text>
-
-            <Button
-              title={ui.hints.close}
-              onPress={() => setHint(null)}
-              variant="primary"
-              small
-              style={styles.modalButton}
+            <ProgressBar
+              progress={healthProgress}
+              color={Theme.colors.success}
+              height={scaleSize(10)}
+              style={styles.progressBar}
             />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
-    </SafeAreaView>
+            <Text style={styles.heroProgressLabel}>
+              {ui.health}: {player.health}/100
+            </Text>
+
+            <ProgressBar
+              progress={qiProgress}
+              color={Theme.colors.info}
+              height={scaleSize(10)}
+              style={styles.progressBar}
+            />
+            <Text style={styles.heroProgressLabel}>
+              {ui.qi}: {formatLargeNumber(player.qi)}
+            </Text>
+          </Card>
+
+          <Card style={styles.statsCard}>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.secondary }]}> 
+                  <Ionicons name="school" size={scaleSize(16)} color={Theme.colors.secondary} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.intelligence}</Text>
+                  <Text style={styles.statValue}>{player.intelligence}</Text>
+                </View>
+              </View>
+
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.success }]}> 
+                  <Ionicons name="heart" size={scaleSize(16)} color={Theme.colors.success} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.health}</Text>
+                  <Text style={styles.statValue}>{player.health}</Text>
+                </View>
+              </View>
+
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.warning }]}> 
+                  <Ionicons name="diamond" size={scaleSize(16)} color={Theme.colors.warning} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.appearance}</Text>
+                  <Text style={styles.statValue}>{player.appearance}</Text>
+                </View>
+              </View>
+
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.gold }]}> 
+                  <Ionicons name="cash" size={scaleSize(16)} color={Theme.colors.gold} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.money}</Text>
+                  <Text style={styles.statValue}>${formatLargeNumber(player.money)}</Text>
+                </View>
+              </View>
+
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.info }]}> 
+                  <Ionicons name="flame" size={scaleSize(16)} color={Theme.colors.info} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.spiritual_root}</Text>
+                  <Text style={styles.statValue}>{player.spiritualRoot}</Text>
+                </View>
+              </View>
+
+              <View style={styles.statCell}>
+                <View style={[styles.statIconBadge, { borderColor: Theme.colors.primarySoft }]}> 
+                  <Ionicons name="sparkles" size={scaleSize(16)} color={Theme.colors.primarySoft} />
+                </View>
+                <View style={styles.statTextWrap}>
+                  <Text style={styles.statLabel}>{ui.karma}</Text>
+                  <Text style={styles.statValue}>{formatLargeNumber(player.karma)}</Text>
+                </View>
+              </View>
+            </View>
+          </Card>
+
+          <Card style={styles.focusCard}>
+            <Text style={styles.focusTitle}>{ui.focus_title}</Text>
+
+            <View style={styles.focusRow}>
+              <TouchableOpacity
+                style={[
+                  styles.focusChip,
+                  styles.focusChipLeft,
+                  player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+                ]}
+                onPress={() => player.setActivityFocus('mundane')}
+              >
+                <Text
+                  style={[
+                    styles.focusChipText,
+                    player.activityFocus === 'mundane' && styles.focusChipTextActive,
+                  ]}
+                >
+                  {ui.focus_mundane}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.focusChip,
+                  player.activityFocus === 'secret' && styles.focusChipActiveSecret,
+                ]}
+                onPress={() => player.setActivityFocus('secret')}
+              >
+                <Text
+                  style={[
+                    styles.focusChipText,
+                    player.activityFocus === 'secret' && styles.focusChipTextActive,
+                  ]}
+                >
+                  {ui.focus_secret}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Card>
+
+          <Button
+            title={ui.btn_grow}
+            onPress={handleGrowOlder}
+            variant="primary"
+            icon="hourglass"
+            style={styles.mainActionButton}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Theme.colors.background,
-  },
-  content: {
-    flex: 1,
-    padding: Theme.spacing.md,
-    paddingBottom: Theme.spacing.sm,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Theme.spacing.sm,
-  },
-  title: {
-    fontSize: Theme.fontSize.lg,
-    fontWeight: '900',
-    color: Theme.colors.text,
-    letterSpacing: 1,
-  },
-  langChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: Theme.colors.surfaceLight,
-    borderWidth: 1,
-    borderColor: Theme.colors.secondary,
-  },
-  langChipText: {
-    color: Theme.colors.text,
-    fontWeight: '800',
-    fontSize: Theme.fontSize.xs,
-  },
-  heroCard: {
-    alignItems: 'center',
-    marginBottom: Theme.spacing.sm,
-    paddingVertical: Theme.spacing.sm + 2,
-  },
-  heroAgeLabel: {
-    color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: 2,
-  },
-  heroAgeValue: {
-    color: Theme.colors.text,
-    fontSize: 34,
-    fontWeight: '900',
-    marginBottom: Theme.spacing.xs,
-  },
-  heroProgress: {
-    marginBottom: 6,
-  },
-  heroProgressLabel: {
-    color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: Theme.spacing.xs,
-  },
-  statsWrapper: {
-    flex: 1,
-    marginBottom: Theme.spacing.sm,
-  },
-  statsScroll: {
-    paddingBottom: 2,
-  },
-  statsCard: {
-    paddingVertical: Theme.spacing.sm,
-  },
-  focusCard: {
-    marginBottom: Theme.spacing.sm,
-    paddingVertical: Theme.spacing.sm,
-  },
-  focusTitle: {
-    color: Theme.colors.textMuted,
-    textAlign: 'center',
-    marginBottom: Theme.spacing.xs,
-    fontSize: Theme.fontSize.sm,
-  },
-  focusRow: {
-    flexDirection: 'row',
-  },
-  focusChip: {
-    flex: 1,
-    borderRadius: Theme.radius.md,
-    paddingVertical: 10,
-    alignItems: 'center',
-    backgroundColor: Theme.colors.surfaceLight,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderSoft,
-  },
-  focusChipLeft: {
-    marginRight: 8,
-  },
-  focusChipActiveMundane: {
-    borderColor: Theme.colors.secondary,
-    backgroundColor: 'rgba(56, 189, 248, 0.16)',
-  },
-  focusChipActiveSecret: {
-    borderColor: Theme.colors.primarySoft,
-    backgroundColor: 'rgba(168, 85, 247, 0.18)',
-  },
-  focusChipText: {
-    color: Theme.colors.textDim,
-    fontWeight: '800',
-    fontSize: Theme.fontSize.sm,
-  },
-  focusChipTextActive: {
-    color: Theme.colors.text,
-  },
-  mainActionButton: {
-    marginTop: Theme.spacing.xs,
-  },
-  deadCenter: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  deadCard: {
-    alignItems: 'center',
-  },
-  deadTitle: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: Theme.colors.danger,
-    marginBottom: 8,
-  },
-  deadSubtitle: {
-    color: Theme.colors.textMuted,
-    marginBottom: Theme.spacing.md,
-    textAlign: 'center',
-  },
-  karmaRow: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  karmaLabel: {
-    color: Theme.colors.textMuted,
-  },
-  karmaValue: {
-    color: Theme.colors.gold,
-    fontWeight: '900',
-  },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: Theme.spacing.lg,
-  },
-  modalCard: {
-    width: '100%',
-    maxWidth: 420,
-    backgroundColor: Theme.colors.surface,
-    borderRadius: Theme.radius.lg,
-    borderWidth: 1,
-    borderColor: Theme.colors.primarySoft,
-    padding: Theme.spacing.lg,
-    alignItems: 'center',
-    ...Theme.shadow,
-  },
-  modalTitle: {
-    color: Theme.colors.text,
-    fontSize: Theme.fontSize.lg,
-    fontWeight: '900',
-    marginBottom: Theme.spacing.sm,
-    textAlign: 'center',
-  },
-  modalText: {
-    color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.sm,
-    lineHeight: 20,
-    marginBottom: Theme.spacing.md,
-    textAlign: 'center',
-  },
-  modalButton: {
-    minWidth: 160,
-  },
-});
+const createStyles = () => {
+  const horizontalPadding = getHorizontalPadding();
+  const contentMaxWidth = getContentMaxWidth();
+  const tablet = isTablet();
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: Theme.colors.background,
+    },
+    scrollContent: {
+      paddingHorizontal: horizontalPadding,
+      alignItems: 'center',
+      flexGrow: 1,
+    },
+    deadScrollContent: {
+      justifyContent: 'center',
+    },
+    contentColumn: {
+      width: '100%',
+      maxWidth: contentMaxWidth,
+    },
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: scaleSize(10),
+    },
+    title: {
+      fontSize: scaleFont(24),
+      fontWeight: '900',
+      color: Theme.colors.text,
+      letterSpacing: 1,
+    },
+    langChip: {
+      paddingHorizontal: scaleSize(12),
+      paddingVertical: scaleSize(6),
+      borderRadius: 999,
+      backgroundColor: Theme.colors.surfaceLight,
+      borderWidth: 1,
+      borderColor: Theme.colors.secondary,
+    },
+    langChipText: {
+      color: Theme.colors.text,
+      fontWeight: '800',
+      fontSize: scaleFont(12),
+    },
+    heroCard: {
+      alignItems: 'center',
+      marginBottom: scaleSize(10),
+      padding: scaleSize(14),
+    },
+    heroAgeLabel: {
+      color: Theme.colors.textMuted,
+      fontSize: scaleFont(12),
+      marginBottom: 2,
+    },
+    heroAgeValue: {
+      color: Theme.colors.text,
+      fontSize: scaleFont(tablet ? 44 : 36),
+      fontWeight: '900',
+      marginBottom: scaleSize(8),
+    },
+    progressBar: {
+      marginBottom: scaleSize(4),
+    },
+    heroProgressLabel: {
+      color: Theme.colors.textMuted,
+      fontSize: scaleFont(11),
+      marginBottom: scaleSize(6),
+      textAlign: 'center',
+    },
+    statsCard: {
+      marginBottom: scaleSize(10),
+      padding: scaleSize(10),
+    },
+    statsGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginHorizontal: -scaleSize(4),
+    },
+    statCell: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: scaleSize(6),
+      paddingHorizontal: scaleSize(8),
+      flexBasis: tablet ? '33.333%' : '50%',
+    },
+    statIconBadge: {
+      width: scaleSize(tablet ? 32 : 28),
+      height: scaleSize(tablet ? 32 : 28),
+      borderRadius: scaleSize(9),
+      backgroundColor: Theme.colors.surfaceLight,
+      borderWidth: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: scaleSize(6),
+    },
+    statTextWrap: {
+      flex: 1,
+    },
+    statLabel: {
+      color: Theme.colors.textMuted,
+      fontSize: scaleFont(10),
+      marginBottom: 1,
+    },
+    statValue: {
+      color: Theme.colors.text,
+      fontWeight: '800',
+      fontSize: scaleFont(12),
+    },
+    focusCard: {
+      marginBottom: scaleSize(10),
+      padding: scaleSize(12),
+    },
+    focusTitle: {
+      color: Theme.colors.textMuted,
+      textAlign: 'center',
+      marginBottom: scaleSize(8),
+      fontSize: scaleFont(12),
+    },
+    focusRow: {
+      flexDirection: 'row',
+    },
+    focusChip: {
+      flex: 1,
+      borderRadius: Theme.radius.md,
+      paddingVertical: scaleSize(10),
+      alignItems: 'center',
+      backgroundColor: Theme.colors.surfaceLight,
+      borderWidth: 1,
+      borderColor: Theme.colors.borderSoft,
+    },
+    focusChipLeft: {
+      marginRight: scaleSize(8),
+    },
+    focusChipActiveMundane: {
+      borderColor: Theme.colors.secondary,
+      backgroundColor: 'rgba(56, 189, 248, 0.16)',
+    },
+    focusChipActiveSecret: {
+      borderColor: Theme.colors.primarySoft,
+      backgroundColor: 'rgba(168, 85, 247, 0.18)',
+    },
+    focusChipText: {
+      color: Theme.colors.textDim,
+      fontWeight: '800',
+      fontSize: scaleFont(12),
+    },
+    focusChipTextActive: {
+      color: Theme.colors.text,
+    },
+    mainActionButton: {
+      marginTop: scaleSize(4),
+    },
+    deadCard: {
+      alignItems: 'center',
+      padding: scaleSize(18),
+    },
+    deadTitle: {
+      fontSize: scaleFont(28),
+      fontWeight: '900',
+      color: Theme.colors.danger,
+      marginBottom: scaleSize(6),
+      textAlign: 'center',
+    },
+    deadSubtitle: {
+      color: Theme.colors.textMuted,
+      marginBottom: scaleSize(12),
+      textAlign: 'center',
+      fontSize: scaleFont(12),
+    },
+    karmaRow: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: scaleSize(6),
+    },
+    karmaLabel: {
+      color: Theme.colors.textMuted,
+      fontSize: scaleFont(12),
+    },
+    karmaValue: {
+      color: Theme.colors.gold,
+      fontWeight: '900',
+      fontSize: scaleFont(12),
+    },
+    reincarnateButton: {
+      marginTop: scaleSize(10),
+      width: '100%',
+    },
+  });
+};

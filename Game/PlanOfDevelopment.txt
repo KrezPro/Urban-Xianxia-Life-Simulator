@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 10 (Исправление UX: стабильный интерфейс, overlay-уведомления, возвращение подсказок)
+[СТАТУС]: ШАГ 10 (Адаптивный layout, safe-area уведомления, фиксированная вкладка Мир без дерганий)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -27,89 +27,85 @@
 === Фаза 5: Экономика, монетизация, социализация ===
 15. [X] IAP-заготовки.
 16. [X] Реклама и кулдауны.
-17. [X] Offline-first секты, инвайты, рейтинг.
+17. [ ] Offline-first секты, инвайты, рейтинг (восстановить отдельно при необходимости).
 
 === Фаза 6: LiveOps и деплой ===
 18. [ ] EAS Updates / OTA.
 19. [ ] Remote config.
 20. [ ] Сезонные LiveOps-флаги.
 
-=== Фаза 7: UI-кит и восстановление отсутствующих файлов ===
+=== Фаза 7: UI-кит и адаптивность ===
 21. [X] Theme.ts: темная неоновая тема.
 22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
 23. [X] utils/helpers.ts: format, BigInt, random.
-24. [X] Экраны используют общий UI-кит.
-25. [X] Навигация использует стабильные route names.
-26. [X] Локализация вкладок и служебных экранов.
+24. [X] utils/layout.ts: масштабирование под телефон/планшет, safe area, ширина контента.
+25. [X] NotificationHost/Toast: одно всплывающее уведомление, safe-area, авто-скрытие.
+26. [X] LifeScreen: фиксированный верхний резерв под уведомление, адаптивные карточки, отсутствие layout-сдвигов.
+27. [X] Локализация уведомлений через notifications.json и events.json.
+28. [ ] Полная адаптация DaoScreen/StoreScreen/LogScreen под layout.ts.
 
-=== Фаза 8: Максимальное вовлечение ===
-27. [ ] Daily Rewards: ежедневные награды и серия входов.
-28. [ ] Quests: короткие цели и быстрые награды.
-29. [ ] Achievements: достижения, тосты, бонусы.
-30. [ ] Choice Events: события с выбором и риском.
-31. [ ] Share: смерть, прорыв, рекорд, инвайт.
-32. [ ] Onboarding: первая сессия с быстрым вознаграждением.
-33. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
+=== Фаза 8: Максимальное вовлечение (следующий блок) ===
+29. [ ] Daily Rewards: ежедневные награды и серия входов.
+30. [ ] Quests: короткие цели и быстрые награды.
+31. [ ] Achievements: достижения, тосты, бонусы.
+32. [ ] Choice Events: события с выбором и риском.
+33. [ ] Share: смерть, прорыв, рекорд, инвайт.
+34. [ ] Onboarding: первая сессия с быстрым вознаграждением.
+35. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
 
 === Фаза 9: Техническая гигиена ===
-34. [X] AsyncStorage не используется.
-35. [X] MMKV-адаптер с memory-fallback.
-36. [X] BigInt хранится как string.
-37. [X] FlashList для больших списков.
-38. [ ] Автотесты BigInt/MMKV/FlashList.
-
-=== Фаза 10: UX-исправления текущего шага ===
-39. [X] Уведомления переведены в absolute overlay и больше не смещают layout.
-40. [X] Очередь уведомлений ограничена одним активным сообщением, старые удаляются автоматически.
-41. [X] LifeScreen использует фиксированные зоны: возраст, статы, фокус и CTA не прыгают.
-42. [X] Возвращены подсказки по нажатию на статы и long-press на фокус.
-43. [X] Подсказки локализованы на RU/EN и показываются модально.
+36. [X] AsyncStorage не используется.
+37. [X] MMKV-адаптер с memory-fallback.
+38. [X] BigInt хранится как string.
+39. [X] FlashList для больших списков.
+40. [ ] Автотесты BigInt/MMKV/FlashList.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
-├── App.tsx                          // Гидратация и навигация
+├── App.tsx                          // SafeAreaProvider, гидратация, глобальный NotificationHost
 ├── components/
 │   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow + onPress/onLongPress
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
 │   └── game/
-│       ├── NotificationHost.tsx     // Absolute overlay очередь уведомлений
-│       └── NotificationToast.tsx    // Анимированный тост уведомления
+│       ├── NotificationHost.tsx     // Одно safe-area уведомление поверх экрана
+│       └── NotificationToast.tsx    // Адаптивный тост с авто-скрытием
 ├── constants/
-│   ├── GameConstants.ts             // Длительность уведомлений, лимиты очереди
-│   └── Theme.ts                     // Цвета и стили
+│   ├── GameConstants.ts             // Лимиты, кулдауны, длительность уведомлений
+│   └── Theme.ts                     // Темная тема
 ├── data/
-│   └── events.json                  // id и эффекты событий
+│   ├── events.json                  // Мирские/тайные события
+│   ├── items.json                   // Карма-баффы
+│   └── stages.json                  // Стадии культивации
 ├── hooks/
-│   ├── useBreakthrough.ts           // Прорывы
-│   └── useIdleProgress.ts           // Оффлайн прогресс + уведомления
+│   ├── useIdleProgress.ts           // Offline-прогресс + уведомления
+│   └── useBreakthrough.ts           // Прорывы + уведомления
 ├── navigation/
-│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Log, Sect
+│   └── TabNavigator.tsx             // Нижние вкладки
 ├── screens/
-│   ├── LifeScreen.tsx               // Стабильный основной экран с уведомлениями и подсказками
+│   ├── LifeScreen.tsx               // Адаптивная вкладка Мир с резервом под уведомление
 │   ├── DaoScreen.tsx                // Путь Дао
 │   ├── StoreScreen.tsx              // Магазин Кармы
-│   ├── SectScreen.tsx               // Секта и рейтинг
 │   └── LogScreen.tsx                // Журнал
 ├── store/
-│   ├── useEventStore.ts             // Журнал
-│   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
+│   ├── mmkvStorage.ts               // MMKV storage
 │   ├── usePlayerStore.ts            // Игрок
-│   ├── useLocaleStore.ts            // Язык интерфейса
-│   └── useSocialStore.ts            // Секты
+│   ├── useEventStore.ts             // Журнал
+│   ├── useInventoryStore.ts         // Инвентарь
+│   ├── useLocaleStore.ts            // Язык
+│   └── useNotificationStore.ts      // Очередь из одного уведомления
 ├── types/
-│   └── index.ts                     // Типы уведомлений и событий
-├── utils/
-│   ├── helpers.ts                   // Форматирование, BigInt, random
-│   ├── notificationUtils.ts         // Локализованный текст уведомлений
-│   └── timeUtils.ts                 // Дельта времени
-└── locales/
-    ├── ru/
-    │   ├── ui.json                  // Интерфейс + подсказки
-    │   ├── events.json              // События
-    │   ├── social.json              // Секта и рейтинг
-    │   └── notifications.json       // Тексты уведомлений
-    └── en/
-        ├── ui.json                  // Интерфейс + подсказки
-        ├── events.json              // События
-        ├── social.json              // Секта и рейтинг
-        └── notifications.json       // Тексты уведомлений
+│   └── index.ts                     // Интерфейсы, включая INotification
+└── utils/
+    ├── layout.ts                    // safe-area, масштаб, maxWidth, высота уведомления
+    ├── notificationUtils.ts         // Текст уведомления по ключу/событию
+    ├── timeUtils.ts                 // Дельта времени
+    └── helpers.ts                   // Форматирование, BigInt, random
+Game/src/locales/
+├── ru/
+│   ├── ui.json
+│   ├── events.json
+│   └── notifications.json
+└── en/
+    ├── ui.json
+    ├── events.json
+    └── notifications.json

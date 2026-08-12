@@ -1,41 +1,42 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotificationStore } from '../../store/useNotificationStore';
 import { NotificationToast } from './NotificationToast';
-import { GameConstants } from '../../constants/GameConstants';
+import { getContentMaxWidth, getWindowDimensions, scaleSize } from '../../utils/layout';
 
 export const NotificationHost = () => {
   const notifications = useNotificationStore((state) => state.notifications);
   const dismissNotification = useNotificationStore((state) => state.dismissNotification);
-  const pruneExpired = useNotificationStore((state) => state.pruneExpired);
-
-  useEffect(() => {
-    pruneExpired();
-
-    const interval = setInterval(() => {
-      pruneExpired();
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  const insets = useSafeAreaInsets();
 
   if (0 === notifications.length) {
     return null;
   }
 
-  const visible = notifications.slice(0, GameConstants.NOTIFICATION_MAX_VISIBLE);
+  const notification = notifications[0];
+
+  if (!notification) {
+    return null;
+  }
+
+  const { width } = getWindowDimensions();
+  const hostWidth = Math.min(width - scaleSize(24), getContentMaxWidth());
+  const left = (width - hostWidth) / 2;
 
   return (
-    <View style={styles.host} pointerEvents="box-none">
-      {visible.map((notification) => (
-        <NotificationToast
-          key={notification.id}
-          notification={notification}
-          onDismiss={dismissNotification}
-        />
-      ))}
+    <View
+      pointerEvents="box-none"
+      style={[
+        styles.host,
+        {
+          top: insets.top + scaleSize(8),
+          left,
+          width: hostWidth,
+        },
+      ]}
+    >
+      <NotificationToast notification={notification} onDismiss={dismissNotification} />
     </View>
   );
 };
@@ -43,11 +44,6 @@ export const NotificationHost = () => {
 const styles = StyleSheet.create({
   host: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     zIndex: 1000,
-    paddingHorizontal: 16,
-    paddingTop: 8,
   },
 });

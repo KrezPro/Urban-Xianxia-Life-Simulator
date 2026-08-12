@@ -7,8 +7,8 @@
   "idle_secret": "Оффлайн-медитация: {seconds} сек. Получено Ци: {amount}.",
   "idle_mundane": "Оффлайн-работа: {seconds} сек. Заработано: ${amount}.",
   "breakthrough_no_qi": "Недостаточно Ци для прорыва.",
-  "breakthrough_success": "[УСПЕХ] Прорыв завершён! Стадия: {name}.",
-  "breakthrough_fail_damage": "[ПРОВАЛ] Mana Burn. Получено {damage} урона.",
-  "breakthrough_fail_death": "[КРИТИЧЕСКИЙ ПРОВАЛ] Небесная скорбь уничтожила вас.",
-  "breakthrough_saved": "[СПАСЕНИЕ] Рекламный бафф защитил меридианы."
+  "breakthrough_success": "Прорыв успешен! Стадия: {name}.",
+  "breakthrough_fail_damage": "Прорыв провален. Mana Burn: {damage} урона.",
+  "breakthrough_fail_death": "Критический провал! Небесная скорбь уничтожила вас.",
+  "breakthrough_saved": "Прорыв провален, но рекламный бафф защитил меридианы."
 }

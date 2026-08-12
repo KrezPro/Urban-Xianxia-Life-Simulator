@@ -14,6 +14,7 @@ export const useIdleProgress = () => {
   const { addLog } = useEventStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const locale = useLocaleStore((state) => state.locale);
+
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useEffect(() => {

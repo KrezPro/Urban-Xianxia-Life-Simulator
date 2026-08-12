@@ -7,8 +7,8 @@
   "idle_secret": "Offline meditation: {seconds}s. Earned Qi: {amount}.",
   "idle_mundane": "Offline work: {seconds}s. Earned: ${amount}.",
   "breakthrough_no_qi": "Insufficient Qi for breakthrough.",
-  "breakthrough_success": "[SUCCESS] Breakthrough complete! Stage: {name}.",
-  "breakthrough_fail_damage": "[FAILURE] Mana Burn. You took {damage} damage.",
-  "breakthrough_fail_death": "[CRITICAL FAILURE] Heavenly Tribulation destroyed you.",
-  "breakthrough_saved": "[SAVED] Ad buff protected your meridians."
+  "breakthrough_success": "Breakthrough successful! Stage: {name}.",
+  "breakthrough_fail_damage": "Breakthrough failed. Mana Burn: {damage} damage.",
+  "breakthrough_fail_death": "Critical failure! Heavenly Tribulation destroyed you.",
+  "breakthrough_saved": "Breakthrough failed, but ad buff protected your meridians."
 }

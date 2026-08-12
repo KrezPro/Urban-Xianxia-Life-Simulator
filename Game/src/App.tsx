@@ -1,45 +1,44 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TabNavigator from './navigation/TabNavigator';
 import { NotificationHost } from './components/game/NotificationHost';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
-import { useSocialStore } from './store/useSocialStore';
-import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
+import { scaleFont, scaleSize } from './utils/layout';
 import ruUI from './locales/ru/ui.json';
 import enUI from './locales/en/ui.json';
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
   const localeHydrated = useLocaleStore((state) => state.hasHydrated);
-  const socialHydrated = useSocialStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
 
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
-  useIdleProgress();
-
-  if (!playerHydrated || !localeHydrated || !socialHydrated) {
+  if (!playerHydrated || !localeHydrated) {
     return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <View style={styles.loadingCard}>
+      <SafeAreaProvider>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
           <Text style={styles.loadingText}>{uiData.app.loading}</Text>
         </View>
-      </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 
   return (
-    <View style={styles.root}>
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
+    <SafeAreaProvider>
+      <View style={styles.root}>
+        <NavigationContainer>
+          <TabNavigator />
+        </NavigationContainer>
 
-      <NotificationHost />
-    </View>
+        <NotificationHost />
+      </View>
+    </SafeAreaProvider>
   );
 }
 
@@ -54,20 +53,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Theme.colors.background,
   },
-  loadingCard: {
-    backgroundColor: Theme.colors.surface,
-    borderColor: Theme.colors.borderSoft,
-    borderWidth: 1,
-    borderRadius: Theme.radius.xl,
-    paddingVertical: Theme.spacing.xl,
-    paddingHorizontal: Theme.spacing.xl,
-    alignItems: 'center',
-    ...Theme.shadow,
-  },
+  loadingCard: {},
   loadingText: {
     color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.md,
+    fontSize: scaleFont(16),
     fontWeight: '700',
-    marginTop: Theme.spacing.md,
+    marginTop: scaleSize(16),
   },
 });
