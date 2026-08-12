@@ -4,6 +4,7 @@ import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { DeathCause, RebirthReport } from '../types';
 import { useInventoryStore } from './useInventoryStore';
+import { useTechniquesStore } from './useTechniquesStore';
 import { useLifestyleStore } from './useLifestyleStore';
 import { getRandomInt, safeBigInt } from '../utils/helpers';
 import {
@@ -302,6 +303,7 @@ export const usePlayerStore = create<PlayerState>()(
         const inventory = useInventoryStore.getState().items;
         const karmaEffects = getKarmaTotalEffects(inventory);
 
+        useTechniquesStore.getState().resetTechniques();
         useLifestyleStore.getState().resetLifestyle();
 
         set((state) => {

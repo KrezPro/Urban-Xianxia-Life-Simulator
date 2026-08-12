@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,6 @@ import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
-import { getSurvivalCost } from '../utils/gameplayUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
@@ -18,8 +17,6 @@ import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruRebirth from '../locales/ru/rebirth.json';
 import enRebirth from '../locales/en/rebirth.json';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
 
 interface HintData {
   title: string;
@@ -37,12 +34,14 @@ export default function LifeScreen() {
 
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
+  const deathNotificationSentRef = useRef(false);
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
   const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const lifeExtras: any = extras.life || {};
+
+  const deathCauses: any = (ui as any).death_causes || {};
+  const deathCauseText = deathCauses[player.lastDeathCause] || deathCauses.none || '';
 
   const rebirthReport = player.lastRebirthReport;
   const hasRebirthPenalties =
@@ -67,8 +66,15 @@ export default function LifeScreen() {
 
   useEffect(() => {
     if (player.isDead) {
-      addLog(ui.death_log, 'system');
-      pushUiNotification('death', 'danger');
+      if (!deathNotificationSentRef.current) {
+        deathNotificationSentRef.current = true;
+        addLog(ui.death_log, 'system');
+        pushUiNotification('death_reason', 'danger', {
+          reason: deathCauseText,
+        });
+      }
+    } else {
+      deathNotificationSentRef.current = false;
     }
   }, [player.isDead]);
 
@@ -79,12 +85,6 @@ export default function LifeScreen() {
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
   const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
 
-  const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
-  const survivalCostText = (lifeExtras.survival_cost_line || '').replace(
-    '{amount}',
-    formatLargeNumber(survivalCost.toString())
-  );
-
   const openHint = (key: string) => {
     const hintData = hints[key];
     if (!hintData) {
@@ -93,18 +93,6 @@ export default function LifeScreen() {
 
     setHint({
       title: hintData.title || key,
-      text: hintData.text || '',
-    });
-  };
-
-  const openSurvivalHint = () => {
-    const hintData = lifeExtras.survival_cost_hint;
-    if (!hintData) {
-      return;
-    }
-
-    setHint({
-      title: hintData.title || '',
       text: hintData.text || '',
     });
   };
@@ -233,6 +221,11 @@ export default function LifeScreen() {
             <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
 
             <View style={styles.karmaRow}>
+              <Text style={styles.karmaLabel}>{ui.death_cause_label}</Text>
+              <Text style={styles.karmaValue}>{deathCauseText}</Text>
+            </View>
+
+            <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
               <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
             </View>
@@ -284,12 +277,6 @@ export default function LifeScreen() {
           <Text style={styles.heroProgressLabel}>
             {ui.qi}: {formatLargeNumber(player.qi)}
           </Text>
-
-          {survivalCost > 0n ? (
-            <TouchableOpacity onPress={() => undefined} onLongPress={openSurvivalHint} delayLongPress={300}>
-              <Text style={styles.survivalCostText}>{survivalCostText}</Text>
-            </TouchableOpacity>
-          ) : null}
         </Card>
 
         <Card style={styles.statsCard}>
@@ -484,13 +471,6 @@ const styles = StyleSheet.create({
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
     marginBottom: Theme.spacing.sm,
-  },
-  survivalCostText: {
-    color: Theme.colors.warning,
-    fontSize: Theme.fontSize.sm,
-    fontWeight: '800',
-    marginTop: 4,
-    textAlign: 'center',
   },
   statsCard: {
     marginBottom: Theme.spacing.md,

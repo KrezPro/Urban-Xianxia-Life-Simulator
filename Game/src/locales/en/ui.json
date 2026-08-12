@@ -50,6 +50,15 @@
     "btn_log": "Log",
     "dead_title": "YOU ARE DEAD",
     "dead_subtitle": "Your life journey has been interrupted.",
+    "death_cause_label": "Cause of death:",
+    "death_causes": {
+      "none": "Unknown",
+      "old_age": "Old age",
+      "health": "Health failure",
+      "breakthrough": "Breakthrough failure",
+      "portal": "Portal accident",
+      "event": "Fateful event"
+    },
     "karma_accumulated": "Total Karma:",
     "karma_earned_last_life": "Legacy earned (Karma):",
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",

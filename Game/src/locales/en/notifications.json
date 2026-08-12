@@ -1,6 +1,7 @@
 {
   "born": "You were born into this world. Your story begins.",
   "death": "You have died. Your soul enters endless Samsara.",
+  "death_reason": "You have died. Cause: {reason}.",
   "reincarnate": "The Wheel of Samsara turned. You were reborn.",
   "meditation": "Secret meditation: +{amount} Qi.",
   "interstitial": "Interstitial ad shown.",

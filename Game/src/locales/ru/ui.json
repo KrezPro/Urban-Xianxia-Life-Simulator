@@ -50,6 +50,15 @@
     "btn_log": "Журнал",
     "dead_title": "ВЫ МЕРТВЫ",
     "dead_subtitle": "Ваш жизненный путь прерван.",
+    "death_cause_label": "Причина смерти:",
+    "death_causes": {
+      "none": "Неизвестно",
+      "old_age": "Старость",
+      "health": "Здоровье",
+      "breakthrough": "Провал прорыва",
+      "portal": "Портал",
+      "event": "Событие"
+    },
     "karma_accumulated": "Общая Карма:",
     "karma_earned_last_life": "Наследие за жизнь (Карма):",
     "meditation_log": "Год прошел в тайной медитации. Накоплено {amount} энергии Ци.",
