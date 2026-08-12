@@ -1,11 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
-import {
-  defaultLifestyleSelection,
-  LifestyleCategory,
-  LifestyleSelection,
-} from '../utils/gameplayUtils';
+import { LifestyleCategory, LifestyleSelection } from '../types';
 
 interface LifestyleState {
   selected: LifestyleSelection;
@@ -16,10 +12,18 @@ interface LifestyleState {
   resetLifestyle: () => void;
 }
 
+const defaultSelection: LifestyleSelection = {
+  job: 'job_none',
+  sport: 'sport_none',
+  food: 'food_none',
+  housing: 'housing_none',
+  portal: 'portal_none',
+};
+
 export const useLifestyleStore = create<LifestyleState>()(
   persist(
     (set) => ({
-      selected: defaultLifestyleSelection,
+      selected: { ...defaultSelection },
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
       selectOption: (category, optionId) =>
@@ -36,7 +40,7 @@ export const useLifestyleStore = create<LifestyleState>()(
             [category]: `${category}_none`,
           },
         })),
-      resetLifestyle: () => set({ selected: defaultLifestyleSelection }),
+      resetLifestyle: () => set({ selected: { ...defaultSelection } }),
     }),
     {
       name: 'lifestyle-storage',

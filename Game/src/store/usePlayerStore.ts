@@ -5,7 +5,7 @@ import { GameConstants } from '../constants/GameConstants';
 import { useInventoryStore } from './useInventoryStore';
 import { useTechniquesStore } from './useTechniquesStore';
 import { useLifestyleStore } from './useLifestyleStore';
-import { getRandomInt, safeBigInt } from '../utils/helpers';
+import { getRandomInt } from '../utils/helpers';
 import { getKarmaTotalEffects } from '../utils/gameplayUtils';
 
 interface PlayerEffects {
@@ -144,7 +144,7 @@ export const usePlayerStore = create<PlayerState>()(
           let maxHealth = state.maxHealth;
 
           if (effects.maxHealth !== undefined) {
-            maxHealth = Math.max(1, maxHealth + effects.maxHealth);
+            maxHealth = Math.max(1, Math.min(GameConstants.MAX_HEALTH_CAP, maxHealth + effects.maxHealth));
           }
 
           let health = state.health;
@@ -153,13 +153,7 @@ export const usePlayerStore = create<PlayerState>()(
             health += effects.health;
           }
 
-          if (0 > health) {
-            health = 0;
-          }
-
-          if (health > maxHealth) {
-            health = maxHealth;
-          }
+          health = Math.max(0, Math.min(maxHealth, health));
 
           newState.maxHealth = maxHealth;
           newState.health = health;
@@ -169,7 +163,7 @@ export const usePlayerStore = create<PlayerState>()(
           }
 
           if (effects.appearance !== undefined) {
-            newState.appearance = Math.max(0, state.appearance + effects.appearance);
+            newState.appearance = Math.max(0, Math.min(GameConstants.APPEARANCE_CAP, state.appearance + effects.appearance));
           }
 
           if (effects.karma !== undefined) {
@@ -212,18 +206,20 @@ export const usePlayerStore = create<PlayerState>()(
 
           return newState;
         }),
-      reincarnate: () => {
-        const inventory = useInventoryStore.getState().items;
-        const karmaEffects = getKarmaTotalEffects(inventory);
-
-        useTechniquesStore.getState().resetTechniques();
-        useLifestyleStore.getState().resetLifestyle();
-
+      reincarnate: () =>
         set((state) => {
           const { STARTING_STATS } = GameConstants;
-          const baseHealth =
-            getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX) +
-            karmaEffects.startMaxHealth;
+          const inventory = useInventoryStore.getState().items;
+          const karmaEffects = getKarmaTotalEffects(inventory);
+
+          useTechniquesStore.getState().resetTechniques();
+          useLifestyleStore.getState().resetLifestyle();
+
+          const baseHealth = getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX);
+          const totalMaxHealth = Math.min(
+            GameConstants.MAX_HEALTH_CAP,
+            baseHealth + karmaEffects.startMaxHealth
+          );
 
           return {
             isDead: false,
@@ -235,20 +231,17 @@ export const usePlayerStore = create<PlayerState>()(
             activityFocus: 'mundane' as 'mundane' | 'secret',
             hasCultivatorPass: state.hasCultivatorPass,
             lastInterstitialTime: state.lastInterstitialTime,
-            health: baseHealth,
-            maxHealth: baseHealth,
+            health: totalMaxHealth,
+            maxHealth: totalMaxHealth,
             intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
             appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),
             money: (
               BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
-              safeBigInt(karmaEffects.startMoney)
+              BigInt(karmaEffects.startMoney)
             ).toString(),
-            spiritualRoot:
-              getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) +
-              karmaEffects.startSpiritualRoot,
+            spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + karmaEffects.startSpiritualRoot,
           };
-        });
-      },
+        }),
       resetPlayer: () => set({ ...initialState }),
     }),
     {

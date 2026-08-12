@@ -2,9 +2,8 @@
 // Обязан экспортировать: formatLargeNumber, safeBigInt, addBigIntStrings,
 // subtractBigIntStrings, compareBigIntStrings, isGreaterOrEqualBigInt,
 // divideBigIntStringByNumber, clampProgress, getBigIntProgress,
-// getRandomInt, pickRandom, chance, multiplyBigIntByPercent,
-// increaseBigIntByPercent, reduceBigIntByPercent, randomBigIntBetween.
-// ВАЖНО: все условия инвертированы (знак ">"), чтобы не ломать XML-парсер AiCoder.
+// getRandomInt, pickRandom, chance, multiplyBigIntByBps, increaseBigIntByBps,
+// reduceBigIntByBps, randomBigIntBetween, clampInt.
 
 export const formatLargeNumber = (value: string | number): string => {
   const strVal = value.toString();
@@ -156,20 +155,34 @@ export const chance = (probability: number): boolean => {
   return probability >= roll;
 };
 
-export const multiplyBigIntByPercent = (value: string | number | bigint, percent: number): string => {
-  const base = safeBigInt(value);
-  const safePercent = Math.floor(percent);
-  return ((base * BigInt(100 + safePercent)) / 100n).toString();
+export const clampInt = (value: number, min: number, max: number): number => {
+  if (value < min) {
+    return min;
+  }
+
+  if (value > max) {
+    return max;
+  }
+
+  return value;
 };
 
-export const increaseBigIntByPercent = (value: string | number | bigint, percent: number): bigint => {
-  return safeBigInt(multiplyBigIntByPercent(value, percent));
+export const multiplyBigIntByBps = (value: string | bigint, bps: number): string => {
+  const base = safeBigInt(value);
+  const safeBps = Math.max(0, Math.floor(bps));
+  return ((base * BigInt(safeBps)) / 10000n).toString();
 };
 
-export const reduceBigIntByPercent = (value: string | number | bigint, percent: number): bigint => {
+export const increaseBigIntByBps = (value: string | bigint, bps: number): string => {
   const base = safeBigInt(value);
-  const safePercent = Math.max(0, Math.min(100, Math.floor(percent)));
-  return (base * BigInt(100 - safePercent)) / 100n;
+  const safeBps = Math.max(0, Math.floor(bps));
+  return (base + (base * BigInt(safeBps)) / 10000n).toString();
+};
+
+export const reduceBigIntByBps = (value: string | bigint, bps: number): string => {
+  const base = safeBigInt(value);
+  const safeBps = Math.max(0, Math.min(10000, Math.floor(bps)));
+  return (base - (base * BigInt(safeBps)) / 10000n).toString();
 };
 
 export const randomBigIntBetween = (min: string, max: string): string => {
@@ -181,11 +194,13 @@ export const randomBigIntBetween = (min: string, max: string): string => {
   }
 
   const diff = maxBig - minBig;
+  const diffNum = Number(diff);
 
-  if (diff <= BigInt(Number.MAX_SAFE_INTEGER)) {
-    const randomPart = BigInt(Math.floor(Math.random() * Number(diff + 1n)));
-    return (minBig + randomPart).toString();
+  if (!isFinite(diffNum) || diffNum > Number.MAX_SAFE_INTEGER) {
+    const half = diff / 2n;
+    return (minBig + half).toString();
   }
 
-  return (minBig + diff / 2n).toString();
+  const randomPart = BigInt(Math.floor(Math.random() * (diffNum + 1)));
+  return (minBig + randomPart).toString();
 };

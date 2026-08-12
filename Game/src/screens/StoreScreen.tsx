@@ -7,6 +7,7 @@ import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
+import { getKarmaItemLevel } from '../utils/gameplayUtils';
 import itemsData from '../data/items.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -24,7 +25,7 @@ export default function StoreScreen() {
 
   const handleBuyLevel = (item: any) => {
     const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
-    const rawLevel = inventory.items[item.id]?.quantity || 0;
+    const rawLevel = getKarmaItemLevel(inventory.items, item.id);
     const currentLevel = Math.min(rawLevel, item.maxLevel);
     const isMax = currentLevel >= item.maxLevel;
 
@@ -34,15 +35,15 @@ export default function StoreScreen() {
     }
 
     const nextLevelData = item.levels[currentLevel];
-    const cost = nextLevelData?.cost || '0';
-    const canAfford = isGreaterOrEqualBigInt(player.karma, cost);
+    const nextCost = nextLevelData?.cost || '0';
+    const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
 
     if (!canAfford) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
     }
 
-    player.deductKarma(cost);
+    player.deductKarma(nextCost);
     inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
     pushUiNotification('store_upgrade_success', 'reward', {
       name: itemUI.name,
@@ -68,7 +69,7 @@ export default function StoreScreen() {
         {(itemsData as any[])
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
-            const rawLevel = inventory.items[item.id]?.quantity || 0;
+            const rawLevel = getKarmaItemLevel(inventory.items, item.id);
             const currentLevel = Math.min(rawLevel, item.maxLevel);
             const isMax = currentLevel >= item.maxLevel;
             const nextLevelData = item.levels[currentLevel];

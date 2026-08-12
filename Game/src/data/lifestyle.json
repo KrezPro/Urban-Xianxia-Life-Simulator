@@ -3,17 +3,18 @@
     {
       "id": "job",
       "options": [
-        { "id": "job_none", "category": "job", "tier": 0, "dailyCost": "0", "dailyIncome": "0" },
-        { "id": "job_parttime", "category": "job", "tier": 1, "dailyCost": "2", "dailyIncome": "20", "requirements": { "healthMin": 20 } },
-        { "id": "job_office", "category": "job", "tier": 2, "dailyCost": "5", "dailyIncome": "60", "requirements": { "intelligence": 15, "appearance": 5, "healthMin": 30 } },
-        { "id": "job_manager", "category": "job", "tier": 3, "dailyCost": "10", "dailyIncome": "160", "requirements": { "intelligence": 30, "appearance": 15, "healthMin": 50 } },
-        { "id": "job_founder", "category": "job", "tier": 4, "dailyCost": "25", "dailyIncome": "500", "requirements": { "intelligence": 60, "appearance": 25, "healthMin": 70, "stage": "qi_condensation_1" } }
+        { "id": "job_none", "category": "job", "tier": 0, "dailyCost": "0", "dailyIncome": "0", "requirements": {}, "effects": {} },
+        { "id": "job_parttime", "category": "job", "tier": 1, "dailyCost": "2", "dailyIncome": "20", "requirements": { "healthMin": 20 }, "effects": {} },
+        { "id": "job_office", "category": "job", "tier": 2, "dailyCost": "5", "dailyIncome": "60", "requirements": { "intelligence": 15, "appearance": 5, "healthMin": 30 }, "effects": {} },
+        { "id": "job_manager", "category": "job", "tier": 3, "dailyCost": "10", "dailyIncome": "160", "requirements": { "intelligence": 30, "appearance": 15, "healthMin": 50 }, "effects": {} },
+        { "id": "job_founder", "category": "job", "tier": 4, "dailyCost": "25", "dailyIncome": "500", "requirements": { "intelligence": 60, "appearance": 25, "healthMin": 70, "stage": "qi_condensation_1" }, "effects": {} },
+        { "id": "job_celebrity", "category": "job", "tier": 5, "dailyCost": "50", "dailyIncome": "1500", "requirements": { "appearance": 70, "healthMin": 90, "stage": "foundation_1" }, "effects": {} }
       ]
     },
     {
       "id": "sport",
       "options": [
-        { "id": "sport_none", "category": "sport", "tier": 0, "dailyCost": "0" },
+        { "id": "sport_none", "category": "sport", "tier": 0, "dailyCost": "0", "effects": {} },
         { "id": "sport_home", "category": "sport", "tier": 1, "dailyCost": "1", "effects": { "maxHealthPerYear": 2, "healthRegenPerYear": 5 } },
         { "id": "sport_gym", "category": "sport", "tier": 2, "dailyCost": "5", "effects": { "maxHealthPerYear": 5, "healthRegenPerYear": 15, "appearancePerYear": 1 } },
         { "id": "sport_premium", "category": "sport", "tier": 3, "dailyCost": "15", "effects": { "maxHealthPerYear": 12, "healthRegenPerYear": 35, "appearancePerYear": 2 } },
@@ -23,7 +24,7 @@
     {
       "id": "food",
       "options": [
-        { "id": "food_none", "category": "food", "tier": 0, "dailyCost": "0" },
+        { "id": "food_none", "category": "food", "tier": 0, "dailyCost": "0", "effects": {} },
         { "id": "food_street", "category": "food", "tier": 1, "dailyCost": "2", "effects": { "healthRegenPerYear": 10 } },
         { "id": "food_home", "category": "food", "tier": 2, "dailyCost": "5", "effects": { "healthRegenPerYear": 25, "maxHealthPerYear": 1 } },
         { "id": "food_premium", "category": "food", "tier": 3, "dailyCost": "12", "effects": { "healthRegenPerYear": 50, "maxHealthPerYear": 3, "appearancePerYear": 1 } },
@@ -33,30 +34,32 @@
     {
       "id": "housing",
       "options": [
-        { "id": "housing_none", "category": "housing", "tier": 0, "dailyCost": "0" },
+        { "id": "housing_none", "category": "housing", "tier": 0, "dailyCost": "0", "effects": {} },
         { "id": "housing_shelter", "category": "housing", "tier": 1, "dailyCost": "1", "effects": { "healthRegenPerYear": 5 } },
         { "id": "housing_room", "category": "housing", "tier": 2, "dailyCost": "4", "effects": { "healthRegenPerYear": 15, "maxHealthPerYear": 1 } },
         { "id": "housing_apartment", "category": "housing", "tier": 3, "dailyCost": "10", "effects": { "healthRegenPerYear": 35, "maxHealthPerYear": 2, "appearancePerYear": 1 } },
-        { "id": "housing_condo", "category": "housing", "tier": 4, "dailyCost": "25", "effects": { "healthRegenPerYear": 70, "maxHealthPerYear": 5, "portalSuccessPercent": 1 } }
+        { "id": "housing_condo", "category": "housing", "tier": 4, "dailyCost": "25", "effects": { "healthRegenPerYear": 70, "maxHealthPerYear": 5, "portalSuccessBps": 100 } },
+        { "id": "housing_penthouse", "category": "housing", "tier": 5, "dailyCost": "60", "requirements": { "stage": "foundation_1" }, "effects": { "healthRegenPerYear": 120, "maxHealthPerYear": 10, "appearancePerYear": 2, "qiPerYear": "20" } }
       ]
     },
     {
       "id": "portal",
       "options": [
-        { "id": "portal_none", "category": "portal", "tier": 0, "dailyCost": "0" },
+        { "id": "portal_none", "category": "portal", "tier": 0, "dailyCost": "0", "effects": {} },
         {
           "id": "portal_subway",
           "category": "portal",
           "tier": 1,
-          "dailyCost": "5",
+          "dailyCost": "2",
           "requirements": { "healthMin": 40 },
+          "effects": {},
           "portal": {
             "attemptCost": "50",
-            "successBase": 0.7,
-            "moneyMin": "150",
-            "moneyMax": "400",
-            "qiMin": "5",
-            "qiMax": "20",
+            "successBaseBps": 7500,
+            "moneyMin": "800",
+            "moneyMax": "1800",
+            "qiMin": "10",
+            "qiMax": "30",
             "failDamage": 10
           }
         },
@@ -64,15 +67,16 @@
           "id": "portal_market",
           "category": "portal",
           "tier": 2,
-          "dailyCost": "12",
+          "dailyCost": "5",
           "requirements": { "healthMin": 60, "stage": "qi_condensation_1" },
+          "effects": {},
           "portal": {
             "attemptCost": "150",
-            "successBase": 0.65,
-            "moneyMin": "500",
-            "moneyMax": "1200",
-            "qiMin": "20",
-            "qiMax": "60",
+            "successBaseBps": 6500,
+            "moneyMin": "3000",
+            "moneyMax": "7000",
+            "qiMin": "30",
+            "qiMax": "80",
             "failDamage": 15
           }
         },
@@ -80,15 +84,16 @@
           "id": "portal_club",
           "category": "portal",
           "tier": 3,
-          "dailyCost": "30",
+          "dailyCost": "10",
           "requirements": { "healthMin": 80, "spiritualRoot": 10, "stage": "qi_condensation_3" },
+          "effects": {},
           "portal": {
             "attemptCost": "500",
-            "successBase": 0.6,
-            "moneyMin": "2000",
-            "moneyMax": "5000",
-            "qiMin": "80",
-            "qiMax": "200",
+            "successBaseBps": 6000,
+            "moneyMin": "10000",
+            "moneyMax": "25000",
+            "qiMin": "100",
+            "qiMax": "250",
             "failDamage": 25
           }
         },
@@ -96,16 +101,34 @@
           "id": "portal_tower",
           "category": "portal",
           "tier": 4,
-          "dailyCost": "80",
+          "dailyCost": "20",
           "requirements": { "healthMin": 120, "stage": "foundation_1" },
+          "effects": {},
           "portal": {
             "attemptCost": "2000",
-            "successBase": 0.55,
-            "moneyMin": "10000",
-            "moneyMax": "30000",
+            "successBaseBps": 5500,
+            "moneyMin": "50000",
+            "moneyMax": "120000",
             "qiMin": "500",
             "qiMax": "1200",
             "failDamage": 40
+          }
+        },
+        {
+          "id": "portal_gate",
+          "category": "portal",
+          "tier": 5,
+          "dailyCost": "50",
+          "requirements": { "healthMin": 200, "spiritualRoot": 20, "stage": "foundation_3" },
+          "effects": {},
+          "portal": {
+            "attemptCost": "10000",
+            "successBaseBps": 4500,
+            "moneyMin": "250000",
+            "moneyMax": "600000",
+            "qiMin": "2000",
+            "qiMax": "5000",
+            "failDamage": 70
           }
         }
       ]

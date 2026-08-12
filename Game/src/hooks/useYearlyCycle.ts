@@ -64,6 +64,7 @@ export const useYearlyCycle = () => {
         appearance: current.appearance,
         spiritualRoot: current.spiritualRoot,
         cultivationStage: current.cultivationStage,
+        age: current.age,
       },
       lifestyle.selected,
       baseModifiers
@@ -123,7 +124,7 @@ export const useYearlyCycle = () => {
 
       const qiGain = Math.max(
         1,
-        Math.floor(current.spiritualRoot * (1 + baseModifiers.qiGainPercent / 100))
+        Math.floor(current.spiritualRoot * (1 + baseModifiers.qiGainBps / 10000))
       );
 
       current.addQi(qiGain.toString());

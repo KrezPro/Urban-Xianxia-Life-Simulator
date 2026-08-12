@@ -9,10 +9,7 @@ import { Button, Card, ProgressBar } from '../components/ui';
 import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress, isGreaterOrEqualBigInt } from '../utils/helpers';
-import {
-  getTechniqueCost,
-  meetsTechniqueRequirements,
-} from '../utils/gameplayUtils';
+import { getTechniqueCost, meetsTechniqueRequirements } from '../utils/gameplayUtils';
 import stagesData from '../data/stages.json';
 import techniquesData from '../data/techniques.json';
 import ruUI from '../locales/ru/ui.json';
@@ -76,8 +73,8 @@ export default function DaoScreen() {
 
   const handleUpgradeTechnique = (technique: any) => {
     const currentLevel = techniques.levels[technique.id] || 0;
-    const cost = getTechniqueCost(technique, currentLevel);
-    const meets = meetsTechniqueRequirements(technique, player);
+    const cost = getTechniqueCost(technique.id, currentLevel);
+    const meets = meetsTechniqueRequirements(technique.id, player);
     const canAfford = isGreaterOrEqualBigInt(player.money, cost);
     const isMax = currentLevel >= technique.maxLevel;
 
@@ -168,8 +165,8 @@ export default function DaoScreen() {
         {(techniquesData as any[]).map((technique) => {
           const currentLevel = techniques.levels[technique.id] || 0;
           const isMax = currentLevel >= technique.maxLevel;
-          const meets = meetsTechniqueRequirements(technique, player);
-          const cost = getTechniqueCost(technique, currentLevel);
+          const meets = meetsTechniqueRequirements(technique.id, player);
+          const cost = getTechniqueCost(technique.id, currentLevel);
           const canAfford = isGreaterOrEqualBigInt(player.money, cost);
           const requirementText = getRequirementText(technique);
 

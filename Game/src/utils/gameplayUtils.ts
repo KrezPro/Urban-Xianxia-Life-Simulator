@@ -1,136 +1,33 @@
 import { GameConstants } from '../constants/GameConstants';
+import { ModifierSet, LifestyleCategory, LifestyleSelection, LifestyleReport } from '../types';
 import {
   safeBigInt,
-  increaseBigIntByPercent,
-  reduceBigIntByPercent,
+  increaseBigIntByBps,
+  reduceBigIntByBps,
   randomBigIntBetween,
+  clampInt,
 } from './helpers';
 import itemsData from '../data/items.json';
 import techniquesData from '../data/techniques.json';
 import lifestyleData from '../data/lifestyle.json';
 import stagesData from '../data/stages.json';
 
-export type LifestyleCategory = 'job' | 'sport' | 'food' | 'housing' | 'portal';
-export type LifestyleSelection = Record<LifestyleCategory, string>;
-
-export interface PlayerLike {
-  money: string;
-  health: number;
-  maxHealth: number;
-  intelligence: number;
-  appearance: number;
-  spiritualRoot: number;
-  cultivationStage: string;
-}
-
-export interface LifestyleRequirements {
-  intelligence?: number;
-  appearance?: number;
-  spiritualRoot?: number;
-  healthMin?: number;
-  maxHealthMin?: number;
-  stage?: string;
-}
-
-export interface LifestylePortal {
-  attemptCost: string;
-  successBase: number;
-  moneyMin: string;
-  moneyMax: string;
-  qiMin: string;
-  qiMax: string;
-  failDamage: number;
-}
-
-export interface LifestyleEffects {
-  moneyGainPercent?: number;
-  jobIncomePercent?: number;
-  qiGainPercent?: number;
-  breakthroughChancePercent?: number;
-  healthRegenPercent?: number;
-  damageReductionPercent?: number;
-  portalSuccessPercent?: number;
-  portalMoneyPercent?: number;
-  karmaGainPercent?: number;
-  healthRegenPerYear?: number;
-  maxHealthPerYear?: number;
-  appearancePerYear?: number;
-  qiPerYear?: string;
-}
-
-export interface LifestyleOption {
-  id: string;
-  category: LifestyleCategory;
-  tier: number;
-  dailyCost: string;
-  dailyIncome?: string;
-  requirements?: LifestyleRequirements;
-  effects?: LifestyleEffects;
-  portal?: LifestylePortal;
-}
-
-export interface LifestyleModifiers {
-  moneyGainPercent: number;
-  jobIncomePercent: number;
-  qiGainPercent: number;
-  breakthroughChancePercent: number;
-  healthRegenPercent: number;
-  damageReductionPercent: number;
-  portalSuccessPercent: number;
-  portalMoneyPercent: number;
-  karmaGainPercent: number;
-}
-
-export interface KarmaEffects {
-  startMoney: string;
-  startMaxHealth: number;
-  startSpiritualRoot: number;
-  moneyGainPercent: number;
-  qiGainPercent: number;
-  breakthroughChancePercent: number;
-  healthRegenPercent: number;
-  damageReductionPercent: number;
-  karmaGainPercent: number;
-}
-
-export interface LifestyleReport {
-  moneyDelta: string;
-  healthDelta: number;
-  maxHealthDelta: number;
-  appearanceDelta: number;
-  qiDelta: string;
-  disabled: LifestyleCategory[];
-  portalResult: 'none' | 'success' | 'fail';
-  portalMoney: string;
-  portalQi: string;
-  portalDamage: number;
-}
-
-export const defaultLifestyleSelection: LifestyleSelection = {
-  job: 'job_none',
-  sport: 'sport_none',
-  food: 'food_none',
-  housing: 'housing_none',
-  portal: 'portal_none',
-};
-
-export const emptyModifiers = (): LifestyleModifiers => ({
-  moneyGainPercent: 0,
-  jobIncomePercent: 0,
-  qiGainPercent: 0,
-  breakthroughChancePercent: 0,
-  healthRegenPercent: 0,
-  damageReductionPercent: 0,
-  portalSuccessPercent: 0,
-  portalMoneyPercent: 0,
-  karmaGainPercent: 0,
+export const emptyModifiers = (): ModifierSet => ({
+  moneyGainBps: 0,
+  jobIncomeBps: 0,
+  qiGainBps: 0,
+  breakthroughChanceBps: 0,
+  healthRegenBps: 0,
+  damageReductionBps: 0,
+  portalSuccessBps: 0,
+  portalMoneyBps: 0,
 });
 
-export const combineModifiers = (...modifiers: Array<Partial<LifestyleModifiers>>): LifestyleModifiers => {
+export const combineModifiers = (...mods: Array<Partial<ModifierSet>>): ModifierSet => {
   const result = emptyModifiers();
 
-  modifiers.forEach((modifier) => {
-    (Object.keys(result) as Array<keyof LifestyleModifiers>).forEach((key) => {
+  mods.forEach((modifier) => {
+    (Object.keys(result) as Array<keyof ModifierSet>).forEach((key) => {
       result[key] += (modifier as any)[key] || 0;
     });
   });
@@ -138,112 +35,123 @@ export const combineModifiers = (...modifiers: Array<Partial<LifestyleModifiers>
   return result;
 };
 
-export const getStageIndex = (stageId: string): number => {
-  const index = (stagesData as any[]).findIndex((stage) => stage.id === stageId);
-  return 0 > index ? 0 : index;
-};
+export const getKarmaItemLevel = (items: Record<string, any>, itemId: string): number => {
+  const item = items[itemId];
 
-export const getKarmaItem = (itemId: string): any => {
-  return (itemsData as any[]).find((item) => item.id === itemId);
-};
+  if (!item) {
+    return 0;
+  }
 
-export const getKarmaLevel = (items: Record<string, any>, itemId: string): number => {
-  const item = items?.[itemId];
-  const quantity = item?.quantity || 0;
-  const karmaItem = getKarmaItem(itemId);
+  const karmaItem = (itemsData as any[]).find((i) => i.id === itemId);
 
   if (!karmaItem) {
     return 0;
   }
 
-  return Math.min(quantity, karmaItem.maxLevel || 0);
+  return Math.min(item.quantity || 0, karmaItem.maxLevel || 0);
 };
 
-export const getKarmaNextCost = (itemId: string, currentLevel: number): string => {
-  const item = getKarmaItem(itemId);
-
-  if (!item || currentLevel >= item.maxLevel) {
-    return '0';
-  }
-
-  return item.levels?.[currentLevel]?.cost || '0';
-};
-
-export const getKarmaLevelEffects = (itemId: string, level: number): Record<string, number | string> => {
-  const item = getKarmaItem(itemId);
-
-  if (!item || 0 >= level) {
+export const getKarmaLevelEffects = (itemId: string, level: number): Record<string, any> => {
+  if (0 >= level) {
     return {};
   }
 
-  return item.levels?.[level - 1]?.effects || {};
+  const item = (itemsData as any[]).find((i) => i.id === itemId);
+
+  if (!item || !item.levels) {
+    return {};
+  }
+
+  const levelData = item.levels.find((l: any) => l.level === level);
+  return levelData ? levelData.effects : {};
 };
 
-export const getKarmaTotalEffects = (items: Record<string, any>): KarmaEffects => {
+export const getKarmaTotalEffects = (items: Record<string, any>): ModifierSet & {
+  startMoney: string;
+  startMaxHealth: number;
+  startSpiritualRoot: number;
+} => {
+  const mods = emptyModifiers();
   let startMoney = 0n;
   let startMaxHealth = 0;
   let startSpiritualRoot = 0;
-  let moneyGainPercent = 0;
-  let qiGainPercent = 0;
-  let breakthroughChancePercent = 0;
-  let healthRegenPercent = 0;
-  let damageReductionPercent = 0;
-  let karmaGainPercent = 0;
 
-  (itemsData as any[])
-    .filter((item) => item.type === 'karma_buff')
-    .forEach((item) => {
-      const level = getKarmaLevel(items, item.id);
+  (itemsData as any[]).forEach((item) => {
+    if (item.type !== 'karma_buff') {
+      return;
+    }
 
-      if (0 >= level) {
-        return;
-      }
+    const level = getKarmaItemLevel(items, item.id);
 
-      const effects = item.levels?.[level - 1]?.effects || {};
-      startMoney += safeBigInt(effects.startMoney || '0');
-      startMaxHealth += effects.startMaxHealth || 0;
-      startSpiritualRoot += effects.startSpiritualRoot || 0;
-      moneyGainPercent += effects.moneyGainPercent || 0;
-      qiGainPercent += effects.qiGainPercent || 0;
-      breakthroughChancePercent += effects.breakthroughChancePercent || 0;
-      healthRegenPercent += effects.healthRegenPercent || 0;
-      damageReductionPercent += effects.damageReductionPercent || 0;
-      karmaGainPercent += effects.karmaGainPercent || 0;
-    });
+    if (0 >= level) {
+      return;
+    }
+
+    const effects = getKarmaLevelEffects(item.id, level);
+
+    if (effects.startMoney) {
+      startMoney += safeBigInt(effects.startMoney);
+    }
+
+    if (effects.startMaxHealth) {
+      startMaxHealth += effects.startMaxHealth;
+    }
+
+    if (effects.startSpiritualRoot) {
+      startSpiritualRoot += effects.startSpiritualRoot;
+    }
+
+    if (effects.moneyGainBps) {
+      mods.moneyGainBps += effects.moneyGainBps;
+    }
+
+    if (effects.qiGainBps) {
+      mods.qiGainBps += effects.qiGainBps;
+    }
+
+    if (effects.breakthroughChanceBps) {
+      mods.breakthroughChanceBps += effects.breakthroughChanceBps;
+    }
+
+    if (effects.healthRegenBps) {
+      mods.healthRegenBps += effects.healthRegenBps;
+    }
+
+    if (effects.damageReductionBps) {
+      mods.damageReductionBps += effects.damageReductionBps;
+    }
+  });
 
   return {
+    ...mods,
     startMoney: startMoney.toString(),
     startMaxHealth,
     startSpiritualRoot,
-    moneyGainPercent,
-    qiGainPercent,
-    breakthroughChancePercent,
-    healthRegenPercent,
-    damageReductionPercent,
-    karmaGainPercent,
   };
 };
 
-export const getTechniqueCost = (technique: any, currentLevel: number): string => {
+export const getTechniqueCost = (techniqueId: string, currentLevel: number): string => {
+  const technique = (techniquesData as any[]).find((t) => t.id === techniqueId);
+
   if (!technique || currentLevel >= technique.maxLevel) {
     return '0';
   }
 
-  let cost = safeBigInt(technique.baseCost || '0');
-  const growth = technique.costGrowthPercent || 0;
+  let cost = safeBigInt(technique.baseCost);
+  const growthBps = technique.costGrowthBps || 0;
 
   for (let i = 0; i < currentLevel; i += 1) {
-    cost = (cost * BigInt(100 + growth) + 99n) / 100n;
+    cost = (cost * BigInt(10000 + growthBps) + 9999n) / 10000n;
   }
 
   return cost.toString();
 };
 
-export const getTechniqueModifiers = (levels: Record<string, number>): LifestyleModifiers => {
-  const modifiers = emptyModifiers();
+export const getTechniqueModifiers = (levels: Record<string, number>): ModifierSet => {
+  const mods = emptyModifiers();
 
   (techniquesData as any[]).forEach((technique) => {
-    const level = levels?.[technique.id] || 0;
+    const level = levels[technique.id] || 0;
 
     if (0 >= level) {
       return;
@@ -251,19 +159,27 @@ export const getTechniqueModifiers = (levels: Record<string, number>): Lifestyle
 
     const effects = technique.effectsPerLevel || {};
 
-    (Object.keys(modifiers) as Array<keyof LifestyleModifiers>).forEach((key) => {
-      const value = effects[key];
-
-      if (typeof value === 'number') {
-        modifiers[key] += value * level;
+    (Object.keys(mods) as Array<keyof ModifierSet>).forEach((key) => {
+      if (effects[key] !== undefined) {
+        mods[key] += effects[key] * level;
       }
     });
   });
 
-  return modifiers;
+  return mods;
 };
 
-export const meetsTechniqueRequirements = (technique: any, player: PlayerLike): boolean => {
+export const getStageIndex = (stageId: string): number => {
+  const index = (stagesData as any[]).findIndex((s) => s.id === stageId);
+  return 0 > index ? 0 : index;
+};
+
+export const meetsTechniqueRequirements = (
+  techniqueId: string,
+  player: { spiritualRoot: number; intelligence: number; cultivationStage: string }
+): boolean => {
+  const technique = (techniquesData as any[]).find((t) => t.id === techniqueId);
+
   if (!technique) {
     return false;
   }
@@ -277,10 +193,10 @@ export const meetsTechniqueRequirements = (technique: any, player: PlayerLike): 
   }
 
   if (technique.requiredStage) {
-    const requiredIndex = getStageIndex(technique.requiredStage);
-    const currentIndex = getStageIndex(player.cultivationStage);
+    const reqIndex = getStageIndex(technique.requiredStage);
+    const curIndex = getStageIndex(player.cultivationStage);
 
-    if (currentIndex < requiredIndex) {
+    if (curIndex < reqIndex) {
       return false;
     }
   }
@@ -288,49 +204,71 @@ export const meetsTechniqueRequirements = (technique: any, player: PlayerLike): 
   return true;
 };
 
-export const getAllLifestyleOptions = (): LifestyleOption[] => {
-  return (lifestyleData as any).categories.reduce(
-    (acc: LifestyleOption[], category: any) => acc.concat(category.options || []),
-    []
-  );
+export const getLifestyleOptions = (): any[] => {
+  const all: any[] = [];
+  const data = lifestyleData as any;
+
+  if (!data || !data.categories) {
+    return all;
+  }
+
+  data.categories.forEach((category: any) => {
+    if (category.options) {
+      category.options.forEach((option: any) => {
+        all.push(option);
+      });
+    }
+  });
+
+  return all;
 };
 
-export const getOptionById = (optionId: string): LifestyleOption | undefined => {
-  return getAllLifestyleOptions().find((option) => option.id === optionId);
+export const getOptionById = (optionId: string): any => {
+  return getLifestyleOptions().find((o) => o.id === optionId);
 };
 
-export const meetsLifestyleRequirements = (option: LifestyleOption, player: PlayerLike): boolean => {
-  const requirements = option.requirements;
+export const meetsLifestyleRequirements = (
+  option: any,
+  player: {
+    intelligence: number;
+    appearance: number;
+    spiritualRoot: number;
+    health: number;
+    maxHealth: number;
+    cultivationStage: string;
+  }
+): boolean => {
+  const req = option.requirements;
 
-  if (!requirements) {
+  if (!req) {
     return true;
   }
 
-  if (requirements.intelligence && player.intelligence < requirements.intelligence) {
+  if (req.intelligence && player.intelligence < req.intelligence) {
     return false;
   }
 
-  if (requirements.appearance && player.appearance < requirements.appearance) {
+  if (req.appearance && player.appearance < req.appearance) {
     return false;
   }
 
-  if (requirements.spiritualRoot && player.spiritualRoot < requirements.spiritualRoot) {
+  if (req.spiritualRoot && player.spiritualRoot < req.spiritualRoot) {
     return false;
   }
 
-  if (requirements.healthMin && player.health < requirements.healthMin) {
+  if (req.healthMin && player.health < req.healthMin) {
     return false;
   }
 
-  if (requirements.maxHealthMin && player.maxHealth < requirements.maxHealthMin) {
+  if (req.maxHealthMin && player.maxHealth < req.maxHealthMin) {
     return false;
   }
 
-  if (requirements.stage) {
-    const requiredIndex = getStageIndex(requirements.stage);
-    const currentIndex = getStageIndex(player.cultivationStage);
+  if (req.stage) {
+    const reqIndex = getStageIndex(req.stage);
+    const curIndex = getStageIndex(player.cultivationStage);
 
-    if (currentIndex < requiredIndex) {
+    if (curIndex < reqIndex) {
       return false;
     }
   }
@@ -338,110 +276,128 @@ export const meetsLifestyleRequirements = (option: LifestyleOption, player: Play
   return true;
 };
 
-const addEffectToModifiers = (modifiers: LifestyleModifiers, effects?: LifestyleEffects): void => {
-  if (!effects) {
-    return;
+export const calculateJobIncome = (
+  option: any,
+  player: { intelligence: number; appearance: number },
+  modifiers: ModifierSet
+): string => {
+  if (!option.dailyIncome || '0' === option.dailyIncome) {
+    return '0';
   }
 
-  (Object.keys(modifiers) as Array<keyof LifestyleModifiers>).forEach((key) => {
-    const value = (effects as any)[key];
+  const baseIncome = safeBigInt(option.dailyIncome) * BigInt(GameConstants.YEAR_DAYS);
 
-    if (typeof value === 'number') {
-      modifiers[key] += value;
-    }
-  });
+  let jobBonusBps =
+    player.intelligence * 250 +
+    player.appearance * 100 +
+    modifiers.jobIncomeBps +
+    modifiers.moneyGainBps;
+
+  jobBonusBps = clampInt(jobBonusBps, 0, GameConstants.JOB_BONUS_CAP_BPS);
+
+  return increaseBigIntByBps(baseIncome.toString(), jobBonusBps);
 };
 
-const yearlyCost = (option: LifestyleOption): bigint => {
-  return safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
-};
-
-const jobYearlyIncome = (
-  option: LifestyleOption,
-  player: PlayerLike,
-  modifiers: LifestyleModifiers
-): bigint => {
-  if (!option.dailyIncome) {
-    return 0n;
+export const calculateAgeDecay = (age: number): number => {
+  if (18 > age) {
+    return 0;
   }
 
-  const base = safeBigInt(option.dailyIncome) * BigInt(GameConstants.YEAR_DAYS);
-  const bonusPercent =
-    (modifiers.jobIncomePercent || 0) +
-    (modifiers.moneyGainPercent || 0) +
-    player.intelligence * 4 +
-    player.appearance * 2;
+  if (40 > age) {
+    return 1;
+  }
 
-  return increaseBigIntByPercent(base, bonusPercent);
-};
+  if (60 > age) {
+    return 2;
+  }
 
-const calcLifestyleNet = (
-  entries: Array<{ cat: LifestyleCategory; option: LifestyleOption }>,
-  player: PlayerLike,
-  modifiers: LifestyleModifiers
-): bigint => {
-  let income = 0n;
-  let cost = 0n;
+  if (80 > age) {
+    return 4;
+  }
 
-  entries.forEach(({ cat, option }) => {
-    cost += yearlyCost(option);
-
-    if (cat === 'portal' && option.portal) {
-      cost += safeBigInt(option.portal.attemptCost || '0');
-    }
-
-    if (cat === 'job') {
-      income += jobYearlyIncome(option, player, modifiers);
-    }
-  });
-
-  return income - cost;
+  return 7;
 };
 
 export const processLifestyleYear = (
-  player: PlayerLike,
+  player: {
+    money: string;
+    health: number;
+    maxHealth: number;
+    intelligence: number;
+    appearance: number;
+    spiritualRoot: number;
+    cultivationStage: string;
+    age: number;
+  },
   selection: LifestyleSelection,
-  baseModifiers: LifestyleModifiers
+  baseModifiers: ModifierSet
 ): LifestyleReport => {
   const disabled: LifestyleCategory[] = [];
+  const categories: LifestyleCategory[] = ['job', 'sport', 'food', 'housing', 'portal'];
+  const priority: LifestyleCategory[] = ['portal', 'sport', 'housing', 'food', 'job'];
 
-  const markDisabled = (category: LifestyleCategory): void => {
-    if (!disabled.includes(category)) {
-      disabled.push(category);
-    }
+  const activeOptions: Record<LifestyleCategory, any> = {
+    job: null,
+    sport: null,
+    food: null,
+    housing: null,
+    portal: null,
   };
 
-  const categories: LifestyleCategory[] = ['job', 'sport', 'food', 'housing', 'portal'];
-  const selectedEntries = categories
-    .map((cat) => ({ cat, option: getOptionById(selection[cat]) }))
-    .filter(
-      (entry): entry is { cat: LifestyleCategory; option: LifestyleOption } =>
-        !!entry.option && entry.option.id !== `${entry.cat}_none`
-    );
+  categories.forEach((cat) => {
+    const optionId = selection[cat];
 
-  let affordable = selectedEntries.filter((entry) => {
-    const meets = meetsLifestyleRequirements(entry.option, player);
-
-    if (!meets) {
-      markDisabled(entry.cat);
+    if (!optionId || `${cat}_none` === optionId) {
+      return;
     }
 
-    return meets;
+    const option = getOptionById(optionId);
+
+    if (!option) {
+      return;
+    }
+
+    if (!meetsLifestyleRequirements(option, player)) {
+      disabled.push(cat);
+      return;
+    }
+
+    activeOptions[cat] = option;
   });
 
-  let net = calcLifestyleNet(affordable, player, baseModifiers);
-  const currentMoney = safeBigInt(player.money);
-  const priority = GameConstants.LIFESTYLE_DISABLE_PRIORITY as LifestyleCategory[];
+  let totalCost = 0n;
+  let totalIncome = 0n;
 
-  while (0n > currentMoney + net && affordable.length > 0) {
+  categories.forEach((cat) => {
+    const option = activeOptions[cat];
+
+    if (!option) {
+      return;
+    }
+
+    const yearCost = safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
+    totalCost += yearCost;
+
+    if (option.portal) {
+      totalCost += safeBigInt(option.portal.attemptCost || '0');
+    }
+
+    if ('job' === cat) {
+      const income = calculateJobIncome(option, player, baseModifiers);
+      totalIncome += safeBigInt(income);
+    }
+  });
+
+  let net = totalIncome - totalCost;
+  let playerMoney = safeBigInt(player.money);
+
+  while (0n > playerMoney + net && activeOptions) {
     let removed = false;
 
-    for (const category of priority) {
-      const index = affordable.findIndex((entry) => entry.cat === category);
-
-      if (index >= 0) {
-        markDisabled(category);
-        affordable.splice(index, 1);
+    for (const cat of priority) {
+      if (activeOptions[cat]) {
+        disabled.push(cat);
+        activeOptions[cat] = null;
         removed = true;
         break;
       }
@@ -451,102 +407,138 @@ export const processLifestyleYear = (
       break;
     }
 
-    net = calcLifestyleNet(affordable, player, baseModifiers);
+    totalCost = 0n;
+    totalIncome = 0n;
+
+    categories.forEach((cat) => {
+      const option = activeOptions[cat];
+
+      if (!option) {
+        return;
+      }
+
+      const yearCost = safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
+      totalCost += yearCost;
+
+      if (option.portal) {
+        totalCost += safeBigInt(option.portal.attemptCost || '0');
+      }
+
+      if ('job' === cat) {
+        const income = calculateJobIncome(option, player, baseModifiers);
+        totalIncome += safeBigInt(income);
+      }
+    });
+
+    net = totalIncome - totalCost;
   }
 
-  const activeOptions = affordable.map((entry) => entry.option);
-  const optionModifiers = emptyModifiers();
-  activeOptions.forEach((option) => addEffectToModifiers(optionModifiers, option.effects));
-  const modifiers = combineModifiers(baseModifiers, optionModifiers);
+  const lifestyleModifiers = { ...baseModifiers };
 
-  let income = 0n;
-  let cost = 0n;
+  categories.forEach((cat) => {
+    const option = activeOptions[cat];
 
-  affordable.forEach(({ cat, option }) => {
-    cost += yearlyCost(option);
-
-    if (cat === 'portal' && option.portal) {
-      cost += safeBigInt(option.portal.attemptCost || '0');
+    if (!option || !option.effects) {
+      return;
     }
 
-    if (cat === 'job') {
-      income += jobYearlyIncome(option, player, modifiers);
+    if (option.effects.portalSuccessBps) {
+      lifestyleModifiers.portalSuccessBps += option.effects.portalSuccessBps;
     }
   });
 
-  let moneyDelta = income - cost;
+  let baseRegen = 0;
+  let maxHealthGain = 0;
+  let appearanceGain = 0;
+  let lifestyleQi = 0n;
 
-  const healthRegenBase = activeOptions.reduce(
-    (sum, option) => sum + (option.effects?.healthRegenPerYear || 0),
-    0
-  );
-  const maxHealthDelta = activeOptions.reduce(
-    (sum, option) => sum + (option.effects?.maxHealthPerYear || 0),
-    0
-  );
-  const appearanceDelta = activeOptions.reduce(
-    (sum, option) => sum + (option.effects?.appearancePerYear || 0),
-    0
-  );
-  const qiBase = activeOptions.reduce(
-    (sum, option) => sum + safeBigInt(option.effects?.qiPerYear || '0'),
-    0n
-  );
+  categories.forEach((cat) => {
+    const option = activeOptions[cat];
 
-  const healthRegen = Number(
-    increaseBigIntByPercent(BigInt(Math.max(0, Math.floor(healthRegenBase))), modifiers.healthRegenPercent)
-  );
-  let healthDelta = healthRegen + maxHealthDelta;
-  let qiDelta = increaseBigIntByPercent(qiBase, modifiers.qiGainPercent);
+    if (!option || !option.effects) {
+      return;
+    }
+
+    if (option.effects.healthRegenPerYear) {
+      baseRegen += option.effects.healthRegenPerYear;
+    }
+
+    if (option.effects.maxHealthPerYear) {
+      maxHealthGain += option.effects.maxHealthPerYear;
+    }
+
+    if (option.effects.appearancePerYear) {
+      appearanceGain += option.effects.appearancePerYear;
+    }
+
+    if (option.effects.qiPerYear) {
+      lifestyleQi += safeBigInt(option.effects.qiPerYear);
+    }
+  });
+
+  const effectiveRegen = Number(increaseBigIntByBps(baseRegen.toString(), lifestyleModifiers.healthRegenBps));
+
+  maxHealthGain = Math.min(maxHealthGain, GameConstants.MAX_HEALTH_CAP - player.maxHealth);
+
+  const ageDecay = calculateAgeDecay(player.age);
 
   let portalResult: LifestyleReport['portalResult'] = 'none';
   let portalMoney = '0';
   let portalQi = '0';
   let portalDamage = 0;
 
-  const portalEntry = affordable.find((entry) => entry.cat === 'portal');
+  const portalOption = activeOptions.portal;
 
-  if (portalEntry?.option.portal) {
-    const portal = portalEntry.option.portal;
-    const successChance = Math.min(
-      GameConstants.PORTAL_MAX_CHANCE,
-      Math.max(
-        GameConstants.PORTAL_MIN_CHANCE,
-        portal.successBase +
-          player.spiritualRoot * 0.004 +
-          player.intelligence * 0.002 +
-          modifiers.portalSuccessPercent / 100
-      )
-    );
+  if (portalOption && portalOption.portal) {
+    const portal = portalOption.portal;
 
-    if (successChance >= Math.random()) {
+    let portalChanceBps =
+      portal.successBaseBps +
+      player.spiritualRoot * 40 +
+      player.intelligence * 20 +
+      lifestyleModifiers.portalSuccessBps;
+
+    portalChanceBps = clampInt(portalChanceBps, GameConstants.PORTAL_MIN_CHANCE_BPS, GameConstants.PORTAL_MAX_CHANCE_BPS);
+
+    const roll = Math.floor(Math.random() * 10000);
+    const success = roll < portalChanceBps;
+
+    if (success) {
       portalResult = 'success';
+
       const rawMoney = randomBigIntBetween(portal.moneyMin, portal.moneyMax);
       const rawQi = randomBigIntBetween(portal.qiMin, portal.qiMax);
-      const finalMoney = increaseBigIntByPercent(
-        rawMoney,
-        modifiers.moneyGainPercent + modifiers.portalMoneyPercent
-      );
-      const finalQi = increaseBigIntByPercent(rawQi, modifiers.qiGainPercent);
 
-      moneyDelta += finalMoney;
-      qiDelta += finalQi;
-      portalMoney = finalMoney.toString();
-      portalQi = finalQi.toString();
+      let moneyBonusBps = clampInt(lifestyleModifiers.moneyGainBps + lifestyleModifiers.portalMoneyBps, 0, GameConstants.MONEY_BONUS_CAP_BPS);
+      let qiBonusBps = clampInt(lifestyleModifiers.qiGainBps, 0, GameConstants.QI_BONUS_CAP_BPS);
+
+      portalMoney = increaseBigIntByBps(rawMoney, moneyBonusBps);
+      portalQi = increaseBigIntByBps(rawQi, qiBonusBps);
     } else {
       portalResult = 'fail';
-      const reducedDamage = reduceBigIntByPercent(BigInt(portal.failDamage), modifiers.damageReductionPercent);
+
+      let damageReductionBps = clampInt(lifestyleModifiers.damageReductionBps, 0, GameConstants.DAMAGE_REDUCTION_CAP_BPS);
+      const reducedDamage = reduceBigIntByBps(portal.failDamage.toString(), damageReductionBps);
       portalDamage = Math.max(1, Number(reducedDamage));
-      healthDelta -= portalDamage;
     }
   }
+
+  const healthDelta = effectiveRegen + maxHealthGain - ageDecay - portalDamage;
+
+  let moneyDelta = totalIncome - totalCost;
+
+  if ('success' === portalResult) {
+    moneyDelta += safeBigInt(portalMoney);
+  }
+
+  const qiDelta = increaseBigIntByBps(lifestyleQi.toString(), lifestyleModifiers.qiGainBps);
 
   return {
     moneyDelta: moneyDelta.toString(),
     healthDelta,
-    maxHealthDelta,
-    appearanceDelta,
-    qiDelta: qiDelta.toString(),
+    maxHealthDelta: maxHealthGain,
+    appearanceDelta: appearanceGain,
+    qiDelta,
     disabled,
     portalResult,
     portalMoney,

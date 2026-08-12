@@ -82,3 +82,27 @@ export interface INotification {
   createdAt: number;
   durationMs: number;
 }
+
+export interface ModifierSet {
+  moneyGainBps: number;
+  jobIncomeBps: number;
+  qiGainBps: number;
+  breakthroughChanceBps: number;
+  healthRegenBps: number;
+  damageReductionBps: number;
+  portalSuccessBps: number;
+  portalMoneyBps: number;
+}
+
+export interface LifestyleReport {
+  moneyDelta: string;
+  healthDelta: number;
+  maxHealthDelta: number;
+  appearanceDelta: number;
+  qiDelta: string;
+  disabled: LifestyleCategory[];
+  portalResult: 'none' | 'success' | 'fail';
+  portalMoney: string;
+  portalQi: string;
+  portalDamage: number;
+}

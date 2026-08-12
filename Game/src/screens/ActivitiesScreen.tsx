@@ -7,11 +7,8 @@ import { Button, Card } from '../components/ui';
 import { CollapsibleSection } from '../components/game/CollapsibleSection';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber } from '../utils/helpers';
-import {
-  getOptionById,
-  meetsLifestyleRequirements,
-  LifestyleCategory,
-} from '../utils/gameplayUtils';
+import { getOptionById, meetsLifestyleRequirements } from '../utils/gameplayUtils';
+import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
 import ruActivities from '../locales/ru/activities.json';
 import enActivities from '../locales/en/activities.json';
