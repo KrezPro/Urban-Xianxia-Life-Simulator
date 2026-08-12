@@ -8,6 +8,33 @@
       "sect": "Sect"
     }
   },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Max Health/year",
+    "healthRegenPerYear": "+{value} Regen/year",
+    "appearancePerYear": "+{value} Appearance/year",
+    "qiPerYear": "+{value} Qi/year",
+    "portalSuccessBps": "+{value}% portal success",
+    "qiFlatPerYear": "+{value} Qi/year",
+    "moneyFlatPerYear": "+${value}/year",
+    "healthRegenFlat": "+{value} Regen/year",
+    "damageReductionBps": "+{value}% damage reduction",
+    "breakthroughChanceBps": "+{value}% breakthrough chance",
+    "startMoney": "Start: +${value}",
+    "startMaxHealth": "Start: +{value} Max Health",
+    "startSpiritualRoot": "Start: +{value} Spiritual Root",
+    "startBodyTempering": "Start: +{value} Body Tempering"
+  },
+  "life": {
+    "survival_cost_line": "Living costs: -${amount}/year",
+    "survival_cost_hint": {
+      "title": "Living costs",
+      "text": "Mandatory yearly expenses for food, housing and safety. They are charged even if no activities are selected. If you lack money, your health suffers."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Living costs: -${amount}.",
+    "lifestyle_money_delta": "Activities yearly net: {amount}."
+  },
   "dao": {
     "techniques": {
       "title": "Dao Techniques",
@@ -17,6 +44,8 @@
       "upgrade": "Upgrade",
       "locked": "Locked",
       "not_enough_money": "Not enough money",
+      "current_effects": "Current",
+      "next_effects": "Next",
       "requirements": {
         "spiritual_root": "Spiritual Root",
         "intelligence": "Intelligence",
@@ -45,7 +74,10 @@
   "store": {
     "level": "Level",
     "max_level": "Max level",
-    "next_cost": "Next level cost"
+    "next_cost": "Next level cost",
+    "current_effects": "Current",
+    "next_effects": "Next",
+    "effects_note": "Start effects apply after reincarnation. Yearly effects apply each year."
   },
   "activities": {
     "title": "Activities",
@@ -56,6 +88,10 @@
     "locked": "Locked",
     "daily_cost": "Cost/day",
     "daily_income": "Income/day",
+    "yearly_cost": "Cost/year",
+    "yearly_income": "Income/year",
+    "net_yearly": "Net/year",
+    "effects_title": "Effects/year",
     "requirements_label": "Requirements",
     "none": "None",
     "categories": {

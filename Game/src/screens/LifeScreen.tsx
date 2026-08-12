@@ -10,6 +10,7 @@ import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { getSurvivalCost } from '../utils/gameplayUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
@@ -17,6 +18,8 @@ import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruRebirth from '../locales/ru/rebirth.json';
 import enRebirth from '../locales/en/rebirth.json';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
 
 interface HintData {
   title: string;
@@ -31,12 +34,16 @@ export default function LifeScreen() {
   const missedNotifications = useNotificationStore((state) => state.missedCount);
   const clearMissedNotifications = useNotificationStore((state) => state.clearMissedNotifications);
   const { handleGrowOlder } = useYearlyCycle();
+
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
   const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const lifeExtras: any = extras.life || {};
+
   const rebirthReport = player.lastRebirthReport;
   const hasRebirthPenalties =
     !!rebirthReport &&
@@ -70,23 +77,38 @@ export default function LifeScreen() {
   const nextStage = (stagesData as any[])[currentStageIndex + 1];
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
-
   const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
+
+  const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
+  const survivalCostText = (lifeExtras.survival_cost_line || '').replace(
+    '{amount}',
+    formatLargeNumber(survivalCost.toString())
+  );
 
   const openHint = (key: string) => {
     const hintData = hints[key];
     if (!hintData) {
       return;
     }
+
     setHint({
       title: hintData.title || key,
       text: hintData.text || '',
     });
   };
 
-  // УРОК (DataForAI): журнал открывается модально (LogScreen с onClose),
-  // navigation.navigate('Log') НЕ используем — маршрута Log в TabNavigator нет.
-  // Счётчик пропущенных уведомлений висит на кнопке журнала, отдельный колокольчик не нужен.
+  const openSurvivalHint = () => {
+    const hintData = lifeExtras.survival_cost_hint;
+    if (!hintData) {
+      return;
+    }
+
+    setHint({
+      title: hintData.title || '',
+      text: hintData.text || '',
+    });
+  };
+
   const openLog = () => {
     setLogVisible(true);
     clearMissedNotifications();
@@ -123,7 +145,9 @@ export default function LifeScreen() {
     if (!rebirthReport || !hasRebirthPenalties) {
       return null;
     }
+
     const tierData = rebirth.tiers?.[rebirthReport.fortuneTier] || {};
+
     return (
       <Modal visible transparent animationType="fade" onRequestClose={closeRebirthReport}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeRebirthReport}>
@@ -131,17 +155,21 @@ export default function LifeScreen() {
             <Text style={styles.modalTitle}>{rebirth.title}</Text>
             <Text style={styles.rebirthTierTitle}>{tierData.title}</Text>
             <Text style={styles.modalText}>{tierData.desc}</Text>
+
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.money?.[rebirthReport.moneyPenaltyKey]}</Text>
             </View>
+
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.health?.[rebirthReport.healthStartKey]}</Text>
             </View>
+
             {(rebirthReport.curses || []).map((curseId) => {
               const curseData = rebirth.curses?.[curseId];
               if (!curseData) {
                 return null;
               }
+
               return (
                 <View key={curseId} style={styles.curseRow}>
                   <Text style={styles.curseName}>{curseData.name}</Text>
@@ -149,6 +177,7 @@ export default function LifeScreen() {
                 </View>
               );
             })}
+
             <Button
               title={rebirth.accept}
               onPress={closeRebirthReport}
@@ -198,17 +227,21 @@ export default function LifeScreen() {
               </TouchableOpacity>
             </View>
           </View>
+
           <Card variant="danger" style={styles.deadCard}>
             <Text style={styles.deadTitle}>{ui.dead_title}</Text>
             <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
+
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
               <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
             </View>
+
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
               <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
             </View>
+
             <Button
               title={ui.btn_reincarnate}
               onPress={handleReincarnate}
@@ -218,6 +251,7 @@ export default function LifeScreen() {
             />
           </Card>
         </View>
+
         {logModal}
         {hintModal}
       </SafeAreaView>
@@ -236,18 +270,28 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
         <Card variant="primary" style={styles.heroCard}>
           <Text style={styles.heroAgeLabel}>{ui.age}</Text>
           <Text style={styles.heroAgeValue}>{player.age}</Text>
+
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
           </Text>
+
           <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.qi}: {formatLargeNumber(player.qi)}
           </Text>
+
+          {survivalCost > 0n ? (
+            <TouchableOpacity onPress={() => undefined} onLongPress={openSurvivalHint} delayLongPress={300}>
+              <Text style={styles.survivalCostText}>{survivalCostText}</Text>
+            </TouchableOpacity>
+          ) : null}
         </Card>
+
         <Card style={styles.statsCard}>
           <StatRow
             icon="school"
@@ -292,6 +336,7 @@ export default function LifeScreen() {
             onLongPress={() => openHint('karma')}
           />
         </Card>
+
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
           <View style={styles.focusRow}>
@@ -313,6 +358,7 @@ export default function LifeScreen() {
                 {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={[
                 styles.focusChip,
@@ -333,11 +379,13 @@ export default function LifeScreen() {
           </View>
         </Card>
       </View>
+
       <DraggableGrowButton
         age={player.age}
         onPress={handleGrowOlder}
         accessibilityLabel={ui.btn_grow}
       />
+
       {logModal}
       {hintModal}
       {renderRebirthReport()}
@@ -436,6 +484,13 @@ const styles = StyleSheet.create({
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.xs,
     marginBottom: Theme.spacing.sm,
+  },
+  survivalCostText: {
+    color: Theme.colors.warning,
+    fontSize: Theme.fontSize.sm,
+    fontWeight: '800',
+    marginTop: 4,
+    textAlign: 'center',
   },
   statsCard: {
     marginBottom: Theme.spacing.md,

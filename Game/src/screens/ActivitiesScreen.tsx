@@ -15,13 +15,21 @@ import {
   getTechniqueModifiers,
   getKarmaTotalEffects,
   canAffordLifestyleOption,
+  getLifestyleAnnualCost,
+  getLifestyleAnnualIncome,
 } from '../utils/gameplayUtils';
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { getStageName } from '../utils/stageUtils';
+import { buildEffectLines } from '../utils/effectFormatter';
 import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
 import ruExtras from '../locales/ru/extras.json';
 import enExtras from '../locales/en/extras.json';
+
+const formatSignedMoney = (value: bigint): string => {
+  const abs = value < 0n ? (-value).toString() : value.toString();
+  return `${value < 0n ? '-' : '+'}$${formatLargeNumber(abs)}`;
+};
 
 export default function ActivitiesScreen() {
   const player = usePlayerStore();
@@ -33,6 +41,7 @@ export default function ActivitiesScreen() {
 
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const activities = extras.activities || {};
+  const effectLabels = extras.effect_labels || {};
 
   const modifiers = combineModifiers(
     getTechniqueModifiers(techniques.levels || {}),
@@ -139,6 +148,11 @@ export default function ActivitiesScreen() {
                     const canSelect = meets && affordable;
                     const requirementText = getRequirementText(option);
 
+                    const annualCost = getLifestyleAnnualCost(option);
+                    const annualIncome = getLifestyleAnnualIncome(option, player, modifiers);
+                    const net = annualIncome - annualCost;
+                    const effectLines = buildEffectLines(option.effects, effectLabels, 1);
+
                     return (
                       <View key={option.id} style={styles.optionCard}>
                         <View style={styles.optionHeader}>
@@ -148,19 +162,46 @@ export default function ActivitiesScreen() {
 
                         <Text style={styles.optionDesc}>{getOptionDesc(option.id)}</Text>
 
-                        <View style={styles.optionMetaRow}>
-                          <Text style={styles.optionMetaLabel}>{activities.daily_cost}</Text>
-                          <Text style={styles.optionMetaValue}>
-                            ${formatLargeNumber(option.dailyCost || '0')}
-                          </Text>
-                        </View>
-
-                        {!!option.dailyIncome ? (
+                        {annualCost > 0n ? (
                           <View style={styles.optionMetaRow}>
-                            <Text style={styles.optionMetaLabel}>{activities.daily_income}</Text>
-                            <Text style={[styles.optionMetaValue, styles.incomeValue]}>
-                              ${formatLargeNumber(option.dailyIncome)}
+                            <Text style={styles.optionMetaLabel}>{activities.yearly_cost}</Text>
+                            <Text style={styles.optionMetaValue}>
+                              -${formatLargeNumber(annualCost.toString())}
                             </Text>
+                          </View>
+                        ) : null}
+
+                        {annualIncome > 0n ? (
+                          <View style={styles.optionMetaRow}>
+                            <Text style={styles.optionMetaLabel}>{activities.yearly_income}</Text>
+                            <Text style={[styles.optionMetaValue, styles.incomeValue]}>
+                              +${formatLargeNumber(annualIncome.toString())}
+                            </Text>
+                          </View>
+                        ) : null}
+
+                        {annualCost > 0n || annualIncome > 0n ? (
+                          <View style={styles.optionMetaRow}>
+                            <Text style={styles.optionMetaLabel}>{activities.net_yearly}</Text>
+                            <Text
+                              style={[
+                                styles.optionMetaValue,
+                                net >= 0n ? styles.incomeValue : styles.expenseValue,
+                              ]}
+                            >
+                              {formatSignedMoney(net)}
+                            </Text>
+                          </View>
+                        ) : null}
+
+                        {effectLines.length > 0 ? (
+                          <View style={styles.effectsContainer}>
+                            <Text style={styles.effectsTitle}>{activities.effects_title}</Text>
+                            {effectLines.map((line, index) => (
+                              <Text key={`${option.id}_effect_${index}`} style={styles.effectLine}>
+                                {line}
+                              </Text>
+                            ))}
                           </View>
                         ) : null}
 
@@ -302,6 +343,23 @@ const styles = StyleSheet.create({
   },
   incomeValue: {
     color: Theme.colors.success,
+  },
+  expenseValue: {
+    color: Theme.colors.danger,
+  },
+  effectsContainer: {
+    marginTop: 6,
+    marginBottom: 6,
+  },
+  effectsTitle: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  effectLine: {
+    color: Theme.colors.secondary,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
   },
   requirementText: {
     color: Theme.colors.warning,

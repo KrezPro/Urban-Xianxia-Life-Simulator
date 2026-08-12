@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 21 (Сохранение техник Дао между жизнями, защита магазина Кармы и проверка оплаты Закалки тела)
+[СТАТУС]: ШАГ 22 (Прозрачность экономики и эффектов: годовые значения в активностях, числовые эффекты техник и карма-баффов, видимый survival cost, финансовые логи)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -126,6 +126,15 @@
 89. [X] Library обновлён: техники персистентны, lifestyle сбрасывается, карма-баффы сохраняются.
 90. [X] Оплата Body Tempering проверена: DaoScreen и usePlayerStore уже используют Ци + деньги.
 
+=== Фаза 18: Прозрачность экономики и эффектов ===
+91. [X] Создан utils/effectFormatter.ts: formatBpsPercent и buildEffectLines для числовых эффектов.
+92. [X] ActivitiesScreen показывает Cost/year, Income/year, Net/year и Effects/year вместо дневных значений.
+93. [X] DaoScreen показывает текущие и следующие числовые эффекты техник Дао.
+94. [X] StoreScreen показывает текущие и следующие числовые эффекты карма-баффов, а также пояснение про стартовые/годовые эффекты.
+95. [X] LifeScreen показывает обязательные расходы на жизнь и long-press подсказку.
+96. [X] useYearlyCycle пишет в журнал расход на жизнь и итог активностей за год.
+97. [X] Обновлены locales/ru/extras.json и locales/en/extras.json: effect_labels, life, logs, новые подписи экранов.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -155,14 +164,14 @@ Game/
     ├── hooks/
     │   ├── useIdleProgress.ts           // Offline-прогресс без процентного разгона
     │   ├── useBreakthrough.ts           // Прорывы с body tempering и новыми капами
-    │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, события
+    │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, события, финансовые логи
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB
-    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering
-    │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
-    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, видимый survival cost
+    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, числовые эффекты техник
+    │   ├── ActivitiesScreen.tsx         // Активности: годовые расходы/доходы/чистыми и эффекты/год
+    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и числовыми эффектами баффов
     │   ├── SectScreen.tsx               // Секта и рейтинг
     │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
     ├── store/
@@ -184,6 +193,7 @@ Game/
     │   ├── stageUtils.ts                // Локализованные имена стадий
     │   ├── rebirthUtils.ts              // Последствия смерти и проклятия
     │   ├── eventGenerator.ts            // Генератор событий с body resistance
+    │   ├── effectFormatter.ts           // Форматирование числовых эффектов и bps в локализованные строки
     │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality
     └── locales/
         ├── ru/
@@ -191,7 +201,7 @@ Game/
         │   ├── events.json              // Legacy-события
         │   ├── social.json              // Секты
         │   ├── notifications.json       // Уведомления
-        │   ├── extras.json              // Навигация, техники, магазин, активности
+        │   ├── extras.json              // Навигация, техники, магазин, активности, effect_labels, life, logs
         │   ├── stages.json              // Имена стадий
         │   ├── rebirth.json             // Последствия перерождения
         │   └── eventGenerator.json      // Шаблоны и пулы событий
@@ -200,7 +210,7 @@ Game/
             ├── events.json              // Legacy-события
             ├── social.json              // Секты
             ├── notifications.json       // Уведомления
-            ├── extras.json              // Навигация, техники, магазин, активности
+            ├── extras.json              // Навигация, техники, магазин, активности, effect_labels, life, logs
             ├── stages.json              // Имена стадий
             ├── rebirth.json             // Последствия перерождения
             └── eventGenerator.json      // Шаблоны и пулы событий

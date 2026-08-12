@@ -18,6 +18,7 @@ import {
   getBodyEffects,
 } from '../utils/gameplayUtils';
 import { getStageName } from '../utils/stageUtils';
+import { buildEffectLines } from '../utils/effectFormatter';
 import techniquesData from '../data/techniques.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -35,6 +36,7 @@ export default function DaoScreen() {
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const techniquesUI = extras.dao?.techniques || {};
+  const effectLabels = extras.effect_labels || {};
 
   const currentStageName = getStageName(player.cultivationStage, locale);
   const chance = calculateChance(hasAdBuff);
@@ -249,6 +251,11 @@ export default function DaoScreen() {
           const canAfford = isGreaterOrEqualBigInt(player.money, cost);
           const requirementText = getRequirementText(technique);
 
+          const currentLines = buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel);
+          const nextLines = !isMax
+            ? buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel + 1)
+            : [];
+
           let buttonTitle = techniquesUI.upgrade;
 
           if (isMax) {
@@ -272,6 +279,28 @@ export default function DaoScreen() {
 
               {!!requirementText ? (
                 <Text style={styles.techniqueRequirement}>{requirementText}</Text>
+              ) : null}
+
+              {currentLines.length > 0 ? (
+                <View style={styles.effectsBlock}>
+                  <Text style={styles.effectsLabel}>{techniquesUI.current_effects}</Text>
+                  {currentLines.map((line, index) => (
+                    <Text key={`${technique.id}_current_${index}`} style={styles.effectLine}>
+                      {line}
+                    </Text>
+                  ))}
+                </View>
+              ) : null}
+
+              {!isMax && nextLines.length > 0 ? (
+                <View style={styles.effectsBlock}>
+                  <Text style={styles.effectsLabel}>{techniquesUI.next_effects}</Text>
+                  {nextLines.map((line, index) => (
+                    <Text key={`${technique.id}_next_${index}`} style={styles.effectLine}>
+                      {line}
+                    </Text>
+                  ))}
+                </View>
               ) : null}
 
               {!isMax ? (
@@ -453,6 +482,19 @@ const styles = StyleSheet.create({
     color: Theme.colors.warning,
     fontSize: Theme.fontSize.sm,
     marginBottom: 8,
+  },
+  effectsBlock: {
+    marginBottom: 8,
+  },
+  effectsLabel: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  effectLine: {
+    color: Theme.colors.secondary,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
   },
   techniqueButton: {
     marginTop: Theme.spacing.sm,

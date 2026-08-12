@@ -8,6 +8,8 @@ import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
+import { getKarmaLevelEffects } from '../utils/gameplayUtils';
+import { buildEffectLines } from '../utils/effectFormatter';
 import itemsData from '../data/items.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -23,6 +25,7 @@ export default function StoreScreen() {
   const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const storeExtra = extras.store || {};
+  const effectLabels = extras.effect_labels || {};
 
   const getSafeMaxLevel = (item: any): number => {
     const maxLevel = Number(item?.maxLevel || 0);
@@ -103,6 +106,15 @@ export default function StoreScreen() {
             const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
             const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
 
+            const currentEffects = getKarmaLevelEffects(item.id, currentLevel);
+            const currentLines = buildEffectLines(currentEffects, effectLabels, 1);
+
+            const nextEffects = getKarmaLevelEffects(
+              item.id,
+              Math.min(currentLevel + 1, safeMaxLevel)
+            );
+            const nextLines = !isMax ? buildEffectLines(nextEffects, effectLabels, 1) : [];
+
             return (
               <Card key={item.id} style={styles.itemCard}>
                 <View style={styles.itemTopRow}>
@@ -113,6 +125,30 @@ export default function StoreScreen() {
                 </View>
 
                 <Text style={styles.itemDesc}>{itemUI.desc}</Text>
+
+                {currentLevel > 0 && currentLines.length > 0 ? (
+                  <View style={styles.effectsBlock}>
+                    <Text style={styles.effectsLabel}>{storeExtra.current_effects}</Text>
+                    {currentLines.map((line, index) => (
+                      <Text key={`${item.id}_current_${index}`} style={styles.effectLine}>
+                        {line}
+                      </Text>
+                    ))}
+                  </View>
+                ) : null}
+
+                {!isMax && nextLines.length > 0 ? (
+                  <View style={styles.effectsBlock}>
+                    <Text style={styles.effectsLabel}>{storeExtra.next_effects}</Text>
+                    {nextLines.map((line, index) => (
+                      <Text key={`${item.id}_next_${index}`} style={styles.effectLine}>
+                        {line}
+                      </Text>
+                    ))}
+                  </View>
+                ) : null}
+
+                <Text style={styles.effectsNote}>{storeExtra.effects_note}</Text>
 
                 {!isMax ? (
                   <View style={styles.costRow}>
@@ -219,6 +255,24 @@ const styles = StyleSheet.create({
   itemDesc: {
     color: Theme.colors.textMuted,
     marginBottom: Theme.spacing.md,
+  },
+  effectsBlock: {
+    marginBottom: 8,
+  },
+  effectsLabel: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  effectLine: {
+    color: Theme.colors.secondary,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  effectsNote: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: Theme.spacing.sm,
   },
   costRow: {
     flexDirection: 'row',

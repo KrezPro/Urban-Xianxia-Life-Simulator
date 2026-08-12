@@ -52,3 +52,5 @@
 50. Пропущенные уведомления считаются в useNotificationStore.missedCount: если новое уведомление приходит при уже занятом видимом слоте, счётчик растёт. Кнопка сброса badge находится в LifeScreen рядом с переключателем языка.
 51. Body Tempering стоит Ци и деньги: moneyCost = qiCost * GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER. Если множитель отсутствует или некорректен, использовать fallback 2.
 52. Покупки в магазине Кармы идут по цепочке StoreScreen -> player.deductKarma -> inventory.addItem. quantity всегда нормализуется как целое число >= 0.
+53. Экономика в UI отображается как годовая: Activities показывает Cost/year, Income/year, Net/year. Survival cost виден в LifeScreen и пишется в журнал.
+54. Эффекты техник, активностей и карма-баффов показываются числовыми строками через utils/effectFormatter.ts и labels из locales/{lang}/extras.json -> effect_labels.

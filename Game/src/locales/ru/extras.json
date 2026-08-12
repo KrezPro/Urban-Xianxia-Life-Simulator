@@ -8,6 +8,33 @@
       "sect": "Секта"
     }
   },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} макс. здоровья/год",
+    "healthRegenPerYear": "+{value} реген/год",
+    "appearancePerYear": "+{value} привлекательности/год",
+    "qiPerYear": "+{value} Ци/год",
+    "portalSuccessBps": "+{value}% успех портала",
+    "qiFlatPerYear": "+{value} Ци/год",
+    "moneyFlatPerYear": "+${value}/год",
+    "healthRegenFlat": "+{value} реген/год",
+    "damageReductionBps": "+{value}% снижение урона",
+    "breakthroughChanceBps": "+{value}% шанс прорыва",
+    "startMoney": "Старт: +${value}",
+    "startMaxHealth": "Старт: +{value} макс. здоровья",
+    "startSpiritualRoot": "Старт: +{value} духовный корень",
+    "startBodyTempering": "Старт: +{value} закалка тела"
+  },
+  "life": {
+    "survival_cost_line": "Расходы на жизнь: -${amount}/год",
+    "survival_cost_hint": {
+      "title": "Расходы на жизнь",
+      "text": "Обязательные ежегодные траты на еду, жильё и безопасность. Они списываются даже если активности не выбраны. Если денег не хватает, страдает здоровье."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Расходы на жизнь: -${amount}.",
+    "lifestyle_money_delta": "Активности за год: {amount}."
+  },
   "dao": {
     "techniques": {
       "title": "Техники Дао",
@@ -17,6 +44,8 @@
       "upgrade": "Улучшить",
       "locked": "Заблокировано",
       "not_enough_money": "Не хватает денег",
+      "current_effects": "Сейчас",
+      "next_effects": "Следующий",
       "requirements": {
         "spiritual_root": "Духовный корень",
         "intelligence": "Интеллект",
@@ -45,7 +74,10 @@
   "store": {
     "level": "Уровень",
     "max_level": "Макс. уровень",
-    "next_cost": "Стоимость следующего уровня"
+    "next_cost": "Стоимость следующего уровня",
+    "current_effects": "Текущий",
+    "next_effects": "Следующий",
+    "effects_note": "Стартовые эффекты применяются после перерождения. Годовые эффекты действуют каждый год."
   },
   "activities": {
     "title": "Активности",
@@ -56,6 +88,10 @@
     "locked": "Заблокировано",
     "daily_cost": "Цена/день",
     "daily_income": "Доход/день",
+    "yearly_cost": "Расход/год",
+    "yearly_income": "Доход/год",
+    "net_yearly": "Чистыми/год",
+    "effects_title": "Эффекты/год",
     "requirements_label": "Требования",
     "none": "Нет",
     "categories": {
