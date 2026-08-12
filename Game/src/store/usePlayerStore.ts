@@ -206,14 +206,15 @@ export const usePlayerStore = create<PlayerState>()(
 
           return newState;
         }),
-      reincarnate: () =>
+      reincarnate: () => {
+        const inventory = useInventoryStore.getState().items;
+        const karmaEffects = getKarmaTotalEffects(inventory);
+
+        useTechniquesStore.getState().resetTechniques();
+        useLifestyleStore.getState().resetLifestyle();
+
         set((state) => {
           const { STARTING_STATS } = GameConstants;
-          const inventory = useInventoryStore.getState().items;
-          const karmaEffects = getKarmaTotalEffects(inventory);
-
-          useTechniquesStore.getState().resetTechniques();
-          useLifestyleStore.getState().resetLifestyle();
 
           const baseHealth = getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX);
           const totalMaxHealth = Math.min(
@@ -241,7 +242,8 @@ export const usePlayerStore = create<PlayerState>()(
             ).toString(),
             spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + karmaEffects.startSpiritualRoot,
           };
-        }),
+        });
+      },
       resetPlayer: () => set({ ...initialState }),
     }),
     {

@@ -7,12 +7,11 @@ import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
-import { getKarmaItemLevel } from '../utils/gameplayUtils';
 import itemsData from '../data/items.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
-import ruStore from '../locales/ru/store.json';
-import enStore from '../locales/en/store.json';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
 
 export default function StoreScreen() {
   const player = usePlayerStore();
@@ -21,11 +20,12 @@ export default function StoreScreen() {
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
 
   const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
-  const uiExtra: any = locale === 'ru' ? ruStore.store_screen : enStore.store_screen;
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const storeExtra = extras.store || {};
 
   const handleBuyLevel = (item: any) => {
     const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
-    const rawLevel = getKarmaItemLevel(inventory.items, item.id);
+    const rawLevel = inventory.items[item.id]?.quantity || 0;
     const currentLevel = Math.min(rawLevel, item.maxLevel);
     const isMax = currentLevel >= item.maxLevel;
 
@@ -69,7 +69,7 @@ export default function StoreScreen() {
         {(itemsData as any[])
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
-            const rawLevel = getKarmaItemLevel(inventory.items, item.id);
+            const rawLevel = inventory.items[item.id]?.quantity || 0;
             const currentLevel = Math.min(rawLevel, item.maxLevel);
             const isMax = currentLevel >= item.maxLevel;
             const nextLevelData = item.levels[currentLevel];
@@ -82,7 +82,7 @@ export default function StoreScreen() {
                 <View style={styles.itemTopRow}>
                   <Text style={styles.itemName}>{itemUI.name}</Text>
                   <Text style={styles.itemLevel}>
-                    {uiExtra.level}: {currentLevel}/{item.maxLevel}
+                    {storeExtra.level}: {currentLevel}/{item.maxLevel}
                   </Text>
                 </View>
 
@@ -90,7 +90,7 @@ export default function StoreScreen() {
 
                 {!isMax ? (
                   <View style={styles.costRow}>
-                    <Text style={styles.costLabel}>{uiExtra.next_cost}</Text>
+                    <Text style={styles.costLabel}>{storeExtra.next_cost}</Text>
                     <Text style={styles.costValue}>{formatLargeNumber(nextCost)}</Text>
                   </View>
                 ) : null}
@@ -98,7 +98,7 @@ export default function StoreScreen() {
                 <Button
                   title={
                     isMax
-                      ? uiExtra.max_level
+                      ? storeExtra.max_level
                       : canAfford
                       ? ui.btn_buy
                       : ui.btn_no_karma

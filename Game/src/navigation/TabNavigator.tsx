@@ -4,20 +4,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import LifeScreen from '../screens/LifeScreen';
 import DaoScreen from '../screens/DaoScreen';
-import LogScreen from '../screens/LogScreen';
 import StoreScreen from '../screens/StoreScreen';
 import SectScreen from '../screens/SectScreen';
 import ActivitiesScreen from '../screens/ActivitiesScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
-import ruNavigation from '../locales/ru/navigation.json';
-import enNavigation from '../locales/en/navigation.json';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const locale = useLocaleStore((state) => state.locale);
-  const navData: any = locale === 'ru' ? ruNavigation : enNavigation;
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const tabBar = extras.navigation?.tab_bar || {};
 
   return (
     <Tab.Navigator
@@ -47,17 +47,13 @@ export default function TabNavigator() {
             key = 'store';
           }
 
-          if (route.name === 'Log') {
-            key = 'log';
-          }
-
           if (route.name === 'Sect') {
             key = 'sect';
           }
 
           return (
-            <Text style={{ color, fontSize: 11, fontWeight: '700' }}>
-              {(navData.tab_bar as any)[key]}
+            <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
+              {tabBar[key] || route.name}
             </Text>
           );
         },
@@ -70,8 +66,6 @@ export default function TabNavigator() {
             iconName = focused ? 'leaf' : 'leaf-outline';
           } else if (route.name === 'Activities') {
             iconName = focused ? 'barbell' : 'barbell-outline';
-          } else if (route.name === 'Log') {
-            iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Store') {
             iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Sect') {
@@ -87,15 +81,6 @@ export default function TabNavigator() {
       <Tab.Screen name="Activities" component={ActivitiesScreen} />
       <Tab.Screen name="Store" component={StoreScreen} />
       <Tab.Screen name="Sect" component={SectScreen} />
-      <Tab.Screen
-        name="Log"
-        component={LogScreen}
-        options={{
-          tabBarButton: () => null,
-          tabBarLabel: () => null,
-          tabBarIcon: () => null,
-        }}
-      />
     </Tab.Navigator>
   );
 }

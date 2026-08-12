@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -11,11 +10,10 @@ import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
+import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
-
-type RootNavigationProp = NavigationProp<Record<string, undefined>>;
 
 interface HintData {
   title: string;
@@ -27,9 +25,9 @@ export default function LifeScreen() {
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const navigation = useNavigation<RootNavigationProp>();
   const { handleGrowOlder } = useYearlyCycle();
   const [hint, setHint] = useState<HintData | null>(null);
+  const [logVisible, setLogVisible] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
@@ -57,7 +55,7 @@ export default function LifeScreen() {
 
   const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
   const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
-  const nextStage = stagesData[currentStageIndex + 1];
+  const nextStage = (stagesData as any[])[currentStageIndex + 1];
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
 
@@ -75,7 +73,7 @@ export default function LifeScreen() {
   };
 
   const openLog = () => {
-    navigation.navigate('Log');
+    setLogVisible(true);
   };
 
   const handleReincarnate = () => {
@@ -128,6 +126,10 @@ export default function LifeScreen() {
             />
           </Card>
         </View>
+
+        <Modal visible={logVisible} animationType="slide" onRequestClose={() => setLogVisible(false)}>
+          <LogScreen onClose={() => setLogVisible(false)} />
+        </Modal>
 
         <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
           <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
@@ -275,6 +277,10 @@ export default function LifeScreen() {
         onPress={handleGrowOlder}
         accessibilityLabel={ui.btn_grow}
       />
+
+      <Modal visible={logVisible} animationType="slide" onRequestClose={() => setLogVisible(false)}>
+        <LogScreen onClose={() => setLogVisible(false)} />
+      </Modal>
 
       <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>

@@ -5,7 +5,13 @@ import { useNotificationStore } from '../store/useNotificationStore';
 import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { GameConstants } from '../constants/GameConstants';
-import { getTechniqueModifiers, getKarmaTotalEffects } from '../utils/gameplayUtils';
+import {
+  combineModifiers,
+  getTechniqueModifiers,
+  getKarmaTotalEffects,
+  getStageIndex,
+} from '../utils/gameplayUtils';
+import { clampInt, getRandomInt, reduceBigIntByBps } from '../utils/helpers';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -15,38 +21,39 @@ export const useBreakthrough = () => {
   const { addLog } = useEventStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const locale = useLocaleStore((state) => state.locale);
+  const techniques = useTechniquesStore();
+  const inventory = useInventoryStore();
 
   const uiData: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
 
-  const currentStageIndex = stagesData.findIndex((s) => s.id === player.cultivationStage);
-  const safeStageIndex = 0 > currentStageIndex ? 0 : currentStageIndex;
-  const nextStage = stagesData[safeStageIndex + 1];
+  const currentStageIndex = getStageIndex(player.cultivationStage);
+  const nextStage = (stagesData as any[])[currentStageIndex + 1];
 
-  const calculateChance = (hasAdBuff: boolean = false) => {
+  const getChanceBps = (hasAdBuff: boolean = false): number => {
     if (!nextStage) {
       return 0;
     }
 
-    const techniqueModifiers = getTechniqueModifiers(useTechniquesStore.getState().levels);
-    const karmaEffects = getKarmaTotalEffects(useInventoryStore.getState().items);
+    const modifiers = combineModifiers(
+      getTechniqueModifiers(techniques.levels),
+      getKarmaTotalEffects(inventory.items)
+    );
 
-    const rootBonus = player.spiritualRoot * 0.005;
-    const intBonus = player.intelligence * 0.002;
-    const techniqueBonus = techniqueModifiers.breakthroughChancePercent / 100;
-    const karmaBonus = karmaEffects.breakthroughChancePercent / 100;
-
-    let chance =
-      nextStage.baseSuccessRate + rootBonus + intBonus + techniqueBonus + karmaBonus;
+    let chanceBps =
+      Math.floor(nextStage.baseSuccessRate * 10000) +
+      player.spiritualRoot * 50 +
+      player.intelligence * 20 +
+      modifiers.breakthroughChanceBps;
 
     if (hasAdBuff) {
-      chance += 0.15;
+      chanceBps += 1500;
     }
 
-    if (chance > GameConstants.BREAKTHROUGH_MAX_CHANCE) {
-      chance = GameConstants.BREAKTHROUGH_MAX_CHANCE;
-    }
+    return clampInt(chanceBps, 0, GameConstants.BREAKTHROUGH_MAX_CHANCE_BPS);
+  };
 
-    return chance;
+  const calculateChance = (hasAdBuff: boolean = false): number => {
+    return getChanceBps(hasAdBuff) / 10000;
   };
 
   const attemptBreakthrough = (hasAdBuff: boolean = false, clearBuff: () => void) => {
@@ -65,9 +72,9 @@ export const useBreakthrough = () => {
 
     player.deductQi(nextStage.requiredQi);
 
-    const chance = calculateChance(hasAdBuff);
-    const roll = Math.random();
-    const isSuccess = chance >= roll;
+    const chanceBps = getChanceBps(hasAdBuff);
+    const roll = getRandomInt(0, 9999);
+    const isSuccess = roll < chanceBps;
 
     if (isSuccess) {
       player.setCultivationStage(nextStage.id);
@@ -80,28 +87,32 @@ export const useBreakthrough = () => {
         addLog(uiData.log_ad_saved, 'secret');
         pushUiNotification('breakthrough_saved', 'reward');
       } else {
-        const techniqueModifiers = getTechniqueModifiers(useTechniquesStore.getState().levels);
-        const karmaEffects = getKarmaTotalEffects(useInventoryStore.getState().items);
-
-        const baseDamage = 30 + safeStageIndex * 15;
+        const stageIndex = Math.max(0, currentStageIndex);
+        const baseDamage = 30 + stageIndex * 15;
         const maxHealthDamage = Math.floor(player.maxHealth * 0.2);
-        let damage = Math.max(baseDamage, maxHealthDamage);
+        const rawDamage = Math.max(baseDamage, maxHealthDamage);
 
-        const reduction = Math.min(
-          90,
-          techniqueModifiers.damageReductionPercent + karmaEffects.damageReductionPercent
+        const modifiers = combineModifiers(
+          getTechniqueModifiers(techniques.levels),
+          getKarmaTotalEffects(inventory.items)
         );
 
-        damage = Math.max(1, Math.floor(damage * (1 - reduction / 100)));
+        const damageReductionBps = clampInt(
+          modifiers.damageReductionBps,
+          0,
+          GameConstants.DAMAGE_REDUCTION_CAP_BPS
+        );
+
+        const damage = Math.max(1, Number(reduceBigIntByBps(rawDamage.toString(), damageReductionBps)));
+
+        player.applyEffects({ health: -damage });
 
         if (player.health > damage) {
-          player.applyEffects({ health: -damage });
           addLog(uiData.log_fail_damage.replace('{damage}', damage.toString()), 'secret');
           pushUiNotification('breakthrough_fail_damage', 'danger', {
             damage: damage.toString(),
           });
         } else {
-          player.applyEffects({ health: -damage });
           addLog(uiData.log_fail_death, 'system');
           pushUiNotification('breakthrough_fail_death', 'danger');
         }

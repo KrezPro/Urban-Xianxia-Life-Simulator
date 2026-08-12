@@ -1,12 +1,6 @@
 import { GameConstants } from '../constants/GameConstants';
 import { ModifierSet, LifestyleCategory, LifestyleSelection, LifestyleReport } from '../types';
-import {
-  safeBigInt,
-  increaseBigIntByBps,
-  reduceBigIntByBps,
-  randomBigIntBetween,
-  clampInt,
-} from './helpers';
+import { safeBigInt, increaseBigIntByBps, reduceBigIntByBps, clampInt, getRandomInt } from './helpers';
 import itemsData from '../data/items.json';
 import techniquesData from '../data/techniques.json';
 import lifestyleData from '../data/lifestyle.json';
@@ -33,6 +27,11 @@ export const combineModifiers = (...mods: Array<Partial<ModifierSet>>): Modifier
   });
 
   return result;
+};
+
+export const getStageIndex = (stageId: string): number => {
+  const index = (stagesData as any[]).findIndex((stage) => stage.id === stageId);
+  return 0 > index ? 0 : index;
 };
 
 export const getKarmaItemLevel = (items: Record<string, any>, itemId: string): number => {
@@ -169,11 +168,6 @@ export const getTechniqueModifiers = (levels: Record<string, number>): ModifierS
   return mods;
 };
 
-export const getStageIndex = (stageId: string): number => {
-  const index = (stagesData as any[]).findIndex((s) => s.id === stageId);
-  return 0 > index ? 0 : index;
-};
-
 export const meetsTechniqueRequirements = (
   techniqueId: string,
   player: { spiritualRoot: number; intelligence: number; cultivationStage: string }
@@ -230,6 +224,7 @@ export const getOptionById = (optionId: string): any => {
 export const meetsLifestyleRequirements = (
   option: any,
   player: {
+    age: number;
     intelligence: number;
     appearance: number;
     spiritualRoot: number;
@@ -242,6 +237,10 @@ export const meetsLifestyleRequirements = (
 
   if (!req) {
     return true;
+  }
+
+  if (req.ageMin && player.age < req.ageMin) {
+    return false;
   }
 
   if (req.intelligence && player.intelligence < req.intelligence) {
@@ -298,24 +297,43 @@ export const calculateJobIncome = (
   return increaseBigIntByBps(baseIncome.toString(), jobBonusBps);
 };
 
-export const calculateAgeDecay = (age: number): number => {
-  if (18 > age) {
+export const calculateAgeDecay = (age: number, stageId: string): number => {
+  const stage = (stagesData as any[]).find((s) => s.id === stageId);
+
+  if (!stage || !stage.maxAge || stage.maxAge <= 0) {
     return 0;
   }
 
-  if (40 > age) {
-    return 1;
+  if (age < stage.softAge) {
+    return 0;
   }
 
-  if (60 > age) {
-    return 2;
+  const overSoft = age - stage.softAge;
+  let decay = Math.floor(overSoft / GameConstants.AGE_DECAY_DIVISOR) + GameConstants.AGE_DECAY_BASE;
+
+  if (age >= stage.maxAge) {
+    decay += GameConstants.AGE_DECAY_MAX_PENALTY;
   }
 
-  if (80 > age) {
-    return 4;
+  return decay;
+};
+
+export const calculateOldAgeDeathBps = (age: number, stageId: string): number => {
+  const stage = (stagesData as any[]).find((s) => s.id === stageId);
+
+  if (!stage || !stage.maxAge || stage.maxAge <= 0) {
+    return 0;
   }
 
-  return 7;
+  if (age < stage.maxAge) {
+    return 0;
+  }
+
+  const bps =
+    GameConstants.OLD_AGE_BASE_DEATH_BPS +
+    (age - stage.maxAge) * GameConstants.OLD_AGE_DEATH_BPS_PER_YEAR;
+
+  return Math.min(10000, bps);
 };
 
 export const processLifestyleYear = (
@@ -336,7 +354,7 @@ export const processLifestyleYear = (
   const categories: LifestyleCategory[] = ['job', 'sport', 'food', 'housing', 'portal'];
   const priority: LifestyleCategory[] = ['portal', 'sport', 'housing', 'food', 'job'];
 
-  const activeOptions: Record<LifestyleCategory, any> = {
+  const active: Record<LifestyleCategory, any> = {
     job: null,
     sport: null,
     food: null,
@@ -362,42 +380,44 @@ export const processLifestyleYear = (
       return;
     }
 
-    activeOptions[cat] = option;
+    active[cat] = option;
   });
 
-  let totalCost = 0n;
-  let totalIncome = 0n;
+  const recalc = (): bigint => {
+    let totalCost = 0n;
+    let totalIncome = 0n;
 
-  categories.forEach((cat) => {
-    const option = activeOptions[cat];
+    categories.forEach((cat) => {
+      const option = active[cat];
 
-    if (!option) {
-      return;
-    }
+      if (!option) {
+        return;
+      }
 
-    const yearCost = safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
-    totalCost += yearCost;
+      totalCost += safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
 
-    if (option.portal) {
-      totalCost += safeBigInt(option.portal.attemptCost || '0');
-    }
+      if (option.portal) {
+        totalCost += safeBigInt(option.portal.attemptCost || '0');
+      }
 
-    if ('job' === cat) {
-      const income = calculateJobIncome(option, player, baseModifiers);
-      totalIncome += safeBigInt(income);
-    }
-  });
+      if ('job' === cat) {
+        totalIncome += safeBigInt(calculateJobIncome(option, player, baseModifiers));
+      }
+    });
 
-  let net = totalIncome - totalCost;
-  let playerMoney = safeBigInt(player.money);
+    return totalIncome - totalCost;
+  };
 
-  while (0n > playerMoney + net && activeOptions) {
+  let net = recalc();
+  const playerMoney = safeBigInt(player.money);
+
+  while (0n > playerMoney + net) {
     let removed = false;
 
     for (const cat of priority) {
-      if (activeOptions[cat]) {
+      if (active[cat]) {
         disabled.push(cat);
-        activeOptions[cat] = null;
+        active[cat] = null;
         removed = true;
         break;
       }
@@ -407,53 +427,17 @@ export const processLifestyleYear = (
       break;
     }
 
-    totalCost = 0n;
-    totalIncome = 0n;
-
-    categories.forEach((cat) => {
-      const option = activeOptions[cat];
-
-      if (!option) {
-        return;
-      }
-
-      const yearCost = safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
-      totalCost += yearCost;
-
-      if (option.portal) {
-        totalCost += safeBigInt(option.portal.attemptCost || '0');
-      }
-
-      if ('job' === cat) {
-        const income = calculateJobIncome(option, player, baseModifiers);
-        totalIncome += safeBigInt(income);
-      }
-    });
-
-    net = totalIncome - totalCost;
+    net = recalc();
   }
 
-  const lifestyleModifiers = { ...baseModifiers };
-
-  categories.forEach((cat) => {
-    const option = activeOptions[cat];
-
-    if (!option || !option.effects) {
-      return;
-    }
-
-    if (option.effects.portalSuccessBps) {
-      lifestyleModifiers.portalSuccessBps += option.effects.portalSuccessBps;
-    }
-  });
-
+  const optionModifiers = emptyModifiers();
   let baseRegen = 0;
   let maxHealthGain = 0;
   let appearanceGain = 0;
   let lifestyleQi = 0n;
 
   categories.forEach((cat) => {
-    const option = activeOptions[cat];
+    const option = active[cat];
 
     if (!option || !option.effects) {
       return;
@@ -474,20 +458,26 @@ export const processLifestyleYear = (
     if (option.effects.qiPerYear) {
       lifestyleQi += safeBigInt(option.effects.qiPerYear);
     }
+
+    if (option.effects.portalSuccessBps) {
+      optionModifiers.portalSuccessBps += option.effects.portalSuccessBps;
+    }
   });
 
-  const effectiveRegen = Number(increaseBigIntByBps(baseRegen.toString(), lifestyleModifiers.healthRegenBps));
+  const modifiers = combineModifiers(baseModifiers, optionModifiers);
+
+  const effectiveRegen = Number(increaseBigIntByBps(baseRegen.toString(), modifiers.healthRegenBps));
 
   maxHealthGain = Math.min(maxHealthGain, GameConstants.MAX_HEALTH_CAP - player.maxHealth);
 
-  const ageDecay = calculateAgeDecay(player.age);
+  const ageDecay = calculateAgeDecay(player.age, player.cultivationStage);
 
   let portalResult: LifestyleReport['portalResult'] = 'none';
   let portalMoney = '0';
   let portalQi = '0';
   let portalDamage = 0;
 
-  const portalOption = activeOptions.portal;
+  const portalOption = active.portal;
 
   if (portalOption && portalOption.portal) {
     const portal = portalOption.portal;
@@ -496,28 +486,28 @@ export const processLifestyleYear = (
       portal.successBaseBps +
       player.spiritualRoot * 40 +
       player.intelligence * 20 +
-      lifestyleModifiers.portalSuccessBps;
+      modifiers.portalSuccessBps;
 
     portalChanceBps = clampInt(portalChanceBps, GameConstants.PORTAL_MIN_CHANCE_BPS, GameConstants.PORTAL_MAX_CHANCE_BPS);
 
-    const roll = Math.floor(Math.random() * 10000);
+    const roll = getRandomInt(0, 9999);
     const success = roll < portalChanceBps;
 
     if (success) {
       portalResult = 'success';
 
-      const rawMoney = randomBigIntBetween(portal.moneyMin, portal.moneyMax);
-      const rawQi = randomBigIntBetween(portal.qiMin, portal.qiMax);
+      const rawMoney = safeBigInt(portal.moneyMin) + ((safeBigInt(portal.moneyMax) - safeBigInt(portal.moneyMin)) / 2n);
+      const rawQi = safeBigInt(portal.qiMin) + ((safeBigInt(portal.qiMax) - safeBigInt(portal.qiMin)) / 2n);
 
-      let moneyBonusBps = clampInt(lifestyleModifiers.moneyGainBps + lifestyleModifiers.portalMoneyBps, 0, GameConstants.MONEY_BONUS_CAP_BPS);
-      let qiBonusBps = clampInt(lifestyleModifiers.qiGainBps, 0, GameConstants.QI_BONUS_CAP_BPS);
+      const moneyBonusBps = clampInt(modifiers.moneyGainBps + modifiers.portalMoneyBps, 0, GameConstants.MONEY_BONUS_CAP_BPS);
+      const qiBonusBps = clampInt(modifiers.qiGainBps, 0, GameConstants.QI_BONUS_CAP_BPS);
 
-      portalMoney = increaseBigIntByBps(rawMoney, moneyBonusBps);
-      portalQi = increaseBigIntByBps(rawQi, qiBonusBps);
+      portalMoney = increaseBigIntByBps(rawMoney.toString(), moneyBonusBps);
+      portalQi = increaseBigIntByBps(rawQi.toString(), qiBonusBps);
     } else {
       portalResult = 'fail';
 
-      let damageReductionBps = clampInt(lifestyleModifiers.damageReductionBps, 0, GameConstants.DAMAGE_REDUCTION_CAP_BPS);
+      const damageReductionBps = clampInt(modifiers.damageReductionBps, 0, GameConstants.DAMAGE_REDUCTION_CAP_BPS);
       const reducedDamage = reduceBigIntByBps(portal.failDamage.toString(), damageReductionBps);
       portalDamage = Math.max(1, Number(reducedDamage));
     }
@@ -525,13 +515,13 @@ export const processLifestyleYear = (
 
   const healthDelta = effectiveRegen + maxHealthGain - ageDecay - portalDamage;
 
-  let moneyDelta = totalIncome - totalCost;
+  let moneyDelta = net;
 
   if ('success' === portalResult) {
     moneyDelta += safeBigInt(portalMoney);
   }
 
-  const qiDelta = increaseBigIntByBps(lifestyleQi.toString(), lifestyleModifiers.qiGainBps);
+  const qiDelta = increaseBigIntByBps(lifestyleQi.toString(), modifiers.qiGainBps);
 
   return {
     moneyDelta: moneyDelta.toString(),

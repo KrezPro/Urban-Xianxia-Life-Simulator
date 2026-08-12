@@ -5,15 +5,15 @@
     "maxLevel": 10,
     "levels": [
       { "level": 1, "cost": "50", "effects": { "startMoney": "5000", "moneyGainBps": 200 } },
-      { "level": 2, "cost": "150", "effects": { "startMoney": "20000", "moneyGainBps": 400 } },
-      { "level": 3, "cost": "400", "effects": { "startMoney": "45000", "moneyGainBps": 600 } },
-      { "level": 4, "cost": "1000", "effects": { "startMoney": "80000", "moneyGainBps": 800 } },
-      { "level": 5, "cost": "2500", "effects": { "startMoney": "125000", "moneyGainBps": 1000 } },
-      { "level": 6, "cost": "6000", "effects": { "startMoney": "180000", "moneyGainBps": 1200 } },
-      { "level": 7, "cost": "14000", "effects": { "startMoney": "245000", "moneyGainBps": 1400 } },
-      { "level": 8, "cost": "32000", "effects": { "startMoney": "320000", "moneyGainBps": 1600 } },
-      { "level": 9, "cost": "70000", "effects": { "startMoney": "405000", "moneyGainBps": 1800 } },
-      { "level": 10, "cost": "150000", "effects": { "startMoney": "500000", "moneyGainBps": 2000 } }
+      { "level": 2, "cost": "120", "effects": { "startMoney": "20000", "moneyGainBps": 400 } },
+      { "level": 3, "cost": "300", "effects": { "startMoney": "45000", "moneyGainBps": 600 } },
+      { "level": 4, "cost": "700", "effects": { "startMoney": "80000", "moneyGainBps": 800 } },
+      { "level": 5, "cost": "1600", "effects": { "startMoney": "125000", "moneyGainBps": 1000 } },
+      { "level": 6, "cost": "3600", "effects": { "startMoney": "180000", "moneyGainBps": 1200 } },
+      { "level": 7, "cost": "8000", "effects": { "startMoney": "245000", "moneyGainBps": 1400 } },
+      { "level": 8, "cost": "18000", "effects": { "startMoney": "320000", "moneyGainBps": 1600 } },
+      { "level": 9, "cost": "40000", "effects": { "startMoney": "405000", "moneyGainBps": 1800 } },
+      { "level": 10, "cost": "90000", "effects": { "startMoney": "500000", "moneyGainBps": 2000 } }
     ]
   },
   {
@@ -21,16 +21,16 @@
     "type": "karma_buff",
     "maxLevel": 10,
     "levels": [
-      { "level": 1, "cost": "150", "effects": { "startMaxHealth": 50, "healthRegenBps": 500, "damageReductionBps": 300 } },
-      { "level": 2, "cost": "400", "effects": { "startMaxHealth": 150, "healthRegenBps": 1000, "damageReductionBps": 600 } },
-      { "level": 3, "cost": "1000", "effects": { "startMaxHealth": 300, "healthRegenBps": 1500, "damageReductionBps": 1000 } },
-      { "level": 4, "cost": "2500", "effects": { "startMaxHealth": 500, "healthRegenBps": 2000, "damageReductionBps": 1500 } },
-      { "level": 5, "cost": "6000", "effects": { "startMaxHealth": 750, "healthRegenBps": 2500, "damageReductionBps": 2100 } },
-      { "level": 6, "cost": "14000", "effects": { "startMaxHealth": 1050, "healthRegenBps": 3000, "damageReductionBps": 2800 } },
-      { "level": 7, "cost": "32000", "effects": { "startMaxHealth": 1400, "healthRegenBps": 3500, "damageReductionBps": 3600 } },
-      { "level": 8, "cost": "70000", "effects": { "startMaxHealth": 1800, "healthRegenBps": 4000, "damageReductionBps": 4600 } },
-      { "level": 9, "cost": "150000", "effects": { "startMaxHealth": 2250, "healthRegenBps": 4500, "damageReductionBps": 5800 } },
-      { "level": 10, "cost": "320000", "effects": { "startMaxHealth": 2750, "healthRegenBps": 5000, "damageReductionBps": 7200 } }
+      { "level": 1, "cost": "100", "effects": { "startMaxHealth": 50, "healthRegenBps": 500, "damageReductionBps": 300 } },
+      { "level": 2, "cost": "250", "effects": { "startMaxHealth": 150, "healthRegenBps": 1000, "damageReductionBps": 600 } },
+      { "level": 3, "cost": "600", "effects": { "startMaxHealth": 300, "healthRegenBps": 1500, "damageReductionBps": 1000 } },
+      { "level": 4, "cost": "1400", "effects": { "startMaxHealth": 500, "healthRegenBps": 2000, "damageReductionBps": 1500 } },
+      { "level": 5, "cost": "3200", "effects": { "startMaxHealth": 750, "healthRegenBps": 2500, "damageReductionBps": 2100 } },
+      { "level": 6, "cost": "7000", "effects": { "startMaxHealth": 1050, "healthRegenBps": 3000, "damageReductionBps": 2800 } },
+      { "level": 7, "cost": "15000", "effects": { "startMaxHealth": 1400, "healthRegenBps": 3500, "damageReductionBps": 3600 } },
+      { "level": 8, "cost": "32000", "effects": { "startMaxHealth": 1800, "healthRegenBps": 4000, "damageReductionBps": 4600 } },
+      { "level": 9, "cost": "70000", "effects": { "startMaxHealth": 2250, "healthRegenBps": 4500, "damageReductionBps": 5800 } },
+      { "level": 10, "cost": "150000", "effects": { "startMaxHealth": 2750, "healthRegenBps": 5000, "damageReductionBps": 7200 } }
     ]
   },
   {
@@ -38,16 +38,16 @@
     "type": "karma_buff",
     "maxLevel": 10,
     "levels": [
-      { "level": 1, "cost": "300", "effects": { "startSpiritualRoot": 5, "qiGainBps": 300, "breakthroughChanceBps": 100 } },
-      { "level": 2, "cost": "800", "effects": { "startSpiritualRoot": 8, "qiGainBps": 600, "breakthroughChanceBps": 200 } },
-      { "level": 3, "cost": "2000", "effects": { "startSpiritualRoot": 12, "qiGainBps": 1000, "breakthroughChanceBps": 300 } },
-      { "level": 4, "cost": "5000", "effects": { "startSpiritualRoot": 17, "qiGainBps": 1500, "breakthroughChanceBps": 400 } },
-      { "level": 5, "cost": "12000", "effects": { "startSpiritualRoot": 23, "qiGainBps": 2100, "breakthroughChanceBps": 500 } },
-      { "level": 6, "cost": "28000", "effects": { "startSpiritualRoot": 30, "qiGainBps": 2800, "breakthroughChanceBps": 600 } },
-      { "level": 7, "cost": "65000", "effects": { "startSpiritualRoot": 38, "qiGainBps": 3600, "breakthroughChanceBps": 700 } },
-      { "level": 8, "cost": "140000", "effects": { "startSpiritualRoot": 47, "qiGainBps": 4600, "breakthroughChanceBps": 800 } },
-      { "level": 9, "cost": "300000", "effects": { "startSpiritualRoot": 57, "qiGainBps": 5800, "breakthroughChanceBps": 900 } },
-      { "level": 10, "cost": "650000", "effects": { "startSpiritualRoot": 70, "qiGainBps": 7500, "breakthroughChanceBps": 1000 } }
+      { "level": 1, "cost": "200", "effects": { "startSpiritualRoot": 5, "qiGainBps": 300, "breakthroughChanceBps": 100 } },
+      { "level": 2, "cost": "500", "effects": { "startSpiritualRoot": 8, "qiGainBps": 600, "breakthroughChanceBps": 200 } },
+      { "level": 3, "cost": "1200", "effects": { "startSpiritualRoot": 12, "qiGainBps": 1000, "breakthroughChanceBps": 300 } },
+      { "level": 4, "cost": "2800", "effects": { "startSpiritualRoot": 17, "qiGainBps": 1500, "breakthroughChanceBps": 400 } },
+      { "level": 5, "cost": "6500", "effects": { "startSpiritualRoot": 23, "qiGainBps": 2100, "breakthroughChanceBps": 500 } },
+      { "level": 6, "cost": "14000", "effects": { "startSpiritualRoot": 30, "qiGainBps": 2800, "breakthroughChanceBps": 600 } },
+      { "level": 7, "cost": "30000", "effects": { "startSpiritualRoot": 38, "qiGainBps": 3600, "breakthroughChanceBps": 700 } },
+      { "level": 8, "cost": "65000", "effects": { "startSpiritualRoot": 47, "qiGainBps": 4600, "breakthroughChanceBps": 800 } },
+      { "level": 9, "cost": "140000", "effects": { "startSpiritualRoot": 57, "qiGainBps": 5800, "breakthroughChanceBps": 900 } },
+      { "level": 10, "cost": "300000", "effects": { "startSpiritualRoot": 70, "qiGainBps": 7500, "breakthroughChanceBps": 1000 } }
     ]
   }
 ]

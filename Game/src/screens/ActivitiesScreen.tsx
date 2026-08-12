@@ -4,14 +4,13 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useLifestyleStore } from '../store/useLifestyleStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Button, Card } from '../components/ui';
-import { CollapsibleSection } from '../components/game/CollapsibleSection';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber } from '../utils/helpers';
 import { getOptionById, meetsLifestyleRequirements } from '../utils/gameplayUtils';
 import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
-import ruActivities from '../locales/ru/activities.json';
-import enActivities from '../locales/en/activities.json';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
 
 export default function ActivitiesScreen() {
   const player = usePlayerStore();
@@ -19,7 +18,8 @@ export default function ActivitiesScreen() {
   const locale = useLocaleStore((state) => state.locale);
   const [expanded, setExpanded] = useState<string>('job');
 
-  const activities: any = locale === 'ru' ? ruActivities : enActivities;
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const activities = extras.activities || {};
 
   const toggleCategory = (categoryId: string) => {
     setExpanded((prev) => (prev === categoryId ? '' : categoryId));
@@ -34,36 +34,36 @@ export default function ActivitiesScreen() {
   };
 
   const getRequirementText = (option: any): string => {
-    const requirements = option.requirements;
+    const req = option.requirements;
 
-    if (!requirements) {
+    if (!req) {
       return '';
     }
 
     const parts: string[] = [];
 
-    if (requirements.intelligence) {
-      parts.push(`${activities.requirements.intelligence} ${requirements.intelligence}`);
+    if (req.ageMin) {
+      parts.push(`${activities.requirements?.age}: ${req.ageMin}`);
     }
 
-    if (requirements.appearance) {
-      parts.push(`${activities.requirements.appearance} ${requirements.appearance}`);
+    if (req.intelligence) {
+      parts.push(`${activities.requirements?.intelligence}: ${req.intelligence}`);
     }
 
-    if (requirements.spiritualRoot) {
-      parts.push(`${activities.requirements.spiritual_root} ${requirements.spiritualRoot}`);
+    if (req.appearance) {
+      parts.push(`${activities.requirements?.appearance}: ${req.appearance}`);
     }
 
-    if (requirements.healthMin) {
-      parts.push(`${activities.requirements.health} ${requirements.healthMin}`);
+    if (req.spiritualRoot) {
+      parts.push(`${activities.requirements?.spiritual_root}: ${req.spiritualRoot}`);
     }
 
-    if (requirements.maxHealthMin) {
-      parts.push(`${activities.requirements.max_health} ${requirements.maxHealthMin}`);
+    if (req.healthMin) {
+      parts.push(`${activities.requirements?.health}: ${req.healthMin}`);
     }
 
-    if (requirements.stage) {
-      parts.push(`${activities.requirements.stage}: ${requirements.stage}`);
+    if (req.stage) {
+      parts.push(`${activities.requirements?.stage}: ${req.stage}`);
     }
 
     return parts.join(', ');
@@ -74,7 +74,7 @@ export default function ActivitiesScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.centerContainer}>
           <Card variant="danger" style={styles.deadCard}>
-            <Text style={styles.deadText}>{activities.activities_screen.dead_text}</Text>
+            <Text style={styles.deadText}>{activities.dead_text}</Text>
           </Card>
         </View>
       </SafeAreaView>
@@ -84,7 +84,7 @@ export default function ActivitiesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{activities.activities_screen.title}</Text>
+        <Text style={styles.title}>{activities.title}</Text>
 
         <Card variant="gold" style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>{`$${formatLargeNumber(player.money)}`}</Text>
@@ -97,95 +97,91 @@ export default function ActivitiesScreen() {
           const isOpen = expanded === category.id;
 
           return (
-            <CollapsibleSection
-              key={category.id}
-              title={activities.categories?.[category.id] || category.id}
-              subtitle={
-                selectedOption
-                  ? getOptionName(selectedOption.id)
-                  : activities.activities_screen.none
-              }
-              isOpen={isOpen}
-              onToggle={() => toggleCategory(category.id)}
-            >
-              {category.options.map((option: any) => {
-                const isSelected = selectedId === option.id;
-                const meets = meetsLifestyleRequirements(option, player);
-                const requirementText = getRequirementText(option);
+            <Card key={category.id} style={styles.categoryCard}>
+              <Button
+                title={`${activities.categories?.[category.id] || category.id} — ${
+                  selectedOption ? getOptionName(selectedOption.id) : activities.none
+                }`}
+                onPress={() => toggleCategory(category.id)}
+                variant="secondary"
+                icon={isOpen ? 'chevron-up' : 'chevron-down'}
+                style={styles.categoryButton}
+              />
 
-                return (
-                  <View key={option.id} style={styles.optionCard}>
-                    <View style={styles.optionHeader}>
-                      <Text style={styles.optionName}>{getOptionName(option.id)}</Text>
-                      <Text style={styles.optionTier}>T{option.tier}</Text>
-                    </View>
+              {isOpen ? (
+                <View style={styles.optionsContainer}>
+                  {category.options.map((option: any) => {
+                    const isSelected = selectedId === option.id;
+                    const meets = meetsLifestyleRequirements(option, player);
+                    const requirementText = getRequirementText(option);
 
-                    <Text style={styles.optionDesc}>{getOptionDesc(option.id)}</Text>
+                    return (
+                      <View key={option.id} style={styles.optionCard}>
+                        <View style={styles.optionHeader}>
+                          <Text style={styles.optionName}>{getOptionName(option.id)}</Text>
+                          <Text style={styles.optionTier}>T{option.tier}</Text>
+                        </View>
 
-                    <View style={styles.optionMetaRow}>
-                      <Text style={styles.optionMetaLabel}>
-                        {activities.activities_screen.daily_cost}
-                      </Text>
-                      <Text style={styles.optionMetaValue}>
-                        ${formatLargeNumber(option.dailyCost || '0')}
-                      </Text>
-                    </View>
+                        <Text style={styles.optionDesc}>{getOptionDesc(option.id)}</Text>
 
-                    {!!option.dailyIncome ? (
-                      <View style={styles.optionMetaRow}>
-                        <Text style={styles.optionMetaLabel}>
-                          {activities.activities_screen.daily_income}
-                        </Text>
-                        <Text style={[styles.optionMetaValue, styles.incomeValue]}>
-                          ${formatLargeNumber(option.dailyIncome)}
-                        </Text>
-                      </View>
-                    ) : null}
+                        <View style={styles.optionMetaRow}>
+                          <Text style={styles.optionMetaLabel}>{activities.daily_cost}</Text>
+                          <Text style={styles.optionMetaValue}>
+                            ${formatLargeNumber(option.dailyCost || '0')}
+                          </Text>
+                        </View>
 
-                    {!!requirementText ? (
-                      <Text style={styles.requirementText}>
-                        {activities.activities_screen.requirements}: {requirementText}
-                      </Text>
-                    ) : null}
-
-                    {isSelected ? (
-                      <View style={styles.optionButtonRow}>
-                        <Button
-                          title={activities.activities_screen.selected}
-                          onPress={() => undefined}
-                          disabled
-                          variant="secondary"
-                          small
-                          style={styles.optionButton}
-                        />
-                        {option.id !== `${category.id}_none` ? (
-                          <Button
-                            title={activities.activities_screen.disable}
-                            onPress={() => lifestyle.disableOption(categoryKey)}
-                            variant="danger"
-                            small
-                            style={[styles.optionButton, styles.optionButtonRight]}
-                          />
+                        {!!option.dailyIncome ? (
+                          <View style={styles.optionMetaRow}>
+                            <Text style={styles.optionMetaLabel}>{activities.daily_income}</Text>
+                            <Text style={[styles.optionMetaValue, styles.incomeValue]}>
+                              ${formatLargeNumber(option.dailyIncome)}
+                            </Text>
+                          </View>
                         ) : null}
+
+                        {!!requirementText ? (
+                          <Text style={styles.requirementText}>
+                            {activities.requirements_label}: {requirementText}
+                          </Text>
+                        ) : null}
+
+                        {isSelected ? (
+                          <View style={styles.optionButtonRow}>
+                            <Button
+                              title={activities.selected}
+                              onPress={() => undefined}
+                              disabled
+                              variant="secondary"
+                              small
+                              style={styles.optionButton}
+                            />
+                            {option.id !== `${category.id}_none` ? (
+                              <Button
+                                title={activities.disable}
+                                onPress={() => lifestyle.disableOption(categoryKey)}
+                                variant="danger"
+                                small
+                                style={[styles.optionButton, styles.optionButtonRight]}
+                              />
+                            ) : null}
+                          </View>
+                        ) : (
+                          <Button
+                            title={meets ? activities.select : activities.locked}
+                            onPress={() => lifestyle.selectOption(categoryKey, option.id)}
+                            disabled={!meets}
+                            variant={meets ? 'primary' : 'ghost'}
+                            small
+                            style={styles.optionButton}
+                          />
+                        )}
                       </View>
-                    ) : (
-                      <Button
-                        title={
-                          meets
-                            ? activities.activities_screen.select
-                            : activities.activities_screen.locked
-                        }
-                        onPress={() => lifestyle.selectOption(categoryKey, option.id)}
-                        disabled={!meets}
-                        variant={meets ? 'primary' : 'ghost'}
-                        small
-                        style={styles.optionButton}
-                      />
-                    )}
-                  </View>
-                );
-              })}
-            </CollapsibleSection>
+                    );
+                  })}
+                </View>
+              ) : null}
+            </Card>
           );
         })}
       </ScrollView>
@@ -223,6 +219,15 @@ const styles = StyleSheet.create({
     color: Theme.colors.gold,
     fontSize: 30,
     fontWeight: '900',
+  },
+  categoryCard: {
+    marginBottom: Theme.spacing.md,
+  },
+  categoryButton: {
+    alignSelf: 'stretch',
+  },
+  optionsContainer: {
+    marginTop: Theme.spacing.sm,
   },
   optionCard: {
     backgroundColor: Theme.colors.surfaceLight,

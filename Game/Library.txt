@@ -6,7 +6,7 @@
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Activities, Store, Log, Sect.
+8. Навигация: route names только английские: Life, Dao, Activities, Store, Sect.
 9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
@@ -14,7 +14,7 @@
 13. MMKV основной storage; memory-fallback только для аварийных сред.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
-16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит и random-утилит.
+16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
 17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
 18. Новые файлы всегда получать короткое описание в структуре проекта.
 19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled и icon.
@@ -25,7 +25,7 @@
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
-27. Кнопка журнала размещается в шапке LifeScreen рядом с переключателем языка. Маршрут Log сохраняется в TabNavigator, но скрыт из tab bar через tabBarButton: () => null.
+27. Журнал открывается модально из LifeScreen, LogScreen принимает onClose.
 28. DraggableGrowButton — перетаскиваемая кнопка взросления. Короткое нажатие вызывает growOlder, перетаскивание выполняется PanResponder в пределах LifeScreen.
 29. IconButton добавлен в UI-кит для компактных кнопок без текста.
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
@@ -35,9 +35,11 @@
 34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection, сбрасываются при реинкарнации.
 35. Годовой цикл рассчитывается в useYearlyCycle и использует processLifestyleYear из utils/gameplayUtils.ts.
 36. Карма-баффы стали многоуровневыми: quantity в useInventoryStore означает текущий уровень баффа.
-37. Локализация вкладок вынесена в locales/{lang}/navigation.json, техники в dao.json, активности в activities.json, дополнительные ключи магазина в store.json.
+37. Локализация дополнительных вкладок, техник, магазина и активностей вынесена в locales/{lang}/extras.json.
 38. Все проценты в игре хранятся как basis points (bps): 1% = 100 bps, 100% = 10000 bps.
-39. CollapsibleSection — раскрывающийся UI-компонент для категорий активностей.
-40. useYearlyCycle обрабатывает: подписки, доход, здоровье, Ци, порталы, события и отключение неоплаченных активностей.
+39. Стадии культивации имеют maxAge и softAge. Смертный не может жить бесконечно: после maxAge применяется шанс смерти от старости.
+40. useYearlyCycle обрабатывает: подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
 41. При реинкарнации техники и активности сбрасываются, карма-баффы сохраняются с уровнями.
-42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник и карма-баффов.
+42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
+43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
+44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.

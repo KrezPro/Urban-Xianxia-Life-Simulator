@@ -12,11 +12,15 @@ import {
   getTechniqueModifiers,
   getKarmaTotalEffects,
   processLifestyleYear,
+  calculateOldAgeDeathBps,
 } from '../utils/gameplayUtils';
+import { increaseBigIntByBps, getRandomInt } from '../utils/helpers';
 import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
+import ruNotifications from '../locales/ru/notifications.json';
+import enNotifications from '../locales/en/notifications.json';
 
 export const useYearlyCycle = () => {
   const { addLog } = useEventStore();
@@ -29,6 +33,7 @@ export const useYearlyCycle = () => {
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
+  const notifications: any = locale === 'ru' ? ruNotifications : enNotifications;
 
   const handleGrowOlder = useCallback(() => {
     let current = usePlayerStore.getState();
@@ -49,6 +54,14 @@ export const useYearlyCycle = () => {
 
     current.growOlder();
     current = usePlayerStore.getState();
+
+    const oldAgeDeathBps = calculateOldAgeDeathBps(current.age, current.cultivationStage);
+
+    if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
+      addLog(notifications.old_age_death, 'system');
+      current.applyEffects({ health: -current.health });
+      return;
+    }
 
     const baseModifiers = combineModifiers(
       getTechniqueModifiers(techniques.levels),
@@ -88,13 +101,11 @@ export const useYearlyCycle = () => {
       });
     }
 
-    if (report.maxHealthDelta !== 0) {
-      current.applyEffects({ maxHealth: report.maxHealthDelta });
-      current = usePlayerStore.getState();
-    }
-
-    if (report.healthDelta !== 0) {
-      current.applyEffects({ health: report.healthDelta });
+    if (report.maxHealthDelta !== 0 || report.healthDelta !== 0) {
+      current.applyEffects({
+        maxHealth: report.maxHealthDelta,
+        health: report.healthDelta,
+      });
       current = usePlayerStore.getState();
     }
 
@@ -117,15 +128,17 @@ export const useYearlyCycle = () => {
       current = usePlayerStore.getState();
     }
 
+    if (current.isDead) {
+      return;
+    }
+
     let secretEventChance = 0.1;
 
     if (current.activityFocus === 'secret') {
       secretEventChance = 0.8;
 
-      const qiGain = Math.max(
-        1,
-        Math.floor(current.spiritualRoot * (1 + baseModifiers.qiGainBps / 10000))
-      );
+      const baseQi = current.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER;
+      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), baseModifiers.qiGainBps));
 
       current.addQi(qiGain.toString());
       current = usePlayerStore.getState();

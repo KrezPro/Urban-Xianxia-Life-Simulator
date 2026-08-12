@@ -14,8 +14,8 @@ import stagesData from '../data/stages.json';
 import techniquesData from '../data/techniques.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
-import ruDao from '../locales/ru/dao.json';
-import enDao from '../locales/en/dao.json';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
 
 export default function DaoScreen() {
   const player = usePlayerStore();
@@ -26,10 +26,10 @@ export default function DaoScreen() {
   const [hasAdBuff, setHasAdBuff] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
-  const daoExtra: any = locale === 'ru' ? ruDao.dao_screen : enDao.dao_screen;
-  const techniquesUI: any = daoExtra?.techniques || {};
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const techniquesUI = extras.dao?.techniques || {};
 
-  const currentStage = stagesData.find((stage) => stage.id === player.cultivationStage);
+  const currentStage = (stagesData as any[]).find((stage) => stage.id === player.cultivationStage);
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
@@ -64,7 +64,7 @@ export default function DaoScreen() {
     }
 
     if (technique.requiredStage) {
-      const stage = stagesData.find((s) => s.id === technique.requiredStage);
+      const stage = (stagesData as any[]).find((s) => s.id === technique.requiredStage);
       parts.push(`${techniquesUI.requirements?.stage}: ${stage?.name || technique.requiredStage}`);
     }
 
@@ -107,9 +107,8 @@ export default function DaoScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <NotificationHost />
-      <ScrollView contentContainerStyle={styles.content}>
+      <View style={styles.header}>
         <Text style={styles.title}>{ui.title}</Text>
-
         <Card variant="primary" style={styles.stageCard}>
           <Text style={styles.stageLabel}>{ui.stage}</Text>
           <Text style={styles.stageName}>{currentStage?.name || ui.unknown}</Text>
@@ -118,7 +117,9 @@ export default function DaoScreen() {
           </Text>
           <ProgressBar progress={progress} color={Theme.colors.info} height={14} style={styles.progress} />
         </Card>
+      </View>
 
+      <ScrollView contentContainerStyle={styles.content}>
         {nextStage ? (
           <Card style={styles.nextCard}>
             <Text style={styles.nextStageTitle}>{ui.next_stage}</Text>
@@ -144,15 +145,6 @@ export default function DaoScreen() {
                 style={styles.adButton}
               />
             ) : null}
-
-            <Button
-              title={canBreakthrough ? ui.btn_breakthrough : ui.btn_no_qi}
-              onPress={handleBreakthrough}
-              disabled={!canBreakthrough}
-              variant="primary"
-              icon="flash"
-              style={styles.breakthroughButton}
-            />
           </Card>
         ) : (
           <Card variant="gold" style={styles.maxCard}>
@@ -214,6 +206,25 @@ export default function DaoScreen() {
           );
         })}
       </ScrollView>
+
+      {nextStage ? (
+        <View style={styles.bottomBar}>
+          <Card variant="primary" style={styles.bottomCard}>
+            <View style={styles.bottomInfoRow}>
+              <Text style={styles.bottomLabel}>{ui.req_qi}</Text>
+              <Text style={styles.bottomValue}>{formatLargeNumber(nextStage.requiredQi)}</Text>
+            </View>
+            <Button
+              title={canBreakthrough ? ui.btn_breakthrough : ui.btn_no_qi}
+              onPress={handleBreakthrough}
+              disabled={!canBreakthrough}
+              variant="primary"
+              icon="flash"
+              style={styles.breakthroughButton}
+            />
+          </Card>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -229,16 +240,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: Theme.spacing.md,
   },
+  header: {
+    padding: Theme.spacing.md,
+    paddingBottom: 0,
+  },
   content: {
     padding: Theme.spacing.md,
-    paddingBottom: 32,
+    paddingBottom: 140,
   },
   title: {
     fontSize: Theme.fontSize.xl,
     fontWeight: '900',
     color: Theme.colors.text,
     textAlign: 'center',
-    marginBottom: Theme.spacing.lg,
+    marginBottom: Theme.spacing.md,
     letterSpacing: 1,
   },
   stageCard: {
@@ -292,9 +307,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   adButton: {
-    marginTop: Theme.spacing.md,
-  },
-  breakthroughButton: {
     marginTop: Theme.spacing.md,
   },
   maxCard: {
@@ -353,5 +365,34 @@ const styles = StyleSheet.create({
   },
   techniqueButton: {
     marginTop: Theme.spacing.sm,
+  },
+  bottomBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: Theme.spacing.md,
+    backgroundColor: Theme.colors.background,
+    borderTopWidth: 1,
+    borderTopColor: Theme.colors.borderSoft,
+  },
+  bottomCard: {
+    marginBottom: 0,
+  },
+  bottomInfoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: Theme.spacing.sm,
+  },
+  bottomLabel: {
+    color: Theme.colors.textMuted,
+  },
+  bottomValue: {
+    color: Theme.colors.text,
+    fontWeight: '800',
+  },
+  breakthroughButton: {
+    minHeight: 56,
+    justifyContent: 'center',
   },
 });

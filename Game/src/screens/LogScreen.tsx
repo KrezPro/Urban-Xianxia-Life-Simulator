@@ -5,8 +5,13 @@ import { FlashList } from '@shopify/flash-list';
 import { useEventStore, IEventLog } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
+import { IconButton } from '../components/ui';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
+
+interface LogScreenProps {
+  onClose?: () => void;
+}
 
 const renderItem = ({ item }: { item: IEventLog }) => {
   const date = new Date(item.timestamp).toLocaleTimeString();
@@ -27,14 +32,19 @@ const renderItem = ({ item }: { item: IEventLog }) => {
   );
 };
 
-export default function LogScreen() {
+export default function LogScreen({ onClose }: LogScreenProps) {
   const { logs } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
   const ui: any = locale === 'ru' ? ruUI : enUI;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>{ui.log_screen.title}</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>{ui.log_screen.title}</Text>
+        {onClose ? (
+          <IconButton icon="close" onPress={onClose} variant="secondary" size={36} accessibilityLabel="Close log" />
+        ) : null}
+      </View>
       <View style={styles.listContainer}>
         <FlashList
           data={logs}
@@ -54,12 +64,17 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background,
     paddingTop: 8,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
   title: {
     fontSize: 24,
     fontWeight: '900',
     color: Theme.colors.text,
-    textAlign: 'center',
-    marginBottom: 10,
   },
   listContainer: {
     flex: 1,

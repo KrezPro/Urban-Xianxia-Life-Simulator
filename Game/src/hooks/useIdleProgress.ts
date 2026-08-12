@@ -3,9 +3,13 @@ import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { useTechniquesStore } from '../store/useTechniquesStore';
+import { useInventoryStore } from '../store/useInventoryStore';
 import { storage } from '../store/mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { calculateOfflineDelta } from '../utils/timeUtils';
+import { combineModifiers, getTechniqueModifiers, getKarmaTotalEffects } from '../utils/gameplayUtils';
+import { increaseBigIntByBps } from '../utils/helpers';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -30,9 +34,16 @@ export const useIdleProgress = () => {
       const { deltaMs, deltaSeconds } = calculateOfflineDelta(lastLogin, now);
 
       if (deltaMs > GameConstants.IDLE_MIN_TIME_MS) {
+        const cappedSeconds = Math.min(deltaSeconds, GameConstants.OFFLINE_MAX_DAYS * 86400);
+
+        const modifiers = combineModifiers(
+          getTechniqueModifiers(useTechniquesStore.getState().levels),
+          getKarmaTotalEffects(useInventoryStore.getState().items)
+        );
+
         if (activityFocus === 'secret') {
-          const multiplier = Math.max(1, Math.floor(spiritualRoot / GameConstants.QI_BASE_MULTIPLIER));
-          const earnedQi = BigInt(deltaSeconds) * BigInt(multiplier);
+          const baseQi = Math.max(1, Math.floor((cappedSeconds * spiritualRoot) / 86400));
+          const earnedQi = BigInt(increaseBigIntByBps(baseQi.toString(), modifiers.qiGainBps));
 
           addQi(earnedQi.toString());
 
@@ -46,7 +57,8 @@ export const useIdleProgress = () => {
             amount: earnedQi.toString(),
           });
         } else {
-          const earnedMoney = deltaSeconds * GameConstants.OFFLINE_MONEY_RATE;
+          const baseMoney = Math.max(1, Math.floor((cappedSeconds * GameConstants.OFFLINE_MONEY_PER_DAY) / 86400));
+          const earnedMoney = BigInt(increaseBigIntByBps(baseMoney.toString(), modifiers.moneyGainBps));
 
           applyEffects({ money: earnedMoney.toString() });
 

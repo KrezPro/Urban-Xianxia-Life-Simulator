@@ -1,10 +1,3 @@
-// helpers.ts v4 — самодостаточный модуль утилит.
-// Обязан экспортировать: formatLargeNumber, safeBigInt, addBigIntStrings,
-// subtractBigIntStrings, compareBigIntStrings, isGreaterOrEqualBigInt,
-// divideBigIntStringByNumber, clampProgress, getBigIntProgress,
-// getRandomInt, pickRandom, chance, multiplyBigIntByBps, increaseBigIntByBps,
-// reduceBigIntByBps, randomBigIntBetween, clampInt.
-
 export const formatLargeNumber = (value: string | number): string => {
   const strVal = value.toString();
   const isNegative = strVal.startsWith('-');
@@ -167,12 +160,6 @@ export const clampInt = (value: number, min: number, max: number): number => {
   return value;
 };
 
-export const multiplyBigIntByBps = (value: string | bigint, bps: number): string => {
-  const base = safeBigInt(value);
-  const safeBps = Math.max(0, Math.floor(bps));
-  return ((base * BigInt(safeBps)) / 10000n).toString();
-};
-
 export const increaseBigIntByBps = (value: string | bigint, bps: number): string => {
   const base = safeBigInt(value);
   const safeBps = Math.max(0, Math.floor(bps));
@@ -183,24 +170,4 @@ export const reduceBigIntByBps = (value: string | bigint, bps: number): string =
   const base = safeBigInt(value);
   const safeBps = Math.max(0, Math.min(10000, Math.floor(bps)));
   return (base - (base * BigInt(safeBps)) / 10000n).toString();
-};
-
-export const randomBigIntBetween = (min: string, max: string): string => {
-  const minBig = safeBigInt(min);
-  const maxBig = safeBigInt(max);
-
-  if (minBig >= maxBig) {
-    return minBig.toString();
-  }
-
-  const diff = maxBig - minBig;
-  const diffNum = Number(diff);
-
-  if (!isFinite(diffNum) || diffNum > Number.MAX_SAFE_INTEGER) {
-    const half = diff / 2n;
-    return (minBig + half).toString();
-  }
-
-  const randomPart = BigInt(Math.floor(Math.random() * (diffNum + 1)));
-  return (minBig + randomPart).toString();
 };

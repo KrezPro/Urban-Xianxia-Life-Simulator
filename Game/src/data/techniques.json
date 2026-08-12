@@ -2,8 +2,8 @@
   {
     "id": "technique_hidden_dragon_breath",
     "maxLevel": 10,
-    "baseCost": "200",
-    "costGrowthBps": 5500,
+    "baseCost": "300",
+    "costGrowthBps": 6500,
     "requiredSpiritualRoot": 5,
     "requiredIntelligence": 0,
     "requiredStage": "",
@@ -15,40 +15,40 @@
   {
     "id": "technique_iron_meridian",
     "maxLevel": 10,
-    "baseCost": "500",
-    "costGrowthBps": 6000,
+    "baseCost": "600",
+    "costGrowthBps": 7000,
     "requiredSpiritualRoot": 8,
     "requiredIntelligence": 0,
     "requiredStage": "",
     "effectsPerLevel": {
-      "healthRegenBps": 500,
+      "healthRegenBps": 600,
       "damageReductionBps": 300
     }
   },
   {
     "id": "technique_jade_ledger",
     "maxLevel": 10,
-    "baseCost": "1200",
-    "costGrowthBps": 6500,
+    "baseCost": "1500",
+    "costGrowthBps": 7500,
     "requiredSpiritualRoot": 10,
-    "requiredIntelligence": 15,
+    "requiredIntelligence": 12,
     "requiredStage": "",
     "effectsPerLevel": {
-      "moneyGainBps": 600,
-      "jobIncomeBps": 600,
+      "moneyGainBps": 500,
+      "jobIncomeBps": 700,
       "portalSuccessBps": 100
     }
   },
   {
     "id": "technique_spirit_sense",
     "maxLevel": 10,
-    "baseCost": "2000",
-    "costGrowthBps": 7000,
+    "baseCost": "5000",
+    "costGrowthBps": 8000,
     "requiredSpiritualRoot": 15,
     "requiredIntelligence": 0,
     "requiredStage": "qi_condensation_2",
     "effectsPerLevel": {
-      "qiGainBps": 500,
+      "qiGainBps": 600,
       "breakthroughChanceBps": 100,
       "portalSuccessBps": 100
     }
