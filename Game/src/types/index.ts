@@ -4,10 +4,11 @@ export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
 export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
 export type NotificationKind = 'ui' | 'event' | 'generated';
-export type EventRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type EventTone = 'positive' | 'negative' | 'neutral';
 export type LifestyleCategory = 'job' | 'sport' | 'food' | 'housing' | 'portal';
 export type LifestyleSelection = Record<LifestyleCategory, string>;
+export type EventRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type EventTone = 'positive' | 'negative' | 'neutral';
+export type DeathCause = 'none' | 'old_age' | 'health' | 'breakthrough' | 'portal' | 'event';
 
 export interface EffectChip {
   stat: 'intelligence' | 'health' | 'maxHealth' | 'appearance' | 'money' | 'qi' | 'karma';
@@ -35,6 +36,16 @@ export interface GeneratedEvent {
   };
   displayEffects: EffectChip[];
   logType: 'mundane' | 'secret' | 'system';
+}
+
+export interface RebirthReport {
+  fortuneTier: 'blessed' | 'uneasy' | 'troubled' | 'severe' | 'doomed';
+  moneyPenaltyKey: string;
+  moneyPenaltyBps: number;
+  healthStartKey: string;
+  healthStartBps: number;
+  curses: string[];
+  deathCause: DeathCause;
 }
 
 export interface IPlayer {
@@ -116,8 +127,6 @@ export interface INotification {
   type: NotificationType;
   createdAt: number;
   durationMs: number;
-  priority?: number;
-  group?: string;
   titleKey?: string;
   textKey?: string;
   effects?: EffectChip[];

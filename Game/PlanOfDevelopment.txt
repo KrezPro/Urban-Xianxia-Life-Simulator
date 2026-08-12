@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 16 (Исправлены критические падения DaoScreen из-за undefined forEach и SafeAreaView deprecation warning)
+[СТАТУС]: ШАГ 17 (Исправлен краш eventGenerator "Cannot convert undefined value to object", починены уведомления и модал журнала вместо navigate Log)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -62,7 +62,7 @@
 41. [ ] Автотесты BigInt/MMKV/FlashList.
 
 === Фаза 10: UX улучшения ===
-42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, журнал открывается модально.
+42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, вкладка Log скрыта из tab bar.
 43. [X] Grow Older заменен перетаскиваемой DraggableGrowButton (FAB в стиле корзины).
 44. [X] Убран скролл во вкладке Мир, так как контент размещается без прокрутки.
 
@@ -90,10 +90,89 @@
 63. [X] LifeScreen показывает модальное окно последствий перерождения.
 64. [X] activeCurses влияют на модификаторы годового цикла и прорывов.
 
-=== Фаза 13: Исправление критических багов ===
-65. [X] Исправлен crash DaoScreen "Cannot read property 'forEach' of undefined" из-за undefined activeCurses/levels/items после гидратации старых сохранений.
-66. [X] Добавлены защитные fallback в getCurseModifiers, getTechniqueModifiers, getKarmaTotalEffects, combineModifiers.
-67. [X] Добавлена миграция в usePlayerStore для нормализации activeCurses и lastDeathCause из старых MMKV-сохранений.
-68. [X] Добавлена нормализация levels в useTechniquesStore и items в useInventoryStore при rehydrate.
-69. [X] Исправлен SafeAreaView deprecation warning в StoreScreen.tsx (переведён на react-native-safe-area-context).
-70. [X] Добавлена защита от undefined techniquesData в DaoScreen через Array.isArray проверку.
+=== Фаза 13: Hotfix после Шага 3 ===
+65. [X] Исправлен краш calculateEffectValue: все таблицы GameConstants читаются через tableNumber с fallback.
+66. [X] GameConstants.ts синхронизирован: добавлены все EVENT_* таблицы и NOTIFICATION_* константы.
+67. [X] Убран navigation.navigate('Log'): журнал открывается только модально (LogScreen onClose).
+68. [X] NotificationToast: таймер от монтирования, уведомления больше не исчезают мгновенно.
+69. [X] useYearlyCycle: try/catch вокруг generateYearEvent с fallback-событием.
+70. [X] Записаны уроки в Game/DataForAI.txt.
+
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
+Game/
+├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
+└── src/
+    ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
+    ├── components/
+    │   ├── ui/
+    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
+    │   └── game/
+    │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
+    │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
+    │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
+    │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
+    ├── constants/
+    │   ├── GameConstants.ts             // Лимиты, кулдауны, EVENT_* таблицы, NOTIFICATION_* константы
+    │   └── Theme.ts                     // Темная тема
+    ├── data/
+    │   ├── events.json                  // Legacy-события (fallback/архив)
+    │   ├── eventRules.json              // Правила генератора событий
+    │   ├── rebirthPenalties.json        // Последствия смерти: деньги, здоровье, проклятия
+    │   ├── items.json                   // Многоуровневые карма-баффы
+    │   ├── stages.json                  // Стадии культивации, maxAge/softAge, требования Ци
+    │   ├── sects.json                   // Шаблоны сект
+    │   ├── rankings.json                // Seed-рейтинг
+    │   ├── techniques.json              // Техники Дао
+    │   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы
+    ├── hooks/
+    │   ├── useIdleProgress.ts           // Offline-прогресс с балансом и модами
+    │   ├── useBreakthrough.ts           // Прорывы, причина смерти breakthrough, локали стадий
+    │   └── useYearlyCycle.ts            // Годовой цикл: survival, подписки, порталы, события (try/catch)
+    ├── navigation/
+    │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
+    ├── screens/
+    │   ├── LifeScreen.tsx               // Модал журнала (LogScreen onClose), rebirth report, без navigate Log
+    │   ├── DaoScreen.tsx                // Путь Дао, техники, закреплённая кнопка прорыва
+    │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
+    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
+    │   ├── SectScreen.tsx               // Секта и рейтинг
+    │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
+    ├── store/
+    │   ├── mmkvStorage.ts               // MMKV storage
+    │   ├── usePlayerStore.ts            // Игрок, current/max health, смерть, activeCurses, rebirth report
+    │   ├── useEventStore.ts             // Журнал, addGeneratedLog
+    │   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
+    │   ├── useLocaleStore.ts            // Язык
+    │   ├── useSocialStore.ts            // Секты
+    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, pushGeneratedEventNotification
+    │   ├── useTechniquesStore.ts        // Уровни техник Дао
+    │   └── useLifestyleStore.ts         // Выбранные активности
+    ├── types/
+    │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport и т.д.
+    ├── utils/
+    │   ├── notificationUtils.ts         // Резолвинг уведомлений и логов по ключам/параметрам
+    │   ├── timeUtils.ts                 // Дельта времени
+    │   ├── helpers.ts                   // Форматирование, BigInt, random, bps
+    │   ├── stageUtils.ts                // Локализованные имена стадий
+    │   ├── rebirthUtils.ts              // Последствия смерти и проклятия
+    │   ├── eventGenerator.ts            // Генератор событий (защищённый tableNumber)
+    │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, старения, порталов
+    └── locales/
+        ├── ru/
+        │   ├── ui.json                  // Базовые тексты UI
+        │   ├── events.json              // Legacy-события
+        │   ├── social.json              // Секты
+        │   ├── notifications.json       // Уведомления
+        │   ├── extras.json              // Навигация, техники, магазин, активности
+        │   ├── stages.json              // Имена стадий
+        │   ├── rebirth.json             // Последствия перерождения
+        │   └── eventGenerator.json      // Шаблоны и пулы событий
+        └── en/
+            ├── ui.json                  // Базовые тексты UI
+            ├── events.json              // Legacy-события
+            ├── social.json              // Секты
+            ├── notifications.json       // Уведомления
+            ├── extras.json              // Навигация, техники, магазин, активности
+            ├── stages.json              // Имена стадий
+            ├── rebirth.json             // Последствия перерождения
+            └── eventGenerator.json      // Шаблоны и пулы событий

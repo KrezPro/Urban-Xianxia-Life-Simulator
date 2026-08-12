@@ -1,23 +1,6 @@
 import { create } from 'zustand';
-import { EffectChip, EventRarity, EventTone, INotification, NotificationKind, NotificationType } from '../types';
+import { GeneratedEvent, INotification, NotificationKind, NotificationType } from '../types';
 import { GameConstants } from '../constants/GameConstants';
-
-interface RichNotificationOptions {
-  kind: NotificationKind;
-  messageKey: string;
-  type: NotificationType;
-  priority?: number;
-  group?: string;
-  params?: Record<string, string>;
-  eventPool?: 'mundane' | 'secret';
-  titleKey?: string;
-  textKey?: string;
-  effects?: EffectChip[];
-  rarity?: EventRarity;
-  tone?: EventTone;
-  dictionary?: 'notifications' | 'eventGenerator' | 'rebirth';
-  durationMs?: number;
-}
 
 interface NotificationState {
   notifications: INotification[];
@@ -33,125 +16,74 @@ interface NotificationState {
     type: NotificationType,
     durationMs?: number
   ) => void;
-  pushGeneratedEventNotification: (options: RichNotificationOptions) => void;
-  pushRichNotification: (options: RichNotificationOptions) => void;
+  pushGeneratedEventNotification: (event: GeneratedEvent) => void;
   dismissNotification: (id: string) => void;
   clearAll: () => void;
 }
 
 let notificationCounter = 0;
 
-const createRichNotification = (options: RichNotificationOptions): INotification => {
+const createBaseNotification = (
+  kind: NotificationKind,
+  messageKey: string,
+  type: NotificationType,
+  durationMs?: number
+): INotification => {
   notificationCounter += 1;
 
   return {
     id: `notification_${Date.now().toString()}_${notificationCounter.toString()}`,
-    kind: options.kind,
-    messageKey: options.messageKey,
-    eventPool: options.eventPool,
-    params: options.params,
-    type: options.type,
+    kind,
+    messageKey,
+    type,
     createdAt: Date.now(),
-    durationMs: options.durationMs || GameConstants.NOTIFICATION_DURATION_MS,
-    priority: options.priority ?? GameConstants.NOTIFICATION_PRIORITY.minor,
-    group: options.group,
-    titleKey: options.titleKey,
-    textKey: options.textKey,
-    effects: options.effects,
-    rarity: options.rarity,
-    tone: options.tone,
-    dictionary: options.dictionary || 'notifications',
+    durationMs: durationMs || GameConstants.NOTIFICATION_DURATION_MS,
   };
 };
 
-const isNotificationActive = (notification: INotification): boolean => {
-  return notification.createdAt + notification.durationMs > Date.now();
-};
-
-const shouldReplaceCurrent = (current: INotification | undefined, next: INotification): boolean => {
-  if (!current) {
-    return true;
-  }
-
-  if (!isNotificationActive(current)) {
-    return true;
-  }
-
-  const currentPriority = current.priority ?? 0;
-  const nextPriority = next.priority ?? 0;
-
-  if (nextPriority > currentPriority) {
-    return true;
-  }
-
-  if (nextPriority === currentPriority && current.group && current.group === next.group) {
-    return true;
-  }
-
-  return false;
+const appendNotification = (state: NotificationState, notification: INotification): Partial<NotificationState> => {
+  return {
+    notifications: [notification, ...state.notifications].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+  };
 };
 
 export const useNotificationStore = create<NotificationState>()((set) => ({
   notifications: [],
   pushUiNotification: (messageKey, type, params, durationMs) => {
-    const notification = createRichNotification({
-      kind: 'ui',
-      messageKey,
-      type,
-      params,
-      durationMs,
-      priority: GameConstants.NOTIFICATION_PRIORITY.userAction,
-      dictionary: 'notifications',
-    });
+    const notification = createBaseNotification('ui', messageKey, type, durationMs);
+    notification.params = params;
 
-    set((state) => {
-      if (!shouldReplaceCurrent(state.notifications[0], notification)) {
-        return state;
-      }
-
-      return { notifications: [notification] };
-    });
+    set((state) => appendNotification(state, notification));
   },
   pushEventNotification: (eventId, eventPool, type, durationMs) => {
-    const notification = createRichNotification({
-      kind: 'event',
-      messageKey: eventId,
-      eventPool,
-      type,
-      durationMs,
-      priority: GameConstants.NOTIFICATION_PRIORITY.generatedEvent,
-      dictionary: 'notifications',
-    });
+    const notification = createBaseNotification('event', eventId, type, durationMs);
+    notification.eventPool = eventPool;
 
-    set((state) => {
-      if (!shouldReplaceCurrent(state.notifications[0], notification)) {
-        return state;
-      }
-
-      return { notifications: [notification] };
-    });
+    set((state) => appendNotification(state, notification));
   },
-  pushGeneratedEventNotification: (options) => {
-    const notification = createRichNotification(options);
+  pushGeneratedEventNotification: (event) => {
+    if (!event) {
+      return;
+    }
 
-    set((state) => {
-      if (!shouldReplaceCurrent(state.notifications[0], notification)) {
-        return state;
-      }
+    const notification = createBaseNotification(
+      'generated',
+      'generated_event',
+      event.logType === 'secret' ? 'secret' : 'mundane',
+      GameConstants.EVENT_NOTIFICATION_DURATION_MS
+    );
 
-      return { notifications: [notification] };
-    });
-  },
-  pushRichNotification: (options) => {
-    const notification = createRichNotification(options);
+    notification.titleKey = event.titleKey;
+    notification.textKey = event.textKey;
+    notification.params = Object.fromEntries(
+      Object.entries(event.params || {}).map(([key, value]) => [key, String(value)])
+    );
+    notification.effects = event.displayEffects || [];
+    notification.rarity = event.rarity;
+    notification.tone = event.tone;
+    notification.dictionary = 'eventGenerator';
 
-    set((state) => {
-      if (!shouldReplaceCurrent(state.notifications[0], notification)) {
-        return state;
-      }
-
-      return { notifications: [notification] };
-    });
+    set((state) => appendNotification(state, notification));
   },
   dismissNotification: (id) => {
     set((state) => ({

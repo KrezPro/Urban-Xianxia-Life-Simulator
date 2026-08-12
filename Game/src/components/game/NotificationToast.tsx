@@ -73,6 +73,8 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
     });
   };
 
+  // УРОК (DataForAI): таймер живёт от момента монтирования тоста,
+  // а не от createdAt, иначе уведомления из очереди "протухают" и исчезают.
   useEffect(() => {
     Animated.parallel([
       Animated.timing(opacity, {
@@ -119,7 +121,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
       ]}
     >
       <TouchableOpacity activeOpacity={0.95} onPress={dismiss} style={styles.inner}>
-        <View style={[styles.iconBadge, { borderColor: accent }]}> 
+        <View style={[styles.iconBadge, { borderColor: accent }]}>
           <Ionicons name={iconName} size={18} color={accent} />
         </View>
 

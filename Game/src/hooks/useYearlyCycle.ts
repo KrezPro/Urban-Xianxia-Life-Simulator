@@ -7,6 +7,7 @@ import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useLifestyleStore } from '../store/useLifestyleStore';
 import { GameConstants } from '../constants/GameConstants';
+import { GeneratedEvent } from '../types';
 import {
   combineModifiers,
   getTechniqueModifiers,
@@ -16,11 +17,45 @@ import {
 } from '../utils/gameplayUtils';
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
-import { increaseBigIntByBps, getRandomInt } from '../utils/helpers';
+import { increaseBigIntByBps, getRandomInt, safeBigInt } from '../utils/helpers';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruNotifications from '../locales/ru/notifications.json';
 import enNotifications from '../locales/en/notifications.json';
+
+const getSurvivalCost = (age: number): bigint => {
+  if (age < 3) {
+    return 0n;
+  }
+
+  if (age < 12) {
+    return 30n;
+  }
+
+  if (age < 18) {
+    return 80n;
+  }
+
+  if (age < 65) {
+    return 150n;
+  }
+
+  return 250n;
+};
+
+const buildFallbackEvent = (pool: 'mundane' | 'secret'): GeneratedEvent => ({
+  id: 'fallback_year',
+  pool,
+  category: 'generic',
+  rarity: 'common',
+  tone: 'neutral',
+  titleKey: 'titles.neutral_common',
+  textKey: 'templates.tmpl_simple',
+  params: { outcome: 'outcomes_generic.ok' },
+  effects: {},
+  displayEffects: [],
+  logType: pool,
+});
 
 export const useYearlyCycle = () => {
   const { addLog, addGeneratedLog } = useEventStore();
@@ -64,10 +99,50 @@ export const useYearlyCycle = () => {
       return;
     }
 
-    const curseModifiers = getCurseModifiers(current.activeCurses || []);
+    const survivalCost = getSurvivalCost(current.age);
+
+    if (survivalCost > 0n) {
+      const money = safeBigInt(current.money);
+
+      if (money >= survivalCost) {
+        current.applyEffects({ money: (-survivalCost).toString() });
+        current = usePlayerStore.getState();
+      } else {
+        const unpaid = survivalCost - money;
+
+        if (money > 0n) {
+          current.applyEffects({ money: (-money).toString() });
+          current = usePlayerStore.getState();
+        }
+
+        const unpaidBps = Number((unpaid * 10000n) / survivalCost);
+        const damageBps = Math.floor((800 * unpaidBps) / 10000);
+        let damage = Math.max(1, Math.floor((current.maxHealth * damageBps) / 10000));
+
+        if (current.age < 12) {
+          damage += 1;
+        }
+
+        current.applyEffects({ health: -damage });
+        current = usePlayerStore.getState();
+
+        addLog(notifications.survival_unpaid, 'system');
+
+        if (unpaidBps >= 5000) {
+          pushUiNotification('survival_unpaid', 'danger');
+        }
+
+        if (current.isDead) {
+          current.setDeathCause('health');
+          return;
+        }
+      }
+    }
+
+    const curseModifiers = getCurseModifiers(current.activeCurses);
     const baseModifiers = combineModifiers(
-      getTechniqueModifiers(techniques.levels || {}),
-      getKarmaTotalEffects(inventory.items || {}),
+      getTechniqueModifiers(techniques.levels),
+      getKarmaTotalEffects(inventory.items),
       curseModifiers
     );
 
@@ -88,20 +163,8 @@ export const useYearlyCycle = () => {
 
     if (report.disabled.length > 0) {
       report.disabled.forEach((category) => lifestyle.disableOption(category));
+      addLog(notifications.lifestyle_disabled_no_money, 'system');
       pushUiNotification('lifestyle_disabled_no_money', 'danger');
-    }
-
-    if (report.portalResult === 'success') {
-      pushUiNotification('portal_success', 'reward', {
-        money: report.portalMoney,
-        qi: report.portalQi,
-      });
-    }
-
-    if (report.portalResult === 'fail') {
-      pushUiNotification('portal_fail', 'danger', {
-        damage: report.portalDamage.toString(),
-      });
     }
 
     if (report.maxHealthDelta !== 0 || report.healthDelta !== 0) {
@@ -109,7 +172,6 @@ export const useYearlyCycle = () => {
         maxHealth: report.maxHealthDelta,
         health: report.healthDelta,
       });
-
       current = usePlayerStore.getState();
 
       if (current.isDead) {
@@ -118,7 +180,6 @@ export const useYearlyCycle = () => {
         } else {
           current.setDeathCause('health');
         }
-
         return;
       }
     }
@@ -138,24 +199,16 @@ export const useYearlyCycle = () => {
       current = usePlayerStore.getState();
     }
 
-    if (current.isDead) {
-      return;
+    if (report.portalResult === 'success') {
+      pushUiNotification('portal_success', 'reward', {
+        money: report.portalMoney,
+        qi: report.portalQi,
+      });
     }
 
-    let secretEventChance = 0.1;
-
-    if (current.activityFocus === 'secret') {
-      secretEventChance = 0.8;
-
-      const baseQi = current.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER;
-      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), baseModifiers.qiGainBps));
-
-      current.addQi(qiGain.toString());
-      current = usePlayerStore.getState();
-
-      addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
-      pushUiNotification('meditation', 'secret', {
-        amount: qiGain.toString(),
+    if (report.portalResult === 'fail') {
+      pushUiNotification('portal_fail', 'danger', {
+        damage: report.portalDamage.toString(),
       });
     }
 
@@ -163,22 +216,43 @@ export const useYearlyCycle = () => {
       return;
     }
 
-    const generatedEvent = generateYearEvent({
-      age: current.age,
-      focus: current.activityFocus,
-      cultivationStage: current.cultivationStage,
-      lifestyle: lifestyle.selected,
-      player: {
-        money: current.money,
-        qi: current.qi,
-        karma: current.karma,
-        health: current.health,
-        maxHealth: current.maxHealth,
-        intelligence: current.intelligence,
-        appearance: current.appearance,
-        spiritualRoot: current.spiritualRoot,
-      },
-    });
+    if (current.activityFocus === 'secret') {
+      const baseQi = current.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER;
+      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), baseModifiers.qiGainBps));
+
+      current.addQi(qiGain.toString());
+      current = usePlayerStore.getState();
+
+      addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
+    }
+
+    if (current.isDead) {
+      return;
+    }
+
+    let generatedEvent: GeneratedEvent;
+
+    try {
+      generatedEvent = generateYearEvent({
+        age: current.age,
+        focus: current.activityFocus,
+        cultivationStage: current.cultivationStage,
+        lifestyle: lifestyle.selected,
+        player: {
+          money: current.money,
+          qi: current.qi,
+          karma: current.karma,
+          health: current.health,
+          maxHealth: current.maxHealth,
+          intelligence: current.intelligence,
+          appearance: current.appearance,
+          spiritualRoot: current.spiritualRoot,
+        },
+        modifiers: baseModifiers,
+      });
+    } catch {
+      generatedEvent = buildFallbackEvent(current.activityFocus === 'secret' ? 'secret' : 'mundane');
+    }
 
     addGeneratedLog(generatedEvent);
     pushGeneratedEventNotification(generatedEvent);

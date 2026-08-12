@@ -6,7 +6,7 @@
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Activities, Store, Sect.
+8. Навигация: route names только английские: Life, Dao, Activities, Store, Sect. Маршрута Log НЕТ.
 9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
@@ -21,11 +21,11 @@
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
 22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
-23. SafeAreaView использовать ТОЛЬКО из react-native-safe-area-context, SafeAreaProvider оборачивает App. Импорт из 'react-native' запрещён — вызывает deprecation warning и краш на новых версиях.
+23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
-27. Журнал открывается модально из LifeScreen, LogScreen принимает onClose.
+27. Журнал открывается ТОЛЬКО модально из LifeScreen (LogScreen с onClose). navigation.navigate('Log') ЗАПРЕЩЁН.
 28. DraggableGrowButton — перетаскиваемая кнопка взросления. Короткое нажатие вызывает growOlder, перетаскивание выполняется PanResponder в пределах LifeScreen.
 29. IconButton добавлен в UI-кит для компактных кнопок без текста.
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
@@ -38,14 +38,13 @@
 37. Локализация дополнительных вкладок, техник, магазина и активностей вынесена в locales/{lang}/extras.json.
 38. Все проценты в игре хранятся как basis points (bps): 1% = 100 bps, 100% = 10000 bps.
 39. Стадии культивации имеют maxAge и softAge. Смертный не может жить бесконечно: после maxAge применяется шанс смерти от старости.
-40. useYearlyCycle обрабатывает: подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
+40. useYearlyCycle обрабатывает: survival cost, подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
 41. При реинкарнации техники и активности сбрасываются, карма-баффы сохраняются с уровнями.
 42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
 43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
 44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.
-45. КРИТИЧНО: Все функции, принимающие массивы/объекты из Zustand сторов (activeCurses, levels, items), должны иметь fallback на пустые значения (|| [], || {}), так как старые MMKV-сохранения могут не содержать новых полей после миграции схемы.
-46. rebirthUtils.ts:getCurseModifiers, gameplayUtils.ts:getTechniqueModifiers и getKarmaTotalEffects защищают от undefined через (input || defaultValue) паттерн.
-47. combineModifiers принимает Partial<ModifierSet> | undefined | null и безопасно пропускает nullish значения.
-48. usePlayerStore.normalizeHealth при rehydrate гарантирует, что activeCurses это массив, а lastDeathCause это валидный DeathCause.
-49. useTechniquesStore и useInventoryStore при onRehydrateStorage проверяют что levels/items это объекты, и сбрасывают их если нет.
-50. При работе с импортированными JSON-массивами (techniquesData, itemsData) всегда использовать Array.isArray() проверку перед .map/.forEach/.filter.
+45. eventGenerator.ts читает таблицы GameConstants ТОЛЬКО через tableNumber(table, key, fallback) — защита от Hermes "Cannot convert undefined value to object".
+46. generateYearEvent в useYearlyCycle обёрнут в try/catch с buildFallbackEvent(), год не крашит приложение.
+47. NotificationToast запускает таймер автоскрытия от момента монтирования, а не от createdAt.
+48. useNotificationStore имеет pushGeneratedEventNotification и очередь NOTIFICATION_MAX_QUEUE=3, NOTIFICATION_MAX_VISIBLE=1.
+49. Уроки по крашам и навигации записаны в Game/DataForAI.txt.

@@ -1,24 +1,31 @@
-ВЫУЧЕННЫЕ УРОКИ:
-1. Metro Bundler может падать без babel-preset-expo в devDependencies.
-2. Для react-native-mmkv v4+ babel-плагин не нужен, достаточно babel-preset-expo.
-3. index.ts должен вести на src/App.tsx, дублирующий App.tsx в корне нужно удалять.
-4. XML-парсер может ломаться о знак меньше в коде. Использовать инверсию условий через знак больше.
-5. Если файл импортируется, но отсутствует, его нужно создать немедленно.
-6. Route names нельзя локализовать. Нужны стабильные английские ключи.
-7. BigInt нельзя безопасно хранить напрямую. Используем string и safeBigInt.
-8. FlashList обязателен для больших списков.
-9. AsyncStorage не использовать для глобального состояния.
-10. Для BigInt-прогресса нельзя наивно делить BigInt. Нужен безопасный getBigIntProgress.
-11. UI-кит должен быть в components/ui/index.tsx, чтобы экраны не дублировали кнопки и карточки.
-12. Утилиты должны быть доступны через utils/helpers.ts, так как экраны и сервисы уже импортируют именно его.
-13. Если components/ui/index.tsx отсутствует, экраны с Button/Card/ProgressBar/StatRow не соберутся.
-14. Для структуры проекта нужны короткие комментарии: файл // назначение.
-15. Если вкладка исчезла, нужно проверять TabNavigator и наличие соответствующего экрана в src/screens/.
-16. При восстановлении большого блока файлов сначала создаются зависимости (types, helpers, Theme, stores, services, locales), затем экраны и навигация.
-17. App должен ждать гидратации всех критичных сторов: player, locale, social.
-18. useSocialStore должен вызывать refreshLeaderboard и simulateOffline после гидратации.
-19. SafeAreaView из react-native устарел и выдаёт warning. Использовать SafeAreaView и SafeAreaProvider из react-native-safe-area-context.
-20. StatRow в UI-ките должен поддерживать onPress и onLongPress, чтобы экраны могли показывать подсказки по long-press.
-21. NotificationHost должен быть размещён глобально в App.tsx поверх NavigationContainer, чтобы уведомления были видны на всех вкладках.
-22. Подсказки хранятся в locales/{lang}/ui.json внутри ключа hints, чтобы поддерживать RU/EN.
-23. Если экран не требует прокрутки, лучше использовать View вместо ScrollView, чтобы убрать инерцию и возможные конфликты жестов с draggable FAB.
+# ВЫУЧЕННЫЕ УРОКИ (Шаг 4)
+
+1. Hermes: "Cannot convert undefined value to object" возникает при чтении свойства из undefined.
+   В eventGenerator.ts ВСЕ таблицы GameConstants читаем только через tableNumber(table, key, fallback).
+   Никогда не писать GameConstants.X[key] без защиты, если X может отсутствовать в старых сборках.
+
+2. GameConstants.ts должен СОДЕРЖАТЬ все EVENT_* таблицы:
+   EVENT_MONEY_BASE_BY_TIER, EVENT_QI_BASE_BY_TIER, EVENT_RARITY_MONEY_MULTIPLIER,
+   EVENT_RARITY_QI_MULTIPLIER, EVENT_QI_CAP_DIVISOR, EVENT_HEALTH_DAMAGE_BPS_BY_RARITY,
+   EVENT_HEALTH_HEAL_BPS_BY_RARITY, EVENT_STAT_CHANGE_BY_RARITY, EVENT_KARMA_CHANGE_BY_RARITY,
+   EVENT_RARITY_WEIGHTS, EVENT_SECRET_FOCUS_CHANCE_BPS, EVENT_MUNDANE_SECRET_CHANCE_BPS.
+   При изменении eventGenerator всегда синхронизировать GameConstants.
+
+3. NAVIGATE 'Log' error: в TabNavigator НЕТ маршрута Log (5 вкладок: Life/Dao/Activities/Store/Sect).
+   Журнал открываем ТОЛЬКО модально: <Modal><LogScreen onClose={...} /></Modal>.
+   Не использовать navigation.navigate('Log') ни в одном файле.
+
+4. Уведомления: таймер тоста запускается от момента монтирования (useEffect [notification.id]),
+   а не от notification.createdAt, иначе уведомления из очереди "протухают" и исчезают мгновенно.
+
+5. useNotificationStore обязан иметь pushGeneratedEventNotification(event) и очередь
+   NOTIFICATION_MAX_QUEUE = 3, NOTIFICATION_MAX_VISIBLE = 1.
+
+6. generateYearEvent оборачиваем в try/catch в useYearlyCycle: при любом сбое генерируем
+   buildFallbackEvent() (нейтральное событие), чтобы год never крашил приложение.
+
+7. Все обращения к данным (rule.effects, rule.params, ctx.player, lifestyle) защищаем
+   fallback-значениями: Array.isArray(...), (x || {}), (x || []).
+
+8. Журнал: addGeneratedLog пишет generated-записи с textKey/params/effects;
+   LogScreen рендерит текст через getEventLogText и чипы через EffectChips.
