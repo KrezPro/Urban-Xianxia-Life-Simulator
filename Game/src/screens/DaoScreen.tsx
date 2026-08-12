@@ -37,7 +37,6 @@ export default function DaoScreen() {
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const { attemptBreakthrough, nextStage, calculateChance, nextStageName } = useBreakthrough();
-
   const [hasAdBuff, setHasAdBuff] = useState(false);
   const [details, setDetails] = useState<DetailsData | null>(null);
 
@@ -48,7 +47,6 @@ export default function DaoScreen() {
 
   const currentStageName = getStageName(player.cultivationStage, locale);
   const currentStageDef = getStageDefinition(player.cultivationStage);
-
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
@@ -63,7 +61,6 @@ export default function DaoScreen() {
   const bodyAlreadyThisYear = player.lastBodyTemperAge === player.age;
   const bodyEnoughQi = isGreaterOrEqualBigInt(player.qi, bodyCost.toString());
   const bodyEnoughMoney = isGreaterOrEqualBigInt(player.money, bodyMoneyCost.toString());
-
   const canTemperBody =
     !player.isDead &&
     bodyOldEnough &&
@@ -74,12 +71,12 @@ export default function DaoScreen() {
   const bodyButtonTitle = !bodyOldEnough
     ? ui.body_locked_age
     : bodyAlreadyThisYear
-      ? ui.body_locked_year
-      : !bodyEnoughQi
-        ? ui.body_locked_qi
-        : !bodyEnoughMoney
-          ? techniquesUI.not_enough_money
-          : ui.body_button;
+    ? ui.body_locked_year
+    : !bodyEnoughQi
+    ? ui.body_locked_qi
+    : !bodyEnoughMoney
+    ? techniquesUI.not_enough_money
+    : ui.body_button;
 
   const bodyCostText = `${formatLargeNumber(bodyCost.toString())} ${ui.qi_energy} / $${formatLargeNumber(
     bodyMoneyCost.toString()
@@ -95,25 +92,20 @@ export default function DaoScreen() {
     if (!stage) {
       return;
     }
-
     const lines: string[] = [];
-
     if (stage.maxAge > 0) {
       lines.push(`${ui.stage_info_max_age}: ${stage.maxAge}`);
       lines.push(`${ui.stage_info_soft_age}: ${stage.softAge}`);
     } else {
       lines.push(ui.stage_info_immortal);
     }
-
     lines.push(`${ui.stage_info_meditation}: x${stage.qiMeditationMultiplier}`);
     lines.push(`${ui.stage_info_mortality}: ${formatBps(stage.mortalityBps)}`);
     lines.push(`${ui.stage_info_survival}: ${formatBps(stage.survivalCostBps)}`);
     lines.push(`${ui.stage_info_breakthrough_damage}: ${formatBps(stage.breakthroughDamageBps)}`);
-
     if (isNext && stage.requiredQi) {
       lines.push(`${ui.stage_info_required_qi}: ${formatLargeNumber(stage.requiredQi)}`);
     }
-
     setDetails({
       title: getStageName(stage.id, locale),
       lines,
@@ -130,7 +122,6 @@ export default function DaoScreen() {
       `${ui.body_details_breakthrough}: ${formatBps(bodyEffects.breakthroughReductionBps)}`,
       `${ui.body_details_portal}: ${formatBps(bodyEffects.portalReductionBps)}`,
     ];
-
     setDetails({
       title: ui.body_details_title,
       lines,
@@ -139,11 +130,9 @@ export default function DaoScreen() {
 
   const openTechniqueDetails = (technique: any, currentLevel: number, isMax: boolean, requirementText: string) => {
     const lines: string[] = [];
-
     if (requirementText) {
       lines.push(requirementText);
     }
-
     const currentLines = buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel);
     const nextLines = !isMax
       ? buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel + 1)
@@ -153,7 +142,6 @@ export default function DaoScreen() {
       lines.push(techniquesUI.current_effects);
       currentLines.forEach((line) => lines.push(line));
     }
-
     if (nextLines.length > 0) {
       lines.push(techniquesUI.next_effects);
       nextLines.forEach((line) => lines.push(line));
@@ -178,10 +166,8 @@ export default function DaoScreen() {
     if (!canTemperBody) {
       return;
     }
-
     const nextLevel = bodyLevel + 1;
     const success = player.temperBody();
-
     if (success) {
       pushUiNotification('body_temper_success', 'reward', {
         level: nextLevel.toString(),
@@ -201,7 +187,6 @@ export default function DaoScreen() {
 
   const getRequirementText = (technique: any): string => {
     const parts: string[] = [];
-
     if (technique.requiredSpiritualRoot) {
       parts.push(`${techniquesUI.requirements?.spiritual_root}: ${technique.requiredSpiritualRoot}`);
     }
@@ -211,7 +196,6 @@ export default function DaoScreen() {
     if (technique.requiredStage) {
       parts.push(`${techniquesUI.requirements?.stage}: ${getStageName(technique.requiredStage, locale)}`);
     }
-
     return parts.join(', ');
   };
 
@@ -229,7 +213,6 @@ export default function DaoScreen() {
 
     player.applyEffects({ money: `-${cost}` });
     techniques.incrementTechnique(technique.id);
-
     pushUiNotification('technique_upgrade_success', 'reward', {
       name: getTechniqueName(technique.id),
       level: (currentLevel + 1).toString(),
@@ -254,17 +237,13 @@ export default function DaoScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <NotificationHost />
-
       <View style={styles.header}>
         <Text style={styles.title}>{ui.title}</Text>
-
         <Card variant="primary" style={styles.stageCard}>
           <Text style={styles.stageLabel}>{ui.stage}</Text>
-
           <TouchableOpacity onPress={() => openStageInfo(currentStageDef, false)} delayLongPress={300}>
             <Text style={styles.stageName}>{currentStageName}</Text>
           </TouchableOpacity>
-
           <Text style={styles.qiValue}>
             {ui.qi_energy}: {formatLargeNumber(player.qi)}
           </Text>
@@ -276,7 +255,6 @@ export default function DaoScreen() {
         {nextStage ? (
           <Card style={styles.nextCard}>
             <Text style={styles.nextStageTitle}>{ui.next_stage}</Text>
-
             <TouchableOpacity onPress={() => openStageInfo(nextStage, true)} delayLongPress={300}>
               <Text style={styles.nextStageName}>{nextStageName}</Text>
             </TouchableOpacity>
@@ -290,6 +268,12 @@ export default function DaoScreen() {
               <Text style={styles.infoLabel}>{ui.success_chance}</Text>
               <Text style={[styles.infoValue, { color: Theme.colors.success }]}>{chancePercent}%</Text>
             </View>
+
+            {player.portalBlessingBps > 0 ? (
+              <Text style={styles.portalBlessingText}>
+                {(ui.portal_blessing_active || '').replace('{percent}', formatBps(player.portalBlessingBps))}
+              </Text>
+            ) : null}
 
             {!player.hasCultivatorPass ? (
               <Button
@@ -315,14 +299,11 @@ export default function DaoScreen() {
               {ui.body_level}: {bodyLevel}
             </Text>
           </View>
-
           <Text style={styles.techniqueDesc}>{ui.body_desc}</Text>
-
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>{ui.body_cost}</Text>
             <Text style={styles.infoValue}>{bodyCostText}</Text>
           </View>
-
           <Button
             title={bodyButtonTitle}
             onPress={handleTemperBody}
@@ -345,7 +326,6 @@ export default function DaoScreen() {
           const requirementText = getRequirementText(technique);
 
           let buttonTitle = techniquesUI.upgrade;
-
           if (isMax) {
             buttonTitle = techniquesUI.max;
           } else if (!meets) {
@@ -362,20 +342,16 @@ export default function DaoScreen() {
                   {techniquesUI.level}: {currentLevel}/{technique.maxLevel}
                 </Text>
               </View>
-
               <Text style={styles.techniqueDesc}>{getTechniqueDesc(technique.id)}</Text>
-
               {!!requirementText ? (
                 <Text style={styles.techniqueRequirement}>{requirementText}</Text>
               ) : null}
-
               {!isMax ? (
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabel}>{techniquesUI.cost}</Text>
                   <Text style={styles.infoValue}>${formatLargeNumber(cost)}</Text>
                 </View>
               ) : null}
-
               <Button
                 title={buttonTitle}
                 onPress={() => handleUpgradeTechnique(technique)}
@@ -397,7 +373,6 @@ export default function DaoScreen() {
               <Text style={styles.bottomLabel}>{ui.req_qi}</Text>
               <Text style={styles.bottomValue}>{formatLargeNumber(nextStage.requiredQi)}</Text>
             </View>
-
             <Button
               title={canBreakthrough ? ui.btn_breakthrough : ui.btn_no_qi}
               onPress={handleBreakthrough}
@@ -496,6 +471,11 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     color: Theme.colors.text,
+    fontWeight: '800',
+  },
+  portalBlessingText: {
+    color: Theme.colors.gold,
+    marginTop: 8,
     fontWeight: '800',
   },
   adButton: {

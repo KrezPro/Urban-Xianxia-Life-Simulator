@@ -163,4 +163,5 @@ export interface LifestyleReport {
   portalMoney: string;
   portalQi: string;
   portalDamage: number;
+  portalBlessingGainedBps: number;
 }

@@ -180,6 +180,7 @@
     "stage_info_breakthrough_damage": "Breakthrough danger",
     "stage_info_required_qi": "Required Qi",
     "stage_info_immortal": "Immortal: old age no longer kills",
+    "portal_blessing_active": "Active portal blessing: +{percent}",
     "log_no_qi": "Insufficient Qi energy for breakthrough.",
     "log_success": "[SUCCESS] Breakthrough successful! You reached stage: {name}. Meridians expanded.",
     "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",

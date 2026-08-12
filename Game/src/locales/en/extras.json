@@ -33,7 +33,8 @@
   },
   "logs": {
     "survival_cost_paid": "Living costs: -${amount}.",
-    "lifestyle_money_delta": "Activities yearly net: {amount}."
+    "lifestyle_money_delta": "Activities yearly net: {amount}.",
+    "portal_blessing_gained": "Portal blessing: +{percent}% to the next breakthrough chance."
   },
   "dao": {
     "techniques": {
@@ -110,6 +111,15 @@
       "health": "Health",
       "max_health": "Max Health",
       "stage": "Stage"
+    },
+    "portal_rewards": {
+      "title": "Portal Rewards",
+      "attempt_cost": "Attempt cost: ${cost}",
+      "reward_money": "Money: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Breakthrough bonus: +{percent}%",
+      "fail_damage_bps": "Failure: {percent}% of Max Health damage",
+      "fail_damage_flat": "Failure: {damage} damage"
     },
     "options": {
       "job_none": { "name": "No Job", "desc": "No income and no obligations." },

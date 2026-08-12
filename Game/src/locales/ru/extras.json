@@ -33,7 +33,8 @@
   },
   "logs": {
     "survival_cost_paid": "Расходы на жизнь: -${amount}.",
-    "lifestyle_money_delta": "Активности за год: {amount}."
+    "lifestyle_money_delta": "Активности за год: {amount}.",
+    "portal_blessing_gained": "Благословение портала: +{percent}% к шансу следующего прорыва."
   },
   "dao": {
     "techniques": {
@@ -110,6 +111,15 @@
       "health": "Здоровье",
       "max_health": "Макс. здоровье",
       "stage": "Стадия"
+    },
+    "portal_rewards": {
+      "title": "Награды портала",
+      "attempt_cost": "Стоимость попытки: ${cost}",
+      "reward_money": "Деньги: ${min}–${max}",
+      "reward_qi": "Ци: {min}–{max}",
+      "breakthrough_bonus": "Бонус прорыва: +{percent}%",
+      "fail_damage_bps": "Провал: {percent}% макс. здоровья",
+      "fail_damage_flat": "Провал: {damage} урона"
     },
     "options": {
       "job_none": { "name": "Без работы", "desc": "Нет дохода и обязательств." },

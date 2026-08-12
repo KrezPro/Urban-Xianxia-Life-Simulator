@@ -23,6 +23,7 @@ import {
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
 import { getRandomInt, safeBigInt, formatLargeNumber } from '../utils/helpers';
+import { formatBpsPercent } from '../utils/effectFormatter';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruNotifications from '../locales/ru/notifications.json';
@@ -51,7 +52,6 @@ export const useYearlyCycle = () => {
   const pushGeneratedEventNotification = useNotificationStore(
     (state) => state.pushGeneratedEventNotification
   );
-
   const techniques = useTechniquesStore();
   const inventory = useInventoryStore();
   const lifestyle = useLifestyleStore();
@@ -63,7 +63,6 @@ export const useYearlyCycle = () => {
 
   const handleGrowOlder = useCallback(() => {
     let current = usePlayerStore.getState();
-
     if (current.isDead) {
       return;
     }
@@ -88,7 +87,6 @@ export const useYearlyCycle = () => {
       current.maxHealth,
       current.bodyTempering
     );
-
     if (ageStageDeathBps > 0 && getRandomInt(0, 9999) < ageStageDeathBps) {
       addLog(notifications.age_mortality, 'system');
       pushUiNotification('age_mortality', 'danger');
@@ -98,7 +96,6 @@ export const useYearlyCycle = () => {
     }
 
     const oldAgeDeathBps = calculateOldAgeDeathBps(current.age, current.cultivationStage);
-
     if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
       addLog(notifications.old_age_death, 'system');
       pushUiNotification('old_age_death', 'danger');
@@ -108,14 +105,11 @@ export const useYearlyCycle = () => {
     }
 
     const survivalCost = getSurvivalCost(current.age, current.cultivationStage);
-
     if (survivalCost > 0n) {
       const money = safeBigInt(current.money);
-
       if (money >= survivalCost) {
         current.applyEffects({ money: (-survivalCost).toString() });
         current = usePlayerStore.getState();
-
         if (logs.survival_cost_paid) {
           addLog(
             logs.survival_cost_paid.replace('{amount}', formatLargeNumber(survivalCost.toString())),
@@ -124,12 +118,10 @@ export const useYearlyCycle = () => {
         }
       } else {
         const unpaid = survivalCost - money;
-
         if (money > 0n) {
           current.applyEffects({ money: (-money).toString() });
           current = usePlayerStore.getState();
         }
-
         const unpaidBps = Number((unpaid * 10000n) / survivalCost);
         const damage = calculateUnpaidSurvivalDamage(
           unpaidBps,
@@ -137,16 +129,12 @@ export const useYearlyCycle = () => {
           current.maxHealth,
           current.bodyTempering
         );
-
         current.applyEffects({ health: -damage });
         current = usePlayerStore.getState();
-
         addLog(notifications.survival_unpaid, 'system');
-
         if (unpaidBps >= 5000) {
           pushUiNotification('survival_unpaid', 'danger');
         }
-
         if (current.isDead) {
           current.setDeathCause('health');
           return;
@@ -189,7 +177,6 @@ export const useYearlyCycle = () => {
         health: report.healthDelta,
       });
       current = usePlayerStore.getState();
-
       if (current.isDead) {
         if (report.portalResult === 'fail') {
           current.setDeathCause('portal');
@@ -208,11 +195,9 @@ export const useYearlyCycle = () => {
     if (report.moneyDelta !== '0') {
       current.applyEffects({ money: report.moneyDelta });
       current = usePlayerStore.getState();
-
       const delta = safeBigInt(report.moneyDelta);
       const abs = delta < 0n ? (-delta).toString() : delta.toString();
       const signedAmount = `${delta < 0n ? '-' : '+'}$${formatLargeNumber(abs)}`;
-
       if (logs.lifestyle_money_delta) {
         addLog(logs.lifestyle_money_delta.replace('{amount}', signedAmount), 'system');
       }
@@ -238,9 +223,18 @@ export const useYearlyCycle = () => {
 
     const activePortalOption = getOptionById(lifestyle.selected.portal);
 
-    if (report.portalResult === 'success' && activePortalOption?.portal?.breakthroughBlessingBps) {
-      current.addPortalBlessing(activePortalOption.portal.breakthroughBlessingBps);
+    if (report.portalResult === 'success' && report.portalBlessingGainedBps > 0) {
+      current.addPortalBlessing(report.portalBlessingGainedBps);
       current = usePlayerStore.getState();
+      if (logs.portal_blessing_gained) {
+        addLog(
+          logs.portal_blessing_gained.replace(
+            '{percent}',
+            formatBpsPercent(report.portalBlessingGainedBps)
+          ),
+          'secret'
+        );
+      }
     }
 
     if (report.portalResult === 'fail' && activePortalOption?.portal?.failDamageBps) {
@@ -248,10 +242,8 @@ export const useYearlyCycle = () => {
         1,
         Math.floor((current.maxHealth * activePortalOption.portal.failDamageBps) / 10000)
       );
-
       current.applyEffects({ health: -extraDamage });
       current = usePlayerStore.getState();
-
       if (current.isDead) {
         current.setDeathCause('portal');
         return;
@@ -270,10 +262,8 @@ export const useYearlyCycle = () => {
         },
         baseModifiers
       );
-
       current.addQi(qiGain);
       current = usePlayerStore.getState();
-
       addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
     }
 
@@ -282,7 +272,6 @@ export const useYearlyCycle = () => {
     }
 
     let generatedEvent: GeneratedEvent;
-
     try {
       generatedEvent = generateYearEvent({
         age: current.age,
@@ -308,11 +297,9 @@ export const useYearlyCycle = () => {
 
     addGeneratedLog(generatedEvent);
     pushGeneratedEventNotification(generatedEvent);
-
     current.applyEffects(generatedEvent.effects);
 
     const afterEvent = usePlayerStore.getState();
-
     if (afterEvent.isDead) {
       afterEvent.setDeathCause('event');
     }

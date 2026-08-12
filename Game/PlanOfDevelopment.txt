@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 23 (Порталы как источник благословения прорыва и повышенная опасность порталов)
+[СТАТУС]: ШАГ 24 (Порталы: отображение наград и активное благословение прорыва)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -36,7 +36,7 @@
 
 === Фаза 7: UI-кит и восстановление отсутствующих файлов ===
 21. [X] Theme.ts: темная неоновая тема.
-22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
+22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow, DetailsModal.
 23. [X] utils/helpers.ts: format, BigInt, random, bps.
 24. [X] Экраны используют общий UI-кит.
 25. [X] Навигация использует стабильные route names.
@@ -75,7 +75,7 @@
 50. [X] При нехватке денег активности автоматически отключаются в порядке приоритета.
 51. [X] Techniques и Lifestyle сбрасываются при реинкарнации, карма-баффы остаются.
 52. [X] Добавлены maxAge/softAge стадий и шанс смерти от старости.
-53. [X] Нижняя навигация содержит только 5 видимых вкладок без лишнего пустого слота.
+53. [X] Нижняя навигация содержит только видимые вкладки без лишнего пустого слота.
 54. [X] Кнопка прорыва во вкладке Дао закреплена внизу и всегда видна.
 
 === Фаза 12: Генератор событий и последствия смерти ===
@@ -132,89 +132,102 @@
 93. [X] При смерти отправляется уведомление death_reason с параметром reason.
 94. [X] Обновлены локали RU/EN: death_cause_label, death_causes, death_reason.
 
-=== Фаза 19: Порталы как источник благословения прорыва ===
-95. [X] В lifestyle.json добавлены breakthroughBlessingBps для всех порталов.
-96. [X] В lifestyle.json добавлены failDamageBps, чтобы провалы порталов были опаснее.
-97. [X] usePlayerStore хранит portalBlessingBps, накапливает его и сбрасывает при реинкарнации.
-98. [X] useYearlyCycle начисляет portalBlessingBps за успешный портал и наносит дополнительный урон при провале.
-99. [X] useBreakthrough учитывает portalBlessingBps в шансе прорыва и списывает благословение после попытки.
-100. [X] Library и PlanOfDevelopment обновлены под новую роль порталов.
+=== Фаза 19: Подсказки и детализация эффектов + отключение Секты ===
+95. [X] Button в components/ui/index.tsx поддерживает onLongPress даже при визуально отключённом onPress.
+96. [X] Добавлен DetailsModal в components/ui/index.tsx для показа деталей по long-press.
+97. [X] Возраст в LifeScreen открывает подсказку с максимальной продолжительностью жизни текущей стадии.
+98. [X] DaoScreen показывает детали текущей и следующей стадии культивации по нажатию.
+99. [X] Закалка тела показывает художественное описание, а числовые эффекты — по long-press.
+100. [X] Техники Дао показывают требования/эффекты по long-press, а не в постоянном интерфейсе.
+101. [X] Магазин Кармы показывает эффекты баффов по long-press.
+102. [X] Sect удалён из TabNavigator: остались Life, Dao, Activities, Store.
+
+=== Фаза 20: Порталы — благословение и отображение наград ===
+103. [X] Данные порталов содержат attemptCost, moneyMin/moneyMax, qiMin/qiMax, breakthroughBlessingBps, failDamage, failDamageBps.
+104. [X] usePlayerStore хранит portalBlessingBps, накапливает его до PORTAL_BLESSING_CAP_BPS и сбрасывает при реинкарнации.
+105. [X] useBreakthrough учитывает portalBlessingBps в шансе прорыва и списывает благословение после реальной попытки.
+106. [X] processLifestyleYear возвращает portalBlessingGainedBps и добавляет portalQi в qiDelta при успехе портала.
+107. [X] useYearlyCycle применяет report.portalBlessingGainedBps через player.addPortalBlessing и пишет лог portal_blessing_gained.
+108. [X] ActivitiesScreen показывает блок наград портала: стоимость попытки, деньги, Ци, бонус прорыва и урон при провале.
+109. [X] DaoScreen показывает активное благословение портала, если portalBlessingBps > 0.
+110. [X] Локализация RU/EN и документация обновлены под награды порталов и благословение прорыва.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
 └── src/
-├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
-├── components/
-│   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
-│   └── game/
-│       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
-│       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
-│       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
-│       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
-├── constants/
-│   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
-│   └── Theme.ts                     // Темная тема
-├── data/
-│   ├── events.json                  // Legacy-события (fallback/архив)
-│   ├── eventRules.json              // Правила генератора событий
-│   ├── rebirthPenalties.json        // Последствия смерти: деньги, здоровье, проклятия
-│   ├── items.json                   // Многоуровневые карма-баффы
-│   ├── stages.json                  // Стадии культивации, med/mortality/survival/breakthrough данные
-│   ├── sects.json                   // Шаблоны сект
-│   ├── rankings.json                // Seed-рейтинг
-│   ├── techniques.json              // Техники Дао
-│   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы с breakthrough blessing и failDamageBps
-├── hooks/
-│   ├── useIdleProgress.ts           // Offline-прогресс без процентного разгона
-│   ├── useBreakthrough.ts           // Прорывы с body tempering, portal blessing и новыми капами
-│   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, порталы, события
-├── navigation/
-│   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
-├── screens/
-│   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти
-│   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering
-│   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
-│   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
-│   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
-├── store/
-│   ├── mmkvStorage.ts               // MMKV storage
-│   ├── usePlayerStore.ts            // Игрок, bodyTempering, interstitialShownThisLife, смерть, portalBlessingBps
-│   ├── useEventStore.ts             // Журнал, addGeneratedLog
-│   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
-│   ├── useLocaleStore.ts            // Язык
-│   ├── useSocialStore.ts            // Секты
-│   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount
-│   ├── useTechniquesStore.ts        // Уровни техник Дао (сбрасываются при реинкарнации)
-│   └── useLifestyleStore.ts         // Выбранные активности (сбрасываются при реинкарнации)
-├── types/
-│   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport, ModifierSet и т.д.
-├── utils/
-│   ├── notificationUtils.ts         // Резолвинг уведомлений и логов по ключам/параметрам
-│   ├── timeUtils.ts                 // Дельта времени
-│   ├── helpers.ts                   // Форматирование, BigInt, random, bps
-│   ├── stageUtils.ts                // Локализованные имена стадий
-│   ├── rebirthUtils.ts              // Последствия смерти и проклятия
-│   ├── eventGenerator.ts            // Генератор событий с body resistance
-│   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, порталы
-└── locales/
-├── ru/
-│   ├── ui.json                  // Базовые тексты UI
-│   ├── events.json              // Legacy-события
-│   ├── social.json              // Секты
-│   ├── notifications.json       // Уведомления
-│   ├── extras.json              // Навигация, техники, магазин, активности
-│   ├── stages.json              // Имена стадий
-│   ├── rebirth.json             // Последствия перерождения
-│   └── eventGenerator.json      // Шаблоны и пулы событий
-└── en/
-├── ui.json                  // Базовые тексты UI
-├── events.json              // Legacy-события
-├── social.json              // Секты
-├── notifications.json       // Уведомления
-├── extras.json              // Навигация, техники, магазин, активности
-├── stages.json              // Имена стадий
-├── rebirth.json             // Последствия перерождения
-└── eventGenerator.json      // Шаблоны и пулы событий
+    ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
+    ├── components/
+    │   ├── ui/
+    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton, DetailsModal
+    │   └── game/
+    │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
+    │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
+    │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
+    │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
+    ├── constants/
+    │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
+    │   └── Theme.ts                     // Темная тема
+    ├── data/
+    │   ├── events.json                  // Legacy-события (fallback/архив)
+    │   ├── eventRules.json              // Правила генератора событий
+    │   ├── rebirthPenalties.json        // Последствия смерти: деньги, здоровье, проклятия
+    │   ├── items.json                   // Многоуровневые карма-баффы
+    │   ├── stages.json                  // Стадии культивации, med/mortality/survival/breakthrough данные
+    │   ├── sects.json                   // Шаблоны сект
+    │   ├── rankings.json                // Seed-рейтинг
+    │   ├── techniques.json              // Техники Дао
+    │   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы с наградами и благословением
+    ├── hooks/
+    │   ├── useIdleProgress.ts           // Offline-прогресс без процентного разгона
+    │   ├── useBreakthrough.ts           // Прорывы с body tempering, portal blessing и капами
+    │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, порталы, события
+    ├── navigation/
+    │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
+    ├── screens/
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста
+    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела, активное благословение портала
+    │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы и награды порталов
+    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press
+    │   ├── SectScreen.tsx               // Секта и рейтинг (deprecated, отключён из навигации)
+    │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
+    ├── store/
+    │   ├── mmkvStorage.ts               // MMKV storage
+    │   ├── usePlayerStore.ts            // Игрок, bodyTempering, interstitialShownThisLife, смерть, portalBlessingBps
+    │   ├── useEventStore.ts             // Журнал, addGeneratedLog
+    │   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
+    │   ├── useLocaleStore.ts            // Язык
+    │   ├── useSocialStore.ts            // Секты
+    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount
+    │   ├── useTechniquesStore.ts        // Уровни техник Дао (сбрасываются при реинкарнации)
+    │   └── useLifestyleStore.ts         // Выбранные активности (сбрасываются при реинкарнации)
+    ├── types/
+    │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport, ModifierSet, LifestyleReport с portalBlessingGainedBps
+    ├── utils/
+    │   ├── notificationUtils.ts         // Резолвинг уведомлений и логов по ключам/параметрам
+    │   ├── timeUtils.ts                 // Дельта времени
+    │   ├── helpers.ts                   // Форматирование, BigInt, random, bps
+    │   ├── stageUtils.ts                // Локализованные имена стадий
+    │   ├── rebirthUtils.ts              // Последствия смерти и проклятия
+    │   ├── eventGenerator.ts            // Генератор событий с body resistance
+    │   ├── effectFormatter.ts           // Форматирование эффектов и bps-процентов
+    │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality, порталы и благословение
+    └── locales/
+        ├── ru/
+        │   ├── ui.json                  // Базовые тексты UI
+        │   ├── events.json              // Legacy-события
+        │   ├── social.json              // Секты
+        │   ├── notifications.json       // Уведомления
+        │   ├── extras.json              // Навигация, техники, магазин, активности, награды порталов
+        │   ├── stages.json              // Имена стадий
+        │   ├── rebirth.json             // Последствия перерождения
+        │   └── eventGenerator.json      // Шаблоны и пулы событий
+        └── en/
+            ├── ui.json                  // Базовые тексты UI
+            ├── events.json              // Legacy-события
+            ├── social.json              // Секты
+            ├── notifications.json       // Уведомления
+            ├── extras.json              // Навигация, техники, магазин, активности, награды порталов
+            ├── stages.json              // Имена стадий
+            ├── rebirth.json             // Последствия перерождения
+            └── eventGenerator.json      // Шаблоны и пулы событий

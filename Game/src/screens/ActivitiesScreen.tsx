@@ -7,7 +7,7 @@ import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
-import { formatLargeNumber } from '../utils/helpers';
+import { formatLargeNumber, safeBigInt } from '../utils/helpers';
 import {
   getOptionById,
   meetsLifestyleRequirements,
@@ -20,7 +20,7 @@ import {
 } from '../utils/gameplayUtils';
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { getStageName } from '../utils/stageUtils';
-import { buildEffectLines } from '../utils/effectFormatter';
+import { buildEffectLines, formatBpsPercent } from '../utils/effectFormatter';
 import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
 import ruExtras from '../locales/ru/extras.json';
@@ -66,9 +66,7 @@ export default function ActivitiesScreen() {
     if (!req) {
       return '';
     }
-
     const parts: string[] = [];
-
     if (req.ageMin) {
       parts.push(`${activities.requirements?.age}: ${req.ageMin}`);
     }
@@ -90,7 +88,6 @@ export default function ActivitiesScreen() {
     if (req.stage) {
       parts.push(`${activities.requirements?.stage}: ${getStageName(req.stage, locale)}`);
     }
-
     return parts.join(', ');
   };
 
@@ -110,7 +107,6 @@ export default function ActivitiesScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{activities.title}</Text>
-
         <Card variant="gold" style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>{`$${formatLargeNumber(player.money)}`}</Text>
         </Card>
@@ -147,11 +143,11 @@ export default function ActivitiesScreen() {
                     );
                     const canSelect = meets && affordable;
                     const requirementText = getRequirementText(option);
-
                     const annualCost = getLifestyleAnnualCost(option);
                     const annualIncome = getLifestyleAnnualIncome(option, player, modifiers);
                     const net = annualIncome - annualCost;
                     const effectLines = buildEffectLines(option.effects, effectLabels, 1);
+                    const portalRewards = activities.portal_rewards || {};
 
                     return (
                       <View key={option.id} style={styles.optionCard}>
@@ -159,7 +155,6 @@ export default function ActivitiesScreen() {
                           <Text style={styles.optionName}>{getOptionName(option.id)}</Text>
                           <Text style={styles.optionTier}>T{option.tier}</Text>
                         </View>
-
                         <Text style={styles.optionDesc}>{getOptionDesc(option.id)}</Text>
 
                         {annualCost > 0n ? (
@@ -205,6 +200,68 @@ export default function ActivitiesScreen() {
                           </View>
                         ) : null}
 
+                        {option.category === 'portal' && option.portal ? (
+                          <View style={styles.portalRewardsContainer}>
+                            <Text style={styles.portalRewardsTitle}>{portalRewards.title}</Text>
+
+                            {safeBigInt(option.portal.attemptCost || '0') > 0n ? (
+                              <Text style={styles.portalRewardLine}>
+                                {(portalRewards.attempt_cost || '').replace(
+                                  '{cost}',
+                                  formatLargeNumber(option.portal.attemptCost)
+                                )}
+                              </Text>
+                            ) : null}
+
+                            {safeBigInt(option.portal.moneyMin || '0') > 0n &&
+                            safeBigInt(option.portal.moneyMax || '0') > 0n ? (
+                              <Text style={styles.portalRewardLine}>
+                                {(portalRewards.reward_money || '')
+                                  .replace('{min}', formatLargeNumber(option.portal.moneyMin))
+                                  .replace('{max}', formatLargeNumber(option.portal.moneyMax))}
+                              </Text>
+                            ) : null}
+
+                            {safeBigInt(option.portal.qiMin || '0') > 0n &&
+                            safeBigInt(option.portal.qiMax || '0') > 0n ? (
+                              <Text style={styles.portalRewardLine}>
+                                {(portalRewards.reward_qi || '')
+                                  .replace('{min}', formatLargeNumber(option.portal.qiMin))
+                                  .replace('{max}', formatLargeNumber(option.portal.qiMax))}
+                              </Text>
+                            ) : null}
+
+                            {typeof option.portal.breakthroughBlessingBps === 'number' &&
+                            option.portal.breakthroughBlessingBps > 0 ? (
+                              <Text style={styles.portalRewardLine}>
+                                {(portalRewards.breakthrough_bonus || '').replace(
+                                  '{percent}',
+                                  formatBpsPercent(option.portal.breakthroughBlessingBps)
+                                )}
+                              </Text>
+                            ) : null}
+
+                            {typeof option.portal.failDamageBps === 'number' &&
+                            option.portal.failDamageBps > 0 ? (
+                              <Text style={styles.portalDangerLine}>
+                                {(portalRewards.fail_damage_bps || '').replace(
+                                  '{percent}',
+                                  formatBpsPercent(option.portal.failDamageBps)
+                                )}
+                              </Text>
+                            ) : null}
+
+                            {safeBigInt(option.portal.failDamage || '0') > 0n ? (
+                              <Text style={styles.portalDangerLine}>
+                                {(portalRewards.fail_damage_flat || '').replace(
+                                  '{damage}',
+                                  formatLargeNumber(option.portal.failDamage)
+                                )}
+                              </Text>
+                            ) : null}
+                          </View>
+                        ) : null}
+
                         {!!requirementText ? (
                           <Text style={styles.requirementText}>
                             {activities.requirements_label}: {requirementText}
@@ -221,7 +278,6 @@ export default function ActivitiesScreen() {
                               small
                               style={styles.optionButton}
                             />
-
                             {option.id !== `${category.id}_none` ? (
                               <Button
                                 title={activities.disable}
@@ -358,6 +414,26 @@ const styles = StyleSheet.create({
   },
   effectLine: {
     color: Theme.colors.secondary,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  portalRewardsContainer: {
+    marginTop: 6,
+    marginBottom: 6,
+  },
+  portalRewardsTitle: {
+    color: Theme.colors.textDim,
+    fontSize: Theme.fontSize.xs,
+    fontWeight: '800',
+    marginBottom: 2,
+  },
+  portalRewardLine: {
+    color: Theme.colors.info,
+    fontSize: Theme.fontSize.xs,
+    marginBottom: 2,
+  },
+  portalDangerLine: {
+    color: Theme.colors.danger,
     fontSize: Theme.fontSize.xs,
     marginBottom: 2,
   },
