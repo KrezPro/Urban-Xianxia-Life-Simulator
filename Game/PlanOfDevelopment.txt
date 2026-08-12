@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 4-fix (Восстановлен helpers.ts: getBigIntProgress и все экспорты на месте. Требуется перезапуск Metro с --clear)
+[СТАТУС]: ШАГ 10 (Восстановлены long-press подсказки и система всплывающих уведомлений, SafeAreaView заменён на react-native-safe-area-context)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -10,19 +10,19 @@
 5. [X] Базовые события взросления.
 
 === Фаза 2: Core Loop (Завершено) ===
-6. [X] Фаза инкарнации.
+6. [X] Инкарнация и стартовые параметры.
 7. [X] Выбор фокуса года.
 8. [X] BigInt для Ци и денег.
 9. [X] Прорывы, смерть, карма.
 
-=== Фаза 3: Контент, локализация, виральность (Завершено базово) ===
+=== Фаза 3: Контент и локализация (Завершено базово) ===
 10. [X] RU/EN словари.
-11. [X] Абсурдные события.
+11. [X] Абсурдные события и виральный тон.
 
 === Фаза 4: Idle и реинкарнация (Завершено) ===
 12. [X] Offline progress.
 13. [X] Карма за смерть.
-14. [X] Магазин реинкарнации.
+14. [X] Магазин кармы.
 
 === Фаза 5: Экономика, монетизация, социализация ===
 15. [X] IAP-заготовки.
@@ -34,76 +34,84 @@
 19. [ ] Remote config.
 20. [ ] Сезонные LiveOps-флаги.
 
-=== Фаза 7: UI-кит и восстановление файлов (Завершено) ===
-21. [X] Theme.ts.
-22. [X] components/ui/index.tsx.
-23. [X] utils/helpers.ts (полный набор экспортов).
-24. [X] Экраны на UI-ките.
-25. [X] Английские route names.
+=== Фаза 7: UI-кит и восстановление отсутствующих файлов ===
+21. [X] Theme.ts: темная неоновая тема.
+22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow.
+23. [X] utils/helpers.ts: format, BigInt, random.
+24. [X] Экраны используют общий UI-кит.
+25. [X] Навигация использует стабильные route names.
 26. [X] Локализация вкладок и служебных экранов.
 
-=== Фаза 8: Вовлечение (следующий блок) ===
-27. [ ] Daily Rewards.
-28. [ ] Quests.
-29. [ ] Achievements.
-30. [ ] Choice Events.
-31. [ ] Share.
-32. [ ] Onboarding.
-33. [ ] Редкие события.
+=== Фаза 8: Максимальное вовлечение ===
+27. [X] Long-press подсказки для всех статов и фокусов во вкладке Мир.
+28. [X] Система всплывающих уведомлений (NotificationHost/Toast/Store) с анимацией и автоскрытием.
+29. [X] SafeAreaView заменён на react-native-safe-area-context во всех экранах.
+30. [ ] Daily Rewards: ежедневные награды и серия входов.
+31. [ ] Quests: короткие цели и быстрые награды.
+32. [ ] Achievements: достижения, тосты, бонусы.
+33. [ ] Choice Events: события с выбором и риском.
+34. [ ] Share: смерть, прорыв, рекорд, инвайт.
+35. [ ] Onboarding: первая сессия с быстрым вознаграждением.
+36. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
 
 === Фаза 9: Техническая гигиена ===
-34. [X] AsyncStorage не используется.
-35. [X] MMKV-адаптер с memory-fallback.
-36. [X] BigInt хранится как string.
-37. [X] FlashList для больших списков.
-38. [X] FIX: helpers.ts переписан самодостаточным, getBigIntProgress экспортируется (рантайм-ошибка "is not a function" устраняется перезапуском Metro с --clear).
-39. [ ] Автотесты BigInt/MMKV/FlashList.
+37. [X] AsyncStorage не используется.
+38. [X] MMKV-адаптер с memory-fallback.
+39. [X] BigInt хранится как string.
+40. [X] FlashList для больших списков.
+41. [ ] Автотесты BigInt/MMKV/FlashList.
 
-=== ОПИСАНИЕ структуры проекта (кратко) ===
-Game/
-├── package.json                 // зависимости
-├── babel.config.js              // babel
-├── app.json                     // Expo config
-├── eas.json                     // EAS channels
-├── PlanOfDevelopment.txt        // план
-├── Library.txt                  // архитектурные правила
-├── DataForAI.txt                // выученные уроки
-└── src/
-    ├── App.tsx                  // вход, гидратация, навигация
-    ├── components/
-    │   └── ui/
-    │       └── index.tsx        // Button, Card, ProgressBar, StatRow
-    ├── constants/
-    │   ├── GameConstants.ts     // лимиты, кулдауны, балансовые числа
-    │   └── Theme.ts             // цвета, отступы, тени
-    ├── data/
-    │   ├── events.json          // мирские/тайные события
-    │   ├── items.json           // карма-баффы
-    │   ├── stages.json          // стадии культивации
-    │   ├── sects.json           // шаблоны сект
-    │   └── rankings.json        // seed-рейтинг
-    ├── hooks/
-    │   ├── useIdleProgress.ts   // offline-прогресс
-    │   └── useBreakthrough.ts   // прорывы
-    ├── navigation/
-    │   └── TabNavigator.tsx     // вкладки: Life, Dao, Store, Log, Sect
-    ├── screens/
-    │   ├── LifeScreen.tsx       // мирская жизнь
-    │   ├── DaoScreen.tsx        // культивация
-    │   ├── StoreScreen.tsx      // магазин кармы
-    │   ├── LogScreen.tsx        // журнал
-    │   └── SectScreen.tsx       // секта и рейтинг
-    ├── services/
-    │   └── socialService.ts     // секты, инвайты, рейтинг
-    ├── store/
-    │   ├── mmkvStorage.ts       // MMKV storage
-    │   ├── usePlayerStore.ts    // игрок
-    │   ├── useEventStore.ts     // журнал
-    │   ├── useInventoryStore.ts // инвентарь
-    │   ├── useLocaleStore.ts    // язык
-    │   └── useSocialStore.ts    // секты
-    ├── types/
-    │   └── index.ts             // интерфейсы
-    └── utils/
-        ├── timeUtils.ts         // дельта времени
-        └── helpers.ts           // format, BigInt, random (самодостаточный)
+=== ОПИСАНИЕ структуры проекта (обновлено) ===
+Game/src/
+├── App.tsx                          // SafeAreaProvider, гидратация, глобальный NotificationHost
+├── components/
+│   ├── ui/
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow (+onLongPress)
+│   └── game/
+│       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
+│       └── NotificationToast.tsx    // Анимированный тост уведомления
+├── constants/
+│   ├── GameConstants.ts             // Лимиты, кулдауны, длительность уведомлений
+│   └── Theme.ts                     // Темная тема
+├── data/
+│   ├── events.json                  // Мирские/тайные события
+│   ├── items.json                   // Карма-баффы
+│   ├── stages.json                  // Стадии культивации
+│   ├── sects.json                   // Шаблоны сект
+│   └── rankings.json                // Seed-рейтинг
+├── hooks/
+│   ├── useIdleProgress.ts           // Offline-прогресс + уведомления
+│   └── useBreakthrough.ts           // Прорывы + уведомления
+├── navigation/
+│   └── TabNavigator.tsx             // Нижние вкладки
+├── screens/
+│   ├── LifeScreen.tsx               // Основной экран с уведомлениями и long-press подсказками
+│   ├── DaoScreen.tsx                // Путь Дао
+│   ├── StoreScreen.tsx              // Магазин Кармы
+│   ├── SectScreen.tsx               // Секта и рейтинг
+│   └── LogScreen.tsx                // Журнал
+├── store/
+│   ├── mmkvStorage.ts               // MMKV storage
+│   ├── usePlayerStore.ts            // Игрок
+│   ├── useEventStore.ts             // Журнал
+│   ├── useInventoryStore.ts         // Инвентарь
+│   ├── useLocaleStore.ts            // Язык
+│   ├── useSocialStore.ts            // Секты
+│   └── useNotificationStore.ts      // Очередь уведомлений
+├── types/
+│   └── index.ts                     // Интерфейсы, включая INotification
+├── utils/
+│   ├── notificationUtils.ts         // Локализованный текст уведомлений
+│   ├── timeUtils.ts                 // Дельта времени
+│   └── helpers.ts                   // Форматирование, BigInt, random
+└── locales/
+    ├── ru/
+    │   ├── ui.json                  // Включает hints для long-press
+    │   ├── events.json
+    │   ├── social.json
+    │   └── notifications.json       // Тексты уведомлений
+    └── en/
+        ├── ui.json                  // Включает hints для long-press
+        ├── events.json
+        ├── social.json
+        └── notifications.json       // Тексты уведомлений

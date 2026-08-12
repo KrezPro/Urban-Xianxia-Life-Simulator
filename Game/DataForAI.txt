@@ -17,5 +17,7 @@
 16. При восстановлении большого блока файлов сначала создаются зависимости (types, helpers, Theme, stores, services, locales), затем экраны и навигация.
 17. App должен ждать гидратации всех критичных сторов: player, locale, social.
 18. useSocialStore должен вызывать refreshLeaderboard и simulateOffline после гидратации.
-19. Ошибка рантайма "getBigIntProgress is not a function (it is undefined)" означает, что Metro отдал СТАРУЮ трансформированную версию helpers.ts (кэш) или файл не содержит экспорт. Лечится: (а) переписать helpers.ts целиком со всеми экспортами, (б) перезапустить Metro с очисткой кэша: npx expo start --clear.
-20. helpers.ts должен оставаться без внешних импортов (самодостаточным), чтобы его кэш-хэш менялся предсказуемо и не было циклических зависимостей.
+19. SafeAreaView из react-native устарел и выдаёт warning. Использовать SafeAreaView и SafeAreaProvider из react-native-safe-area-context.
+20. StatRow в UI-ките должен поддерживать onPress и onLongPress, чтобы экраны могли показывать подсказки по long-press.
+21. NotificationHost должен быть размещён глобально в App.tsx поверх NavigationContainer, чтобы уведомления были видны на всех вкладках.
+22. Подсказки хранятся в locales/{lang}/ui.json внутри ключа hints, чтобы поддерживать RU/EN.

@@ -25,11 +25,7 @@ export const getNotificationText = (notification: INotification, locale: Locale)
     const list = events[pool] || [];
     const found = list.find((event: any) => event.id === notification.messageKey);
 
-    if (found) {
-      return applyParams(found.text, notification.params);
-    }
-
-    return notification.messageKey;
+    return found ? applyParams(found.text, notification.params) : notification.messageKey;
   }
 
   const dictionary: any = locale === 'ru' ? ruNotifications : enNotifications;

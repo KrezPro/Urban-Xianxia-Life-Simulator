@@ -1,5 +1,5 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social.
+1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
 4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
@@ -14,11 +14,14 @@
 13. MMKV основной storage; memory-fallback только для аварийных сред.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
-16. utils/helpers.ts: единый самодостаточный модуль. Обязан экспортировать: formatLargeNumber, safeBigInt, addBigIntStrings, subtractBigIntStrings, compareBigIntStrings, isGreaterOrEqualBigInt, divideBigIntStringByNumber, clampProgress, getBigIntProgress, getRandomInt, pickRandom, chance. Никаких внешних импортов внутри helpers.ts.
+16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит и random-утилит.
 17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
 18. Новые файлы всегда получать короткое описание в структуре проекта.
 19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled и icon.
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
 22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
-23. После изменения экспортов в utils обязательно перезапускать Metro с очисткой кэша (npx expo start --clear), иначе рантайм получит старый модуль и упадет с "is not a function".
+23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
+24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
+25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
+26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.

@@ -1,49 +1,63 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
-import { INotification } from '../../types';
+import { INotification, NotificationType } from '../../types';
 import { useLocaleStore } from '../../store/useLocaleStore';
 import { getNotificationText } from '../../utils/notificationUtils';
-import { getNotificationAreaHeight, isTablet, scaleFont, scaleSize } from '../../utils/layout';
 
 interface NotificationToastProps {
   notification: INotification;
   onDismiss: (id: string) => void;
 }
 
-const iconByType = {
+const iconByType: Record<NotificationType, keyof typeof Ionicons.glyphMap> = {
   mundane: 'earth',
   secret: 'sparkles',
   system: 'information-circle',
   reward: 'gift',
   danger: 'skull',
   social: 'people',
-} as const;
+};
 
-const colorByType = {
+const colorByType: Record<NotificationType, string> = {
   mundane: Theme.colors.secondary,
   secret: Theme.colors.info,
   system: Theme.colors.textMuted,
   reward: Theme.colors.gold,
   danger: Theme.colors.danger,
   social: Theme.colors.success,
-} as const;
+};
 
 export const NotificationToast = ({ notification, onDismiss }: NotificationToastProps) => {
   const locale = useLocaleStore((state) => state.locale);
 
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-14)).current;
+  const leavingRef = useRef(false);
 
-  const text = getNotificationText(notification, locale);
-  const areaHeight = getNotificationAreaHeight();
-  const tablet = isTablet();
+  const dismiss = () => {
+    if (leavingRef.current) {
+      return;
+    }
 
-  const styles = useMemo(
-    () => createStyles(areaHeight, text.length, tablet),
-    [areaHeight, text.length, tablet]
-  );
+    leavingRef.current = true;
+
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: -14,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      onDismiss(notification.id);
+    });
+  };
 
   useEffect(() => {
     const expiresAt = notification.createdAt + notification.durationMs;
@@ -68,20 +82,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
     ]).start();
 
     const timer = setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY, {
-          toValue: -14,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        onDismiss(notification.id);
-      });
+      dismiss();
     }, remaining);
 
     return () => {
@@ -91,6 +92,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
 
   const iconName = iconByType[notification.type] || 'information-circle';
   const accent = colorByType[notification.type] || Theme.colors.textMuted;
+  const text = getNotificationText(notification, locale);
 
   return (
     <Animated.View
@@ -103,50 +105,48 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
         },
       ]}
     >
-      <View style={[styles.iconBadge, { borderColor: accent }]}> 
-        <Ionicons name={iconName} size={scaleSize(18)} color={accent} />
-      </View>
+      <TouchableOpacity activeOpacity={0.95} onPress={dismiss} style={styles.inner}>
+        <View style={[styles.iconBadge, { borderColor: accent }]}>
+          <Ionicons name={iconName} size={18} color={accent} />
+        </View>
 
-      <Text style={styles.text} numberOfLines={3}>
-        {text}
-      </Text>
+        <Text style={styles.text} numberOfLines={2}>
+          {text}
+        </Text>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
 
-const createStyles = (areaHeight: number, textLength: number, tablet: boolean) => {
-  const fontSize = textLength > 160 ? 11 : textLength > 100 ? 12 : 13;
-  const lineHeight = textLength > 160 ? 15 : 18;
-
-  return StyleSheet.create({
-    container: {
-      maxHeight: areaHeight,
-      borderRadius: scaleSize(14),
-      borderWidth: 1,
-      backgroundColor: Theme.colors.surface,
-      paddingHorizontal: scaleSize(12),
-      paddingVertical: scaleSize(10),
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      ...Theme.shadow,
-    },
-    iconBadge: {
-      width: scaleSize(tablet ? 34 : 28),
-      height: scaleSize(tablet ? 34 : 28),
-      borderRadius: scaleSize(10),
-      backgroundColor: Theme.colors.surfaceLight,
-      borderWidth: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginRight: scaleSize(8),
-      marginTop: scaleSize(2),
-    },
-    text: {
-      flex: 1,
-      color: Theme.colors.text,
-      fontSize: scaleFont(fontSize),
-      lineHeight: scaleFont(lineHeight),
-      fontWeight: '600',
-    },
-  });
-};
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 14,
+    borderWidth: 1,
+    backgroundColor: Theme.colors.surface,
+    ...Theme.shadow,
+    marginBottom: Theme.spacing.sm,
+  },
+  inner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  iconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  text: {
+    flex: 1,
+    color: Theme.colors.text,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '600',
+  },
+});

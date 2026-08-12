@@ -1,30 +1,36 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import TabNavigator from './navigation/TabNavigator';
 import { NotificationHost } from './components/game/NotificationHost';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
+import { useSocialStore } from './store/useSocialStore';
+import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
-import { scaleFont, scaleSize } from './utils/layout';
 import ruUI from './locales/ru/ui.json';
 import enUI from './locales/en/ui.json';
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
   const localeHydrated = useLocaleStore((state) => state.hasHydrated);
+  const socialHydrated = useSocialStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
 
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
-  if (!playerHydrated || !localeHydrated) {
+  useIdleProgress();
+
+  if (!playerHydrated || !localeHydrated || !socialHydrated) {
     return (
       <SafeAreaProvider>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
-          <Text style={styles.loadingText}>{uiData.app.loading}</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.loadingCard}>
+            <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
+            <Text style={styles.loadingText}>{uiData.app.loading}</Text>
+          </View>
+        </SafeAreaView>
       </SafeAreaProvider>
     );
   }
@@ -35,7 +41,6 @@ export default function App() {
         <NavigationContainer>
           <TabNavigator />
         </NavigationContainer>
-
         <NotificationHost />
       </View>
     </SafeAreaProvider>
@@ -47,17 +52,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Theme.colors.background,
   },
-  loadingContainer: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Theme.colors.background,
   },
-  loadingCard: {},
+  loadingCard: {
+    backgroundColor: Theme.colors.surface,
+    borderColor: Theme.colors.borderSoft,
+    borderWidth: 1,
+    borderRadius: Theme.radius.xl,
+    paddingVertical: Theme.spacing.xl,
+    paddingHorizontal: Theme.spacing.xl,
+    alignItems: 'center',
+    ...Theme.shadow,
+  },
   loadingText: {
     color: Theme.colors.textMuted,
-    fontSize: scaleFont(16),
+    fontSize: Theme.fontSize.md,
     fontWeight: '700',
-    marginTop: scaleSize(16),
+    marginTop: Theme.spacing.md,
   },
 });

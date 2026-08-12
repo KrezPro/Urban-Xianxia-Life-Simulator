@@ -145,7 +145,7 @@ export const StatRow = ({ icon, label, value, color, onPress, onLongPress }: Sta
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.85} onPress={onPress} onLongPress={onLongPress}>
+    <TouchableOpacity activeOpacity={0.85} onPress={onPress} onLongPress={onLongPress} delayLongPress={300}>
       {content}
     </TouchableOpacity>
   );
@@ -240,20 +240,20 @@ const styles = StyleSheet.create({
   statRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Theme.colors.borderSoft,
   },
   statIconBadge: {
-    width: 30,
-    height: 30,
-    borderRadius: 10,
+    width: 34,
+    height: 34,
+    borderRadius: 12,
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
     borderColor: Theme.colors.borderSoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 12,
   },
   statLabel: {
     flex: 1,
@@ -263,6 +263,6 @@ const styles = StyleSheet.create({
   statValue: {
     color: Theme.colors.text,
     fontWeight: '800',
-    fontSize: Theme.fontSize.sm,
+    fontSize: Theme.fontSize.md,
   },
 });
