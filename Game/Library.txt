@@ -7,21 +7,21 @@
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Activities, Store. Маршрута Log НЕТ. Sect отключён.
-9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг. Код сохранён, но вкладка Sect отключена.
+8. Навигация: route names только английские: Life, Dao, Activities, Store, Sect. Маршрута Log НЕТ.
+9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
 13. MMKV основной storage; memory-fallback только для аварийных сред.
 14. Theme.ts: единая темная тема для всего UI.
-15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
+15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
 17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
 18. Новые файлы всегда получать короткое описание в структуре проекта.
-19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled, icon и onLongPress.
+19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled и icon.
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
-21. Вкладка Sect отключена в пользовательской навигации. Код секты остаётся в проекте как deprecated.
-22. SectScreen больше не используется в TabNavigator, но файл сохранён для возможного будущего удаления.
+21. Вкладка Sect обязана присутствовать в TabNavigator как отдельный английский route name "Sect".
+22. SectScreen содержит два режима: "Моя секта" и локальный рейтинг.
 23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
@@ -43,7 +43,7 @@
 41. При реинкарнации техники и lifestyle сбрасываются, карма-баффы сохраняются с уровнями.
 42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
 43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
-44. TabNavigator содержит только 4 видимых вкладок: Life, Dao, Activities, Store.
+44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.
 45. eventGenerator.ts читает таблицы GameConstants ТОЛЬКО через tableNumber(table, key, fallback) — защита от Hermes "Cannot convert undefined value to object".
 46. generateYearEvent в useYearlyCycle обёрнут в try/catch с buildFallbackEvent(), год не крашит приложение.
 47. NotificationToast запускает таймер автоскрытия от момента монтирования, а не от createdAt.
@@ -53,5 +53,4 @@
 51. Body Tempering стоит Ци и деньги: moneyCost = qiCost * GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER. Если множитель отсутствует или некорректен, использовать fallback 2.
 52. Покупки в магазине Кармы идут по цепочке StoreScreen -> player.deductKarma -> inventory.addItem. quantity всегда нормализуется как целое число >= 0.
 53. Причина смерти хранится в player.lastDeathCause, отображается в LifeScreen и передаётся в уведомлении death_reason.
-54. DetailsModal из components/ui/index.tsx используется для показа деталей по long-press в DaoScreen и StoreScreen.
-55. Числовые эффекты техник, карма-баффов, стадий и закалки тела показываются в деталях по long-press, а не в постоянном интерфейсе.
+54. Порталы дают portalBlessingBps при успехе: благословение накапливается до PORTAL_BLESSING_CAP_BPS и списывается при попытке прорыва. Провал портала наносит дополнительный урон failDamageBps от максимального здоровья.
