@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 22 (Сброс техник Дао при реинкарнации и отображение причины смерти)
+[СТАТУС]: ШАГ 23 (Подсказки и детализация эффектов в Мире/Дао/Магазине + отключение Секты)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -132,6 +132,16 @@
 93. [X] При смерти отправляется уведомление death_reason с параметром reason.
 94. [X] Обновлены локали RU/EN: death_cause_label, death_causes, death_reason.
 
+=== Фаза 19: Подсказки и детализация эффектов + отключение Секты ===
+95. [X] Button в components/ui/index.tsx поддерживает onLongPress даже при визуально отключённом onPress.
+96. [X] Добавлен DetailsModal в components/ui/index.tsx для показа деталей по long-press.
+97. [X] Возраст в LifeScreen открывает подсказку с максимальной продолжительностью жизни текущей стадии.
+98. [X] DaoScreen показывает детали текущей и следующей стадии культивации по нажатию.
+99. [X] Закалка тела показывает художественное описание, а числовые эффекты — по long-press.
+100. [X] Техники Дао показывают требования/эффекты по long-press, а не в постоянном интерфейсе.
+101. [X] Магазин Кармы показывает эффекты баффов по long-press.
+102. [X] Sect удалён из TabNavigator: остались Life, Dao, Activities, Store.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -139,7 +149,7 @@ Game/
     ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
     ├── components/
     │   ├── ui/
-    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
+    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton, DetailsModal
     │   └── game/
     │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
     │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
@@ -163,13 +173,13 @@ Game/
     │   ├── useBreakthrough.ts           // Прорывы с body tempering и новыми капами
     │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, события
     ├── navigation/
-    │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
+    │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти
-    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB, причина смерти, подсказка возраста
+    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
-    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
-    │   ├── SectScreen.tsx               // Секта и рейтинг
+    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press
+    │   ├── SectScreen.tsx               // Секта и рейтинг (deprecated, отключён из навигации)
     │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
     ├── store/
     │   ├── mmkvStorage.ts               // MMKV storage

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useInventoryStore } from '../store/useInventoryStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card } from '../components/ui';
+import { Button, Card, DetailsModal } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
 import { getKarmaLevelEffects } from '../utils/gameplayUtils';
@@ -16,11 +16,18 @@ import enUI from '../locales/en/ui.json';
 import ruExtras from '../locales/ru/extras.json';
 import enExtras from '../locales/en/extras.json';
 
+interface DetailsData {
+  title: string;
+  lines: string[];
+}
+
 export default function StoreScreen() {
   const player = usePlayerStore();
   const inventory = useInventoryStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+
+  const [details, setDetails] = useState<DetailsData | null>(null);
 
   const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
@@ -39,6 +46,35 @@ export default function StoreScreen() {
     const rawLevel = Number(inventory.items[item.id]?.quantity || 0);
     const safeRawLevel = Number.isFinite(rawLevel) ? Math.max(0, Math.floor(rawLevel)) : 0;
     return Math.min(safeRawLevel, getSafeMaxLevel(item));
+  };
+
+  const buildItemDetails = (item: any, itemUI: any, currentLevel: number, safeMaxLevel: number): string[] => {
+    const lines: string[] = [];
+
+    const currentEffects = getKarmaLevelEffects(item.id, currentLevel);
+    const currentLines = buildEffectLines(currentEffects, effectLabels, 1);
+
+    if (currentLevel > 0 && currentLines.length > 0) {
+      lines.push(storeExtra.current_effects);
+      currentLines.forEach((line) => lines.push(line));
+    }
+
+    if (currentLevel < safeMaxLevel) {
+      const nextLevel = Math.min(currentLevel + 1, safeMaxLevel);
+      const nextEffects = getKarmaLevelEffects(item.id, nextLevel);
+      const nextLines = buildEffectLines(nextEffects, effectLabels, 1);
+
+      if (nextLines.length > 0) {
+        lines.push(storeExtra.next_effects);
+        nextLines.forEach((line) => lines.push(line));
+      }
+    }
+
+    if (storeExtra.effects_note) {
+      lines.push(storeExtra.effects_note);
+    }
+
+    return lines;
   };
 
   const handleBuyLevel = (item: any) => {
@@ -106,15 +142,6 @@ export default function StoreScreen() {
             const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
             const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
 
-            const currentEffects = getKarmaLevelEffects(item.id, currentLevel);
-            const currentLines = buildEffectLines(currentEffects, effectLabels, 1);
-
-            const nextEffects = getKarmaLevelEffects(
-              item.id,
-              Math.min(currentLevel + 1, safeMaxLevel)
-            );
-            const nextLines = !isMax ? buildEffectLines(nextEffects, effectLabels, 1) : [];
-
             return (
               <Card key={item.id} style={styles.itemCard}>
                 <View style={styles.itemTopRow}>
@@ -125,30 +152,6 @@ export default function StoreScreen() {
                 </View>
 
                 <Text style={styles.itemDesc}>{itemUI.desc}</Text>
-
-                {currentLevel > 0 && currentLines.length > 0 ? (
-                  <View style={styles.effectsBlock}>
-                    <Text style={styles.effectsLabel}>{storeExtra.current_effects}</Text>
-                    {currentLines.map((line, index) => (
-                      <Text key={`${item.id}_current_${index}`} style={styles.effectLine}>
-                        {line}
-                      </Text>
-                    ))}
-                  </View>
-                ) : null}
-
-                {!isMax && nextLines.length > 0 ? (
-                  <View style={styles.effectsBlock}>
-                    <Text style={styles.effectsLabel}>{storeExtra.next_effects}</Text>
-                    {nextLines.map((line, index) => (
-                      <Text key={`${item.id}_next_${index}`} style={styles.effectLine}>
-                        {line}
-                      </Text>
-                    ))}
-                  </View>
-                ) : null}
-
-                <Text style={styles.effectsNote}>{storeExtra.effects_note}</Text>
 
                 {!isMax ? (
                   <View style={styles.costRow}>
@@ -162,6 +165,12 @@ export default function StoreScreen() {
                     isMax ? storeExtra.max_level : canAfford ? ui.btn_buy : ui.btn_no_karma
                   }
                   onPress={() => handleBuyLevel(item)}
+                  onLongPress={() =>
+                    setDetails({
+                      title: itemUI.name,
+                      lines: buildItemDetails(item, itemUI, currentLevel, safeMaxLevel),
+                    })
+                  }
                   disabled={isMax || !canAfford}
                   variant={isMax ? 'secondary' : canAfford ? 'gold' : 'ghost'}
                   icon={isMax ? 'checkmark-circle' : 'cart'}
@@ -199,6 +208,14 @@ export default function StoreScreen() {
           />
         </Card>
       </ScrollView>
+
+      <DetailsModal
+        visible={details !== null}
+        title={details?.title || ''}
+        lines={details?.lines || []}
+        closeLabel={storeExtra.details_close}
+        onClose={() => setDetails(null)}
+      />
     </SafeAreaView>
   );
 }
@@ -255,24 +272,6 @@ const styles = StyleSheet.create({
   itemDesc: {
     color: Theme.colors.textMuted,
     marginBottom: Theme.spacing.md,
-  },
-  effectsBlock: {
-    marginBottom: 8,
-  },
-  effectsLabel: {
-    color: Theme.colors.textDim,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: 2,
-  },
-  effectLine: {
-    color: Theme.colors.secondary,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: 2,
-  },
-  effectsNote: {
-    color: Theme.colors.textDim,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: Theme.spacing.sm,
   },
   costRow: {
     flexDirection: 'row',

@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import LifeScreen from '../screens/LifeScreen';
 import DaoScreen from '../screens/DaoScreen';
 import StoreScreen from '../screens/StoreScreen';
-import SectScreen from '../screens/SectScreen';
 import ActivitiesScreen from '../screens/ActivitiesScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
@@ -47,10 +46,6 @@ export default function TabNavigator() {
             key = 'store';
           }
 
-          if (route.name === 'Sect') {
-            key = 'sect';
-          }
-
           return (
             <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
               {tabBar[key] || route.name}
@@ -68,8 +63,6 @@ export default function TabNavigator() {
             iconName = focused ? 'barbell' : 'barbell-outline';
           } else if (route.name === 'Store') {
             iconName = focused ? 'cart' : 'cart-outline';
-          } else if (route.name === 'Sect') {
-            iconName = focused ? 'people' : 'people-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -80,7 +73,6 @@ export default function TabNavigator() {
       <Tab.Screen name="Dao" component={DaoScreen} />
       <Tab.Screen name="Activities" component={ActivitiesScreen} />
       <Tab.Screen name="Store" component={StoreScreen} />
-      <Tab.Screen name="Sect" component={SectScreen} />
     </Tab.Navigator>
   );
 }

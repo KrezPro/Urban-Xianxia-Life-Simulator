@@ -97,6 +97,14 @@
       "focus_secret": {
         "title": "Secret Path",
         "text": "Focus on cultivation: you gain Qi and encounter secret events more often."
+      },
+      "age": {
+        "title": "Age",
+        "text": "Maximum lifespan of your current stage: {maxAge} years. Old age may come earlier, especially after {softAge} years."
+      },
+      "age_immortal": {
+        "title": "Age",
+        "text": "This stage is immortal: old age no longer kills you."
       }
     }
   },
@@ -154,6 +162,24 @@
     "body_locked_year": "Tempering available next year",
     "body_locked_qi": "Not enough Qi",
     "body_effect_line": "+{maxHealth} Max Health, +{regen} Regen/year, illness resistance {resistance}%",
+    "body_desc": "The body is tempered through pain, sweat and will, becoming a vessel for true power.",
+    "details_close": "Close",
+    "body_details_title": "Body Tempering Effects",
+    "body_details_max_health": "Max Health",
+    "body_details_regen": "Regen/year",
+    "body_details_illness": "Illness resistance",
+    "body_details_mortality": "Mortality reduction",
+    "body_details_survival": "Living cost reduction",
+    "body_details_breakthrough": "Breakthrough damage reduction",
+    "body_details_portal": "Portal damage reduction",
+    "stage_info_max_age": "Max lifespan",
+    "stage_info_soft_age": "Old age starts at",
+    "stage_info_meditation": "Qi meditation",
+    "stage_info_mortality": "Mortality",
+    "stage_info_survival": "Living cost",
+    "stage_info_breakthrough_damage": "Breakthrough danger",
+    "stage_info_required_qi": "Required Qi",
+    "stage_info_immortal": "Immortal: old age no longer kills",
     "log_no_qi": "Insufficient Qi energy for breakthrough.",
     "log_success": "[SUCCESS] Breakthrough successful! You reached stage: {name}. Meridians expanded.",
     "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",

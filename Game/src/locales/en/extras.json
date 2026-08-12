@@ -77,7 +77,8 @@
     "next_cost": "Next level cost",
     "current_effects": "Current",
     "next_effects": "Next",
-    "effects_note": "Start effects apply after reincarnation. Yearly effects apply each year."
+    "effects_note": "Start effects apply after reincarnation. Yearly effects apply each year.",
+    "details_close": "Close"
   },
   "activities": {
     "title": "Activities",

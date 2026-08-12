@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
 
@@ -8,6 +8,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'gold' | 'ghost';
 interface ButtonProps {
   title: string;
   onPress: () => void;
+  onLongPress?: () => void;
   variant?: ButtonVariant;
   disabled?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
@@ -19,6 +20,7 @@ interface ButtonProps {
 export const Button = ({
   title,
   onPress,
+  onLongPress,
   variant = 'primary',
   disabled = false,
   icon,
@@ -31,8 +33,9 @@ export const Button = ({
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={onPress}
-      disabled={disabled}
+      onPress={disabled ? undefined : onPress}
+      onLongPress={onLongPress}
+      delayLongPress={300}
       style={[
         styles.button,
         small && styles.buttonSmall,
@@ -198,6 +201,34 @@ export const StatRow = ({ icon, label, value, color, onPress, onLongPress }: Sta
   );
 };
 
+interface DetailsModalProps {
+  visible: boolean;
+  title: string;
+  lines: string[];
+  closeLabel: string;
+  onClose: () => void;
+}
+
+export const DetailsModal = ({ visible, title, lines, closeLabel, onClose }: DetailsModalProps) => {
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <TouchableOpacity style={styles.detailsBackdrop} activeOpacity={1} onPress={onClose}>
+        <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.detailsCard}>
+          <Text style={styles.detailsTitle}>{title}</Text>
+
+          {lines.map((line, index) => (
+            <Text key={`details_line_${index}`} style={styles.detailsLine}>
+              {line}
+            </Text>
+          ))}
+
+          <Button title={closeLabel} onPress={onClose} variant="primary" small style={styles.detailsButton} />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
@@ -337,5 +368,42 @@ const styles = StyleSheet.create({
     color: Theme.colors.text,
     fontWeight: '800',
     fontSize: Theme.fontSize.md,
+  },
+  detailsBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Theme.spacing.lg,
+  },
+  detailsCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
+    borderWidth: 1,
+    borderColor: Theme.colors.primarySoft,
+    padding: Theme.spacing.lg,
+    alignItems: 'flex-start',
+    ...Theme.shadow,
+  },
+  detailsTitle: {
+    color: Theme.colors.text,
+    fontSize: Theme.fontSize.lg,
+    fontWeight: '900',
+    marginBottom: Theme.spacing.sm,
+    textAlign: 'left',
+  },
+  detailsLine: {
+    color: Theme.colors.textMuted,
+    fontSize: Theme.fontSize.sm,
+    lineHeight: 20,
+    marginBottom: 4,
+    textAlign: 'left',
+  },
+  detailsButton: {
+    minWidth: 160,
+    marginTop: Theme.spacing.md,
+    alignSelf: 'center',
   },
 });

@@ -97,6 +97,41 @@ export default function LifeScreen() {
     });
   };
 
+  const openAgeHint = () => {
+    const stage: any =
+      (stagesData as any[]).find((item) => item.id === player.cultivationStage) ||
+      (stagesData as any[])[0];
+
+    if (!stage) {
+      return;
+    }
+
+    if (stage.maxAge > 0) {
+      const ageHint = hints.age;
+      if (!ageHint) {
+        return;
+      }
+
+      setHint({
+        title: ageHint.title || '',
+        text: (ageHint.text || '')
+          .replace('{maxAge}', String(stage.maxAge))
+          .replace('{softAge}', String(stage.softAge)),
+      });
+      return;
+    }
+
+    const immortalHint = hints.age_immortal;
+    if (!immortalHint) {
+      return;
+    }
+
+    setHint({
+      title: immortalHint.title || '',
+      text: immortalHint.text || '',
+    });
+  };
+
   const openLog = () => {
     setLogVisible(true);
     clearMissedNotifications();
@@ -266,7 +301,10 @@ export default function LifeScreen() {
 
         <Card variant="primary" style={styles.heroCard}>
           <Text style={styles.heroAgeLabel}>{ui.age}</Text>
-          <Text style={styles.heroAgeValue}>{player.age}</Text>
+
+          <TouchableOpacity onPress={openAgeHint} onLongPress={openAgeHint} delayLongPress={300}>
+            <Text style={styles.heroAgeValue}>{player.age}</Text>
+          </TouchableOpacity>
 
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>

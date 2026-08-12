@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useBreakthrough } from '../hooks/useBreakthrough';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card, ProgressBar } from '../components/ui';
+import { Button, Card, ProgressBar, DetailsModal } from '../components/ui';
 import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { GameConstants } from '../constants/GameConstants';
@@ -16,6 +16,7 @@ import {
   getBodyTemperCost,
   getBodyTemperMoneyCost,
   getBodyEffects,
+  getStageDefinition,
 } from '../utils/gameplayUtils';
 import { getStageName } from '../utils/stageUtils';
 import { buildEffectLines } from '../utils/effectFormatter';
@@ -25,13 +26,20 @@ import enUI from '../locales/en/ui.json';
 import ruExtras from '../locales/ru/extras.json';
 import enExtras from '../locales/en/extras.json';
 
+interface DetailsData {
+  title: string;
+  lines: string[];
+}
+
 export default function DaoScreen() {
   const player = usePlayerStore();
   const techniques = useTechniquesStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const { attemptBreakthrough, nextStage, calculateChance, nextStageName } = useBreakthrough();
+
   const [hasAdBuff, setHasAdBuff] = useState(false);
+  const [details, setDetails] = useState<DetailsData | null>(null);
 
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
@@ -39,6 +47,8 @@ export default function DaoScreen() {
   const effectLabels = extras.effect_labels || {};
 
   const currentStageName = getStageName(player.cultivationStage, locale);
+  const currentStageDef = getStageDefinition(player.cultivationStage);
+
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
@@ -71,14 +81,89 @@ export default function DaoScreen() {
           ? techniquesUI.not_enough_money
           : ui.body_button;
 
-  const bodyEffectText = (ui.body_effect_line || '')
-    .replace('{maxHealth}', bodyEffects.maxHealth.toString())
-    .replace('{regen}', bodyEffects.regenPerYear.toString())
-    .replace('{resistance}', (bodyEffects.illnessResistanceBps / 100).toFixed(1));
-
   const bodyCostText = `${formatLargeNumber(bodyCost.toString())} ${ui.qi_energy} / $${formatLargeNumber(
     bodyMoneyCost.toString()
   )}`;
+
+  const formatBps = (bps: number): string => {
+    const safe = typeof bps === 'number' && isFinite(bps) ? bps : 0;
+    const percent = (safe / 100).toFixed(1);
+    return `${percent.replace(/\.0$/, '')}%`;
+  };
+
+  const openStageInfo = (stage: any, isNext: boolean) => {
+    if (!stage) {
+      return;
+    }
+
+    const lines: string[] = [];
+
+    if (stage.maxAge > 0) {
+      lines.push(`${ui.stage_info_max_age}: ${stage.maxAge}`);
+      lines.push(`${ui.stage_info_soft_age}: ${stage.softAge}`);
+    } else {
+      lines.push(ui.stage_info_immortal);
+    }
+
+    lines.push(`${ui.stage_info_meditation}: x${stage.qiMeditationMultiplier}`);
+    lines.push(`${ui.stage_info_mortality}: ${formatBps(stage.mortalityBps)}`);
+    lines.push(`${ui.stage_info_survival}: ${formatBps(stage.survivalCostBps)}`);
+    lines.push(`${ui.stage_info_breakthrough_damage}: ${formatBps(stage.breakthroughDamageBps)}`);
+
+    if (isNext && stage.requiredQi) {
+      lines.push(`${ui.stage_info_required_qi}: ${formatLargeNumber(stage.requiredQi)}`);
+    }
+
+    setDetails({
+      title: getStageName(stage.id, locale),
+      lines,
+    });
+  };
+
+  const openBodyDetails = () => {
+    const lines = [
+      `${ui.body_details_max_health}: +${bodyEffects.maxHealth}`,
+      `${ui.body_details_regen}: +${bodyEffects.regenPerYear}`,
+      `${ui.body_details_illness}: ${formatBps(bodyEffects.illnessResistanceBps)}`,
+      `${ui.body_details_mortality}: ${formatBps(bodyEffects.mortalityReductionBps)}`,
+      `${ui.body_details_survival}: ${formatBps(bodyEffects.survivalReductionBps)}`,
+      `${ui.body_details_breakthrough}: ${formatBps(bodyEffects.breakthroughReductionBps)}`,
+      `${ui.body_details_portal}: ${formatBps(bodyEffects.portalReductionBps)}`,
+    ];
+
+    setDetails({
+      title: ui.body_details_title,
+      lines,
+    });
+  };
+
+  const openTechniqueDetails = (technique: any, currentLevel: number, isMax: boolean, requirementText: string) => {
+    const lines: string[] = [];
+
+    if (requirementText) {
+      lines.push(requirementText);
+    }
+
+    const currentLines = buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel);
+    const nextLines = !isMax
+      ? buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel + 1)
+      : [];
+
+    if (currentLines.length > 0) {
+      lines.push(techniquesUI.current_effects);
+      currentLines.forEach((line) => lines.push(line));
+    }
+
+    if (nextLines.length > 0) {
+      lines.push(techniquesUI.next_effects);
+      nextLines.forEach((line) => lines.push(line));
+    }
+
+    setDetails({
+      title: getTechniqueName(technique.id),
+      lines,
+    });
+  };
 
   const handleWatchAd = () => {
     setHasAdBuff(true);
@@ -175,7 +260,11 @@ export default function DaoScreen() {
 
         <Card variant="primary" style={styles.stageCard}>
           <Text style={styles.stageLabel}>{ui.stage}</Text>
-          <Text style={styles.stageName}>{currentStageName}</Text>
+
+          <TouchableOpacity onPress={() => openStageInfo(currentStageDef, false)} delayLongPress={300}>
+            <Text style={styles.stageName}>{currentStageName}</Text>
+          </TouchableOpacity>
+
           <Text style={styles.qiValue}>
             {ui.qi_energy}: {formatLargeNumber(player.qi)}
           </Text>
@@ -187,7 +276,10 @@ export default function DaoScreen() {
         {nextStage ? (
           <Card style={styles.nextCard}>
             <Text style={styles.nextStageTitle}>{ui.next_stage}</Text>
-            <Text style={styles.nextStageName}>{nextStageName}</Text>
+
+            <TouchableOpacity onPress={() => openStageInfo(nextStage, true)} delayLongPress={300}>
+              <Text style={styles.nextStageName}>{nextStageName}</Text>
+            </TouchableOpacity>
 
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>{ui.req_qi}</Text>
@@ -224,7 +316,7 @@ export default function DaoScreen() {
             </Text>
           </View>
 
-          <Text style={styles.techniqueDesc}>{bodyEffectText}</Text>
+          <Text style={styles.techniqueDesc}>{ui.body_desc}</Text>
 
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>{ui.body_cost}</Text>
@@ -234,6 +326,7 @@ export default function DaoScreen() {
           <Button
             title={bodyButtonTitle}
             onPress={handleTemperBody}
+            onLongPress={openBodyDetails}
             disabled={!canTemperBody}
             variant={canTemperBody ? 'primary' : 'ghost'}
             icon="barbell"
@@ -250,11 +343,6 @@ export default function DaoScreen() {
           const cost = getTechniqueCost(technique.id, currentLevel);
           const canAfford = isGreaterOrEqualBigInt(player.money, cost);
           const requirementText = getRequirementText(technique);
-
-          const currentLines = buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel);
-          const nextLines = !isMax
-            ? buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel + 1)
-            : [];
 
           let buttonTitle = techniquesUI.upgrade;
 
@@ -281,28 +369,6 @@ export default function DaoScreen() {
                 <Text style={styles.techniqueRequirement}>{requirementText}</Text>
               ) : null}
 
-              {currentLines.length > 0 ? (
-                <View style={styles.effectsBlock}>
-                  <Text style={styles.effectsLabel}>{techniquesUI.current_effects}</Text>
-                  {currentLines.map((line, index) => (
-                    <Text key={`${technique.id}_current_${index}`} style={styles.effectLine}>
-                      {line}
-                    </Text>
-                  ))}
-                </View>
-              ) : null}
-
-              {!isMax && nextLines.length > 0 ? (
-                <View style={styles.effectsBlock}>
-                  <Text style={styles.effectsLabel}>{techniquesUI.next_effects}</Text>
-                  {nextLines.map((line, index) => (
-                    <Text key={`${technique.id}_next_${index}`} style={styles.effectLine}>
-                      {line}
-                    </Text>
-                  ))}
-                </View>
-              ) : null}
-
               {!isMax ? (
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabel}>{techniquesUI.cost}</Text>
@@ -313,6 +379,7 @@ export default function DaoScreen() {
               <Button
                 title={buttonTitle}
                 onPress={() => handleUpgradeTechnique(technique)}
+                onLongPress={() => openTechniqueDetails(technique, currentLevel, isMax, requirementText)}
                 disabled={isMax || !meets || !canAfford}
                 variant={isMax ? 'secondary' : meets && canAfford ? 'gold' : 'ghost'}
                 icon="sparkles"
@@ -342,6 +409,14 @@ export default function DaoScreen() {
           </Card>
         </View>
       ) : null}
+
+      <DetailsModal
+        visible={details !== null}
+        title={details?.title || ''}
+        lines={details?.lines || []}
+        closeLabel={ui.details_close}
+        onClose={() => setDetails(null)}
+      />
     </SafeAreaView>
   );
 }
@@ -482,19 +557,6 @@ const styles = StyleSheet.create({
     color: Theme.colors.warning,
     fontSize: Theme.fontSize.sm,
     marginBottom: 8,
-  },
-  effectsBlock: {
-    marginBottom: 8,
-  },
-  effectsLabel: {
-    color: Theme.colors.textDim,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: 2,
-  },
-  effectLine: {
-    color: Theme.colors.secondary,
-    fontSize: Theme.fontSize.xs,
-    marginBottom: 2,
   },
   techniqueButton: {
     marginTop: Theme.spacing.sm,
