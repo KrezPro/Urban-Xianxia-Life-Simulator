@@ -61,6 +61,11 @@ export const getBodyTemperCost = (level: number): bigint => {
   );
 };
 
+export const getBodyTemperMoneyCost = (level: number): bigint => {
+  const qiCost = getBodyTemperCost(level);
+  return qiCost * BigInt(GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER);
+};
+
 export const getBodyRegenPerYear = (level: number): number => {
   if (0 >= level) {
     return 0;
@@ -172,7 +177,9 @@ export const getKarmaTotalEffects = (
   let startMaxHealth = 0;
   let startSpiritualRoot = 0;
   let startBodyTempering = 0;
+
   const safeItems = items || {};
+
   (itemsData as any[]).forEach((item) => {
     if (item.type !== 'karma_buff') {
       return;
@@ -182,6 +189,7 @@ export const getKarmaTotalEffects = (
       return;
     }
     const effects = getKarmaLevelEffects(item.id, level);
+
     if (effects.startMoney) {
       startMoney += safeBigInt(effects.startMoney);
     }
@@ -194,6 +202,7 @@ export const getKarmaTotalEffects = (
     if (effects.startBodyTempering) {
       startBodyTempering += effects.startBodyTempering;
     }
+
     (Object.keys(mods) as Array<keyof ModifierSet>).forEach((key) => {
       const value = effects[key as string];
       if (typeof value === 'number') {
@@ -201,6 +210,7 @@ export const getKarmaTotalEffects = (
       }
     });
   });
+
   return {
     ...mods,
     startMoney: startMoney.toString(),
@@ -215,11 +225,14 @@ export const getTechniqueCost = (techniqueId: string, currentLevel: number): str
   if (!technique || currentLevel >= technique.maxLevel) {
     return '0';
   }
+
   let cost = safeBigInt(technique.baseCost);
   const growthBps = technique.costGrowthBps || 0;
+
   for (let i = 0; i < currentLevel; i += 1) {
     cost = (cost * BigInt(10000 + growthBps) + 9999n) / 10000n;
   }
+
   return cost.toString();
 };
 
@@ -228,6 +241,7 @@ export const getTechniqueModifiers = (
 ): ModifierSet => {
   const mods = emptyModifiers();
   const safeLevels = levels || {};
+
   (techniquesData as any[]).forEach((technique) => {
     const level = safeLevels[technique.id] || 0;
     if (0 >= level) {
@@ -240,6 +254,7 @@ export const getTechniqueModifiers = (
       }
     });
   });
+
   return mods;
 };
 
@@ -251,6 +266,7 @@ export const meetsTechniqueRequirements = (
   if (!technique) {
     return false;
   }
+
   if (technique.requiredSpiritualRoot && player.spiritualRoot < technique.requiredSpiritualRoot) {
     return false;
   }
@@ -264,6 +280,7 @@ export const meetsTechniqueRequirements = (
       return false;
     }
   }
+
   return true;
 };
 
@@ -303,6 +320,7 @@ export const meetsLifestyleRequirements = (
   if (!req) {
     return true;
   }
+
   if (req.ageMin && player.age < req.ageMin) {
     return false;
   }
@@ -328,6 +346,7 @@ export const meetsLifestyleRequirements = (
       return false;
     }
   }
+
   return true;
 };
 
@@ -339,13 +358,102 @@ export const calculateJobIncome = (
   if (!option.dailyIncome || '0' === option.dailyIncome) {
     return '0';
   }
+
   const baseIncome = safeBigInt(option.dailyIncome) * BigInt(GameConstants.YEAR_DAYS);
   const statBonus = Math.min(
     GameConstants.JOB_STAT_BONUS_FLAT_CAP,
     player.intelligence * 80 + player.appearance * 30
   );
   const flatBonus = clampInt(modifiers.moneyFlatPerYear, 0, GameConstants.MONEY_FLAT_CAP);
+
   return (baseIncome + BigInt(statBonus) + BigInt(flatBonus)).toString();
+};
+
+export const getLifestyleAnnualCost = (option: any): bigint => {
+  if (!option) {
+    return 0n;
+  }
+
+  let cost = safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
+
+  if (option.portal && option.portal.attemptCost) {
+    cost += safeBigInt(option.portal.attemptCost);
+  }
+
+  return cost;
+};
+
+export const getLifestyleAnnualIncome = (
+  option: any,
+  player: { intelligence: number; appearance: number },
+  modifiers: ModifierSet
+): bigint => {
+  if (!option || option.category !== 'job') {
+    return 0n;
+  }
+
+  return safeBigInt(calculateJobIncome(option, player, modifiers));
+};
+
+export const getLifestyleProjectedNet = (
+  selection: LifestyleSelection | undefined | null,
+  player: { money: string; intelligence: number; appearance: number },
+  modifiers: ModifierSet
+): bigint => {
+  const safeSelection: LifestyleSelection = {
+    job: 'job_none',
+    sport: 'sport_none',
+    food: 'food_none',
+    housing: 'housing_none',
+    portal: 'portal_none',
+    ...(selection || {}),
+  };
+
+  let net = safeBigInt(player.money);
+
+  (Object.keys(safeSelection) as LifestyleCategory[]).forEach((category) => {
+    const option = getOptionById(safeSelection[category]);
+    if (!option) {
+      return;
+    }
+
+    net += getLifestyleAnnualIncome(option, player, modifiers);
+    net -= getLifestyleAnnualCost(option);
+  });
+
+  return net;
+};
+
+export const canAffordLifestyleSelection = (
+  selection: LifestyleSelection | undefined | null,
+  player: { money: string; intelligence: number; appearance: number },
+  modifiers: ModifierSet
+): boolean => {
+  return getLifestyleProjectedNet(selection, player, modifiers) >= 0n;
+};
+
+export const canAffordLifestyleOption = (
+  category: LifestyleCategory,
+  optionId: string,
+  currentSelection: LifestyleSelection | undefined | null,
+  player: { money: string; intelligence: number; appearance: number },
+  modifiers: ModifierSet
+): boolean => {
+  const safeSelection: LifestyleSelection = {
+    job: 'job_none',
+    sport: 'sport_none',
+    food: 'food_none',
+    housing: 'housing_none',
+    portal: 'portal_none',
+    ...(currentSelection || {}),
+  };
+
+  const nextSelection: LifestyleSelection = {
+    ...safeSelection,
+    [category]: optionId,
+  };
+
+  return canAffordLifestyleSelection(nextSelection, player, modifiers);
 };
 
 export const calculateAgeDecay = (age: number, stageId: string): number => {
@@ -353,14 +461,18 @@ export const calculateAgeDecay = (age: number, stageId: string): number => {
   if (!stage || !stage.maxAge || stage.maxAge <= 0) {
     return 0;
   }
+
   if (age < stage.softAge) {
     return 0;
   }
+
   const overSoft = age - stage.softAge;
   let decay = Math.floor(overSoft / GameConstants.AGE_DECAY_DIVISOR) + GameConstants.AGE_DECAY_BASE;
+
   if (age >= stage.maxAge) {
     decay += GameConstants.AGE_DECAY_MAX_PENALTY;
   }
+
   return decay;
 };
 
@@ -369,17 +481,21 @@ export const calculateOldAgeDeathBps = (age: number, stageId: string): number =>
   if (!stage || !stage.maxAge || stage.maxAge <= 0) {
     return 0;
   }
+
   if (age < stage.maxAge) {
     return 0;
   }
+
   const bps =
     GameConstants.OLD_AGE_BASE_DEATH_BPS +
     (age - stage.maxAge) * GameConstants.OLD_AGE_DEATH_BPS_PER_YEAR;
+
   return Math.min(10000, bps);
 };
 
 export const getSurvivalCost = (age: number, stageId: string): bigint => {
   let base = 0n;
+
   if (age < 3) {
     base = BigInt(GameConstants.SURVIVAL_COST.INFANT);
   } else if (age < 12) {
@@ -391,9 +507,11 @@ export const getSurvivalCost = (age: number, stageId: string): bigint => {
   } else {
     base = BigInt(GameConstants.SURVIVAL_COST.ELDER);
   }
+
   const stage = getStageDefinition(stageId);
   const survivalCostBps =
     typeof stage.survivalCostBps === 'number' ? stage.survivalCostBps : 10000;
+
   return (base * BigInt(survivalCostBps)) / 10000n;
 };
 
@@ -405,13 +523,16 @@ export const calculateUnpaidSurvivalDamage = (
 ): number => {
   const reduction = getBodySurvivalReductionBps(bodyTempering);
   const damageBps = Math.max(0, GameConstants.UNPAID_SURVIVAL_DAMAGE_BPS - reduction);
+
   let damage = Math.max(1, Math.floor((maxHealth * damageBps) / 10000));
+
   if (age < 12) {
     damage += 2;
   }
   if (age >= 65) {
     damage += 3;
   }
+
   return damage;
 };
 
@@ -449,18 +570,23 @@ export const calculateAgeStageDeathBps = (
 ): number => {
   const stage = getStageDefinition(stageId);
   const mortalityBps = typeof stage.mortalityBps === 'number' ? stage.mortalityBps : 10000;
+
   if (mortalityBps <= 0) {
     return 0;
   }
+
   const base = getAgeMortalityBase(age);
   const stageAdjusted = Math.floor((base * mortalityBps) / 10000);
   const reduction = getBodyMortalityReductionBps(bodyTempering);
+
   const safeMaxHealth = maxHealth > 0 ? maxHealth : 100;
   const healthPercent = Math.max(0, Math.min(100, (health / safeMaxHealth) * 100));
+
   let healthPenalty = 0;
   if (healthPercent < 40) {
     healthPenalty = Math.floor((40 - healthPercent) * 20);
   }
+
   return clampInt(Math.max(0, stageAdjusted - reduction + healthPenalty), 0, 10000);
 };
 
@@ -471,9 +597,10 @@ export const calculateMeditationQi = (
   const stageMultiplier = getStageMeditationMultiplier(player.cultivationStage);
   const baseQi = Math.max(
     0,
-    player.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER * stageMultiplier
+    Math.floor(player.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER * stageMultiplier)
   );
   const flatQi = clampInt(modifiers.qiFlatPerYear, 0, GameConstants.QI_FLAT_CAP);
+
   return (BigInt(baseQi) + BigInt(flatQi)).toString();
 };
 
@@ -495,6 +622,7 @@ export const processLifestyleYear = (
   const disabled: LifestyleCategory[] = [];
   const categories: LifestyleCategory[] = ['job', 'sport', 'food', 'housing', 'portal'];
   const priority: LifestyleCategory[] = ['portal', 'sport', 'housing', 'food', 'job'];
+
   const active: Record<LifestyleCategory, any> = {
     job: null,
     sport: null,
@@ -502,45 +630,52 @@ export const processLifestyleYear = (
     housing: null,
     portal: null,
   };
+
   categories.forEach((cat) => {
     const optionId = selection[cat];
     if (!optionId || `${cat}_none` === optionId) {
       return;
     }
+
     const option = getOptionById(optionId);
     if (!option) {
       return;
     }
+
     if (!meetsLifestyleRequirements(option, player)) {
       disabled.push(cat);
       return;
     }
+
     active[cat] = option;
   });
 
   const recalc = (): bigint => {
     let totalCost = 0n;
     let totalIncome = 0n;
+
     categories.forEach((cat) => {
       const option = active[cat];
       if (!option) {
         return;
       }
-      totalCost += safeBigInt(option.dailyCost || '0') * BigInt(GameConstants.YEAR_DAYS);
-      if (option.portal) {
-        totalCost += safeBigInt(option.portal.attemptCost || '0');
-      }
+
+      totalCost += getLifestyleAnnualCost(option);
+
       if ('job' === cat) {
         totalIncome += safeBigInt(calculateJobIncome(option, player, baseModifiers));
       }
     });
+
     return totalIncome - totalCost;
   };
 
   let net = recalc();
   const playerMoney = safeBigInt(player.money);
+
   while (0n > playerMoney + net) {
     let removed = false;
+
     for (const cat of priority) {
       if (active[cat]) {
         disabled.push(cat);
@@ -549,22 +684,27 @@ export const processLifestyleYear = (
         break;
       }
     }
+
     if (!removed) {
       break;
     }
+
     net = recalc();
   }
 
   const optionModifiers = emptyModifiers();
+
   let baseRegen = 0;
   let maxHealthGain = 0;
   let appearanceGain = 0;
   let lifestyleQi = 0n;
+
   categories.forEach((cat) => {
     const option = active[cat];
     if (!option || !option.effects) {
       return;
     }
+
     if (option.effects.healthRegenPerYear) {
       baseRegen += option.effects.healthRegenPerYear;
     }
@@ -583,48 +723,62 @@ export const processLifestyleYear = (
   });
 
   const modifiers = combineModifiers(baseModifiers, optionModifiers);
+
   const flatRegen = clampInt(modifiers.healthRegenFlat, 0, GameConstants.HEALTH_REGEN_FLAT_CAP);
   const bodyRegen = getBodyRegenPerYear(player.bodyTempering || 0);
   const effectiveRegen = baseRegen + flatRegen + bodyRegen;
+
   maxHealthGain = Math.min(maxHealthGain, GameConstants.MAX_HEALTH_CAP - player.maxHealth);
+
   const ageDecay = calculateAgeDecay(player.age, player.cultivationStage);
 
   let portalResult: LifestyleReport['portalResult'] = 'none';
   let portalMoney = '0';
   let portalQi = '0';
   let portalDamage = 0;
+
   const portalOption = active.portal;
+
   if (portalOption && portalOption.portal) {
     const portal = portalOption.portal;
+
     let portalChanceBps =
       portal.successBaseBps +
       player.spiritualRoot * 20 +
       player.intelligence * 10 +
       modifiers.portalSuccessBps;
+
     portalChanceBps = clampInt(
       portalChanceBps,
       GameConstants.PORTAL_MIN_CHANCE_BPS,
       GameConstants.PORTAL_MAX_CHANCE_BPS
     );
+
     const roll = getRandomInt(0, 9999);
     const success = roll < portalChanceBps;
+
     if (success) {
       portalResult = 'success';
+
       const rawMoney =
         safeBigInt(portal.moneyMin) +
         (safeBigInt(portal.moneyMax) - safeBigInt(portal.moneyMin)) / 2n;
+
       const rawQi =
         safeBigInt(portal.qiMin) + (safeBigInt(portal.qiMax) - safeBigInt(portal.qiMin)) / 2n;
+
       portalMoney = rawMoney.toString();
       portalQi = rawQi.toString();
     } else {
       portalResult = 'fail';
+
       const bodyReduction = getBodyPortalReductionBps(player.bodyTempering || 0);
       const damageReductionBps = clampInt(
         modifiers.damageReductionBps + bodyReduction,
         0,
         GameConstants.DAMAGE_REDUCTION_CAP_BPS
       );
+
       const reducedDamage = reduceBigIntByBps(portal.failDamage.toString(), damageReductionBps);
       portalDamage = Math.max(1, Number(reducedDamage));
     }
@@ -632,7 +786,9 @@ export const processLifestyleYear = (
 
   const flatQi = clampInt(modifiers.qiFlatPerYear, 0, GameConstants.QI_FLAT_CAP);
   const qiDelta = (lifestyleQi + BigInt(flatQi)).toString();
+
   const healthDelta = effectiveRegen + maxHealthGain - ageDecay - portalDamage;
+
   let moneyDelta = net;
   if ('success' === portalResult) {
     moneyDelta += safeBigInt(portalMoney);

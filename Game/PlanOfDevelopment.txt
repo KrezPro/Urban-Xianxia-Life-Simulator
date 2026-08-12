@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 19 (Полный ребаланс core-loop: абсолютные значения вместо процентного разгона, возрастная/стадийная смертность, Body Tempering, реклама после реинкарнации на 1 году жизни)
+[СТАТУС]: ШАГ 20 (Hotfix экономики: affordability активностей, nerf Ци, Body Tempering стоит Ци + монеты)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -108,6 +108,15 @@
 75. [X] Изменена реклама: interstitial показывается после реинкарнации на 1 году жизни, а не по 70-секундному таймеру.
 76. [X] Обновлены стадии, техники, карма-баффы, проклятия, события и lifestyle под новый баланс.
 77. [X] Добавлены balanceNote-описания для стадий, работ, порталов, техник, карма-баффов и проклятий.
+
+=== Фаза 16: Hotfix экономики, доступности активностей и стоимости Закалки тела ===
+78. [X] Добавлены affordability-утилиты: getLifestyleAnnualCost, getLifestyleAnnualIncome, getLifestyleProjectedNet, canAffordLifestyleSelection, canAffordLifestyleOption.
+79. [X] ActivitiesScreen блокирует выбор платной активности, если projected balance текущего выбора становится отрицательным.
+80. [X] Годовой цикл сохраняет автоматический сброс активностей, если денег не хватает после survival cost и годовых затрат.
+81. [X] MEDITATION_QI_MULTIPLIER понижен с 12 до 2, calculateMeditationQi дополнительно использует Math.floor.
+82. [X] Body Tempering теперь стоит Ци и монеты: moneyCost = qiCost * COST_MONEY_MULTIPLIER, базовая формула Ци изменена на 25/25.
+83. [X] usePlayerStore.temperBody проверяет и списывает Ци + деньги.
+84. [X] DaoScreen показывает двойную стоимость Закалки тела и блокирует кнопку при нехватке Ци или денег.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/

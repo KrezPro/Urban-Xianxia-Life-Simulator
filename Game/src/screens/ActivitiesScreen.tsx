@@ -3,10 +3,20 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useLifestyleStore } from '../store/useLifestyleStore';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useTechniquesStore } from '../store/useTechniquesStore';
+import { useInventoryStore } from '../store/useInventoryStore';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber } from '../utils/helpers';
-import { getOptionById, meetsLifestyleRequirements } from '../utils/gameplayUtils';
+import {
+  getOptionById,
+  meetsLifestyleRequirements,
+  combineModifiers,
+  getTechniqueModifiers,
+  getKarmaTotalEffects,
+  canAffordLifestyleOption,
+} from '../utils/gameplayUtils';
+import { getCurseModifiers } from '../utils/rebirthUtils';
 import { getStageName } from '../utils/stageUtils';
 import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
@@ -17,10 +27,18 @@ export default function ActivitiesScreen() {
   const player = usePlayerStore();
   const lifestyle = useLifestyleStore();
   const locale = useLocaleStore((state) => state.locale);
+  const techniques = useTechniquesStore();
+  const inventory = useInventoryStore();
   const [expanded, setExpanded] = useState<string>('job');
 
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const activities = extras.activities || {};
+
+  const modifiers = combineModifiers(
+    getTechniqueModifiers(techniques.levels || {}),
+    getKarmaTotalEffects(inventory.items || {}),
+    getCurseModifiers(player.activeCurses || [])
+  );
 
   const toggleCategory = (categoryId: string) => {
     setExpanded((prev) => (prev === categoryId ? '' : categoryId));
@@ -36,7 +54,6 @@ export default function ActivitiesScreen() {
 
   const getRequirementText = (option: any): string => {
     const req = option.requirements;
-
     if (!req) {
       return '';
     }
@@ -46,27 +63,21 @@ export default function ActivitiesScreen() {
     if (req.ageMin) {
       parts.push(`${activities.requirements?.age}: ${req.ageMin}`);
     }
-
     if (req.intelligence) {
       parts.push(`${activities.requirements?.intelligence}: ${req.intelligence}`);
     }
-
     if (req.appearance) {
       parts.push(`${activities.requirements?.appearance}: ${req.appearance}`);
     }
-
     if (req.spiritualRoot) {
       parts.push(`${activities.requirements?.spiritual_root}: ${req.spiritualRoot}`);
     }
-
     if (req.healthMin) {
       parts.push(`${activities.requirements?.health}: ${req.healthMin}`);
     }
-
     if (req.maxHealthMin) {
       parts.push(`${activities.requirements?.max_health}: ${req.maxHealthMin}`);
     }
-
     if (req.stage) {
       parts.push(`${activities.requirements?.stage}: ${getStageName(req.stage, locale)}`);
     }
@@ -118,6 +129,14 @@ export default function ActivitiesScreen() {
                   {category.options.map((option: any) => {
                     const isSelected = selectedId === option.id;
                     const meets = meetsLifestyleRequirements(option, player);
+                    const affordable = canAffordLifestyleOption(
+                      categoryKey,
+                      option.id,
+                      lifestyle.selected,
+                      player,
+                      modifiers
+                    );
+                    const canSelect = meets && affordable;
                     const requirementText = getRequirementText(option);
 
                     return (
@@ -161,6 +180,7 @@ export default function ActivitiesScreen() {
                               small
                               style={styles.optionButton}
                             />
+
                             {option.id !== `${category.id}_none` ? (
                               <Button
                                 title={activities.disable}
@@ -173,10 +193,14 @@ export default function ActivitiesScreen() {
                           </View>
                         ) : (
                           <Button
-                            title={meets ? activities.select : activities.locked}
-                            onPress={() => lifestyle.selectOption(categoryKey, option.id)}
-                            disabled={!meets}
-                            variant={meets ? 'primary' : 'ghost'}
+                            title={canSelect ? activities.select : activities.locked}
+                            onPress={() => {
+                              if (canSelect) {
+                                lifestyle.selectOption(categoryKey, option.id);
+                              }
+                            }}
+                            disabled={!canSelect}
+                            variant={canSelect ? 'primary' : 'ghost'}
                             small
                             style={styles.optionButton}
                           />
