@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { Theme } from '../../constants/Theme';
 import stagesData from '../../data/stages.json';
 
@@ -11,6 +11,7 @@ interface LifeAvatarProps {
   age: number;
   cultivationStage: string;
   accessibilityLabel: string;
+  stageLabel?: string;
   size?: number;
 }
 
@@ -18,6 +19,12 @@ interface QiParticleProps {
   delay: number;
   left: number;
   color: string;
+}
+
+interface AuraRingProps {
+  ringSize: number;
+  color: string;
+  delay: number;
 }
 
 // Пороги возрастных групп синхронизированы с eventGenerator.ts:
@@ -60,22 +67,25 @@ const getStageTier = (stageIndex: number): number => {
   return 4;
 };
 
-// Цвет ауры по стадии культивации: смертный без ауры, Ци — голубой,
-// Основание — фиолетовый, Ядро — золотой, Бессмертный — сияющий белый.
-const getAuraColor = (stageIndex: number): string | null => {
+// Цвет ауры по ТОЧНОЙ стадии: каждый прорыв меняет оттенок,
+// чтобы стадии визуально отличались и игрок не путался.
+const STAGE_AURA_COLORS: Record<string, string> = {
+  mortal: '', // смертный без ауры
+  qi_condensation_1: '#38BDF8', // голубой — первая ци
+  qi_condensation_2: '#22D3EE', // циан — ци плотнее
+  qi_condensation_3: '#2DD4BF', // бирюза — пик ци
+  foundation_1: '#A855F7', // фиолет — закладка основания
+  foundation_2: '#C084FC', // светлый фиолет — основание крепнет
+  foundation_3: '#E879F9', // маджента — пик основания
+  core_formation: '#FBBF24', // золото — золотое ядро
+  immortal: '#F8FAFF', // белое сияние — бессмертный
+};
+
+const getAuraColor = (stageId: string, stageIndex: number): string | null => {
   if (stageIndex <= 0) {
     return null;
   }
-  if (stageIndex <= 3) {
-    return Theme.colors.secondary;
-  }
-  if (stageIndex <= 6) {
-    return Theme.colors.primarySoft;
-  }
-  if (stageIndex === 7) {
-    return Theme.colors.gold;
-  }
-  return '#F4F4FF';
+  return STAGE_AURA_COLORS[stageId] || Theme.colors.secondary;
 };
 
 // Матрица эмодзи "возраст x стадия Дао": персонаж меняется и с возрастом, и с прорывами.
@@ -106,7 +116,7 @@ const getCharacterEmoji = (group: AvatarAgeGroup, tier: number): string => {
   }
   // Ци (tier 1): медитация в лотосе.
   if (tier === 1) {
-    return group === 'elder' ? '🧘‍️' : '🧘';
+    return group === 'elder' ? '🧘‍️' : '';
   }
   // Основание (tier 2): коленопреклонённое накопление основы.
   if (tier === 2) {
@@ -128,7 +138,7 @@ const getMotionKind = (group: AvatarAgeGroup, tier: number): MotionKind => {
   return 'breathe';
 };
 
-// Всплывающая частица Ци внутри бейджа: поднимается снизу вверх, появляется и гаснет.
+// Всплывающая частица Ци: поднимается снизу вверх, появляется и гаснет.
 const QiParticle = ({ delay, left, color }: QiParticleProps) => {
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -153,7 +163,7 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
     return () => {
       animation.stop();
     };
-  }, []);
+  }, [delay]);
 
   const translateY = progress.interpolate({
     inputRange: [0, 1],
@@ -181,28 +191,84 @@ const QiParticle = ({ delay, left, color }: QiParticleProps) => {
   );
 };
 
+// Пульсирующее кольцо ауры: каждое следующее кольцо стартует с фазовым сдвигом.
+// Число колец растёт с тиром: Ци 1, Основание 2, Ядро 3, Бессмертный 4.
+const AuraRing = ({ ringSize, color, delay }: AuraRingProps) => {
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.delay(delay),
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 1400,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulse, {
+          toValue: 0,
+          duration: 1400,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    animation.start();
+    return () => {
+      animation.stop();
+    };
+  }, [delay]);
+
+  const opacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 0.7],
+  });
+  const scale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.92, 1.08],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.auraRing,
+        {
+          width: ringSize,
+          height: ringSize,
+          borderRadius: ringSize / 2,
+          borderColor: color,
+          opacity,
+          transform: [{ scale }],
+        },
+      ]}
+    />
+  );
+};
+
 // Анимированный бейдж-аватар взросления персонажа во вкладке Мир.
-// Эмодзи подбирается матрицей "возраст x стадия Дао", движение — по смыслу
-// (ползание / медитация-дыхание / левитация). Всё на встроенном Animated API и emoji.
+// Эмодзи подбирается матрицей "возраст x тир стадии", движение — по смыслу
+// (ползание / медитация-дыхание / левитация). Аура дифференцирует стадии:
+// цвет по точной стадии, число колец по тиру, число частиц по индексу стадии.
+// Под бейджем — локализованное имя стадии (stageLabel), чтобы не запутаться.
 export const LifeAvatar = ({
   age,
   cultivationStage,
   accessibilityLabel,
+  stageLabel,
   size = 76,
 }: LifeAvatarProps) => {
   const group = getAvatarAgeGroup(age);
   const stageIndex = getStageIndex(cultivationStage);
   const tier = getStageTier(stageIndex);
-  const auraColor = getAuraColor(stageIndex);
-  const showParticles = tier >= 1;
+  const auraColor = getAuraColor(cultivationStage, stageIndex);
   const emoji = getCharacterEmoji(group, tier);
   const motionKind = getMotionKind(group, tier);
 
-  const auraSize = Math.round(size * 0.76);
   const emojiSize = Math.round(size * 0.45);
+  const labelSize = Math.max(9, Math.round(size * 0.16));
 
   const motion = useRef(new Animated.Value(0)).current;
-  const aura = useRef(new Animated.Value(0)).current;
 
   // Основная анимация персонажа перезапускается при смене вида движения.
   useEffect(() => {
@@ -223,34 +289,6 @@ export const LifeAvatar = ({
       animation.stop();
     };
   }, [motionKind]);
-
-  // Пульсация ауры: включается только для культиваторов (индекс стадии больше либо равен 1).
-  useEffect(() => {
-    aura.setValue(0);
-    if (!auraColor) {
-      return;
-    }
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(aura, {
-          toValue: 1,
-          duration: 1400,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(aura, {
-          toValue: 0,
-          duration: 1400,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    animation.start();
-    return () => {
-      animation.stop();
-    };
-  }, [auraColor]);
 
   // Трансформации персонажа по виду движения.
   let characterTransform: any[] = [];
@@ -281,69 +319,96 @@ export const LifeAvatar = ({
     characterTransform = [{ scale }];
   }
 
-  const auraOpacity = aura.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.25, 0.7],
-  });
-  const auraScale = aura.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.9, 1.1],
-  });
+  // Кольца ауры: число равно тиру (1-4), размеры расходятся концентрически.
+  const ringCount = tier <= 0 ? 0 : Math.min(tier, 4);
+  const rings: any[] = [];
+  for (let i = 0; i < ringCount; i += 1) {
+    const ringSize = Math.min(
+      size - 2,
+      Math.round(size * 0.6) + i * Math.round(size * 0.13)
+    );
+    rings.push(
+      <AuraRing
+        key={`aura_ring_${i}`}
+        ringSize={ringSize}
+        color={auraColor || Theme.colors.secondary}
+        delay={i * 250}
+      />
+    );
+  }
+
+  // Частицы Ци: число растёт с индексом стадии (2 + stageIndex, кап 6).
+  const particleCount = stageIndex <= 0 ? 0 : Math.min(2 + stageIndex, 6);
+  const particles: any[] = [];
+  for (let i = 0; i < particleCount; i += 1) {
+    const t = particleCount > 1 ? i / (particleCount - 1) : 0.5;
+    particles.push(
+      <QiParticle
+        key={`qi_particle_${i}`}
+        delay={i * 400}
+        left={Math.round(size * (0.1 + 0.8 * t))}
+        color={auraColor || Theme.colors.secondary}
+      />
+    );
+  }
 
   return (
-    <View
-      style={[
-        styles.badge,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          borderColor: auraColor || Theme.colors.borderSoft,
-        },
-      ]}
-      accessibilityLabel={accessibilityLabel}
-    >
-      {showParticles && auraColor ? (
-        <View pointerEvents="none" style={styles.particlesLayer}>
-          <QiParticle delay={0} left={size * 0.14} color={auraColor} />
-          <QiParticle delay={800} left={size * 0.46} color={auraColor} />
-          <QiParticle delay={1600} left={size * 0.74} color={auraColor} />
-        </View>
-      ) : null}
-      <View style={styles.center}>
-        {auraColor ? (
-          <Animated.View
+    <View style={styles.root} accessibilityLabel={accessibilityLabel}>
+      <View
+        style={[
+          styles.badge,
+          {
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderColor: auraColor || Theme.colors.borderSoft,
+          },
+        ]}
+      >
+        {particleCount > 0 && auraColor ? (
+          <View pointerEvents="none" style={styles.particlesLayer}>
+            {particles}
+          </View>
+        ) : null}
+        <View style={styles.center}>
+          {rings}
+          <Animated.Text
             style={[
-              styles.aura,
+              styles.character,
               {
-                width: auraSize,
-                height: auraSize,
-                borderRadius: auraSize / 2,
-                borderColor: auraColor,
-                opacity: auraOpacity,
-                transform: [{ scale: auraScale }],
+                fontSize: emojiSize,
+                lineHeight: emojiSize + 8,
+                transform: characterTransform,
               },
             ]}
-          />
-        ) : null}
-        <Animated.Text
+          >
+            {emoji}
+          </Animated.Text>
+        </View>
+      </View>
+      {stageLabel ? (
+        <Text
           style={[
-            styles.character,
+            styles.stageLabel,
             {
-              fontSize: emojiSize,
-              lineHeight: emojiSize + 8,
-              transform: characterTransform,
+              color: auraColor || Theme.colors.textMuted,
+              fontSize: labelSize,
+              marginTop: Math.max(2, Math.round(size * 0.06)),
             },
           ]}
+          numberOfLines={1}
         >
-          {emoji}
-        </Animated.Text>
-      </View>
+          {stageLabel}
+        </Text>
+      ) : null}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    alignItems: 'center',
+  },
   badge: {
     backgroundColor: Theme.colors.surfaceLight,
     borderWidth: 1,
@@ -364,12 +429,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  aura: {
+  auraRing: {
     position: 'absolute',
     borderWidth: 2,
   },
   character: {
     fontSize: 34,
     lineHeight: 42,
+  },
+  stageLabel: {
+    fontWeight: '700',
+    letterSpacing: 0.3,
+    textAlign: 'center',
   },
 });

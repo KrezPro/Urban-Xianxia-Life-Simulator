@@ -20,6 +20,7 @@ import { LifeAvatar, getAvatarAgeGroup } from '../components/game/LifeAvatar';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress, safeBigInt } from '../utils/helpers';
 import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils/gameplayUtils';
+import { getStageName } from '../utils/stageUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import { LifestyleCategory } from '../types';
 import LogScreen from './LogScreen';
@@ -109,6 +110,8 @@ export default function LifeScreen() {
   const avatarLabels: any = (ui as any).avatar || {};
   const avatarGroup = getAvatarAgeGroup(player.age);
   const avatarAria = avatarLabels['aria_' + avatarGroup] || '';
+  // Локализованное имя стадии для подписи под бейджем аватара.
+  const stageLabel = getStageName(player.cultivationStage, locale);
 
   // Ежегодные расходы: стоимость жизни по возрасту/стадии + траты выбранных активностей.
   const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
@@ -348,6 +351,7 @@ export default function LifeScreen() {
               age={player.age}
               cultivationStage={player.cultivationStage}
               accessibilityLabel={avatarAria}
+              stageLabel={stageLabel}
               size={avatarSize}
             />
             <View style={styles.heroAgeBlock}>
