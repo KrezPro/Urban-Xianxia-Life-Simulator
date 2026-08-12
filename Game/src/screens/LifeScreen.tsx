@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card, ProgressBar, StatRow } from '../components/ui';
+import { Button, Card, ProgressBar, StatRow, IconButton } from '../components/ui';
+import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
@@ -14,6 +16,8 @@ import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
+
+type RootNavigationProp = NavigationProp<Record<string, undefined>>;
 
 interface HintData {
   title: string;
@@ -26,7 +30,7 @@ export default function LifeScreen() {
   const { locale, toggleLocale } = useLocaleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
-
+  const navigation = useNavigation<RootNavigationProp>();
   const [hint, setHint] = useState<HintData | null>(null);
 
   const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
@@ -51,7 +55,6 @@ export default function LifeScreen() {
   const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
   const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
   const nextStage = stagesData[currentStageIndex + 1];
-
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.health / 100;
 
@@ -66,6 +69,10 @@ export default function LifeScreen() {
       title: hintData.title || key,
       text: hintData.text || '',
     });
+  };
+
+  const openLog = () => {
+    navigation.navigate('Log');
   };
 
   const handleGrowOlder = () => {
@@ -99,8 +106,8 @@ export default function LifeScreen() {
     player.applyEffects(randomEvent.effects);
 
     const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
-    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
 
+    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
     pushEventNotification(
       randomEvent.id,
       isSecretEvent ? 'secret' : 'mundane',
@@ -120,9 +127,19 @@ export default function LifeScreen() {
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
-            <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
-              <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
-            </TouchableOpacity>
+            <View style={styles.headerActions}>
+              <IconButton
+                icon="book-outline"
+                onPress={openLog}
+                accessibilityLabel={ui.btn_log}
+                variant="secondary"
+                size={38}
+                style={styles.headerIconButton}
+              />
+              <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+                <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <Card variant="danger" style={styles.deadCard}>
@@ -155,7 +172,7 @@ export default function LifeScreen() {
               <Text style={styles.modalTitle}>{hint?.title}</Text>
               <Text style={styles.modalText}>{hint?.text}</Text>
               <Button
-                title={hints.close || 'OK'}
+                title={hints.close}
                 onPress={() => setHint(null)}
                 variant="primary"
                 small
@@ -173,9 +190,19 @@ export default function LifeScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{ui.title}</Text>
-          <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
-            <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <IconButton
+              icon="book-outline"
+              onPress={openLog}
+              accessibilityLabel={ui.btn_log}
+              variant="secondary"
+              size={38}
+              style={styles.headerIconButton}
+            />
+            <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
+              <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Card variant="primary" style={styles.heroCard}>
@@ -240,7 +267,6 @@ export default function LifeScreen() {
 
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
-
           <View style={styles.focusRow}>
             <TouchableOpacity
               style={[styles.focusChip, styles.focusChipLeft, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
@@ -251,7 +277,6 @@ export default function LifeScreen() {
                 {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
               onPress={() => player.setActivityFocus('secret')}
@@ -263,15 +288,13 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </Card>
-
-        <Button
-          title={ui.btn_grow}
-          onPress={handleGrowOlder}
-          variant="primary"
-          icon="hourglass"
-          style={styles.mainActionButton}
-        />
       </ScrollView>
+
+      <DraggableGrowButton
+        age={player.age}
+        onPress={handleGrowOlder}
+        accessibilityLabel={ui.btn_grow}
+      />
 
       <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
@@ -279,7 +302,7 @@ export default function LifeScreen() {
             <Text style={styles.modalTitle}>{hint?.title}</Text>
             <Text style={styles.modalText}>{hint?.text}</Text>
             <Button
-              title={hints.close || 'OK'}
+              title={hints.close}
               onPress={() => setHint(null)}
               variant="primary"
               small
@@ -299,13 +322,20 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: Theme.spacing.md,
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: Theme.spacing.md,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerIconButton: {
+    marginRight: 10,
   },
   title: {
     fontSize: Theme.fontSize.xl,
@@ -388,9 +418,6 @@ const styles = StyleSheet.create({
   },
   focusChipTextActive: {
     color: Theme.colors.text,
-  },
-  mainActionButton: {
-    marginTop: Theme.spacing.sm,
   },
   deadCard: {
     alignItems: 'center',

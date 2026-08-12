@@ -13,19 +13,14 @@
   "context_focus": [
     "Game/PlanOfDevelopment.txt",
     "Game/Library.txt",
-    "Game/DataForAI.txt",
+    "Game/src/navigation/TabNavigator.tsx",
     "Game/src/screens/LifeScreen.tsx",
-    "Game/src/store/useNotificationStore.ts",
-    "Game/src/components/game/NotificationHost.tsx",
-    "Game/src/components/game/NotificationToast.tsx",
+    "Game/src/screens/LogScreen.tsx",
     "Game/src/components/ui/index.tsx",
+    "Game/src/constants/Theme.ts",
     "Game/src/constants/GameConstants.ts",
-    "Game/src/types/index.ts",
-    "Game/src/store/useLocaleStore.ts",
     "Game/src/locales/ru/ui.json",
-    "Game/src/locales/en/ui.json",
-    "Game/src/locales/ru/notifications.json",
-    "Game/src/locales/en/notifications.json"
+    "Game/src/locales/en/ui.json"
   ],
   "max_file_size_kb": 100
 }

@@ -53,7 +53,6 @@ export const Button = ({
           style={styles.buttonIcon}
         />
       ) : null}
-
       <Text
         style={[
           styles.buttonText,
@@ -64,6 +63,55 @@ export const Button = ({
       >
         {title}
       </Text>
+    </TouchableOpacity>
+  );
+};
+
+interface IconButtonProps {
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  size?: number;
+  style?: any;
+  accessibilityLabel?: string;
+}
+
+export const IconButton = ({
+  icon,
+  onPress,
+  variant = 'secondary',
+  disabled = false,
+  size = 40,
+  style,
+  accessibilityLabel,
+}: IconButtonProps) => {
+  const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      style={[
+        styles.iconButton,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+        },
+        variant === 'primary' && styles.iconButtonPrimary,
+        variant === 'secondary' && styles.iconButtonSecondary,
+        variant === 'danger' && styles.iconButtonDanger,
+        variant === 'gold' && styles.iconButtonGold,
+        variant === 'ghost' && styles.iconButtonGhost,
+        disabled && styles.buttonDisabled,
+        style,
+      ]}
+    >
+      <Ionicons name={icon} size={Math.floor(size * 0.52)} color={iconColor} />
     </TouchableOpacity>
   );
 };
@@ -134,7 +182,6 @@ export const StatRow = ({ icon, label, value, color, onPress, onLongPress }: Sta
       <View style={[styles.statIconBadge, color ? { borderColor: color } : null]}>
         <Ionicons name={icon} size={18} color={color || Theme.colors.secondary} />
       </View>
-
       <Text style={styles.statLabel}>{label}</Text>
       <Text style={[styles.statValue, color ? { color } : null]}>{value}</Text>
     </View>
@@ -204,6 +251,32 @@ const styles = StyleSheet.create({
   },
   buttonTextDark: {
     color: '#221A02',
+  },
+  iconButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    ...Theme.shadow,
+  },
+  iconButtonPrimary: {
+    backgroundColor: Theme.colors.primary,
+    borderColor: Theme.colors.primarySoft,
+  },
+  iconButtonSecondary: {
+    backgroundColor: Theme.colors.surfaceLight,
+    borderColor: Theme.colors.secondary,
+  },
+  iconButtonDanger: {
+    backgroundColor: '#4C1D24',
+    borderColor: Theme.colors.danger,
+  },
+  iconButtonGold: {
+    backgroundColor: Theme.colors.gold,
+    borderColor: '#FDE68A',
+  },
+  iconButtonGhost: {
+    backgroundColor: 'transparent',
+    borderColor: Theme.colors.borderSoft,
   },
   card: {
     backgroundColor: Theme.colors.surface,

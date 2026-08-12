@@ -78,8 +78,16 @@ export default function TabNavigator() {
       <Tab.Screen name="Life" component={LifeScreen} />
       <Tab.Screen name="Dao" component={DaoScreen} />
       <Tab.Screen name="Store" component={StoreScreen} />
-      <Tab.Screen name="Log" component={LogScreen} />
       <Tab.Screen name="Sect" component={SectScreen} />
+      <Tab.Screen
+        name="Log"
+        component={LogScreen}
+        options={{
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+          tabBarIcon: () => null,
+        }}
+      />
     </Tab.Navigator>
   );
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { useEventStore, IEventLog } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Theme.colors.background,
-    paddingTop: 20,
+    paddingTop: 8,
   },
   title: {
     fontSize: 24,

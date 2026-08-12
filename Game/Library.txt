@@ -25,3 +25,7 @@
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
+27. Кнопка журнала размещается в шапке LifeScreen рядом с переключателем языка. Маршрут Log сохраняется в TabNavigator, но скрыт из tab bar через tabBarButton: () => null.
+28. DraggableGrowButton — перетаскиваемая кнопка взросления. Короткое нажатие вызывает growOlder, перетаскивание выполняется PanResponder в пределах LifeScreen.
+29. IconButton добавлен в UI-кит для компактных кнопок без текста.
+30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.

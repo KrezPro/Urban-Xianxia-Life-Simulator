@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 10 (Восстановлены long-press подсказки и система всплывающих уведомлений, SafeAreaView заменён на react-native-safe-area-context)
+[СТАТУС]: ШАГ 11 (Кнопка журнала перенесена в LifeScreen, вкладка Log скрыта из tab bar, Grow Older заменен перетаскиваемой FAB-кнопкой)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -61,17 +61,22 @@
 40. [X] FlashList для больших списков.
 41. [ ] Автотесты BigInt/MMKV/FlashList.
 
+=== Фаза 10: UX улучшения ===
+42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, вкладка Log скрыта из tab bar.
+43. [X] Grow Older заменен перетаскиваемой DraggableGrowButton (FAB в стиле корзины).
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
 ├── App.tsx                          // SafeAreaProvider, гидратация, глобальный NotificationHost
 ├── components/
 │   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow (+onLongPress)
+│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
 │   └── game/
 │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
-│       └── NotificationToast.tsx    // Анимированный тост уведомления
+│       ├── NotificationToast.tsx    // Анимированный тост уведомления
+│       └── DraggableGrowButton.tsx // Перетаскиваемая кнопка взросления (FAB)
 ├── constants/
-│   ├── GameConstants.ts             // Лимиты, кулдауны, длительность уведомлений
+│   ├── GameConstants.ts             // Лимиты, кулдауны, длительность уведомлений, draggable FAB constants
 │   └── Theme.ts                     // Темная тема
 ├── data/
 │   ├── events.json                  // Мирские/тайные события
@@ -83,13 +88,13 @@ Game/src/
 │   ├── useIdleProgress.ts           // Offline-прогресс + уведомления
 │   └── useBreakthrough.ts           // Прорывы + уведомления
 ├── navigation/
-│   └── TabNavigator.tsx             // Нижние вкладки
+│   └── TabNavigator.tsx             // Нижние вкладки, Log скрыт из tab bar
 ├── screens/
-│   ├── LifeScreen.tsx               // Основной экран с уведомлениями и long-press подсказками
+│   ├── LifeScreen.tsx               // Основной экран, кнопка журнала в шапке, draggable Grow Older
 │   ├── DaoScreen.tsx                // Путь Дао
 │   ├── StoreScreen.tsx              // Магазин Кармы
 │   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Журнал
+│   └── LogScreen.tsx                // Журнал, открывается из LifeScreen
 ├── store/
 │   ├── mmkvStorage.ts               // MMKV storage
 │   ├── usePlayerStore.ts            // Игрок
@@ -106,12 +111,12 @@ Game/src/
 │   └── helpers.ts                   // Форматирование, BigInt, random
 └── locales/
     ├── ru/
-    │   ├── ui.json                  // Включает hints для long-press
+    │   ├── ui.json                  // Включает hints и btn_log
     │   ├── events.json
     │   ├── social.json
     │   └── notifications.json       // Тексты уведомлений
     └── en/
-        ├── ui.json                  // Включает hints для long-press
+        ├── ui.json                  // Включает hints и btn_log
         ├── events.json
         ├── social.json
         └── notifications.json       // Тексты уведомлений
