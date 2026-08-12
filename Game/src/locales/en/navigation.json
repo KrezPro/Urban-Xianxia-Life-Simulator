@@ -1,0 +1,10 @@
+{
+  "tab_bar": {
+    "life": "Life",
+    "dao": "Dao",
+    "activities": "Activities",
+    "store": "Store",
+    "log": "Log",
+    "sect": "Sect"
+  }
+}

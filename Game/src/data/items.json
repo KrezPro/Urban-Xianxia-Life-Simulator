@@ -2,19 +2,52 @@
   {
     "id": "buff_rich_family",
     "type": "karma_buff",
-    "cost": "50",
-    "effects": { "money": 5000 }
+    "maxLevel": 10,
+    "levels": [
+      { "level": 1, "cost": "50", "effects": { "startMoney": "5000", "moneyGainPercent": 2 } },
+      { "level": 2, "cost": "150", "effects": { "startMoney": "18000", "moneyGainPercent": 4 } },
+      { "level": 3, "cost": "400", "effects": { "startMoney": "45000", "moneyGainPercent": 6 } },
+      { "level": 4, "cost": "900", "effects": { "startMoney": "100000", "moneyGainPercent": 8 } },
+      { "level": 5, "cost": "2000", "effects": { "startMoney": "220000", "moneyGainPercent": 10 } },
+      { "level": 6, "cost": "4200", "effects": { "startMoney": "450000", "moneyGainPercent": 12 } },
+      { "level": 7, "cost": "8500", "effects": { "startMoney": "900000", "moneyGainPercent": 14 } },
+      { "level": 8, "cost": "17000", "effects": { "startMoney": "1800000", "moneyGainPercent": 16 } },
+      { "level": 9, "cost": "34000", "effects": { "startMoney": "3500000", "moneyGainPercent": 18 } },
+      { "level": 10, "cost": "70000", "effects": { "startMoney": "7000000", "moneyGainPercent": 20 } }
+    ]
   },
   {
     "id": "buff_strong_meridians",
     "type": "karma_buff",
-    "cost": "150",
-    "effects": { "health": 50 }
+    "maxLevel": 10,
+    "levels": [
+      { "level": 1, "cost": "150", "effects": { "startMaxHealth": 50, "healthRegenPercent": 5, "damageReductionPercent": 3 } },
+      { "level": 2, "cost": "350", "effects": { "startMaxHealth": 120, "healthRegenPercent": 10, "damageReductionPercent": 6 } },
+      { "level": 3, "cost": "800", "effects": { "startMaxHealth": 220, "healthRegenPercent": 16, "damageReductionPercent": 10 } },
+      { "level": 4, "cost": "1600", "effects": { "startMaxHealth": 360, "healthRegenPercent": 24, "damageReductionPercent": 15 } },
+      { "level": 5, "cost": "3200", "effects": { "startMaxHealth": 550, "healthRegenPercent": 34, "damageReductionPercent": 21 } },
+      { "level": 6, "cost": "6500", "effects": { "startMaxHealth": 800, "healthRegenPercent": 46, "damageReductionPercent": 28 } },
+      { "level": 7, "cost": "12000", "effects": { "startMaxHealth": 1150, "healthRegenPercent": 60, "damageReductionPercent": 36 } },
+      { "level": 8, "cost": "22000", "effects": { "startMaxHealth": 1600, "healthRegenPercent": 78, "damageReductionPercent": 46 } },
+      { "level": 9, "cost": "40000", "effects": { "startMaxHealth": 2200, "healthRegenPercent": 100, "damageReductionPercent": 58 } },
+      { "level": 10, "cost": "75000", "effects": { "startMaxHealth": 3000, "healthRegenPercent": 125, "damageReductionPercent": 72 } }
+    ]
   },
   {
     "id": "buff_pure_root",
     "type": "karma_buff",
-    "cost": "300",
-    "effects": { "spiritualRoot": 5 }
+    "maxLevel": 10,
+    "levels": [
+      { "level": 1, "cost": "300", "effects": { "startSpiritualRoot": 5, "qiGainPercent": 3, "breakthroughChancePercent": 1 } },
+      { "level": 2, "cost": "700", "effects": { "startSpiritualRoot": 8, "qiGainPercent": 6, "breakthroughChancePercent": 2 } },
+      { "level": 3, "cost": "1500", "effects": { "startSpiritualRoot": 12, "qiGainPercent": 10, "breakthroughChancePercent": 3 } },
+      { "level": 4, "cost": "3000", "effects": { "startSpiritualRoot": 17, "qiGainPercent": 15, "breakthroughChancePercent": 4 } },
+      { "level": 5, "cost": "6000", "effects": { "startSpiritualRoot": 23, "qiGainPercent": 21, "breakthroughChancePercent": 5 } },
+      { "level": 6, "cost": "11000", "effects": { "startSpiritualRoot": 30, "qiGainPercent": 28, "breakthroughChancePercent": 6 } },
+      { "level": 7, "cost": "20000", "effects": { "startSpiritualRoot": 38, "qiGainPercent": 36, "breakthroughChancePercent": 7 } },
+      { "level": 8, "cost": "36000", "effects": { "startSpiritualRoot": 47, "qiGainPercent": 46, "breakthroughChancePercent": 8 } },
+      { "level": 9, "cost": "65000", "effects": { "startSpiritualRoot": 57, "qiGainPercent": 58, "breakthroughChancePercent": 9 } },
+      { "level": 10, "cost": "120000", "effects": { "startSpiritualRoot": 70, "qiGainPercent": 75, "breakthroughChancePercent": 10 } }
+    ]
   }
 ]

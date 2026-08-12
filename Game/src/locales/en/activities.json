@@ -1,0 +1,56 @@
+{
+  "activities_screen": {
+    "title": "Activities",
+    "dead_text": "The dead cannot choose activities.",
+    "select": "Select",
+    "selected": "Selected",
+    "disable": "Disable",
+    "locked": "Locked",
+    "daily_cost": "Cost/day",
+    "daily_income": "Income/day",
+    "requirements": "Requirements",
+    "none": "None"
+  },
+  "categories": {
+    "job": "Job",
+    "sport": "Sport",
+    "food": "Food",
+    "housing": "Housing",
+    "portal": "Portals"
+  },
+  "requirements": {
+    "intelligence": "Int",
+    "appearance": "App",
+    "spiritual_root": "Root",
+    "health": "Health",
+    "max_health": "Max Health",
+    "stage": "Stage"
+  },
+  "options": {
+    "job_none": { "name": "No Job", "desc": "No income and no obligations." },
+    "job_parttime": { "name": "Part-time", "desc": "Small errands and delivery." },
+    "job_office": { "name": "Office Clerk", "desc": "Boring but stable." },
+    "job_manager": { "name": "Manager", "desc": "More responsibility, more money." },
+    "job_founder": { "name": "Tech Founder", "desc": "A startup blending IT and spiritual tech." },
+    "sport_none": { "name": "No Sport", "desc": "No physical activity." },
+    "sport_home": { "name": "Home Workouts", "desc": "Push-ups in the yard." },
+    "sport_gym": { "name": "Gym", "desc": "Local gym membership." },
+    "sport_premium": { "name": "Premium Club", "desc": "Trainers, pool and recovery." },
+    "sport_spirit": { "name": "Spirit Training", "desc": "Body and meridian training." },
+    "food_none": { "name": "No Meal Plan", "desc": "Snacks on the run." },
+    "food_street": { "name": "Street Food", "desc": "Noodles and energy bars." },
+    "food_home": { "name": "Home Food", "desc": "Regular decent meals." },
+    "food_premium": { "name": "Premium Meals", "desc": "Quality products and diet." },
+    "food_spirit": { "name": "Spirit Cuisine", "desc": "Dishes made from spirit herbs." },
+    "housing_none": { "name": "No Housing", "desc": "Sleeping wherever you can." },
+    "housing_shelter": { "name": "Shelter", "desc": "A minimal roof over your head." },
+    "housing_room": { "name": "Room", "desc": "A small room in an old house." },
+    "housing_apartment": { "name": "Apartment", "desc": "A clean apartment and proper sleep." },
+    "housing_condo": { "name": "Condo", "desc": "Modern building with security." },
+    "portal_none": { "name": "No Portals", "desc": "No risky expeditions." },
+    "portal_subway": { "name": "Abandoned Subway", "desc": "Old tunnels with strange eyes." },
+    "portal_market": { "name": "Night Spirit Market", "desc": "Pill smuggling and shady deals." },
+    "portal_club": { "name": "Demon Club", "desc": "An underground club where demons gamble with humans." },
+    "portal_tower": { "name": "Spirit Tower", "desc": "A trial for sturdy cultivators." }
+  }
+}

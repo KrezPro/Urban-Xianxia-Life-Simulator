@@ -7,6 +7,9 @@ import { NotificationHost } from './components/game/NotificationHost';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
 import { useSocialStore } from './store/useSocialStore';
+import { useInventoryStore } from './store/useInventoryStore';
+import { useTechniquesStore } from './store/useTechniquesStore';
+import { useLifestyleStore } from './store/useLifestyleStore';
 import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
 import ruUI from './locales/ru/ui.json';
@@ -16,13 +19,23 @@ export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
   const localeHydrated = useLocaleStore((state) => state.hasHydrated);
   const socialHydrated = useSocialStore((state) => state.hasHydrated);
+  const inventoryHydrated = useInventoryStore((state) => state.hasHydrated);
+  const techniquesHydrated = useTechniquesStore((state) => state.hasHydrated);
+  const lifestyleHydrated = useLifestyleStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
 
   const uiData: any = locale === 'ru' ? ruUI : enUI;
 
   useIdleProgress();
 
-  if (!playerHydrated || !localeHydrated || !socialHydrated) {
+  if (
+    !playerHydrated ||
+    !localeHydrated ||
+    !socialHydrated ||
+    !inventoryHydrated ||
+    !techniquesHydrated ||
+    !lifestyleHydrated
+  ) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>

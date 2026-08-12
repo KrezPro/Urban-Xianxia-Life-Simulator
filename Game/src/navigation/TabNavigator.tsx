@@ -7,16 +7,17 @@ import DaoScreen from '../screens/DaoScreen';
 import LogScreen from '../screens/LogScreen';
 import StoreScreen from '../screens/StoreScreen';
 import SectScreen from '../screens/SectScreen';
+import ActivitiesScreen from '../screens/ActivitiesScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
+import ruNavigation from '../locales/ru/navigation.json';
+import enNavigation from '../locales/en/navigation.json';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const navData: any = locale === 'ru' ? ruNavigation : enNavigation;
 
   return (
     <Tab.Navigator
@@ -38,6 +39,10 @@ export default function TabNavigator() {
             key = 'dao';
           }
 
+          if (route.name === 'Activities') {
+            key = 'activities';
+          }
+
           if (route.name === 'Store') {
             key = 'store';
           }
@@ -51,8 +56,8 @@ export default function TabNavigator() {
           }
 
           return (
-            <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
-              {(uiData.tab_bar as any)[key]}
+            <Text style={{ color, fontSize: 11, fontWeight: '700' }}>
+              {(navData.tab_bar as any)[key]}
             </Text>
           );
         },
@@ -63,6 +68,8 @@ export default function TabNavigator() {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === 'Dao') {
             iconName = focused ? 'leaf' : 'leaf-outline';
+          } else if (route.name === 'Activities') {
+            iconName = focused ? 'barbell' : 'barbell-outline';
           } else if (route.name === 'Log') {
             iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Store') {
@@ -77,6 +84,7 @@ export default function TabNavigator() {
     >
       <Tab.Screen name="Life" component={LifeScreen} />
       <Tab.Screen name="Dao" component={DaoScreen} />
+      <Tab.Screen name="Activities" component={ActivitiesScreen} />
       <Tab.Screen name="Store" component={StoreScreen} />
       <Tab.Screen name="Sect" component={SectScreen} />
       <Tab.Screen

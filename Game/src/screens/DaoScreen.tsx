@@ -1,25 +1,38 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useBreakthrough } from '../hooks/useBreakthrough';
 import { useLocaleStore } from '../store/useLocaleStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, ProgressBar } from '../components/ui';
 import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
-import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { formatLargeNumber, getBigIntProgress, isGreaterOrEqualBigInt } from '../utils/helpers';
+import {
+  getTechniqueCost,
+  meetsTechniqueRequirements,
+} from '../utils/gameplayUtils';
 import stagesData from '../data/stages.json';
+import techniquesData from '../data/techniques.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
+import ruDao from '../locales/ru/dao.json';
+import enDao from '../locales/en/dao.json';
 
 export default function DaoScreen() {
   const player = usePlayerStore();
+  const techniques = useTechniquesStore();
   const locale = useLocaleStore((state) => state.locale);
+  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const { attemptBreakthrough, nextStage, calculateChance } = useBreakthrough();
   const [hasAdBuff, setHasAdBuff] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
-  const currentStage = stagesData.find((stage) => stage.id === player.cultivationStage);
+  const daoExtra: any = locale === 'ru' ? ruDao.dao_screen : enDao.dao_screen;
+  const techniquesUI: any = daoExtra?.techniques || {};
 
+  const currentStage = stagesData.find((stage) => stage.id === player.cultivationStage);
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
@@ -32,6 +45,53 @@ export default function DaoScreen() {
 
   const handleBreakthrough = () => {
     attemptBreakthrough(hasAdBuff, () => setHasAdBuff(false));
+  };
+
+  const getTechniqueName = (techniqueId: string): string => {
+    return techniquesUI.items?.[techniqueId]?.name || techniqueId;
+  };
+
+  const getTechniqueDesc = (techniqueId: string): string => {
+    return techniquesUI.items?.[techniqueId]?.desc || '';
+  };
+
+  const getRequirementText = (technique: any): string => {
+    const parts: string[] = [];
+
+    if (technique.requiredSpiritualRoot) {
+      parts.push(`${techniquesUI.requirements?.spiritual_root}: ${technique.requiredSpiritualRoot}`);
+    }
+
+    if (technique.requiredIntelligence) {
+      parts.push(`${techniquesUI.requirements?.intelligence}: ${technique.requiredIntelligence}`);
+    }
+
+    if (technique.requiredStage) {
+      const stage = stagesData.find((s) => s.id === technique.requiredStage);
+      parts.push(`${techniquesUI.requirements?.stage}: ${stage?.name || technique.requiredStage}`);
+    }
+
+    return parts.join(', ');
+  };
+
+  const handleUpgradeTechnique = (technique: any) => {
+    const currentLevel = techniques.levels[technique.id] || 0;
+    const cost = getTechniqueCost(technique, currentLevel);
+    const meets = meetsTechniqueRequirements(technique, player);
+    const canAfford = isGreaterOrEqualBigInt(player.money, cost);
+    const isMax = currentLevel >= technique.maxLevel;
+
+    if (isMax || !meets || !canAfford) {
+      pushUiNotification('technique_upgrade_error', 'danger');
+      return;
+    }
+
+    player.applyEffects({ money: `-${cost}` });
+    techniques.incrementTechnique(technique.id);
+    pushUiNotification('technique_upgrade_success', 'reward', {
+      name: getTechniqueName(technique.id),
+      level: (currentLevel + 1).toString(),
+    });
   };
 
   if (player.isDead) {
@@ -102,6 +162,60 @@ export default function DaoScreen() {
             <Text style={styles.maxStageText}>{ui.max_stage}</Text>
           </Card>
         )}
+
+        <Text style={styles.sectionTitle}>{techniquesUI.title}</Text>
+
+        {(techniquesData as any[]).map((technique) => {
+          const currentLevel = techniques.levels[technique.id] || 0;
+          const isMax = currentLevel >= technique.maxLevel;
+          const meets = meetsTechniqueRequirements(technique, player);
+          const cost = getTechniqueCost(technique, currentLevel);
+          const canAfford = isGreaterOrEqualBigInt(player.money, cost);
+          const requirementText = getRequirementText(technique);
+
+          let buttonTitle = techniquesUI.upgrade;
+
+          if (isMax) {
+            buttonTitle = techniquesUI.max;
+          } else if (!meets) {
+            buttonTitle = techniquesUI.locked;
+          } else if (!canAfford) {
+            buttonTitle = techniquesUI.not_enough_money;
+          }
+
+          return (
+            <Card key={technique.id} style={styles.techniqueCard}>
+              <View style={styles.techniqueHeader}>
+                <Text style={styles.techniqueName}>{getTechniqueName(technique.id)}</Text>
+                <Text style={styles.techniqueLevel}>
+                  {techniquesUI.level}: {currentLevel}/{technique.maxLevel}
+                </Text>
+              </View>
+
+              <Text style={styles.techniqueDesc}>{getTechniqueDesc(technique.id)}</Text>
+
+              {!!requirementText ? (
+                <Text style={styles.techniqueRequirement}>{requirementText}</Text>
+              ) : null}
+
+              {!isMax ? (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>{techniquesUI.cost}</Text>
+                  <Text style={styles.infoValue}>${formatLargeNumber(cost)}</Text>
+                </View>
+              ) : null}
+
+              <Button
+                title={buttonTitle}
+                onPress={() => handleUpgradeTechnique(technique)}
+                disabled={isMax || !meets || !canAfford}
+                variant={isMax ? 'secondary' : meets && canAfford ? 'gold' : 'ghost'}
+                icon="sparkles"
+                style={styles.techniqueButton}
+              />
+            </Card>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -203,5 +317,44 @@ const styles = StyleSheet.create({
     color: Theme.colors.danger,
     fontSize: Theme.fontSize.lg,
     fontWeight: '900',
+  },
+  sectionTitle: {
+    color: Theme.colors.text,
+    fontSize: 22,
+    fontWeight: '900',
+    marginTop: Theme.spacing.sm,
+    marginBottom: Theme.spacing.md,
+  },
+  techniqueCard: {
+    marginBottom: Theme.spacing.md,
+  },
+  techniqueHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  techniqueName: {
+    color: Theme.colors.secondary,
+    fontSize: 18,
+    fontWeight: '900',
+    flex: 1,
+  },
+  techniqueLevel: {
+    color: Theme.colors.textMuted,
+    fontWeight: '800',
+    marginLeft: 8,
+  },
+  techniqueDesc: {
+    color: Theme.colors.textMuted,
+    marginBottom: 8,
+  },
+  techniqueRequirement: {
+    color: Theme.colors.warning,
+    fontSize: Theme.fontSize.sm,
+    marginBottom: 8,
+  },
+  techniqueButton: {
+    marginTop: Theme.spacing.sm,
   },
 });

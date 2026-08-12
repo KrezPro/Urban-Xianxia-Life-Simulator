@@ -1,8 +1,9 @@
-// helpers.ts v3 — самодостаточный модуль утилит.
+// helpers.ts v4 — самодостаточный модуль утилит.
 // Обязан экспортировать: formatLargeNumber, safeBigInt, addBigIntStrings,
 // subtractBigIntStrings, compareBigIntStrings, isGreaterOrEqualBigInt,
 // divideBigIntStringByNumber, clampProgress, getBigIntProgress,
-// getRandomInt, pickRandom, chance.
+// getRandomInt, pickRandom, chance, multiplyBigIntByPercent,
+// increaseBigIntByPercent, reduceBigIntByPercent, randomBigIntBetween.
 // ВАЖНО: все условия инвертированы (знак ">"), чтобы не ломать XML-парсер AiCoder.
 
 export const formatLargeNumber = (value: string | number): string => {
@@ -15,7 +16,6 @@ export const formatLargeNumber = (value: string | number): string => {
   }
 
   const len = absVal.length;
-
   if (3 >= len) {
     return strVal;
   }
@@ -105,6 +105,7 @@ export const getBigIntProgress = (value: string, max: string): number => {
 
   const valueStr = valueBig.toString();
   const maxStr = maxBig.toString();
+
   const valueNum = Number(valueStr);
   const maxNum = Number(maxStr);
 
@@ -153,4 +154,38 @@ export const pickRandom = (arr: any[]): any => {
 export const chance = (probability: number): boolean => {
   const roll = Math.random();
   return probability >= roll;
+};
+
+export const multiplyBigIntByPercent = (value: string | number | bigint, percent: number): string => {
+  const base = safeBigInt(value);
+  const safePercent = Math.floor(percent);
+  return ((base * BigInt(100 + safePercent)) / 100n).toString();
+};
+
+export const increaseBigIntByPercent = (value: string | number | bigint, percent: number): bigint => {
+  return safeBigInt(multiplyBigIntByPercent(value, percent));
+};
+
+export const reduceBigIntByPercent = (value: string | number | bigint, percent: number): bigint => {
+  const base = safeBigInt(value);
+  const safePercent = Math.max(0, Math.min(100, Math.floor(percent)));
+  return (base * BigInt(100 - safePercent)) / 100n;
+};
+
+export const randomBigIntBetween = (min: string, max: string): string => {
+  const minBig = safeBigInt(min);
+  const maxBig = safeBigInt(max);
+
+  if (minBig >= maxBig) {
+    return minBig.toString();
+  }
+
+  const diff = maxBig - minBig;
+
+  if (diff <= BigInt(Number.MAX_SAFE_INTEGER)) {
+    const randomPart = BigInt(Math.floor(Math.random() * Number(diff + 1n)));
+    return (minBig + randomPart).toString();
+  }
+
+  return (minBig + diff / 2n).toString();
 };

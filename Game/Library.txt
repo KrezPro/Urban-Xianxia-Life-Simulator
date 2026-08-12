@@ -1,12 +1,12 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification.
+1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Techniques, Lifestyle.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
 4. Типизация: strict TypeScript, интерфейсы в src/types/index.ts.
 5. Большие числа: хранить как string, считать через safeBigInt.
 6. UI: функциональные компоненты. Текст только из locales/{lang}/*.json.
 7. Баланс и контент: data/*.json.
-8. Навигация: route names только английские: Life, Dao, Store, Log, Sect.
+8. Навигация: route names только английские: Life, Dao, Activities, Store, Log, Sect.
 9. Социальный слой: offline-first секты, локальные инвайты, локальный рейтинг.
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en.
@@ -30,3 +30,9 @@
 29. IconButton добавлен в UI-кит для компактных кнопок без текста.
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
 31. LifeScreen использует обычный View вместо ScrollView, если прокрутка не требуется; DraggableGrowButton остается абсолютным overlay.
+32. Здоровье игрока разделено на health (текущее) и maxHealth (максимальное). Во вкладке Мир в списке характеристик отображается maxHealth.
+33. Техники Дао хранятся в useTechniquesStore как levels: Record<string, number>, сбрасываются при реинкарнации.
+34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection, сбрасываются при реинкарнации.
+35. Годовой цикл рассчитывается в useYearlyCycle и использует processLifestyleYear из utils/gameplayUtils.ts.
+36. Карма-баффы стали многоуровневыми: quantity в useInventoryStore означает текущий уровень баффа.
+37. Локализация вкладок вынесена в locales/{lang}/navigation.json, техники в dao.json, активности в activities.json, дополнительные ключи магазина в store.json.

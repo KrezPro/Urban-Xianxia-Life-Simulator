@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 12 (Убран лишний скролл во вкладке Мир, журнал и перетаскиваемая кнопка взросления сохранены)
+[СТАТУС]: ШАГ 13 (Реализованы MAX-здоровье, техники Дао, уровни карма-магазина, вкладка Активности и годовой цикл подписок)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -66,58 +66,83 @@
 43. [X] Grow Older заменен перетаскиваемой DraggableGrowButton (FAB в стиле корзины).
 44. [X] Убран скролл во вкладке Мир, так как контент размещается без прокрутки.
 
+=== Фаза 11: Геймплейные системы MAX-здоровья, техник, активностей и подписок ===
+45. [X] Здоровье разделено на current/max, в списке характеристик отображается MAX.
+46. [X] Добавлены техники Дао с уровнями, стоимостью, требованиями и эффектами.
+47. [X] Карма-магазин переведен на уровни 1-10 с растущей стоимостью и эффектами.
+48. [X] Добавлена вкладка Activities с работами, спортом, едой, жильем и порталами.
+49. [X] Годовой цикл учитывает подписки, доход, траты, здоровье, Ци и порталы.
+50. [X] При нехватке денег активности автоматически отключаются в порядке приоритета.
+51. [X] Techniques и Lifestyle сбрасываются при реинкарнации, карма-баффы остаются.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
-├── App.tsx                          // SafeAreaProvider, гидратация, глобальный NotificationHost
+├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
 ├── components/
 │   ├── ui/
 │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow, IconButton
 │   └── game/
 │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
 │       ├── NotificationToast.tsx    // Анимированный тост уведомления
-│       └── DraggableGrowButton.tsx // Перетаскиваемая кнопка взросления (FAB)
+│       ├── DraggableGrowButton.tsx // Перетаскиваемая кнопка взросления (FAB)
+│       └── CollapsibleSection.tsx  // Раскрывающаяся секция для активностей и техник
 ├── constants/
-│   ├── GameConstants.ts             // Лимиты, кулдауны, длительность уведомлений, draggable FAB constants
+│   ├── GameConstants.ts             // Лимиты, кулдауны, годовой цикл, приоритеты отключения подписок
 │   └── Theme.ts                     // Темная тема
 ├── data/
 │   ├── events.json                  // Мирские/тайные события
-│   ├── items.json                   // Карма-баффы
+│   ├── items.json                   // Многоуровневые карма-баффы
 │   ├── stages.json                  // Стадии культивации
 │   ├── sects.json                   // Шаблоны сект
-│   └── rankings.json                // Seed-рейтинг
+│   ├── rankings.json                // Seed-рейтинг
+│   ├── techniques.json              // Техники Дао
+│   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы
 ├── hooks/
-│   ├── useIdleProgress.ts           // Offline-прогресс + уведомления
-│   └── useBreakthrough.ts           // Прорывы + уведомления
+│   ├── useIdleProgress.ts           // Offline-прогресс
+│   ├── useBreakthrough.ts           // Прорывы с учетом техник и карма-баффов
+│   └── useYearlyCycle.ts            // Полный годовой цикл: подписки, порталы, события
 ├── navigation/
-│   └── TabNavigator.tsx             // Нижние вкладки, Log скрыт из tab bar
+│   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect, Log скрыт
 ├── screens/
-│   ├── LifeScreen.tsx               // Основной экран без скролла, кнопка журнала в шапке, draggable Grow Older
-│   ├── DaoScreen.tsx                // Путь Дао
-│   ├── StoreScreen.tsx              // Магазин Кармы
+│   ├── LifeScreen.tsx               // Основной экран, MAX-здоровье, годовой цикл через useYearlyCycle
+│   ├── DaoScreen.tsx                // Путь Дао и техники
+│   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
+│   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
 │   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Журнал, открывается из LifeScreen
+│   └── LogScreen.tsx                // Журнал
 ├── store/
 │   ├── mmkvStorage.ts               // MMKV storage
-│   ├── usePlayerStore.ts            // Игрок
+│   ├── usePlayerStore.ts            // Игрок, current/max health, реинкарнация
 │   ├── useEventStore.ts             // Журнал
-│   ├── useInventoryStore.ts         // Инвентарь
+│   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
 │   ├── useLocaleStore.ts            // Язык
 │   ├── useSocialStore.ts            // Секты
-│   └── useNotificationStore.ts      // Очередь уведомлений
+│   ├── useNotificationStore.ts      // Очередь уведомлений
+│   ├── useTechniquesStore.ts        // Уровни техник Дао
+│   └── useLifestyleStore.ts         // Выбранные активности
 ├── types/
-│   └── index.ts                     // Интерфейсы, включая INotification
+│   └── index.ts                     // Интерфейсы, включая maxHealth и Lifestyle типы
 ├── utils/
 │   ├── notificationUtils.ts         // Локализованный текст уведомлений
 │   ├── timeUtils.ts                 // Дельта времени
-│   └── helpers.ts                   // Форматирование, BigInt, random
+│   ├── helpers.ts                   // Форматирование, BigInt, random, проценты BigInt
+│   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, порталов
 └── locales/
     ├── ru/
-    │   ├── ui.json                  // Включает hints и btn_log
-    │   ├── events.json
-    │   ├── social.json
-    │   └── notifications.json       // Тексты уведомлений
+    │   ├── ui.json                  // Базовые тексты UI
+    │   ├── events.json              // События
+    │   ├── social.json              // Секты
+    │   ├── notifications.json       // Уведомления
+    │   ├── navigation.json          // Подписи вкладок
+    │   ├── dao.json                 // Текники Дао
+    │   ├── store.json               // Дополнительные тексты магазина
+    │   └── activities.json          // Активности
     └── en/
-        ├── ui.json                  // Включает hints и btn_log
-        ├── events.json
-        ├── social.json
-        └── notifications.json       // Тексты уведомлений
+        ├── ui.json                  // Базовые тексты UI
+        ├── events.json              // События
+        ├── social.json              // Секты
+        ├── notifications.json       // Уведомления
+        ├── navigation.json          // Подписи вкладок
+        ├── dao.json                 // Текники Дао
+        ├── store.json               // Дополнительные тексты магазина
+        └── activities.json          // Активности

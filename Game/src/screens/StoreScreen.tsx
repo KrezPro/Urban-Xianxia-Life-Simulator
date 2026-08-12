@@ -10,6 +10,8 @@ import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
 import itemsData from '../data/items.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
+import ruStore from '../locales/ru/store.json';
+import enStore from '../locales/en/store.json';
 
 export default function StoreScreen() {
   const player = usePlayerStore();
@@ -18,17 +20,34 @@ export default function StoreScreen() {
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
 
   const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
+  const uiExtra: any = locale === 'ru' ? ruStore.store_screen : enStore.store_screen;
 
-  const handleBuy = (item: any) => {
+  const handleBuyLevel = (item: any) => {
     const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
+    const rawLevel = inventory.items[item.id]?.quantity || 0;
+    const currentLevel = Math.min(rawLevel, item.maxLevel);
+    const isMax = currentLevel >= item.maxLevel;
 
-    if (isGreaterOrEqualBigInt(player.karma, item.cost) && !inventory.items[item.id]) {
-      player.deductKarma(item.cost);
-      inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
-      pushUiNotification('store_buy_success', 'reward', { name: itemUI.name });
-    } else {
-      pushUiNotification('store_buy_error', 'danger');
+    if (isMax) {
+      pushUiNotification('store_upgrade_error', 'danger');
+      return;
     }
+
+    const nextLevelData = item.levels[currentLevel];
+    const cost = nextLevelData?.cost || '0';
+    const canAfford = isGreaterOrEqualBigInt(player.karma, cost);
+
+    if (!canAfford) {
+      pushUiNotification('store_upgrade_error', 'danger');
+      return;
+    }
+
+    player.deductKarma(cost);
+    inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
+    pushUiNotification('store_upgrade_success', 'reward', {
+      name: itemUI.name,
+      level: (currentLevel + 1).toString(),
+    });
   };
 
   const handleBuyPass = () => {
@@ -46,28 +65,47 @@ export default function StoreScreen() {
           <Text style={styles.balanceValue}>{formatLargeNumber(player.karma)}</Text>
         </Card>
 
-        {itemsData
+        {(itemsData as any[])
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
-            const isBought = !!inventory.items[item.id];
-            const canAfford = isGreaterOrEqualBigInt(player.karma, item.cost);
+            const rawLevel = inventory.items[item.id]?.quantity || 0;
+            const currentLevel = Math.min(rawLevel, item.maxLevel);
+            const isMax = currentLevel >= item.maxLevel;
+            const nextLevelData = item.levels[currentLevel];
+            const nextCost = nextLevelData?.cost || '0';
+            const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
             const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
 
             return (
               <Card key={item.id} style={styles.itemCard}>
                 <View style={styles.itemTopRow}>
                   <Text style={styles.itemName}>{itemUI.name}</Text>
-                  <Text style={styles.itemCost}>{ui.cost}: {formatLargeNumber(item.cost)}</Text>
+                  <Text style={styles.itemLevel}>
+                    {uiExtra.level}: {currentLevel}/{item.maxLevel}
+                  </Text>
                 </View>
 
                 <Text style={styles.itemDesc}>{itemUI.desc}</Text>
 
+                {!isMax ? (
+                  <View style={styles.costRow}>
+                    <Text style={styles.costLabel}>{uiExtra.next_cost}</Text>
+                    <Text style={styles.costValue}>{formatLargeNumber(nextCost)}</Text>
+                  </View>
+                ) : null}
+
                 <Button
-                  title={isBought ? ui.btn_bought : canAfford ? ui.btn_buy : ui.btn_no_karma}
-                  onPress={() => handleBuy(item)}
-                  disabled={isBought}
-                  variant={isBought ? 'secondary' : canAfford ? 'gold' : 'ghost'}
-                  icon={isBought ? 'checkmark-circle' : 'cart'}
+                  title={
+                    isMax
+                      ? uiExtra.max_level
+                      : canAfford
+                      ? ui.btn_buy
+                      : ui.btn_no_karma
+                  }
+                  onPress={() => handleBuyLevel(item)}
+                  disabled={isMax || !canAfford}
+                  variant={isMax ? 'secondary' : canAfford ? 'gold' : 'ghost'}
+                  icon={isMax ? 'checkmark-circle' : 'cart'}
                   style={styles.itemButton}
                 />
               </Card>
@@ -79,7 +117,6 @@ export default function StoreScreen() {
         <Card variant="primary" style={styles.iapCard}>
           <Text style={styles.iapName}>{ui.iap_pass}</Text>
           <Text style={styles.iapDesc}>{ui.iap_pass_desc}</Text>
-
           <Button
             title={player.hasCultivatorPass ? ui.btn_iap_active : ui.btn_iap_buy}
             onPress={handleBuyPass}
@@ -93,7 +130,6 @@ export default function StoreScreen() {
         <Card style={styles.iapCard}>
           <Text style={styles.iapName}>{ui.iap_ad}</Text>
           <Text style={styles.iapDesc}>{ui.iap_ad_desc}</Text>
-
           <Button
             title={ui.btn_info}
             onPress={() => undefined}
@@ -152,13 +188,26 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     flex: 1,
   },
-  itemCost: {
-    color: Theme.colors.gold,
+  itemLevel: {
+    color: Theme.colors.textMuted,
     fontWeight: '800',
+    marginLeft: 8,
   },
   itemDesc: {
     color: Theme.colors.textMuted,
     marginBottom: Theme.spacing.md,
+  },
+  costRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: Theme.spacing.sm,
+  },
+  costLabel: {
+    color: Theme.colors.textMuted,
+  },
+  costValue: {
+    color: Theme.colors.gold,
+    fontWeight: '800',
   },
   itemButton: {
     alignSelf: 'stretch',

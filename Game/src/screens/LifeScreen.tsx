@@ -10,10 +10,8 @@ import { Button, Card, ProgressBar, StatRow, IconButton } from '../components/ui
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
-import { GameConstants } from '../constants/GameConstants';
+import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import stagesData from '../data/stages.json';
-import ruEvents from '../locales/ru/events.json';
-import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -29,16 +27,21 @@ export default function LifeScreen() {
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
   const navigation = useNavigation<RootNavigationProp>();
+  const { handleGrowOlder } = useYearlyCycle();
   const [hint, setHint] = useState<HintData | null>(null);
 
-  const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
 
   useEffect(() => {
-    if (player.age === 0 && player.money === '0' && player.health === 100 && player.qi === '0' && !player.isDead) {
+    if (
+      player.age === 0 &&
+      player.money === '0' &&
+      player.health === 100 &&
+      player.qi === '0' &&
+      !player.isDead
+    ) {
       player.reincarnate();
       addLog(ui.born_log, 'system');
       pushUiNotification('born', 'system');
@@ -56,7 +59,7 @@ export default function LifeScreen() {
   const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
   const nextStage = stagesData[currentStageIndex + 1];
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
-  const healthProgress = player.health / 100;
+  const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
 
   const openHint = (key: string) => {
     const hintData = hints[key];
@@ -73,46 +76,6 @@ export default function LifeScreen() {
 
   const openLog = () => {
     navigation.navigate('Log');
-  };
-
-  const handleGrowOlder = () => {
-    const now = Date.now();
-
-    if (!player.hasCultivatorPass) {
-      if (now - player.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
-        player.setLastInterstitialTime(now);
-        addLog(ui.interstitial_log, 'system');
-        pushUiNotification('interstitial', 'system');
-      }
-    }
-
-    player.growOlder();
-
-    let secretEventChance = 0.1;
-
-    if (player.activityFocus === 'secret') {
-      secretEventChance = 0.8;
-      player.addQi(player.spiritualRoot.toString());
-      addLog(ui.meditation_log.replace('{amount}', player.spiritualRoot.toString()), 'secret');
-      pushUiNotification('meditation', 'secret', {
-        amount: player.spiritualRoot.toString(),
-      });
-    }
-
-    const isSecretEvent = secretEventChance > Math.random();
-    const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
-    const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
-
-    player.applyEffects(randomEvent.effects);
-
-    const ageString = ui.age_log.replace('{age}', (player.age + 1).toString());
-
-    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
-    pushEventNotification(
-      randomEvent.id,
-      isSecretEvent ? 'secret' : 'mundane',
-      isSecretEvent ? 'secret' : 'mundane'
-    );
   };
 
   const handleReincarnate = () => {
@@ -211,7 +174,7 @@ export default function LifeScreen() {
 
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
-            {ui.health}: {player.health}/100
+            {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
           </Text>
 
           <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
@@ -231,7 +194,7 @@ export default function LifeScreen() {
           <StatRow
             icon="heart"
             label={ui.health}
-            value={player.health.toString()}
+            value={formatLargeNumber(player.maxHealth)}
             color={Theme.colors.success}
             onLongPress={() => openHint('health')}
           />
@@ -269,20 +232,37 @@ export default function LifeScreen() {
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
           <View style={styles.focusRow}>
             <TouchableOpacity
-              style={[styles.focusChip, styles.focusChipLeft, player.activityFocus === 'mundane' && styles.focusChipActiveMundane]}
+              style={[
+                styles.focusChip,
+                styles.focusChipLeft,
+                player.activityFocus === 'mundane' && styles.focusChipActiveMundane,
+              ]}
               onPress={() => player.setActivityFocus('mundane')}
               onLongPress={() => openHint('focus_mundane')}
             >
-              <Text style={[styles.focusChipText, player.activityFocus === 'mundane' && styles.focusChipTextActive]}>
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'mundane' && styles.focusChipTextActive,
+                ]}
+              >
                 {ui.focus_mundane}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.focusChip, player.activityFocus === 'secret' && styles.focusChipActiveSecret]}
+              style={[
+                styles.focusChip,
+                player.activityFocus === 'secret' && styles.focusChipActiveSecret,
+              ]}
               onPress={() => player.setActivityFocus('secret')}
               onLongPress={() => openHint('focus_secret')}
             >
-              <Text style={[styles.focusChipText, player.activityFocus === 'secret' && styles.focusChipTextActive]}>
+              <Text
+                style={[
+                  styles.focusChipText,
+                  player.activityFocus === 'secret' && styles.focusChipTextActive,
+                ]}
+              >
                 {ui.focus_secret}
               </Text>
             </TouchableOpacity>

@@ -92,54 +92,60 @@
 1. Прочитай `Game/PlanOfDevelopment.txt` и выбери текущую задачу.
 2. Сверь структуру проекта с *ОПИСАНИЕ структуры проекта*. Если в *ОПИСАНИЕ структуры проекта* не хватает файлов, тебе нужно составить правильный, в формате *ОПИСАНИЕ структуры проекта*.
 
-*ОПИСАНИЕ структуры проекта*
 Game/src/
-├── App.tsx                          // Гидратация и навигация
+├── App.tsx                                     // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
 ├── components/
 │   ├── ui/
-│   │   └── index.tsx                // Button, Card, ProgressBar, StatRow
+│   │   └── index.tsx                           // Единый UI-кит: Button, Card, ProgressBar, StatRow, IconButton
 │   └── game/
-│       ├── NotificationHost.tsx     // Очередь уведомлений на вкладке Мир
-│       └── NotificationToast.tsx    // Анимированный тост уведомления
+│       ├── NotificationHost.tsx                // Глобальная очередь уведомлений поверх экранов (zIndex 1000)
+│       ├── NotificationToast.tsx               // Анимированный тост одного уведомления с автоскрытием
+│       └── DraggableGrowButton.tsx             // Перетаскиваемая плавающая кнопка взросления (FAB в стиле корзины)
 ├── constants/
-│   ├── GameConstants.ts             // Лимиты, кулдауны, константы уведомлений
-│   └── Theme.ts                     // Цвета и стили
+│   ├── GameConstants.ts                        // Игровые константы: кулдауны, шансы, параметры FAB и уведомлений
+│   └── Theme.ts                                // Единая тёмная неоновая тема: цвета, отступы, радиусы, шрифты, тени
 ├── data/
-│   └── events.json                  // id и эффекты событий
+│   ├── events.json                             // Мирские и тайные события взросления (id, эффекты, тексты)
+│   ├── items.json                              // Карма-баффы магазина (Rich Family, Strong Meridians, Pure Root)
+│   ├── stages.json                             // Стадии культивации и требования Ци для прорыва
+│   ├── sects.json                              // Шаблоны сект (имена, теги, фокус, базовые фонды/влияние)
+│   └── rankings.json                           // Seed-данные локального рейтинга сект
 ├── hooks/
-│   ├── useBreakthrough.ts           // Прорывы, использует уведомления
-│   └── useIdleProgress.ts           // Оффлайн прогресс, использует уведомления
+│   ├── useBreakthrough.ts                      // Хук прорыва: проверка Ци, шанс успеха, урон/смерть, уведомления
+│   └── useIdleProgress.ts                      // Оффлайн-прогресс: дельта времени, начисления Ци/денег, уведомления
 ├── navigation/
-│   └── TabNavigator.tsx             // Табы Life, Dao, Store, Sect
+│   └── TabNavigator.tsx                        // Нижние вкладки Life/Dao/Store/Sect, Log скрыт из tab bar
 ├── screens/
-│   ├── LifeScreen.tsx               // Основной экран с уведомлениями
-│   ├── DaoScreen.tsx                // Путь Дао
-│   ├── StoreScreen.tsx              // Магазин Кармы
-│   ├── SectScreen.tsx               // Секта и рейтинг
-│   └── LogScreen.tsx                // Legacy журнал, скрыт из навигации
+│   ├── LifeScreen.tsx                          // Вкладка «Мир»: статы, фокус года, кнопка журнала в шапке, draggable FAB
+│   ├── DaoScreen.tsx                           // Вкладка «Дао»: стадия, Ци, попытка прорыва, рекламный бафф
+│   ├── StoreScreen.tsx                         // Магазин кармы: перманентные баффы и IAP-заготовки (Cultivator Pass)
+│   ├── SectScreen.tsx                          // Секта и локальный рейтинг: «Моя секта» + таблица лидеров
+│   └── LogScreen.tsx                           // Журнал судьбы (FlashList), открывается из LifeScreen кнопкой
 ├── store/
-│   ├── useEventStore.ts             // Старый журнал, legacy
-│   ├── useNotificationStore.ts      // Очередь локализованных уведомлений
-│   ├── usePlayerStore.ts            // Игрок
-│   ├── useLocaleStore.ts            // Язык интерфейса
-│   └── useSocialStore.ts            // Секты
+│   ├── mmkvStorage.ts                          // Zustand-адаптер для react-native-mmkv с memory-fallback
+│   ├── usePlayerStore.ts                       // Состояние игрока: возраст, статы, Ци, карма, взросление, смерть
+│   ├── useEventStore.ts                        // Журнал событий (legacy logs)
+│   ├── useInventoryStore.ts                    // Инвентарь: пилюли, артефакты, имущество
+│   ├── useLocaleStore.ts                       // Выбор языка ru/en с гидратацией
+│   ├── useSocialStore.ts                       // Секты: создание, инвайты, участники, оффлайн-симуляция, рейтинг
+│   └── useNotificationStore.ts                 // Очередь UI и event-уведомлений
 ├── types/
-│   └── index.ts                     // Типы уведомлений и событий
+│   └── index.ts                                // TypeScript интерфейсы: IPlayer, IEventLog, INotification, ISect и т.д.
 ├── utils/
-│   ├── notificationUtils.ts         // Получение текста уведомления по ключу
-│   ├── helpers.ts                   // Форматирование, BigInt, random
-│   └── timeUtils.ts                 // Дельта времени
+│   ├── notificationUtils.ts                    // Получение локализованного текста уведомления по ключу
+│   ├── helpers.ts                              // formatLargeNumber, safeBigInt, getBigIntProgress, random-утилиты
+│   └── timeUtils.ts                            // Расчёт дельты времени для оффлайн-прогресса
 └── locales/
     ├── ru/
-    │   ├── ui.json
-    │   ├── events.json
-    │   ├── social.json
-    │   └── notifications.json       // Русские тексты уведомлений
+    │   ├── ui.json                             // Русские тексты UI, хинты long-press, кнопки (btn_log, btn_grow)
+    │   ├── events.json                         // Русские тексты мирских и тайных событий
+    │   ├── social.json                         // Русские тексты сект и рейтинга
+    │   └── notifications.json                  // Русские тексты тостов уведомлений
     └── en/
-        ├── ui.json
-        ├── events.json
-        ├── social.json
-        └── notifications.json       // Английские тексты уведомлений
+        ├── ui.json                             // Английские тексты UI, хинты long-press, кнопки (btn_log, btn_grow)
+        ├── events.json                         // Английские тексты мирских и тайных событий
+        ├── social.json                         // Английские тексты сект и рейтинга
+        └── notifications.json                  // Английские тексты тостов уведомлений
 
 3. Проанализируй ОПИСАНИЕ структуры проекта и `Library.txt`, выбери нужные файлы для выполнения текущего задания.
 4. Сформируй JSON для обновления context_focus.

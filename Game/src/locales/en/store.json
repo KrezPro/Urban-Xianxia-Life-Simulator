@@ -1,0 +1,7 @@
+{
+  "store_screen": {
+    "level": "Level",
+    "max_level": "Max level",
+    "next_cost": "Next level cost"
+  }
+}

@@ -10,5 +10,13 @@
   "breakthrough_success": "Breakthrough successful! Stage: {name}.",
   "breakthrough_fail_damage": "Breakthrough failed. Mana Burn: {damage} damage.",
   "breakthrough_fail_death": "Critical failure! Heavenly Tribulation destroyed you.",
-  "breakthrough_saved": "Breakthrough failed, but ad buff protected your meridians."
+  "breakthrough_saved": "Breakthrough failed, but ad buff protected your meridians.",
+  "technique_upgrade_success": "Technique upgraded: {name} (level {level}).",
+  "technique_upgrade_error": "Failed to upgrade technique.",
+  "lifestyle_disabled_no_money": "Not enough money or requirements. Some activities were disabled.",
+  "portal_success": "Portal cleared! Reward: ${money}, Qi: {qi}.",
+  "portal_fail": "Portal failed. Damage taken: {damage}.",
+  "store_upgrade_success": "Upgraded: {name} to level {level}.",
+  "store_upgrade_error": "Not enough karma to upgrade.",
+  "store_pass_activated": "Cultivator Pass activated. Ads disabled."
 }

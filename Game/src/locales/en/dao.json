@@ -1,0 +1,36 @@
+{
+  "dao_screen": {
+    "techniques": {
+      "title": "Dao Techniques",
+      "level": "Level",
+      "max": "Max",
+      "cost": "Cost",
+      "upgrade": "Upgrade",
+      "locked": "Locked",
+      "not_enough_money": "Not enough money",
+      "requirements": {
+        "spiritual_root": "Spiritual Root",
+        "intelligence": "Intelligence",
+        "stage": "Stage"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Hidden Dragon Breathing",
+          "desc": "A basic breathing technique. Each level increases Qi gain and breakthrough chance."
+        },
+        "technique_iron_meridian": {
+          "name": "Iron Meridians",
+          "desc": "Tempers the body and meridians. Improves health recovery and reduces damage."
+        },
+        "technique_jade_ledger": {
+          "name": "Jade Ledger",
+          "desc": "A mundane wealth technique. Increases income, job efficiency and portal success."
+        },
+        "technique_spirit_sense": {
+          "name": "Spirit Sense",
+          "desc": "A late-game perception technique. Boosts Qi, breakthroughs and portal success."
+        }
+      }
+    }
+  }
+}

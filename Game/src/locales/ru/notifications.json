@@ -10,5 +10,13 @@
   "breakthrough_success": "Прорыв успешен! Стадия: {name}.",
   "breakthrough_fail_damage": "Прорыв провален. Mana Burn: {damage} урона.",
   "breakthrough_fail_death": "Критический провал! Небесная скорбь уничтожила вас.",
-  "breakthrough_saved": "Прорыв провален, но рекламный бафф защитил меридианы."
+  "breakthrough_saved": "Прорыв провален, но рекламный бафф защитил меридианы.",
+  "technique_upgrade_success": "Техника улучшена: {name} (уровень {level}).",
+  "technique_upgrade_error": "Не удалось улучшить технику.",
+  "lifestyle_disabled_no_money": "Не хватает денег или требований. Часть активностей отключена.",
+  "portal_success": "Портал пройден! Награда: ${money}, Ци: {qi}.",
+  "portal_fail": "Портал провален. Получен урон: {damage}.",
+  "store_upgrade_success": "Улучшено: {name} до уровня {level}.",
+  "store_upgrade_error": "Не хватает кармы для улучшения.",
+  "store_pass_activated": "Cultivator Pass активирован. Реклама отключена."
 }

@@ -32,4 +32,9 @@ export const GameConstants = {
   DRAG_FAB_MARGIN: 16,
   DRAG_TAP_THRESHOLD: 8,
   DRAG_FAB_Z_INDEX: 900,
+  YEAR_DAYS: 365,
+  BREAKTHROUGH_MAX_CHANCE: 0.98,
+  PORTAL_MIN_CHANCE: 0.05,
+  PORTAL_MAX_CHANCE: 0.95,
+  LIFESTYLE_DISABLE_PRIORITY: ['portal', 'sport', 'housing', 'food', 'job'],
 };

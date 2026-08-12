@@ -4,11 +4,14 @@ export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
 export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
 export type NotificationKind = 'ui' | 'event';
+export type LifestyleCategory = 'job' | 'sport' | 'food' | 'housing' | 'portal';
+export type LifestyleSelection = Record<LifestyleCategory, string>;
 
 export interface IPlayer {
   age: number;
   intelligence: number;
   health: number;
+  maxHealth: number;
   appearance: number;
   money: string;
   qi: string;
