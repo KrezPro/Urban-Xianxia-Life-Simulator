@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { usePlayerStore } from '../store/usePlayerStore';
@@ -124,7 +124,7 @@ export default function LifeScreen() {
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.content}>
           <View style={styles.headerRow}>
             <Text style={styles.title}>{ui.title}</Text>
             <View style={styles.headerActions}>
@@ -164,7 +164,7 @@ export default function LifeScreen() {
               style={styles.reincarnateButton}
             />
           </Card>
-        </ScrollView>
+        </View>
 
         <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
           <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
@@ -187,7 +187,7 @@ export default function LifeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{ui.title}</Text>
           <View style={styles.headerActions}>
@@ -288,7 +288,7 @@ export default function LifeScreen() {
             </TouchableOpacity>
           </View>
         </Card>
-      </ScrollView>
+      </View>
 
       <DraggableGrowButton
         age={player.age}
@@ -321,6 +321,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background,
   },
   content: {
+    flex: 1,
     padding: Theme.spacing.md,
     paddingBottom: 120,
   },

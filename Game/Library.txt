@@ -29,3 +29,4 @@
 28. DraggableGrowButton — перетаскиваемая кнопка взросления. Короткое нажатие вызывает growOlder, перетаскивание выполняется PanResponder в пределах LifeScreen.
 29. IconButton добавлен в UI-кит для компактных кнопок без текста.
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
+31. LifeScreen использует обычный View вместо ScrollView, если прокрутка не требуется; DraggableGrowButton остается абсолютным overlay.
