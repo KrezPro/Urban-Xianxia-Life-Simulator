@@ -1,4 +1,4 @@
-import { ILeaderboardEntry, ISect, ISectMember } from '../types';
+import { ISect, ISectMember, ILeaderboardEntry, SectFocus, SectRole } from '../types';
 import { GameConstants } from '../constants/GameConstants';
 import {
   addBigIntStrings,
@@ -10,9 +10,13 @@ import {
 import sectsData from '../data/sects.json';
 import rankingsData from '../data/rankings.json';
 
+const sectsAny = sectsData as any;
+const fallbackTemplate = sectsAny.fallback;
+const npcFallbackName: string = sectsAny.npcFallbackName || 'Adept';
+const npcNames: string[] = sectsAny.npcNames || [];
+const templates: any[] = sectsAny.templates || [];
+
 const allowedInviteChars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-const npcNames: string[] = (sectsData as any).npcNames || [];
-const templates: any[] = (sectsData as any).templates || [];
 
 export const getCurrentSeasonId = (): string => {
   return new Date().toISOString().slice(0, 7);
@@ -40,12 +44,12 @@ export const codeToSeed = (code: string): number => {
 
 const createNpcMembers = (count: number): ISectMember[] => {
   return Array.from({ length: count }).map((_, index) => {
-    const name = pickRandom(npcNames) || `Adept ${index + 1}`;
+    const name = pickRandom(npcNames) || `${npcFallbackName} ${index + 1}`;
 
     return {
       id: `npc_${Date.now().toString()}_${index.toString()}`,
       name,
-      role: 'member',
+      role: 'member' as SectRole,
       contribution: '0',
       influence: '0',
     };
@@ -61,7 +65,7 @@ export const createPlayerSect = (params: {
   const playerMember: ISectMember = {
     id: 'player',
     name: 'player_name',
-    role: 'founder',
+    role: 'founder' as SectRole,
     contribution: '0',
     influence: '0',
   };
@@ -71,7 +75,7 @@ export const createPlayerSect = (params: {
     name: params.name,
     tag: params.tag,
     inviteCode: params.inviteCode,
-    focus: 'hybrid',
+    focus: 'hybrid' as SectFocus,
     funds: '1000',
     influence: '100',
     members: [playerMember, ...createNpcMembers(getRandomInt(3, 5))],
@@ -82,24 +86,12 @@ export const createPlayerSect = (params: {
 
 export const createNpcSectFromCode = (code: string, seasonId: string): ISect => {
   const seed = codeToSeed(code);
-
-  const fallbackTemplate = {
-    id: 'shadow_syndicate',
-    name: 'Shadow Syndicate',
-    tag: 'SS',
-    focus: 'secret',
-    baseFunds: '5000',
-    baseInfluence: '300',
-  };
-
-  const template = 0 === templates.length
-    ? fallbackTemplate
-    : templates[seed % templates.length];
+  const template = templates.length > 0 ? templates[seed % templates.length] : fallbackTemplate;
 
   const playerMember: ISectMember = {
     id: 'player',
     name: 'player_name',
-    role: 'member',
+    role: 'member' as SectRole,
     contribution: '0',
     influence: '0',
   };
@@ -109,7 +101,7 @@ export const createNpcSectFromCode = (code: string, seasonId: string): ISect => 
     name: template.name,
     tag: template.tag,
     inviteCode: code,
-    focus: template.focus,
+    focus: template.focus as SectFocus,
     funds: template.baseFunds,
     influence: template.baseInfluence,
     members: [playerMember, ...createNpcMembers(getRandomInt(4, 6))],
@@ -153,6 +145,7 @@ export const simulateNpcProgress = (sect: ISect, elapsedSeconds: number): ISect 
 const calculateSectScore = (sect: ISect): string => {
   const influencePart = sect.influence;
   const fundsPart = divideBigIntStringByNumber(sect.funds, 1000);
+
   return addBigIntStrings(influencePart, fundsPart);
 };
 

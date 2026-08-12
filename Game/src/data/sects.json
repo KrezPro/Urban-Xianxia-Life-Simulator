@@ -1,4 +1,13 @@
 {
+  "fallback": {
+    "id": "shadow_syndicate",
+    "name": "Shadow Syndicate",
+    "tag": "SS",
+    "focus": "secret",
+    "baseFunds": "5000",
+    "baseInfluence": "300"
+  },
+  "npcFallbackName": "Adept",
   "npcNames": [
     "Neo Salaryman",
     "Night Intern",

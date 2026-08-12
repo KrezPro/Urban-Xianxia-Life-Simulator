@@ -2,8 +2,6 @@ export type Locale = 'ru' | 'en';
 export type ActivityFocus = 'mundane' | 'secret';
 export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
-export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
-export type NotificationKind = 'ui' | 'event';
 
 export interface IPlayer {
   age: number;
@@ -67,15 +65,4 @@ export interface ISectTemplate {
   focus: SectFocus;
   baseFunds: string;
   baseInfluence: string;
-}
-
-export interface INotification {
-  id: string;
-  kind: NotificationKind;
-  messageKey: string;
-  eventPool?: 'mundane' | 'secret';
-  params?: Record<string, string>;
-  type: NotificationType;
-  createdAt: number;
-  durationMs: number;
 }

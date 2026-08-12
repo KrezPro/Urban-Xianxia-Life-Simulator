@@ -78,59 +78,6 @@ export const divideBigIntStringByNumber = (value: string, divisor: number): stri
   return (safeBigInt(value) / BigInt(divisor)).toString();
 };
 
-export const clampProgress = (value: number): number => {
-  const safe = 0 > value ? 0 : value;
-  return 1 > safe ? safe : 1;
-};
-
-export const getBigIntProgress = (value: string, max: string): number => {
-  const maxBig = safeBigInt(max);
-
-  if (0n === maxBig) {
-    return 0;
-  }
-
-  const valueBig = safeBigInt(value);
-
-  if (valueBig > maxBig) {
-    return 1;
-  }
-
-  const valueStr = valueBig.toString();
-  const maxStr = maxBig.toString();
-  const valueNum = Number(valueStr);
-  const maxNum = Number(maxStr);
-
-  if (!isFinite(valueNum) || !isFinite(maxNum)) {
-    if (valueStr.length > maxStr.length) {
-      return 1;
-    }
-
-    if (valueStr.length === maxStr.length) {
-      return 0.99;
-    }
-
-    const diff = maxStr.length - valueStr.length;
-    return 1 / Math.pow(10, diff);
-  }
-
-  if (0 === maxNum) {
-    return 0;
-  }
-
-  const ratio = valueNum / maxNum;
-
-  if (ratio > 1) {
-    return 1;
-  }
-
-  if (0 > ratio) {
-    return 0;
-  }
-
-  return ratio;
-};
-
 export const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };

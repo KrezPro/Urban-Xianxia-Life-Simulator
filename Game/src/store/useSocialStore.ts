@@ -12,11 +12,13 @@ import {
   normalizeInviteCode,
   simulateNpcProgress,
 } from '../services/socialService';
-import { addBigIntStrings, divideBigIntStringByNumber, safeBigInt } from '../utils/helpers';
+import {
+  addBigIntStrings,
+  divideBigIntStringByNumber,
+} from '../utils/helpers';
 import { GameConstants } from '../constants/GameConstants';
-import { usePlayerStore } from './usePlayerStore';
 
-type ContributeResult = 'ok' | 'no_money' | 'no_sect';
+type ContributeResult = 'ok' | 'no_sect';
 
 interface SocialState {
   hasHydrated: boolean;
@@ -29,7 +31,7 @@ interface SocialState {
   createSect: (name: string, tag: string) => void;
   joinSectByInvite: (code: string) => boolean;
   leaveSect: () => void;
-  contribute: (amount: string) => ContributeResult;
+  registerDonation: (amount: string) => ContributeResult;
   simulateOffline: (now: number) => void;
   refreshLeaderboard: () => void;
 }
@@ -43,6 +45,7 @@ export const useSocialStore = create<SocialState>()(
       leaderboard: buildLeaderboard(null),
       seasonId: getCurrentSeasonId(),
       lastOfflineSimulationAt: Date.now(),
+
       setHasHydrated: (state) => set({ hasHydrated: state }),
 
       createSect: (name, tag) => {
@@ -89,22 +92,12 @@ export const useSocialStore = create<SocialState>()(
         });
       },
 
-      contribute: (amount) => {
+      registerDonation: (amount) => {
         const state = get();
 
         if (!state.sect) {
           return 'no_sect';
         }
-
-        const playerStore = usePlayerStore.getState();
-        const amountBig = safeBigInt(amount);
-        const moneyBig = safeBigInt(playerStore.money);
-
-        if (amountBig > moneyBig) {
-          return 'no_money';
-        }
-
-        playerStore.applyEffects({ money: `-${amount}` });
 
         const influenceGain = divideBigIntStringByNumber(amount, 100);
 

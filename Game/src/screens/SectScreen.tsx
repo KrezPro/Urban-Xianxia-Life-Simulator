@@ -12,13 +12,9 @@ import {
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSocialStore } from '../store/useSocialStore';
-import { usePlayerStore } from '../store/usePlayerStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { Button, Card, StatRow } from '../components/ui';
 import { Theme } from '../constants/Theme';
-import { GameConstants } from '../constants/GameConstants';
-import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
+import { formatLargeNumber } from '../utils/helpers';
 import ruSocial from '../locales/ru/social.json';
 import enSocial from '../locales/en/social.json';
 
@@ -26,9 +22,7 @@ type SectMode = 'sect' | 'leaderboard';
 
 export default function SectScreen() {
   const social = useSocialStore();
-  const player = usePlayerStore();
   const locale = useLocaleStore((state) => state.locale);
-  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
 
   const [mode, setMode] = useState<SectMode>('sect');
   const [inviteInput, setInviteInput] = useState('');
@@ -36,10 +30,6 @@ export default function SectScreen() {
 
   const socialData: any = locale === 'ru' ? ruSocial : enSocial;
   const ui = socialData.sect_screen;
-
-  const minContribution = GameConstants.SOCIAL_MIN_CONTRIBUTION_MONEY;
-  const minContributionLabel = formatLargeNumber(minContribution);
-  const canAffordDonation = isGreaterOrEqualBigInt(player.money, minContribution);
 
   useEffect(() => {
     if (social.hasHydrated) {
@@ -60,7 +50,6 @@ export default function SectScreen() {
 
   const handleCreate = () => {
     social.createSect(ui.default_name, ui.default_tag);
-    pushUiNotification('sect_created', 'social', { name: ui.default_name });
     setMode('sect');
   };
 
@@ -72,23 +61,9 @@ export default function SectScreen() {
       return;
     }
 
-    const joinedName = useSocialStore.getState().sect?.name || '';
-    pushUiNotification('sect_joined', 'social', { name: joinedName });
     setInviteInput('');
     setJoinError('');
     setMode('sect');
-  };
-
-  const handleDonate = () => {
-    const result = social.contribute(minContribution);
-
-    if (result === 'ok') {
-      pushUiNotification('sect_donate_success', 'social', { amount: `$${minContributionLabel}` });
-    }
-
-    if (result === 'no_money') {
-      pushUiNotification('sect_donate_no_money', 'danger');
-    }
   };
 
   const handleLeave = () => {
@@ -105,7 +80,6 @@ export default function SectScreen() {
           style: 'destructive',
           onPress: () => {
             social.leaveSect();
-            pushUiNotification('sect_left', 'social');
           },
         },
       ]
@@ -129,10 +103,12 @@ export default function SectScreen() {
     return (
       <View style={[styles.leaderboardRow, item.isPlayer && styles.leaderboardRowPlayer]}>
         <Text style={styles.leaderboardRank}>#{rank}</Text>
+
         <View style={styles.leaderboardInfo}>
           <Text style={styles.leaderboardName}>{displayName}</Text>
           <Text style={styles.leaderboardTag}>[{item.tag}]</Text>
         </View>
+
         <Text style={styles.leaderboardScore}>{formatLargeNumber(item.score)}</Text>
       </View>
     );
@@ -167,17 +143,13 @@ export default function SectScreen() {
       {mode === 'sect' ? (
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {!social.sect ? (
-            <Card variant="primary" style={styles.emptyCard}>
+            <View style={styles.emptyCard}>
               <Text style={styles.emptyTitle}>{ui.empty_title}</Text>
               <Text style={styles.emptyText}>{ui.empty_text}</Text>
 
-              <Button
-                title={ui.btn_create}
-                onPress={handleCreate}
-                variant="primary"
-                icon="add-circle"
-                style={styles.actionButton}
-              />
+              <TouchableOpacity style={styles.primaryButton} onPress={handleCreate}>
+                <Text style={styles.primaryButtonText}>{ui.btn_create}</Text>
+              </TouchableOpacity>
 
               <TextInput
                 style={styles.input}
@@ -191,62 +163,46 @@ export default function SectScreen() {
                 autoCapitalize="characters"
               />
 
-              <Button
-                title={ui.btn_join}
-                onPress={handleJoin}
-                variant="secondary"
-                icon="enter"
-                style={styles.actionButton}
-              />
+              <TouchableOpacity style={styles.secondaryButton} onPress={handleJoin}>
+                <Text style={styles.secondaryButtonText}>{ui.btn_join}</Text>
+              </TouchableOpacity>
 
               {joinError !== '' ? <Text style={styles.errorText}>{joinError}</Text> : null}
-            </Card>
+            </View>
           ) : (
-            <Card variant="primary" style={styles.sectCard}>
+            <View style={styles.sectCard}>
               <Text style={styles.sectName}>
                 {social.sect.name} [{social.sect.tag}]
               </Text>
 
-              <StatRow icon="calendar" label={ui.season} value={social.seasonId} color={Theme.colors.secondary} />
-              <StatRow icon="cash" label={ui.funds} value={`$${formatLargeNumber(social.sect.funds)}`} color={Theme.colors.gold} />
-              <StatRow icon="flame" label={ui.influence} value={formatLargeNumber(social.sect.influence)} color={Theme.colors.info} />
+              <View style={styles.statRow}>
+                <Text style={styles.statLabel}>{ui.season}</Text>
+                <Text style={styles.statValue}>{social.seasonId}</Text>
+              </View>
 
-              <Card style={styles.inviteCard}>
+              <View style={styles.statRow}>
+                <Text style={styles.statLabel}>{ui.funds}</Text>
+                <Text style={styles.statValueGold}>${formatLargeNumber(social.sect.funds)}</Text>
+              </View>
+
+              <View style={styles.statRow}>
+                <Text style={styles.statLabel}>{ui.influence}</Text>
+                <Text style={styles.statValueInfo}>{formatLargeNumber(social.sect.influence)}</Text>
+              </View>
+
+              <View style={styles.inviteCard}>
                 <Text style={styles.inviteLabel}>
                   {ui.invite_code}: {social.sect.inviteCode}
                 </Text>
 
-                <Button
-                  title={ui.share_invite}
-                  onPress={handleShareInvite}
-                  variant="secondary"
-                  icon="share-social"
-                  small
-                />
-              </Card>
+                <TouchableOpacity style={styles.shareButton} onPress={handleShareInvite}>
+                  <Text style={styles.shareButtonText}>{ui.share_invite}</Text>
+                </TouchableOpacity>
+              </View>
 
-              <Button
-                title={ui.donate.replace('{amount}', minContributionLabel)}
-                onPress={handleDonate}
-                disabled={!canAffordDonation}
-                variant="gold"
-                icon="cash"
-                style={styles.actionButton}
-              />
-
-              {!canAffordDonation ? (
-                <Text style={styles.hintText}>
-                  {ui.donate_hint.replace('{amount}', `$${minContributionLabel}`)}
-                </Text>
-              ) : null}
-
-              <Button
-                title={ui.btn_leave}
-                onPress={handleLeave}
-                variant="danger"
-                icon="exit"
-                style={styles.actionButton}
-              />
+              <TouchableOpacity style={styles.dangerButton} onPress={handleLeave}>
+                <Text style={styles.dangerButtonText}>{ui.btn_leave}</Text>
+              </TouchableOpacity>
 
               <Text style={styles.sectionTitle}>{ui.members}</Text>
 
@@ -262,7 +218,7 @@ export default function SectScreen() {
                   </View>
                 );
               })}
-            </Card>
+            </View>
           )}
         </ScrollView>
       ) : (
@@ -335,6 +291,11 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   emptyCard: {
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
+    padding: Theme.spacing.md,
     alignItems: 'center',
   },
   emptyTitle: {
@@ -361,20 +322,41 @@ const styles = StyleSheet.create({
     marginBottom: Theme.spacing.md,
     width: '100%',
   },
-  actionButton: {
+  primaryButton: {
     width: '100%',
-    marginTop: Theme.spacing.sm,
+    backgroundColor: Theme.colors.primary,
+    borderRadius: Theme.radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: Theme.spacing.md,
+  },
+  primaryButtonText: {
+    color: Theme.colors.text,
+    fontWeight: '900',
+  },
+  secondaryButton: {
+    width: '100%',
+    backgroundColor: Theme.colors.surfaceLight,
+    borderRadius: Theme.radius.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.secondary,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  secondaryButtonText: {
+    color: Theme.colors.text,
+    fontWeight: '900',
   },
   errorText: {
     color: Theme.colors.danger,
     marginTop: Theme.spacing.sm,
   },
-  hintText: {
-    color: Theme.colors.warning,
-    marginTop: Theme.spacing.sm,
-  },
   sectCard: {
-    marginBottom: Theme.spacing.md,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
+    padding: Theme.spacing.md,
   },
   sectName: {
     color: Theme.colors.info,
@@ -382,15 +364,65 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     marginBottom: Theme.spacing.md,
   },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: Theme.colors.borderSoft,
+  },
+  statLabel: {
+    color: Theme.colors.textMuted,
+  },
+  statValue: {
+    color: Theme.colors.text,
+    fontWeight: '800',
+  },
+  statValueGold: {
+    color: Theme.colors.gold,
+    fontWeight: '900',
+  },
+  statValueInfo: {
+    color: Theme.colors.info,
+    fontWeight: '900',
+  },
   inviteCard: {
     marginTop: Theme.spacing.md,
     marginBottom: Theme.spacing.sm,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderRadius: Theme.radius.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.borderSoft,
+    padding: Theme.spacing.md,
     alignItems: 'flex-start',
   },
   inviteLabel: {
     color: Theme.colors.gold,
     fontWeight: '800',
     marginBottom: Theme.spacing.sm,
+  },
+  shareButton: {
+    backgroundColor: Theme.colors.secondary,
+    borderRadius: Theme.radius.sm,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
+  shareButtonText: {
+    color: Theme.colors.text,
+    fontWeight: '900',
+  },
+  dangerButton: {
+    backgroundColor: '#4C1D24',
+    borderRadius: Theme.radius.md,
+    borderWidth: 1,
+    borderColor: Theme.colors.danger,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: Theme.spacing.sm,
+  },
+  dangerButtonText: {
+    color: Theme.colors.text,
+    fontWeight: '900',
   },
   sectionTitle: {
     color: Theme.colors.text,

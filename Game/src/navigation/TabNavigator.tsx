@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import LifeScreen from '../screens/LifeScreen';
 import DaoScreen from '../screens/DaoScreen';
+import LogScreen from '../screens/LogScreen';
 import StoreScreen from '../screens/StoreScreen';
 import SectScreen from '../screens/SectScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -41,6 +42,10 @@ export default function TabNavigator() {
             key = 'store';
           }
 
+          if (route.name === 'Log') {
+            key = 'log';
+          }
+
           if (route.name === 'Sect') {
             key = 'sect';
           }
@@ -58,8 +63,10 @@ export default function TabNavigator() {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === 'Dao') {
             iconName = focused ? 'leaf' : 'leaf-outline';
+          } else if (route.name === 'Log') {
+            iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Store') {
-            iconName = focused ? 'diamond' : 'diamond-outline';
+            iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Sect') {
             iconName = focused ? 'people' : 'people-outline';
           }
@@ -71,6 +78,7 @@ export default function TabNavigator() {
       <Tab.Screen name="Life" component={LifeScreen} />
       <Tab.Screen name="Dao" component={DaoScreen} />
       <Tab.Screen name="Store" component={StoreScreen} />
+      <Tab.Screen name="Log" component={LogScreen} />
       <Tab.Screen name="Sect" component={SectScreen} />
     </Tab.Navigator>
   );

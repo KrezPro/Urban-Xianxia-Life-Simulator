@@ -18,8 +18,6 @@
     "members": "Members",
     "player_name": "You",
     "contribution": "Contribution",
-    "donate": "Donate ${amount}",
-    "donate_hint": "Minimum contribution is ${amount}.",
     "btn_leave": "Leave Sect",
     "leave_confirm_title": "Leave sect?",
     "leave_confirm_message": "You will lose your current sect contribution, but you can join another one.",
@@ -27,11 +25,6 @@
     "no": "Cancel",
     "leaderboard_empty": "Leaderboard is empty for now.",
     "default_name": "Neo Lotus Syndicate",
-    "default_tag": "NLS",
-    "log_created": "You founded the sect {name}. The city felt your presence.",
-    "log_joined": "You joined the sect {name}. Your name was added to the secret registry.",
-    "log_contribute": "You donated {amount} to the sect fund. Your influence grows.",
-    "log_no_money": "Not enough money to contribute to the sect.",
-    "log_left": "You left the sect. Its seals no longer protect you."
+    "default_tag": "NLS"
   }
 }
