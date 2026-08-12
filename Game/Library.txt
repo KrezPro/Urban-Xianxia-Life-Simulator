@@ -48,3 +48,4 @@
 47. NotificationToast запускает таймер автоскрытия от момента монтирования, а не от createdAt.
 48. useNotificationStore имеет pushGeneratedEventNotification и очередь NOTIFICATION_MAX_QUEUE=3, NOTIFICATION_MAX_VISIBLE=1.
 49. Уроки по крашам и навигации записаны в Game/DataForAI.txt.
+50. Пропущенные уведомления считаются в useNotificationStore.missedCount: если новое уведомление приходит при уже занятом видимом слоте, счётчик растёт. Кнопка сброса badge находится в LifeScreen рядом с переключателем языка.

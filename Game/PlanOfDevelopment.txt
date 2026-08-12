@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 17 (Исправлен краш eventGenerator "Cannot convert undefined value to object", починены уведомления и модал журнала вместо navigate Log)
+[СТАТУС]: ШАГ 18 (Добавлен счётчик пропущенных уведомлений на кнопку уведомлений в LifeScreen рядом с языком)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -98,6 +98,9 @@
 69. [X] useYearlyCycle: try/catch вокруг generateYearEvent с fallback-событием.
 70. [X] Записаны уроки в Game/DataForAI.txt.
 
+=== Фаза 14: Notification UX ===
+71. [X] Счётчик пропущенных уведомлений: missedCount в useNotificationStore и badge-кнопка рядом с языком в LifeScreen.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -112,7 +115,7 @@ Game/
     │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
     │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
     ├── constants/
-    │   ├── GameConstants.ts             // Лимиты, кулдауны, EVENT_* таблицы, NOTIFICATION_* константы
+    │   ├── GameConstants.ts             // Лимиты, кулдауны, EVENT_* таблицы, NOTIFICATION_* константы и missed badge
     │   └── Theme.ts                     // Темная тема
     ├── data/
     │   ├── events.json                  // Legacy-события (fallback/архив)
@@ -131,7 +134,7 @@ Game/
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала (LogScreen onClose), rebirth report, без navigate Log
+    │   ├── LifeScreen.tsx               // Модал журнала (LogScreen onClose), кнопка пропущенных уведомлений рядом с языком, rebirth report, без navigate Log
     │   ├── DaoScreen.tsx                // Путь Дао, техники, закреплённая кнопка прорыва
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
     │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
@@ -144,7 +147,7 @@ Game/
     │   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
     │   ├── useLocaleStore.ts            // Язык
     │   ├── useSocialStore.ts            // Секты
-    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, pushGeneratedEventNotification
+    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount, pushGeneratedEventNotification
     │   ├── useTechniquesStore.ts        // Уровни техник Дао
     │   └── useLifestyleStore.ts         // Выбранные активности
     ├── types/

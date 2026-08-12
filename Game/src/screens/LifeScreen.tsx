@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -8,6 +9,7 @@ import { useNotificationStore } from '../store/useNotificationStore';
 import { Button, Card, ProgressBar, StatRow, IconButton } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
+import { GameConstants } from '../constants/GameConstants';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import LogScreen from './LogScreen';
@@ -27,6 +29,8 @@ export default function LifeScreen() {
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+  const missedNotifications = useNotificationStore((state) => state.missedCount);
+  const clearMissedNotifications = useNotificationStore((state) => state.clearMissedNotifications);
   const { handleGrowOlder } = useYearlyCycle();
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
@@ -34,7 +38,6 @@ export default function LifeScreen() {
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
   const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
-
   const rebirthReport = player.lastRebirthReport;
   const hasRebirthPenalties =
     !!rebirthReport &&
@@ -69,13 +72,16 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
 
+  const missedBadgeText =
+    missedNotifications > GameConstants.NOTIFICATION_MISSED_CAP
+      ? `${GameConstants.NOTIFICATION_MISSED_CAP}+`
+      : missedNotifications.toString();
+
   const openHint = (key: string) => {
     const hintData = hints[key];
-
     if (!hintData) {
       return;
     }
-
     setHint({
       title: hintData.title || key,
       text: hintData.text || '',
@@ -98,13 +104,27 @@ export default function LifeScreen() {
     player.clearRebirthReport();
   };
 
+  const notificationsButton = (
+    <TouchableOpacity
+      style={styles.notificationsButton}
+      onPress={clearMissedNotifications}
+      activeOpacity={0.85}
+      accessibilityRole="button"
+    >
+      <Ionicons name="notifications" size={20} color={Theme.colors.text} />
+      {missedNotifications > 0 ? (
+        <View style={styles.notificationsBadge}>
+          <Text style={styles.notificationsBadgeText}>{missedBadgeText}</Text>
+        </View>
+      ) : null}
+    </TouchableOpacity>
+  );
+
   const renderRebirthReport = () => {
     if (!rebirthReport || !hasRebirthPenalties) {
       return null;
     }
-
     const tierData = rebirth.tiers?.[rebirthReport.fortuneTier] || {};
-
     return (
       <Modal visible transparent animationType="fade" onRequestClose={closeRebirthReport}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeRebirthReport}>
@@ -112,22 +132,17 @@ export default function LifeScreen() {
             <Text style={styles.modalTitle}>{rebirth.title}</Text>
             <Text style={styles.rebirthTierTitle}>{tierData.title}</Text>
             <Text style={styles.modalText}>{tierData.desc}</Text>
-
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.money?.[rebirthReport.moneyPenaltyKey]}</Text>
             </View>
-
             <View style={styles.rebirthRow}>
               <Text style={styles.rebirthLine}>{rebirth.health?.[rebirthReport.healthStartKey]}</Text>
             </View>
-
             {(rebirthReport.curses || []).map((curseId) => {
               const curseData = rebirth.curses?.[curseId];
-
               if (!curseData) {
                 return null;
               }
-
               return (
                 <View key={curseId} style={styles.curseRow}>
                   <Text style={styles.curseName}>{curseData.name}</Text>
@@ -135,7 +150,6 @@ export default function LifeScreen() {
                 </View>
               );
             })}
-
             <Button
               title={rebirth.accept}
               onPress={closeRebirthReport}
@@ -187,26 +201,23 @@ export default function LifeScreen() {
                 size={38}
                 style={styles.headerIconButton}
               />
+              {notificationsButton}
               <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
                 <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>
-
           <Card variant="danger" style={styles.deadCard}>
             <Text style={styles.deadTitle}>{ui.dead_title}</Text>
             <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
-
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
               <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
             </View>
-
             <View style={styles.karmaRow}>
               <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
               <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
             </View>
-
             <Button
               title={ui.btn_reincarnate}
               onPress={handleReincarnate}
@@ -216,7 +227,6 @@ export default function LifeScreen() {
             />
           </Card>
         </View>
-
         {logModal}
         {hintModal}
       </SafeAreaView>
@@ -237,27 +247,24 @@ export default function LifeScreen() {
               size={38}
               style={styles.headerIconButton}
             />
+            {notificationsButton}
             <TouchableOpacity style={styles.langChip} onPress={toggleLocale}>
               <Text style={styles.langChipText}>{locale.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
         </View>
-
         <Card variant="primary" style={styles.heroCard}>
           <Text style={styles.heroAgeLabel}>{ui.age}</Text>
           <Text style={styles.heroAgeValue}>{player.age}</Text>
-
           <ProgressBar progress={healthProgress} color={Theme.colors.success} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
           </Text>
-
           <ProgressBar progress={qiProgress} color={Theme.colors.info} height={10} style={styles.heroProgress} />
           <Text style={styles.heroProgressLabel}>
             {ui.qi}: {formatLargeNumber(player.qi)}
           </Text>
         </Card>
-
         <Card style={styles.statsCard}>
           <StatRow
             icon="school"
@@ -302,7 +309,6 @@ export default function LifeScreen() {
             onLongPress={() => openHint('karma')}
           />
         </Card>
-
         <Card style={styles.focusCard}>
           <Text style={styles.focusTitle}>{ui.focus_title}</Text>
           <View style={styles.focusRow}>
@@ -344,13 +350,11 @@ export default function LifeScreen() {
           </View>
         </Card>
       </View>
-
       <DraggableGrowButton
         age={player.age}
         onPress={handleGrowOlder}
         accessibilityLabel={ui.btn_grow}
       />
-
       {logModal}
       {hintModal}
       {renderRebirthReport()}
@@ -380,6 +384,37 @@ const styles = StyleSheet.create({
   },
   headerIconButton: {
     marginRight: 10,
+  },
+  notificationsButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: Theme.colors.surfaceLight,
+    borderWidth: 1,
+    borderColor: Theme.colors.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  notificationsBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: Theme.colors.danger,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 1,
+    borderColor: Theme.colors.background,
+  },
+  notificationsBadgeText: {
+    color: Theme.colors.text,
+    fontSize: 10,
+    lineHeight: 12,
+    fontWeight: '900',
   },
   title: {
     fontSize: Theme.fontSize.xl,

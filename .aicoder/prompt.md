@@ -100,52 +100,79 @@ Game/src/
 │   └── game/
 │       ├── NotificationHost.tsx                // Глобальная очередь уведомлений поверх экранов (zIndex 1000)
 │       ├── NotificationToast.tsx               // Анимированный тост одного уведомления с автоскрытием
+│       ├── EffectChips.tsx                     // Чипы эффектов для уведомлений и журнала (макс 4 видимых)
 │       └── DraggableGrowButton.tsx             // Перетаскиваемая плавающая кнопка взросления (FAB в стиле корзины)
 ├── constants/
-│   ├── GameConstants.ts                        // Игровые константы: кулдауны, шансы, параметры FAB и уведомлений
+│   ├── GameConstants.ts                        // Игровые константы: кулдауны, шансы, EVENT_* таблицы, survival, bps-капы
 │   └── Theme.ts                                // Единая тёмная неоновая тема: цвета, отступы, радиусы, шрифты, тени
 ├── data/
-│   ├── events.json                             // Мирские и тайные события взросления (id, эффекты, тексты)
-│   ├── items.json                              // Карма-баффы магазина (Rich Family, Strong Meridians, Pure Root)
-│   ├── stages.json                             // Стадии культивации и требования Ци для прорыва
-│   ├── sects.json                              // Шаблоны сект (имена, теги, фокус, базовые фонды/влияние)
+│   ├── events.json                             // Legacy-события (fallback/архив)
+│   ├── eventRules.json                         // Правила генератора событий (data-driven)
+│   ├── rebirthPenalties.json                   // Последствия смерти: деньги, здоровье, проклятия
+│   ├── items.json                              // Многоуровневые карма-баффы магазина
+│   ├── stages.json                             // Стадии культивации, maxAge/softAge, требования Ци
+│   ├── techniques.json                         // Техники Дао с уровнями и эффектами
+│   ├── lifestyle.json                          // Работы, спорт, еда, жильё, порталы
+│   ├── sects.json                              // Шаблоны сект (имена, теги, фокус)
 │   └── rankings.json                           // Seed-данные локального рейтинга сект
 ├── hooks/
 │   ├── useBreakthrough.ts                      // Хук прорыва: проверка Ци, шанс успеха, урон/смерть, уведомления
-│   └── useIdleProgress.ts                      // Оффлайн-прогресс: дельта времени, начисления Ци/денег, уведомления
+│   ├── useIdleProgress.ts                      // Оффлайн-прогресс: дельта времени, начисления Ци/денег, уведомления
+│   └── useYearlyCycle.ts                       // Годовой цикл: survival cost, lifestyle, события, старение, один тост
 ├── navigation/
-│   └── TabNavigator.tsx                        // Нижние вкладки Life/Dao/Store/Sect, Log скрыт из tab bar
+│   └── TabNavigator.tsx                        // Нижние вкладки Life/Dao/Activities/Store/Sect (5 видимых)
 ├── screens/
-│   ├── LifeScreen.tsx                          // Вкладка «Мир»: статы, фокус года, кнопка журнала в шапке, draggable FAB
-│   ├── DaoScreen.tsx                           // Вкладка «Дао»: стадия, Ци, попытка прорыва, рекламный бафф
-│   ├── StoreScreen.tsx                         // Магазин кармы: перманентные баффы и IAP-заготовки (Cultivator Pass)
+│   ├── LifeScreen.tsx                          // Вкладка «Мир»: статы, фокус, журнал модал, rebirth report, FAB
+│   ├── DaoScreen.tsx                           // Вкладка «Дао»: стадия, техники, кнопка прорыва (закреплена)
+│   ├── ActivitiesScreen.tsx                    // Вкладка «Активности»: работа, спорт, еда, жильё, порталы
+│   ├── StoreScreen.tsx                         // Магазин кармы: многоуровневые баффы и IAP-заготовки
 │   ├── SectScreen.tsx                          // Секта и локальный рейтинг: «Моя секта» + таблица лидеров
-│   └── LogScreen.tsx                           // Журнал судьбы (FlashList), открывается из LifeScreen кнопкой
+│   └── LogScreen.tsx                           // Журнал судьбы (FlashList), модал с generated-событиями и effect chips
 ├── store/
 │   ├── mmkvStorage.ts                          // Zustand-адаптер для react-native-mmkv с memory-fallback
-│   ├── usePlayerStore.ts                       // Состояние игрока: возраст, статы, Ци, карма, взросление, смерть
-│   ├── useEventStore.ts                        // Журнал событий (legacy logs)
-│   ├── useInventoryStore.ts                    // Инвентарь: пилюли, артефакты, имущество
+│   ├── usePlayerStore.ts                       // Игрок: current/max health, activeCurses, rebirth report, смерть
+│   ├── useEventStore.ts                        // Журнал событий (legacy + generated logs с effects)
+│   ├── useInventoryStore.ts                    // Инвентарь: пилюли, артефакты, уровни карма-баффов
 │   ├── useLocaleStore.ts                       // Выбор языка ru/en с гидратацией
 │   ├── useSocialStore.ts                       // Секты: создание, инвайты, участники, оффлайн-симуляция, рейтинг
-│   └── useNotificationStore.ts                 // Очередь UI и event-уведомлений
+│   ├── useTechniquesStore.ts                   // Уровни техник Дао (сбрасываются при реинкарнации)
+│   ├── useLifestyleStore.ts                    // Выбранные активности (сбрасываются при реинкарнации)
+│   └── useNotificationStore.ts                 // Приоритетная очередь rich-уведомлений (MAX_VISIBLE=1)
 ├── types/
-│   └── index.ts                                // TypeScript интерфейсы: IPlayer, IEventLog, INotification, ISect и т.д.
+│   └── index.ts                                // TypeScript интерфейсы: IPlayer, GeneratedEvent, RebirthReport, EffectChip, ModifierSet, LifestyleSelection и т.д.
 ├── utils/
-│   ├── notificationUtils.ts                    // Получение локализованного текста уведомления по ключу
-│   ├── helpers.ts                              // formatLargeNumber, safeBigInt, getBigIntProgress, random-утилиты
-│   └── timeUtils.ts                            // Расчёт дельты времени для оффлайн-прогресса
+│   ├── notificationUtils.ts                    // Безопасный резолвинг уведомлений и логов по ключам/параметрам с fallback
+│   ├── helpers.ts                              // formatLargeNumber, safeBigInt, getBigIntProgress, random-утилиты, bps-утилиты
+│   ├── timeUtils.ts                            // Расчёт дельты времени для оффлайн-прогресса
+│   ├── stageUtils.ts                           // Локализованные имена стадий из stages.json
+│   ├── rebirthUtils.ts                         // Последствия смерти и проклятия (rollRebirthReport, getCurseModifiers)
+│   ├── eventGenerator.ts                       // Генератор событий: age/focus/stage/lifestyle-aware, tableNumber защита
+│   └── gameplayUtils.ts                        // Расчёты: karma-эффекты, техники, lifestyle, survival, порталы, old-age death
 └── locales/
     ├── ru/
-    │   ├── ui.json                             // Русские тексты UI, хинты long-press, кнопки (btn_log, btn_grow)
-    │   ├── events.json                         // Русские тексты мирских и тайных событий
+    │   ├── ui.json                             // Русские тексты UI, хинты long-press, кнопки, life_screen/dao_screen/store_screen
+    │   ├── events.json                         // Русские тексты legacy-событий
     │   ├── social.json                         // Русские тексты сект и рейтинга
-    │   └── notifications.json                  // Русские тексты тостов уведомлений
+    │   ├── notifications.json                  // Русские тексты тостов уведомлений
+    │   ├── extras.json                         // Русская локализация техник, магазина, активностей, навигации
+    │   ├── stages.json                         // Русские имена стадий культивации
+    │   ├── rebirth.json                        // Русские тексты последствий перерождения и проклятий
+    │   └── eventGenerator.json                 // Русские шаблоны, пулы слов, заголовки событий
     └── en/
-        ├── ui.json                             // Английские тексты UI, хинты long-press, кнопки (btn_log, btn_grow)
-        ├── events.json                         // Английские тексты мирских и тайных событий
+        ├── ui.json                             // Английские тексты UI, хинты long-press, кнопки
+        ├── events.json                         // Английские тексты legacy-событий
         ├── social.json                         // Английские тексты сект и рейтинга
-        └── notifications.json                  // Английские тексты тостов уведомлений
+        ├── notifications.json                  // Английские тексты тостов уведомлений
+        ├── extras.json                         // Английская локализация техник, магазина, активностей, навигации
+        ├── stages.json                         // Английские имена стадий культивации
+        ├── rebirth.json                        // Английские тексты последствий перерождения и проклятий
+        └── eventGenerator.json                 // Английские шаблоны, пулы слов, заголовки событий
+
+Game/
+├── PlanOfDevelopment.txt                       // Глобальный план разработки с чеклистом задач и статусами
+├── Library.txt                                 // Архитектурная библиотека: 50+ правил и важных решений
+├── DataForAI.txt                               // Выученные уроки по крашам Hermes и навигации
+└── prompt.md                                   // Системный протокол AiCoder
 
 3. Проанализируй ОПИСАНИЕ структуры проекта и `Library.txt`, выбери нужные файлы для выполнения текущего задания.
 4. Сформируй JSON для обновления context_focus.

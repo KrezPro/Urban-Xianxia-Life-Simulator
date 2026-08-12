@@ -4,6 +4,7 @@ import { GameConstants } from '../constants/GameConstants';
 
 interface NotificationState {
   notifications: INotification[];
+  missedCount: number;
   pushUiNotification: (
     messageKey: string,
     type: NotificationType,
@@ -18,6 +19,7 @@ interface NotificationState {
   ) => void;
   pushGeneratedEventNotification: (event: GeneratedEvent) => void;
   dismissNotification: (id: string) => void;
+  clearMissedNotifications: () => void;
   clearAll: () => void;
 }
 
@@ -30,7 +32,6 @@ const createBaseNotification = (
   durationMs?: number
 ): INotification => {
   notificationCounter += 1;
-
   return {
     id: `notification_${Date.now().toString()}_${notificationCounter.toString()}`,
     kind,
@@ -41,38 +42,49 @@ const createBaseNotification = (
   };
 };
 
-const appendNotification = (state: NotificationState, notification: INotification): Partial<NotificationState> => {
+const appendNotification = (
+  state: NotificationState,
+  notification: INotification
+): Partial<NotificationState> => {
+  // Если видимый слот уже занят, уведомление считается пропущенным
+  // и добавляет счётчик на кнопку уведомлений в LifeScreen.
+  const isMissed = state.notifications.length >= GameConstants.NOTIFICATION_MAX_VISIBLE;
+  const nextMissedCount = isMissed
+    ? Math.min(state.missedCount + 1, GameConstants.NOTIFICATION_MISSED_CAP)
+    : state.missedCount;
+
   return {
-    notifications: [notification, ...state.notifications].slice(0, GameConstants.NOTIFICATION_MAX_QUEUE),
+    notifications: [notification, ...state.notifications].slice(
+      0,
+      GameConstants.NOTIFICATION_MAX_QUEUE
+    ),
+    missedCount: nextMissedCount,
   };
 };
 
 export const useNotificationStore = create<NotificationState>()((set) => ({
   notifications: [],
+  missedCount: 0,
   pushUiNotification: (messageKey, type, params, durationMs) => {
     const notification = createBaseNotification('ui', messageKey, type, durationMs);
     notification.params = params;
-
     set((state) => appendNotification(state, notification));
   },
   pushEventNotification: (eventId, eventPool, type, durationMs) => {
     const notification = createBaseNotification('event', eventId, type, durationMs);
     notification.eventPool = eventPool;
-
     set((state) => appendNotification(state, notification));
   },
   pushGeneratedEventNotification: (event) => {
     if (!event) {
       return;
     }
-
     const notification = createBaseNotification(
       'generated',
       'generated_event',
       event.logType === 'secret' ? 'secret' : 'mundane',
       GameConstants.EVENT_NOTIFICATION_DURATION_MS
     );
-
     notification.titleKey = event.titleKey;
     notification.textKey = event.textKey;
     notification.params = Object.fromEntries(
@@ -82,7 +94,6 @@ export const useNotificationStore = create<NotificationState>()((set) => ({
     notification.rarity = event.rarity;
     notification.tone = event.tone;
     notification.dictionary = 'eventGenerator';
-
     set((state) => appendNotification(state, notification));
   },
   dismissNotification: (id) => {
@@ -90,7 +101,10 @@ export const useNotificationStore = create<NotificationState>()((set) => ({
       notifications: state.notifications.filter((item) => item.id !== id),
     }));
   },
+  clearMissedNotifications: () => {
+    set({ missedCount: 0 });
+  },
   clearAll: () => {
-    set({ notifications: [] });
+    set({ notifications: [], missedCount: 0 });
   },
 }));
