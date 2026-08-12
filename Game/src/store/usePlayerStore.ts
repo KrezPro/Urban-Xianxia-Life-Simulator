@@ -4,7 +4,6 @@ import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
 import { DeathCause, RebirthReport } from '../types';
 import { useInventoryStore } from './useInventoryStore';
-import { useTechniquesStore } from './useTechniquesStore';
 import { useLifestyleStore } from './useLifestyleStore';
 import { getRandomInt, safeBigInt } from '../utils/helpers';
 import {
@@ -150,8 +149,8 @@ export const usePlayerStore = create<PlayerState>()(
           if (state.isDead) {
             return state;
           }
-          const current = BigInt(state.qi);
-          const add = BigInt(amount);
+          const current = safeBigInt(state.qi);
+          const add = safeBigInt(amount);
           return { qi: (current + add).toString() };
         }),
       deductQi: (amount) =>
@@ -159,16 +158,18 @@ export const usePlayerStore = create<PlayerState>()(
           if (state.isDead) {
             return state;
           }
-          const current = BigInt(state.qi);
-          const deduct = BigInt(amount);
-          const result = current - deduct;
+          const current = safeBigInt(state.qi);
+          const deduct = safeBigInt(amount);
+          const safeDeduct = deduct > 0n ? deduct : 0n;
+          const result = current - safeDeduct;
           return { qi: 0n > result ? '0' : result.toString() };
         }),
       deductKarma: (amount) =>
         set((state) => {
-          const current = BigInt(state.karma);
-          const deduct = BigInt(amount);
-          const result = current - deduct;
+          const current = safeBigInt(state.karma);
+          const deduct = safeBigInt(amount);
+          const safeDeduct = deduct > 0n ? deduct : 0n;
+          const result = current - safeDeduct;
           return { karma: 0n > result ? '0' : result.toString() };
         }),
       applyEffects: (effects) =>
@@ -208,22 +209,22 @@ export const usePlayerStore = create<PlayerState>()(
           }
 
           if (effects.karma !== undefined) {
-            const currentKarma = BigInt(state.karma);
-            const addKarma = BigInt(effects.karma);
+            const currentKarma = safeBigInt(state.karma);
+            const addKarma = safeBigInt(effects.karma);
             const resultKarma = currentKarma + addKarma;
             newState.karma = 0n > resultKarma ? '0' : resultKarma.toString();
           }
 
           if (effects.money !== undefined) {
-            const currentMoney = BigInt(state.money);
-            const addMoney = BigInt(effects.money);
+            const currentMoney = safeBigInt(state.money);
+            const addMoney = safeBigInt(effects.money);
             const resultMoney = currentMoney + addMoney;
             newState.money = 0n > resultMoney ? '0' : resultMoney.toString();
           }
 
           if (effects.qi !== undefined) {
-            const currentQi = BigInt(state.qi);
-            const addQi = BigInt(effects.qi);
+            const currentQi = safeBigInt(state.qi);
+            const addQi = safeBigInt(effects.qi);
             const resultQi = currentQi + addQi;
             newState.qi = 0n > resultQi ? '0' : resultQi.toString();
           }
@@ -231,9 +232,11 @@ export const usePlayerStore = create<PlayerState>()(
           if (newState.health !== undefined && 0 === newState.health) {
             newState.isDead = true;
 
-            const currentAge = BigInt(state.age);
-            const finalMoney = BigInt(newState.money !== undefined ? newState.money : state.money);
-            const finalQi = BigInt(newState.qi !== undefined ? newState.qi : state.qi);
+            const currentAge = safeBigInt(state.age);
+            const finalMoney = safeBigInt(
+              newState.money !== undefined ? newState.money : state.money
+            );
+            const finalQi = safeBigInt(newState.qi !== undefined ? newState.qi : state.qi);
 
             const ageKarma = currentAge * GameConstants.KARMA_RATES.AGE_MULTIPLIER;
             const moneyKarma = finalMoney / GameConstants.KARMA_RATES.MONEY_DIVISOR;
@@ -242,7 +245,7 @@ export const usePlayerStore = create<PlayerState>()(
 
             newState.lastLifeKarmaEarned = earnedKarma.toString();
 
-            const existingKarma = BigInt(
+            const existingKarma = safeBigInt(
               newState.karma !== undefined ? newState.karma : state.karma
             );
             newState.karma = (existingKarma + earnedKarma).toString();
@@ -268,19 +271,22 @@ export const usePlayerStore = create<PlayerState>()(
         const cost = getBodyTemperCost(state.bodyTempering);
         const moneyCost = getBodyTemperMoneyCost(state.bodyTempering);
 
-        if (safeBigInt(state.qi) < cost) {
+        const currentQi = safeBigInt(state.qi);
+        const currentMoney = safeBigInt(state.money);
+
+        if (currentQi < cost) {
           return false;
         }
 
-        if (safeBigInt(state.money) < moneyCost) {
+        if (currentMoney < moneyCost) {
           return false;
         }
 
         const nextBodyTempering = state.bodyTempering + 1;
 
         set({
-          qi: (safeBigInt(state.qi) - cost).toString(),
-          money: (safeBigInt(state.money) - moneyCost).toString(),
+          qi: (currentQi - cost).toString(),
+          money: (currentMoney - moneyCost).toString(),
           bodyTempering: nextBodyTempering,
           lastBodyTemperAge: state.age,
         });
@@ -296,7 +302,6 @@ export const usePlayerStore = create<PlayerState>()(
         const inventory = useInventoryStore.getState().items;
         const karmaEffects = getKarmaTotalEffects(inventory);
 
-        useTechniquesStore.getState().resetTechniques();
         useLifestyleStore.getState().resetLifestyle();
 
         set((state) => {

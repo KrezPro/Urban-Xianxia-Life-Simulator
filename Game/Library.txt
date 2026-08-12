@@ -1,4 +1,5 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
+
 1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Techniques, Lifestyle.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
@@ -31,15 +32,15 @@
 30. Draggable FAB имеет zIndex 900, NotificationHost остается выше с zIndex 1000.
 31. LifeScreen использует обычный View вместо ScrollView, если прокрутка не требуется; DraggableGrowButton остается абсолютным overlay.
 32. Здоровье игрока разделено на health (текущее) и maxHealth (максимальное). Во вкладке Мир в списке характеристик отображается maxHealth.
-33. Техники Дао хранятся в useTechniquesStore как levels: Record<string, number>, сбрасываются при реинкарнации.
-34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection, сбрасываются при реинкарнации.
+33. Техники Дао хранятся в useTechniquesStore как levels: Record<string, number> и сохраняются между реинкарнациями. Сброс техник возможен только при полном сбросе профиля, если это будет отдельно требуется.
+34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection и сбрасываются при реинкарнации.
 35. Годовой цикл рассчитывается в useYearlyCycle и использует processLifestyleYear из utils/gameplayUtils.ts.
 36. Карма-баффы стали многоуровневыми: quantity в useInventoryStore означает текущий уровень баффа.
 37. Локализация дополнительных вкладок, техник, магазина и активностей вынесена в locales/{lang}/extras.json.
 38. Все проценты в игре хранятся как basis points (bps): 1% = 100 bps, 100% = 10000 bps.
 39. Стадии культивации имеют maxAge и softAge. Смертный не может жить бесконечно: после maxAge применяется шанс смерти от старости.
 40. useYearlyCycle обрабатывает: survival cost, подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
-41. При реинкарнации техники и активности сбрасываются, карма-баффы сохраняются с уровнями.
+41. При реинкарнации сбрасываются только lifestyle-активности и текущие жизненные показатели. Техники Дао и карма-баффы сохраняются.
 42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
 43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
 44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.
@@ -49,3 +50,5 @@
 48. useNotificationStore имеет pushGeneratedEventNotification и очередь NOTIFICATION_MAX_QUEUE=3, NOTIFICATION_MAX_VISIBLE=1.
 49. Уроки по крашам и навигации записаны в Game/DataForAI.txt.
 50. Пропущенные уведомления считаются в useNotificationStore.missedCount: если новое уведомление приходит при уже занятом видимом слоте, счётчик растёт. Кнопка сброса badge находится в LifeScreen рядом с переключателем языка.
+51. Body Tempering стоит Ци и деньги: moneyCost = qiCost * GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER. Если множитель отсутствует или некорректен, использовать fallback 2.
+52. Покупки в магазине Кармы идут по цепочке StoreScreen -> player.deductKarma -> inventory.addItem. quantity всегда нормализуется как целое число >= 0.

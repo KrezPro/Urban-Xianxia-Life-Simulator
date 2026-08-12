@@ -24,18 +24,38 @@ export default function StoreScreen() {
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const storeExtra = extras.store || {};
 
+  const getSafeMaxLevel = (item: any): number => {
+    const maxLevel = Number(item?.maxLevel || 0);
+    if (!Number.isFinite(maxLevel)) {
+      return 0;
+    }
+    return Math.max(0, Math.floor(maxLevel));
+  };
+
+  const getSafeCurrentLevel = (item: any): number => {
+    const rawLevel = Number(inventory.items[item.id]?.quantity || 0);
+    const safeRawLevel = Number.isFinite(rawLevel) ? Math.max(0, Math.floor(rawLevel)) : 0;
+    return Math.min(safeRawLevel, getSafeMaxLevel(item));
+  };
+
   const handleBuyLevel = (item: any) => {
     const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
-    const rawLevel = inventory.items[item.id]?.quantity || 0;
-    const currentLevel = Math.min(rawLevel, item.maxLevel);
-    const isMax = currentLevel >= item.maxLevel;
+    const safeMaxLevel = getSafeMaxLevel(item);
+    const currentLevel = getSafeCurrentLevel(item);
+    const isMax = currentLevel >= safeMaxLevel;
 
     if (isMax) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
     }
 
-    const nextLevelData = item.levels[currentLevel];
+    const nextLevelData = Array.isArray(item.levels) ? item.levels[currentLevel] : undefined;
+
+    if (!nextLevelData) {
+      pushUiNotification('store_upgrade_error', 'danger');
+      return;
+    }
+
     const nextCost = nextLevelData?.cost || '0';
     const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
 
@@ -46,6 +66,7 @@ export default function StoreScreen() {
 
     player.deductKarma(nextCost);
     inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
+
     pushUiNotification('store_upgrade_success', 'reward', {
       name: itemUI.name,
       level: (currentLevel + 1).toString(),
@@ -72,10 +93,12 @@ export default function StoreScreen() {
         {safeItems
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
-            const rawLevel = inventory.items[item.id]?.quantity || 0;
-            const currentLevel = Math.min(rawLevel, item.maxLevel);
-            const isMax = currentLevel >= item.maxLevel;
-            const nextLevelData = item.levels[currentLevel];
+            const safeMaxLevel = getSafeMaxLevel(item);
+            const currentLevel = getSafeCurrentLevel(item);
+            const isMax = currentLevel >= safeMaxLevel;
+            const nextLevelData = Array.isArray(item.levels)
+              ? item.levels[currentLevel]
+              : undefined;
             const nextCost = nextLevelData?.cost || '0';
             const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
             const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
@@ -85,7 +108,7 @@ export default function StoreScreen() {
                 <View style={styles.itemTopRow}>
                   <Text style={styles.itemName}>{itemUI.name}</Text>
                   <Text style={styles.itemLevel}>
-                    {storeExtra.level}: {currentLevel}/{item.maxLevel}
+                    {storeExtra.level}: {currentLevel}/{safeMaxLevel}
                   </Text>
                 </View>
 
@@ -100,11 +123,7 @@ export default function StoreScreen() {
 
                 <Button
                   title={
-                    isMax
-                      ? storeExtra.max_level
-                      : canAfford
-                      ? ui.btn_buy
-                      : ui.btn_no_karma
+                    isMax ? storeExtra.max_level : canAfford ? ui.btn_buy : ui.btn_no_karma
                   }
                   onPress={() => handleBuyLevel(item)}
                   disabled={isMax || !canAfford}

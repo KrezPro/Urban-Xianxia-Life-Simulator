@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 20 (Hotfix экономики: affordability активностей, nerf Ци, Body Tempering стоит Ци + монеты)
+[СТАТУС]: ШАГ 21 (Сохранение техник Дао между жизнями, защита магазина Кармы и проверка оплаты Закалки тела)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -118,6 +118,14 @@
 83. [X] usePlayerStore.temperBody проверяет и списывает Ци + деньги.
 84. [X] DaoScreen показывает двойную стоимость Закалки тела и блокирует кнопку при нехватке Ци или денег.
 
+=== Фаза 17: Сохранение техник Дао и защита Karma Store ===
+85. [X] Убран resetTechniques из usePlayerStore.reincarnate: техники Дао сохраняются между жизнями.
+86. [X] deductKarma использует safeBigInt и не допускает отрицательную Карму.
+87. [X] StoreScreen защищён от некорректного уровня, отсутствующего nextLevelData и невалидного maxLevel.
+88. [X] useInventoryStore.addItem нормализует quantity как целое число >= 0.
+89. [X] Library обновлён: техники персистентны, lifestyle сбрасывается, карма-баффы сохраняются.
+90. [X] Оплата Body Tempering проверена: DaoScreen и usePlayerStore уже используют Ци + деньги.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -165,8 +173,8 @@ Game/
     │   ├── useLocaleStore.ts            // Язык
     │   ├── useSocialStore.ts            // Секты
     │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount
-    │   ├── useTechniquesStore.ts        // Уровни техник Дао
-    │   └── useLifestyleStore.ts         // Выбранные активности
+    │   ├── useTechniquesStore.ts        // Уровни техник Дао (сохраняются при реинкарнации)
+    │   └── useLifestyleStore.ts         // Выбранные активности (сбрасываются при реинкарнации)
     ├── types/
     │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport, ModifierSet и т.д.
     ├── utils/
