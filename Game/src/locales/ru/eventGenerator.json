@@ -1,0 +1,126 @@
+{
+  "stats": {
+    "intelligence": "Инт",
+    "health": "Здоровье",
+    "maxHealth": "Макс. здоровье",
+    "appearance": "Привл",
+    "money": "Деньги",
+    "qi": "Ци",
+    "karma": "Карма"
+  },
+  "titles": {
+    "positive_common": "Удача",
+    "positive_uncommon": "Хороший знак",
+    "positive_rare": "Редкая удача",
+    "positive_epic": "Небесная удача",
+    "positive_legendary": "Легендарный момент",
+    "negative_common": "Неприятность",
+    "negative_uncommon": "Дурной знак",
+    "negative_rare": "Опасность",
+    "negative_epic": "Серьёзная угроза",
+    "negative_legendary": "Катастрофа",
+    "neutral_common": "Событие",
+    "neutral_uncommon": "Странное событие",
+    "neutral_rare": "Загадочное событие",
+    "neutral_epic": "Необычное явление",
+    "neutral_legendary": "Судьбоносный момент"
+  },
+  "templates": {
+    "tmpl_scene": "{actor} {action} {place}. {outcome}",
+    "tmpl_simple": "{outcome}"
+  },
+  "actors_mundane": {
+    "boss": "Босс",
+    "client": "Клиент",
+    "neighbor": "Сосед",
+    "stranger": "Незнакомец",
+    "official": "Чиновник",
+    "teacher": "Учитель",
+    "doctor": "Врач",
+    "influencer": "Инфлюенсер"
+  },
+  "actions_mundane": {
+    "offers": "предлагает вам возможность",
+    "challenges": "бросает вам вызов",
+    "invites": "приглашает вас",
+    "helps": "помогает вам",
+    "tests": "испытывает вас",
+    "accuses": "обвиняет вас",
+    "praises": "хвалит вас",
+    "stops": "останавливает вас"
+  },
+  "places_mundane": {
+    "office": "в офисе",
+    "market": "на рынке",
+    "gym": "в спортзале",
+    "apartment": "в квартире",
+    "subway": "в метро",
+    "park": "в парке",
+    "school": "в школе",
+    "library": "в библиотеке",
+    "hospital": "в больнице"
+  },
+  "outcomes_positive": {
+    "gain": "Это приносит неожиданную пользу.",
+    "discovery": "Вы находите полезную возможность.",
+    "support": "Вас поддерживают в нужный момент.",
+    "luck": "Удача поворачивается к вам лицом.",
+    "reward": "Вы получаете заслуженную награду."
+  },
+  "outcomes_negative": {
+    "loss": "Вы несёте потери.",
+    "illness": "Ваше здоровье страдает.",
+    "conflict": "Возникает неприятный конфликт.",
+    "fine": "Приходится платить штраф.",
+    "fatigue": "Вы чувствуете сильную усталость."
+  },
+  "outcomes_generic": {
+    "ok": "Год проходит спокойно.",
+    "change": "Что-то меняется в вашей жизни.",
+    "lesson": "Вы получаете важный урок."
+  },
+  "actors_secret": {
+    "spirit": "Дух",
+    "demon": "Демон",
+    "cultivator": "Культиватор",
+    "guardian": "Дух-хранитель",
+    "ghost": "Призрак",
+    "merchant": "Тайный торговец",
+    "sage": "Мудрец",
+    "beast": "Духовный зверь"
+  },
+  "actions_secret": {
+    "blesses": "благословляет вас",
+    "attacks": "атакует вас",
+    "tempts": "искушает вас",
+    "guides": "направляет вас",
+    "robs": "пытается обокрасть вас",
+    "awakens": "пробуждает вашу силу",
+    "whispers": "шепчет вам тайны",
+    "protects": "защищает вас"
+  },
+  "places_secret": {
+    "hidden_vein": "в скрытой духовной жиле",
+    "old_park": "в старом парке",
+    "rooftop": "на крыше небоскрёба",
+    "alley": "в тёмной подворотне",
+    "portal_rift": "у разлома портала",
+    "shrine": "в заброшенном святилище",
+    "abandoned_station": "на заброшенной станции",
+    "dream": "в странном сне"
+  },
+  "outcomes_secret_positive": {
+    "qi_flow": "Энергия Ци наполняет ваше тело.",
+    "insight": "Вы получаете озарение на пути Дао.",
+    "karma_light": "Ваша карма становится чище.",
+    "treasure": "Вы находите духовную ценность.",
+    "protection": "Невидимая сила защищает вас."
+  },
+  "outcomes_secret_negative": {
+    "mana_burn": "Происходит откат энергии (Mana Burn).",
+    "qi_leak": "Ваша Ци утекает сквозь меридианы.",
+    "curse_touch": "Вас касается чужая тёмная воля.",
+    "blood_price": "Приходится платить кровью.",
+    "fear": "Сердце сковывает страх."
+  }
+}

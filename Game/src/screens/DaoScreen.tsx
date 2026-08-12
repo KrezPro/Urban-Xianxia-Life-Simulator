@@ -10,6 +10,7 @@ import { NotificationHost } from '../components/game/NotificationHost';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress, isGreaterOrEqualBigInt } from '../utils/helpers';
 import { getTechniqueCost, meetsTechniqueRequirements } from '../utils/gameplayUtils';
+import { getStageName } from '../utils/stageUtils';
 import stagesData from '../data/stages.json';
 import techniquesData from '../data/techniques.json';
 import ruUI from '../locales/ru/ui.json';
@@ -22,14 +23,14 @@ export default function DaoScreen() {
   const techniques = useTechniquesStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const { attemptBreakthrough, nextStage, calculateChance } = useBreakthrough();
+  const { attemptBreakthrough, nextStage, calculateChance, nextStageName } = useBreakthrough();
   const [hasAdBuff, setHasAdBuff] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
   const extras: any = locale === 'ru' ? ruExtras : enExtras;
   const techniquesUI = extras.dao?.techniques || {};
 
-  const currentStage = (stagesData as any[]).find((stage) => stage.id === player.cultivationStage);
+  const currentStageName = getStageName(player.cultivationStage, locale);
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
@@ -64,8 +65,7 @@ export default function DaoScreen() {
     }
 
     if (technique.requiredStage) {
-      const stage = (stagesData as any[]).find((s) => s.id === technique.requiredStage);
-      parts.push(`${techniquesUI.requirements?.stage}: ${stage?.name || technique.requiredStage}`);
+      parts.push(`${techniquesUI.requirements?.stage}: ${getStageName(technique.requiredStage, locale)}`);
     }
 
     return parts.join(', ');
@@ -111,7 +111,7 @@ export default function DaoScreen() {
         <Text style={styles.title}>{ui.title}</Text>
         <Card variant="primary" style={styles.stageCard}>
           <Text style={styles.stageLabel}>{ui.stage}</Text>
-          <Text style={styles.stageName}>{currentStage?.name || ui.unknown}</Text>
+          <Text style={styles.stageName}>{currentStageName}</Text>
           <Text style={styles.qiValue}>
             {ui.qi_energy}: {formatLargeNumber(player.qi)}
           </Text>
@@ -123,7 +123,7 @@ export default function DaoScreen() {
         {nextStage ? (
           <Card style={styles.nextCard}>
             <Text style={styles.nextStageTitle}>{ui.next_stage}</Text>
-            <Text style={styles.nextStageName}>{nextStage.name}</Text>
+            <Text style={styles.nextStageName}>{nextStageName}</Text>
 
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>{ui.req_qi}</Text>

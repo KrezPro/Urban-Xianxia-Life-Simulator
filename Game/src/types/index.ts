@@ -3,9 +3,50 @@ export type ActivityFocus = 'mundane' | 'secret';
 export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
 export type NotificationType = 'mundane' | 'secret' | 'system' | 'reward' | 'danger' | 'social';
-export type NotificationKind = 'ui' | 'event';
+export type NotificationKind = 'ui' | 'event' | 'generated';
 export type LifestyleCategory = 'job' | 'sport' | 'food' | 'housing' | 'portal';
 export type LifestyleSelection = Record<LifestyleCategory, string>;
+export type EventRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type EventTone = 'positive' | 'negative' | 'neutral';
+export type DeathCause = 'none' | 'old_age' | 'health' | 'breakthrough' | 'portal' | 'event';
+
+export interface EffectChip {
+  stat: 'intelligence' | 'health' | 'maxHealth' | 'appearance' | 'money' | 'qi' | 'karma';
+  amount: string;
+  positive: boolean;
+}
+
+export interface GeneratedEvent {
+  id: string;
+  pool: 'mundane' | 'secret';
+  category: string;
+  rarity: EventRarity;
+  tone: EventTone;
+  titleKey: string;
+  textKey: string;
+  params: Record<string, string | number>;
+  effects: {
+    intelligence?: number;
+    health?: number;
+    maxHealth?: number;
+    appearance?: number;
+    karma?: number;
+    money?: string;
+    qi?: string;
+  };
+  displayEffects: EffectChip[];
+  logType: 'mundane' | 'secret' | 'system';
+}
+
+export interface RebirthReport {
+  fortuneTier: 'blessed' | 'uneasy' | 'troubled' | 'severe' | 'doomed';
+  moneyPenaltyKey: string;
+  moneyPenaltyBps: number;
+  healthStartKey: string;
+  healthStartBps: number;
+  curses: string[];
+  deathCause: DeathCause;
+}
 
 export interface IPlayer {
   age: number;
@@ -25,6 +66,11 @@ export interface IEventLog {
   text: string;
   timestamp: number;
   type: 'mundane' | 'secret' | 'system';
+  generated?: boolean;
+  textKey?: string;
+  params?: Record<string, string | number>;
+  effects?: EffectChip[];
+  rarity?: EventRarity;
 }
 
 export interface IItem {
@@ -81,6 +127,12 @@ export interface INotification {
   type: NotificationType;
   createdAt: number;
   durationMs: number;
+  titleKey?: string;
+  textKey?: string;
+  effects?: EffectChip[];
+  rarity?: EventRarity;
+  tone?: EventTone;
+  dictionary?: 'notifications' | 'eventGenerator' | 'rebirth';
 }
 
 export interface ModifierSet {

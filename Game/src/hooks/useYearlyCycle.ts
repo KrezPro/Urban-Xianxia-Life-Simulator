@@ -14,24 +14,23 @@ import {
   processLifestyleYear,
   calculateOldAgeDeathBps,
 } from '../utils/gameplayUtils';
+import { getCurseModifiers } from '../utils/rebirthUtils';
+import { generateYearEvent } from '../utils/eventGenerator';
 import { increaseBigIntByBps, getRandomInt } from '../utils/helpers';
-import ruEvents from '../locales/ru/events.json';
-import enEvents from '../locales/en/events.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruNotifications from '../locales/ru/notifications.json';
 import enNotifications from '../locales/en/notifications.json';
 
 export const useYearlyCycle = () => {
-  const { addLog } = useEventStore();
+  const { addLog, addGeneratedLog } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const pushEventNotification = useNotificationStore((state) => state.pushEventNotification);
+  const pushGeneratedEventNotification = useNotificationStore((state) => state.pushGeneratedEventNotification);
   const techniques = useTechniquesStore();
   const inventory = useInventoryStore();
   const lifestyle = useLifestyleStore();
 
-  const eventsData: any = locale === 'ru' ? ruEvents : enEvents;
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const notifications: any = locale === 'ru' ? ruNotifications : enNotifications;
 
@@ -59,13 +58,17 @@ export const useYearlyCycle = () => {
 
     if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
       addLog(notifications.old_age_death, 'system');
+      pushUiNotification('old_age_death', 'danger');
+      current.setDeathCause('old_age');
       current.applyEffects({ health: -current.health });
       return;
     }
 
+    const curseModifiers = getCurseModifiers(current.activeCurses);
     const baseModifiers = combineModifiers(
       getTechniqueModifiers(techniques.levels),
-      getKarmaTotalEffects(inventory.items)
+      getKarmaTotalEffects(inventory.items),
+      curseModifiers
     );
 
     const report = processLifestyleYear(
@@ -106,11 +109,18 @@ export const useYearlyCycle = () => {
         maxHealth: report.maxHealthDelta,
         health: report.healthDelta,
       });
-      current = usePlayerStore.getState();
-    }
 
-    if (current.isDead) {
-      return;
+      current = usePlayerStore.getState();
+
+      if (current.isDead) {
+        if (report.portalResult === 'fail') {
+          current.setDeathCause('portal');
+        } else {
+          current.setDeathCause('health');
+        }
+
+        return;
+      }
     }
 
     if (report.appearanceDelta !== 0) {
@@ -153,19 +163,34 @@ export const useYearlyCycle = () => {
       return;
     }
 
-    const isSecretEvent = secretEventChance > Math.random();
-    const eventPool = isSecretEvent ? eventsData.secret : eventsData.mundane;
-    const randomEvent = eventPool[Math.floor(Math.random() * eventPool.length)];
+    const generatedEvent = generateYearEvent({
+      age: current.age,
+      focus: current.activityFocus,
+      cultivationStage: current.cultivationStage,
+      lifestyle: lifestyle.selected,
+      player: {
+        money: current.money,
+        qi: current.qi,
+        karma: current.karma,
+        health: current.health,
+        maxHealth: current.maxHealth,
+        intelligence: current.intelligence,
+        appearance: current.appearance,
+        spiritualRoot: current.spiritualRoot,
+      },
+      modifiers: baseModifiers,
+    });
 
-    const ageString = ui.age_log.replace('{age}', current.age.toString());
-    current.applyEffects(randomEvent.effects);
+    addGeneratedLog(generatedEvent);
+    pushGeneratedEventNotification(generatedEvent);
 
-    addLog(`${ageString} ${randomEvent.text}`, isSecretEvent ? 'secret' : 'mundane');
-    pushEventNotification(
-      randomEvent.id,
-      isSecretEvent ? 'secret' : 'mundane',
-      isSecretEvent ? 'secret' : 'mundane'
-    );
+    current.applyEffects(generatedEvent.effects);
+
+    const afterEvent = usePlayerStore.getState();
+
+    if (afterEvent.isDead) {
+      afterEvent.setDeathCause('event');
+    }
   }, [techniques.levels, inventory.items, lifestyle.selected, locale]);
 
   return { handleGrowOlder };

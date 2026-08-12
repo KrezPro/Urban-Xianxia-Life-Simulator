@@ -7,6 +7,7 @@ import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber } from '../utils/helpers';
 import { getOptionById, meetsLifestyleRequirements } from '../utils/gameplayUtils';
+import { getStageName } from '../utils/stageUtils';
 import { LifestyleCategory } from '../types';
 import lifestyleData from '../data/lifestyle.json';
 import ruExtras from '../locales/ru/extras.json';
@@ -62,8 +63,12 @@ export default function ActivitiesScreen() {
       parts.push(`${activities.requirements?.health}: ${req.healthMin}`);
     }
 
+    if (req.maxHealthMin) {
+      parts.push(`${activities.requirements?.max_health}: ${req.maxHealthMin}`);
+    }
+
     if (req.stage) {
-      parts.push(`${activities.requirements?.stage}: ${req.stage}`);
+      parts.push(`${activities.requirements?.stage}: ${getStageName(req.stage, locale)}`);
     }
 
     return parts.join(', ');

@@ -11,6 +11,8 @@ import {
   getKarmaTotalEffects,
   getStageIndex,
 } from '../utils/gameplayUtils';
+import { getCurseModifiers } from '../utils/rebirthUtils';
+import { getStageName } from '../utils/stageUtils';
 import { clampInt, getRandomInt, reduceBigIntByBps } from '../utils/helpers';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
@@ -28,6 +30,7 @@ export const useBreakthrough = () => {
 
   const currentStageIndex = getStageIndex(player.cultivationStage);
   const nextStage = (stagesData as any[])[currentStageIndex + 1];
+  const nextStageName = nextStage ? getStageName(nextStage.id, locale) : '';
 
   const getChanceBps = (hasAdBuff: boolean = false): number => {
     if (!nextStage) {
@@ -36,7 +39,8 @@ export const useBreakthrough = () => {
 
     const modifiers = combineModifiers(
       getTechniqueModifiers(techniques.levels),
-      getKarmaTotalEffects(inventory.items)
+      getKarmaTotalEffects(inventory.items),
+      getCurseModifiers(player.activeCurses)
     );
 
     let chanceBps =
@@ -78,9 +82,9 @@ export const useBreakthrough = () => {
 
     if (isSuccess) {
       player.setCultivationStage(nextStage.id);
-      addLog(uiData.log_success.replace('{name}', nextStage.name), 'secret');
+      addLog(uiData.log_success.replace('{name}', nextStageName), 'secret');
       pushUiNotification('breakthrough_success', 'reward', {
-        name: nextStage.name,
+        name: nextStageName,
       });
     } else {
       if (hasAdBuff) {
@@ -94,7 +98,8 @@ export const useBreakthrough = () => {
 
         const modifiers = combineModifiers(
           getTechniqueModifiers(techniques.levels),
-          getKarmaTotalEffects(inventory.items)
+          getKarmaTotalEffects(inventory.items),
+          getCurseModifiers(player.activeCurses)
         );
 
         const damageReductionBps = clampInt(
@@ -104,17 +109,24 @@ export const useBreakthrough = () => {
         );
 
         const damage = Math.max(1, Number(reduceBigIntByBps(rawDamage.toString(), damageReductionBps)));
+        const willDie = player.health <= damage;
 
         player.applyEffects({ health: -damage });
 
-        if (player.health > damage) {
+        const after = usePlayerStore.getState();
+
+        if (after.isDead) {
+          after.setDeathCause('breakthrough');
+          addLog(uiData.log_fail_death, 'system');
+          pushUiNotification('breakthrough_fail_death', 'danger');
+        } else if (willDie) {
+          addLog(uiData.log_fail_death, 'system');
+          pushUiNotification('breakthrough_fail_death', 'danger');
+        } else {
           addLog(uiData.log_fail_damage.replace('{damage}', damage.toString()), 'secret');
           pushUiNotification('breakthrough_fail_damage', 'danger', {
             damage: damage.toString(),
           });
-        } else {
-          addLog(uiData.log_fail_death, 'system');
-          pushUiNotification('breakthrough_fail_death', 'danger');
         }
       }
     }
@@ -124,5 +136,5 @@ export const useBreakthrough = () => {
     }
   };
 
-  return { attemptBreakthrough, nextStage, calculateChance };
+  return { attemptBreakthrough, nextStage, calculateChance, nextStageName };
 };

@@ -1,0 +1,463 @@
+{
+  "rules": [
+    {
+      "id": "generic_common",
+      "pool": ["mundane", "secret"],
+      "category": "generic",
+      "tone": "neutral",
+      "weight": 10,
+      "rarity": ["common"],
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_generic.ok", "outcomes_generic.change", "outcomes_generic.lesson"]
+      },
+      "effects": [
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 3500 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 3500 }
+      ]
+    },
+    {
+      "id": "mundane_child_study",
+      "pool": ["mundane"],
+      "category": "study",
+      "tone": "positive",
+      "weight": 100,
+      "age": ["child", "teen"],
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.teacher", "actors_mundane.neighbor"],
+        "action": ["actions_mundane.helps", "actions_mundane.tests"],
+        "place": ["places_mundane.school", "places_mundane.library"],
+        "outcome": ["outcomes_positive.gain", "outcomes_positive.discovery"]
+      },
+      "effects": [
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "mundane_teen_work",
+      "pool": ["mundane"],
+      "category": "work",
+      "tone": "positive",
+      "weight": 100,
+      "age": ["teen", "adult"],
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.boss", "actors_mundane.stranger"],
+        "action": ["actions_mundane.offers", "actions_mundane.helps"],
+        "place": ["places_mundane.market", "places_mundane.subway"],
+        "outcome": ["outcomes_positive.reward", "outcomes_positive.luck"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 1500 }
+      ]
+    },
+    {
+      "id": "mundane_adult_career",
+      "pool": ["mundane"],
+      "category": "job",
+      "tone": "positive",
+      "weight": 120,
+      "age": ["adult", "mature", "elder"],
+      "rarity": ["common", "uncommon", "rare"],
+      "requiresActivities": {
+        "job": ["job_office", "job_manager", "job_founder"]
+      },
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.boss", "actors_mundane.client"],
+        "action": ["actions_mundane.offers", "actions_mundane.praises"],
+        "place": ["places_mundane.office"],
+        "outcome": ["outcomes_positive.reward", "outcomes_positive.support"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 3000 }
+      ]
+    },
+    {
+      "id": "mundane_money_loss",
+      "pool": ["mundane"],
+      "category": "money",
+      "tone": "negative",
+      "weight": 80,
+      "age": ["teen", "adult", "mature", "elder"],
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.stranger", "actors_mundane.official"],
+        "action": ["actions_mundane.accuses", "actions_mundane.stops"],
+        "place": ["places_mundane.market", "places_mundane.subway"],
+        "outcome": ["outcomes_negative.loss", "outcomes_negative.fine"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "mundane_illness",
+      "pool": ["mundane"],
+      "category": "health",
+      "tone": "negative",
+      "weight": 70,
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_negative.illness", "outcomes_negative.fatigue"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 3000 }
+      ]
+    },
+    {
+      "id": "mundane_sport_gain",
+      "pool": ["mundane"],
+      "category": "sport",
+      "tone": "positive",
+      "weight": 110,
+      "rarity": ["common", "uncommon"],
+      "requiresActivities": {
+        "sport": ["sport_gym", "sport_premium", "sport_spirit"]
+      },
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.neighbor", "actors_mundane.stranger"],
+        "action": ["actions_mundane.helps", "actions_mundane.challenges"],
+        "place": ["places_mundane.gym", "places_mundane.park"],
+        "outcome": ["outcomes_positive.gain", "outcomes_positive.support"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 3500 }
+      ]
+    },
+    {
+      "id": "mundane_food_positive",
+      "pool": ["mundane"],
+      "category": "food",
+      "tone": "positive",
+      "weight": 100,
+      "rarity": ["common", "uncommon"],
+      "requiresActivities": {
+        "food": ["food_street", "food_home", "food_premium", "food_spirit"]
+      },
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_positive.gain", "outcomes_positive.reward"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2500 }
+      ]
+    },
+    {
+      "id": "mundane_housing_rest",
+      "pool": ["mundane"],
+      "category": "housing",
+      "tone": "positive",
+      "weight": 100,
+      "rarity": ["common", "uncommon"],
+      "requiresActivities": {
+        "housing": ["housing_shelter", "housing_room", "housing_apartment", "housing_condo"]
+      },
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_positive.support", "outcomes_positive.luck"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "mundane_housing_issue",
+      "pool": ["mundane"],
+      "category": "housing",
+      "tone": "negative",
+      "weight": 70,
+      "rarity": ["common", "uncommon"],
+      "requiresActivities": {
+        "housing": ["housing_shelter", "housing_room", "housing_apartment", "housing_condo"]
+      },
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_negative.conflict", "outcomes_negative.fine"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "mundane_portal_reward",
+      "pool": ["mundane"],
+      "category": "portal",
+      "tone": "positive",
+      "weight": 90,
+      "rarity": ["uncommon", "rare"],
+      "requiresActivities": {
+        "portal": ["portal_subway", "portal_market", "portal_club", "portal_tower"]
+      },
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_positive.reward", "outcomes_positive.discovery"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 3500 }
+      ]
+    },
+    {
+      "id": "mundane_portal_injury",
+      "pool": ["mundane"],
+      "category": "portal",
+      "tone": "negative",
+      "weight": 70,
+      "rarity": ["uncommon", "rare"],
+      "requiresActivities": {
+        "portal": ["portal_subway", "portal_market", "portal_club", "portal_tower"]
+      },
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_negative.conflict", "outcomes_negative.fatigue"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 3000 }
+      ]
+    },
+    {
+      "id": "secret_meditation",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 120,
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.sage", "actors_secret.guardian"],
+        "action": ["actions_secret.guides", "actions_secret.protects"],
+        "place": ["places_secret.rooftop", "places_secret.shrine"],
+        "outcome": ["outcomes_secret_positive.qi_flow", "outcomes_secret_positive.insight"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "secret_qi_vein",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 90,
+      "rarity": ["uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.spirit", "actors_secret.guardian"],
+        "action": ["actions_secret.blesses", "actions_secret.awakens"],
+        "place": ["places_secret.hidden_vein", "places_secret.old_park"],
+        "outcome": ["outcomes_secret_positive.qi_flow", "outcomes_secret_positive.treasure"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 2500 }
+      ]
+    },
+    {
+      "id": "secret_mana_burn",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "negative",
+      "weight": 80,
+      "rarity": ["common", "uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.ghost", "actors_secret.demon"],
+        "action": ["actions_secret.attacks", "actions_secret.tempt s"],
+        "place": ["places_secret.alley", "places_secret.dream"],
+        "outcome": ["outcomes_secret_negative.mana_burn", "outcomes_secret_negative.qi_leak"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "negative", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 }
+      ]
+    },
+    {
+      "id": "secret_demon_fight",
+      "pool": ["secret"],
+      "category": "danger",
+      "tone": "negative",
+      "weight": 80,
+      "rarity": ["uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.demon", "actors_secret.beast"],
+        "action": ["actions_secret.attacks", "actions_secret.robs"],
+        "place": ["places_secret.abandoned_station", "places_secret.alley"],
+        "outcome": ["outcomes_secret_negative.blood_price", "outcomes_secret_negative.fear"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 4000 },
+        { "stat": "karma", "sign": "negative", "scale": "karma", "chanceBps": 2000 }
+      ]
+    },
+    {
+      "id": "secret_karma_deed",
+      "pool": ["secret"],
+      "category": "karma",
+      "tone": "positive",
+      "weight": 60,
+      "rarity": ["uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.guardian", "actors_secret.spirit"],
+        "action": ["actions_secret.blesses", "actions_secret.guides"],
+        "place": ["places_secret.shrine", "places_secret.old_park"],
+        "outcome": ["outcomes_secret_positive.karma_light", "outcomes_secret_positive.protection"]
+      },
+      "effects": [
+        { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 3000 }
+      ]
+    },
+    {
+      "id": "secret_market",
+      "pool": ["secret"],
+      "category": "money",
+      "tone": "neutral",
+      "weight": 60,
+      "rarity": ["uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.merchant", "actors_secret.cultivator"],
+        "action": ["actions_secret.tempt s", "actions_secret.offers" ],
+        "place": ["places_secret.portal_rift", "places_secret.alley"],
+        "outcome": ["outcomes_secret_positive.treasure", "outcomes_secret_positive.insight"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 }
+      ]
+    },
+    {
+      "id": "stage_qi_event",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 80,
+      "stageMin": "qi_condensation_1",
+      "rarity": ["uncommon", "rare"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.cultivator", "actors_secret.sage"],
+        "action": ["actions_secret.guides", "actions_secret.awakens"],
+        "place": ["places_secret.hidden_vein", "places_secret.rooftop"],
+        "outcome": ["outcomes_secret_positive.insight", "outcomes_secret_positive.qi_flow"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2500 }
+      ]
+    },
+    {
+      "id": "stage_foundation_event",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 70,
+      "stageMin": "foundation_1",
+      "rarity": ["rare", "epic"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.sage", "actors_secret.guardian"],
+        "action": ["actions_secret.blesses", "actions_secret.protects"],
+        "place": ["places_secret.shrine", "places_secret.portal_rift"],
+        "outcome": ["outcomes_secret_positive.treasure", "outcomes_secret_positive.protection"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 }
+      ]
+    },
+    {
+      "id": "stage_core_event",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 60,
+      "stageMin": "core_formation",
+      "rarity": ["rare", "epic", "legendary"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_secret.sage", "actors_secret.spirit"],
+        "action": ["actions_secret.awakens", "actions_secret.blesses"],
+        "place": ["places_secret.dream", "places_secret.hidden_vein"],
+        "outcome": ["outcomes_secret_positive.qi_flow", "outcomes_secret_positive.karma_light"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 3500 }
+      ]
+    },
+    {
+      "id": "elder_health_event",
+      "pool": ["mundane"],
+      "category": "health",
+      "tone": "negative",
+      "weight": 80,
+      "age": ["elder"],
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_negative.illness", "outcomes_negative.fatigue"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2500 }
+      ]
+    },
+    {
+      "id": "lucky_money_event",
+      "pool": ["mundane"],
+      "category": "money",
+      "tone": "positive",
+      "weight": 30,
+      "rarity": ["rare", "epic", "legendary"],
+      "textTemplate": "templates.tmpl_simple",
+      "params": {
+        "outcome": ["outcomes_positive.luck", "outcomes_positive.reward"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 }
+      ]
+    },
+    {
+      "id": "social_appearance_event",
+      "pool": ["mundane"],
+      "category": "social",
+      "tone": "positive",
+      "weight": 80,
+      "age": ["teen", "adult"],
+      "rarity": ["common", "uncommon"],
+      "textTemplate": "templates.tmpl_scene",
+      "params": {
+        "actor": ["actors_mundane.influencer", "actors_mundane.client"],
+        "action": ["actions_mundane.invites", "actions_mundane.praises"],
+        "place": ["places_mundane.park", "places_mundane.market"],
+        "outcome": ["outcomes_positive.support", "outcomes_positive.luck"]
+      },
+      "effects": [
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2000 }
+      ]
+    }
+  ]
+}

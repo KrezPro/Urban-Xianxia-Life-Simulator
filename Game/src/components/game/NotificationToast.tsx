@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
 import { INotification, NotificationType } from '../../types';
 import { useLocaleStore } from '../../store/useLocaleStore';
-import { getNotificationText } from '../../utils/notificationUtils';
+import { getNotificationBody, getNotificationTitle } from '../../utils/notificationUtils';
+import { EffectChips } from './EffectChips';
 
 interface NotificationToastProps {
   notification: INotification;
@@ -29,9 +30,16 @@ const colorByType: Record<NotificationType, string> = {
   social: Theme.colors.success,
 };
 
+const rarityColor: Record<string, string> = {
+  common: Theme.colors.textMuted,
+  uncommon: Theme.colors.success,
+  rare: Theme.colors.info,
+  epic: Theme.colors.gold,
+  legendary: Theme.colors.danger,
+};
+
 export const NotificationToast = ({ notification, onDismiss }: NotificationToastProps) => {
   const locale = useLocaleStore((state) => state.locale);
-
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-14)).current;
   const leavingRef = useRef(false);
@@ -91,8 +99,12 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
   }, []);
 
   const iconName = iconByType[notification.type] || 'information-circle';
-  const accent = colorByType[notification.type] || Theme.colors.textMuted;
-  const text = getNotificationText(notification, locale);
+  const accent = notification.rarity
+    ? rarityColor[notification.rarity] || colorByType[notification.type]
+    : colorByType[notification.type] || Theme.colors.textMuted;
+
+  const title = getNotificationTitle(notification, locale);
+  const body = getNotificationBody(notification, locale);
 
   return (
     <Animated.View
@@ -110,9 +122,19 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
           <Ionicons name={iconName} size={18} color={accent} />
         </View>
 
-        <Text style={styles.text} numberOfLines={2}>
-          {text}
-        </Text>
+        <View style={styles.textBlock}>
+          {!!title ? (
+            <Text style={[styles.title, { color: accent }]} numberOfLines={1}>
+              {title}
+            </Text>
+          ) : null}
+
+          <Text style={styles.body} numberOfLines={3}>
+            {body}
+          </Text>
+
+          {!!notification.effects?.length ? <EffectChips effects={notification.effects} /> : null}
+        </View>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -128,7 +150,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
@@ -141,9 +163,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
+    marginTop: 2,
   },
-  text: {
+  textBlock: {
     flex: 1,
+  },
+  title: {
+    fontSize: 13,
+    fontWeight: '900',
+    marginBottom: 2,
+  },
+  body: {
     color: Theme.colors.text,
     fontSize: 13,
     lineHeight: 18,

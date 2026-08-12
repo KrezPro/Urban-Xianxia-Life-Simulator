@@ -1,0 +1,111 @@
+{
+  "fortuneTiers": [
+    {
+      "id": "blessed",
+      "minRoll": 0,
+      "maxRoll": 4499,
+      "picks": 0,
+      "entries": []
+    },
+    {
+      "id": "uneasy",
+      "minRoll": 4500,
+      "maxRoll": 7499,
+      "picks": 1,
+      "entries": [
+        { "kind": "money", "ref": "money_loss_25", "weight": 40 },
+        { "kind": "health", "ref": "health_start_85", "weight": 40 },
+        { "kind": "curse", "severity": "minor", "weight": 20 }
+      ]
+    },
+    {
+      "id": "troubled",
+      "minRoll": 7500,
+      "maxRoll": 9299,
+      "picks": 1,
+      "entries": [
+        { "kind": "money", "ref": "money_loss_50", "weight": 35 },
+        { "kind": "health", "ref": "health_start_70", "weight": 35 },
+        { "kind": "curse", "severity": "minor", "weight": 30 }
+      ]
+    },
+    {
+      "id": "severe",
+      "minRoll": 9300,
+      "maxRoll": 9899,
+      "picks": 2,
+      "entries": [
+        { "kind": "money", "ref": "money_loss_75", "weight": 30 },
+        { "kind": "health", "ref": "health_start_55", "weight": 30 },
+        { "kind": "curse", "severity": "major", "weight": 40 }
+      ]
+    },
+    {
+      "id": "doomed",
+      "minRoll": 9900,
+      "maxRoll": 9999,
+      "picks": 3,
+      "entries": [
+        { "kind": "money", "ref": "money_loss_100", "weight": 34 },
+        { "kind": "health", "ref": "health_start_40", "weight": 33 },
+        { "kind": "curse", "severity": "major", "weight": 33 }
+      ]
+    }
+  ],
+  "moneyPenalties": {
+    "money_loss_0": 0,
+    "money_loss_25": 2500,
+    "money_loss_50": 5000,
+    "money_loss_75": 7500,
+    "money_loss_100": 10000
+  },
+  "healthStart": {
+    "health_start_100": 10000,
+    "health_start_85": 8500,
+    "health_start_70": 7000,
+    "health_start_55": 5500,
+    "health_start_40": 4000
+  },
+  "curses": [
+    {
+      "id": "curse_minor_hunger",
+      "severity": "minor",
+      "modifiers": { "moneyGainBps": -300 }
+    },
+    {
+      "id": "curse_minor_frail",
+      "severity": "minor",
+      "modifiers": { "healthRegenBps": -500 }
+    },
+    {
+      "id": "curse_minor_fog",
+      "severity": "minor",
+      "startIntelligence": -3
+    },
+    {
+      "id": "curse_minor_rough_skin",
+      "severity": "minor",
+      "startAppearance": -3
+    },
+    {
+      "id": "curse_major_debt",
+      "severity": "major",
+      "modifiers": { "moneyGainBps": -1000 }
+    },
+    {
+      "id": "curse_major_cracked_meridians",
+      "severity": "major",
+      "modifiers": { "qiGainBps": -1200 }
+    },
+    {
+      "id": "curse_major_heaven_mark",
+      "severity": "major",
+      "modifiers": { "breakthroughChanceBps": -700, "portalSuccessBps": -700 }
+    },
+    {
+      "id": "curse_major_sickly",
+      "severity": "major",
+      "modifiers": { "healthRegenBps": -1200 }
+    }
+  ]
+}

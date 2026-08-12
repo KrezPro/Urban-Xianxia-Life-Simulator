@@ -1,0 +1,126 @@
+{
+  "stats": {
+    "intelligence": "Int",
+    "health": "Health",
+    "maxHealth": "Max Health",
+    "appearance": "App",
+    "money": "Money",
+    "qi": "Qi",
+    "karma": "Karma"
+  },
+  "titles": {
+    "positive_common": "Luck",
+    "positive_uncommon": "Good Omen",
+    "positive_rare": "Rare Luck",
+    "positive_epic": "Heavenly Luck",
+    "positive_legendary": "Legendary Moment",
+    "negative_common": "Trouble",
+    "negative_uncommon": "Bad Omen",
+    "negative_rare": "Danger",
+    "negative_epic": "Serious Threat",
+    "negative_legendary": "Catastrophe",
+    "neutral_common": "Event",
+    "neutral_uncommon": "Strange Event",
+    "neutral_rare": "Mysterious Event",
+    "neutral_epic": "Unusual Phenomenon",
+    "neutral_legendary": "Fateful Moment"
+  },
+  "templates": {
+    "tmpl_scene": "{actor} {action} {place}. {outcome}",
+    "tmpl_simple": "{outcome}"
+  },
+  "actors_mundane": {
+    "boss": "Your boss",
+    "client": "A client",
+    "neighbor": "A neighbor",
+    "stranger": "A stranger",
+    "official": "An official",
+    "teacher": "A teacher",
+    "doctor": "A doctor",
+    "influencer": "An influencer"
+  },
+  "actions_mundane": {
+    "offers": "offers you an opportunity",
+    "challenges": "challenges you",
+    "invites": "invites you",
+    "helps": "helps you",
+    "tests": "tests you",
+    "accuses": "accuses you",
+    "praises": "praises you",
+    "stops": "stops you"
+  },
+  "places_mundane": {
+    "office": "in the office",
+    "market": "at the market",
+    "gym": "in the gym",
+    "apartment": "in the apartment",
+    "subway": "in the subway",
+    "park": "in the park",
+    "school": "at school",
+    "library": "in the library",
+    "hospital": "in the hospital"
+  },
+  "outcomes_positive": {
+    "gain": "It brings unexpected benefit.",
+    "discovery": "You find a useful opportunity.",
+    "support": "You receive support at the right moment.",
+    "luck": "Luck turns to face you.",
+    "reward": "You receive a deserved reward."
+  },
+  "outcomes_negative": {
+    "loss": "You suffer losses.",
+    "illness": "Your health suffers.",
+    "conflict": "An unpleasant conflict arises.",
+    "fine": "You have to pay a fine.",
+    "fatigue": "You feel severe fatigue."
+  },
+  "outcomes_generic": {
+    "ok": "The year passes calmly.",
+    "change": "Something changes in your life.",
+    "lesson": "You learn an important lesson."
+  },
+  "actors_secret": {
+    "spirit": "A spirit",
+    "demon": "A demon",
+    "cultivator": "A cultivator",
+    "guardian": "A guardian spirit",
+    "ghost": "A ghost",
+    "merchant": "A secret merchant",
+    "sage": "A sage",
+    "beast": "A spirit beast"
+  },
+  "actions_secret": {
+    "blesses": "blesses you",
+    "attacks": "attacks you",
+    "tempts": "tempts you",
+    "guides": "guides you",
+    "robs": "tries to rob you",
+    "awakens": "awakens your power",
+    "whispers": "whispers secrets to you",
+    "protects": "protects you"
+  },
+  "places_secret": {
+    "hidden_vein": "in a hidden spiritual vein",
+    "old_park": "in an old park",
+    "rooftop": "on a skyscraper rooftop",
+    "alley": "in a dark alley",
+    "portal_rift": "near a portal rift",
+    "shrine": "in an abandoned shrine",
+    "abandoned_station": "at an abandoned station",
+    "dream": "in a strange dream"
+  },
+  "outcomes_secret_positive": {
+    "qi_flow": "Qi energy fills your body.",
+    "insight": "You receive insight on the Dao.",
+    "karma_light": "Your karma becomes cleaner.",
+    "treasure": "You find a spiritual treasure.",
+    "protection": "An unseen force protects you."
+  },
+  "outcomes_secret_negative": {
+    "mana_burn": "A Mana Burn occurs.",
+    "qi_leak": "Your Qi leaks through your meridians.",
+    "curse_touch": "A dark foreign will touches you.",
+    "blood_price": "You must pay in blood.",
+    "fear": "Fear grips your heart."
+  }
+}

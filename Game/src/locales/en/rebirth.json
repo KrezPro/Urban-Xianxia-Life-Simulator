@@ -1,0 +1,74 @@
+{
+  "title": "Rebirth",
+  "accept": "Accept fate",
+  "tiers": {
+    "blessed": {
+      "title": "Blessed Rebirth",
+      "desc": "The heavens are merciful. You suffer no new losses."
+    },
+    "uneasy": {
+      "title": "Uneasy Rebirth",
+      "desc": "Your previous life left a light mark on your new fate."
+    },
+    "troubled": {
+      "title": "Troubled Rebirth",
+      "desc": "The karma of your past life weighs on your new body."
+    },
+    "severe": {
+      "title": "Severe Rebirth",
+      "desc": "You entered the new world with heavy losses."
+    },
+    "doomed": {
+      "title": "Doomed Rebirth",
+      "desc": "The heavens turned away from you. Your new life began in darkness."
+    }
+  },
+  "money": {
+    "money_loss_0": "Inheritance preserved.",
+    "money_loss_25": "Lost 25% of inheritance.",
+    "money_loss_50": "Lost 50% of inheritance.",
+    "money_loss_75": "Lost 75% of inheritance.",
+    "money_loss_100": "You lost all inheritance."
+  },
+  "health": {
+    "health_start_100": "Your body is healthy.",
+    "health_start_85": "Your body is slightly weakened.",
+    "health_start_70": "Your body is noticeably weakened.",
+    "health_start_55": "You were born weak.",
+    "health_start_40": "You are on the brink of death."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Hungry Shadow",
+      "desc": "Income reduced by 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Frail Body",
+      "desc": "Health recovery reduced by 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Foggy Mind",
+      "desc": "Intelligence reduced by 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Rough Skin",
+      "desc": "Appearance reduced by 3."
+    },
+    "curse_major_debt": {
+      "name": "Debt of Past Life",
+      "desc": "Income reduced by 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Cracked Meridians",
+      "desc": "Qi gain reduced by 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Mark of Heaven",
+      "desc": "Breakthrough chance and portal success reduced by 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Sickly Body",
+      "desc": "Health recovery reduced by 12%."
+    }
+  }
+}

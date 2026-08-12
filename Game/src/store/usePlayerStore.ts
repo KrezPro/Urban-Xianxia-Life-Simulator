@@ -2,11 +2,13 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
+import { DeathCause, RebirthReport } from '../types';
 import { useInventoryStore } from './useInventoryStore';
 import { useTechniquesStore } from './useTechniquesStore';
 import { useLifestyleStore } from './useLifestyleStore';
-import { getRandomInt } from '../utils/helpers';
+import { getRandomInt, safeBigInt } from '../utils/helpers';
 import { getKarmaTotalEffects } from '../utils/gameplayUtils';
+import { getCurseById, rollRebirthReport } from '../utils/rebirthUtils';
 
 interface PlayerEffects {
   intelligence?: number;
@@ -35,11 +37,16 @@ interface PlayerState {
   hasHydrated: boolean;
   hasCultivatorPass: boolean;
   lastInterstitialTime: number;
+  activeCurses: string[];
+  lastDeathCause: DeathCause;
+  lastRebirthReport: RebirthReport | null;
   setHasHydrated: (state: boolean) => void;
   setActivityFocus: (focus: 'mundane' | 'secret') => void;
   setCultivationStage: (stage: string) => void;
   setCultivatorPass: (status: boolean) => void;
   setLastInterstitialTime: (time: number) => void;
+  setDeathCause: (cause: DeathCause) => void;
+  clearRebirthReport: () => void;
   normalizeHealth: () => void;
   growOlder: () => void;
   addQi: (amount: string) => void;
@@ -66,6 +73,9 @@ const initialState = {
   activityFocus: 'mundane' as 'mundane' | 'secret',
   hasCultivatorPass: false,
   lastInterstitialTime: 0,
+  activeCurses: [] as string[],
+  lastDeathCause: 'none' as DeathCause,
+  lastRebirthReport: null as RebirthReport | null,
 };
 
 export const usePlayerStore = create<PlayerState>()(
@@ -78,6 +88,8 @@ export const usePlayerStore = create<PlayerState>()(
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
       setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
       setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
+      setDeathCause: (cause) => set({ lastDeathCause: cause }),
+      clearRebirthReport: () => set({ lastRebirthReport: null }),
       normalizeHealth: () =>
         set((state) => {
           let maxHealth = state.maxHealth;
@@ -169,7 +181,8 @@ export const usePlayerStore = create<PlayerState>()(
           if (effects.karma !== undefined) {
             const currentKarma = BigInt(state.karma);
             const addKarma = BigInt(effects.karma);
-            newState.karma = (currentKarma + addKarma).toString();
+            const resultKarma = currentKarma + addKarma;
+            newState.karma = 0n > resultKarma ? '0' : resultKarma.toString();
           }
 
           if (effects.money !== undefined) {
@@ -215,12 +228,44 @@ export const usePlayerStore = create<PlayerState>()(
 
         set((state) => {
           const { STARTING_STATS } = GameConstants;
+          const report = rollRebirthReport(state.lastDeathCause);
+
+          let startIntelligencePenalty = 0;
+          let startAppearancePenalty = 0;
+
+          report.curses.forEach((curseId) => {
+            const curse = getCurseById(curseId);
+
+            if (!curse) {
+              return;
+            }
+
+            if (curse.startIntelligence) {
+              startIntelligencePenalty += curse.startIntelligence;
+            }
+
+            if (curse.startAppearance) {
+              startAppearancePenalty += curse.startAppearance;
+            }
+          });
 
           const baseHealth = getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX);
           const totalMaxHealth = Math.min(
             GameConstants.MAX_HEALTH_CAP,
             baseHealth + karmaEffects.startMaxHealth
           );
+
+          const currentHealth = Math.max(
+            1,
+            Math.floor((totalMaxHealth * report.healthStartBps) / 10000)
+          );
+
+          const baseMoney =
+            BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
+            safeBigInt(karmaEffects.startMoney);
+
+          const finalMoney =
+            (baseMoney * BigInt(10000 - report.moneyPenaltyBps)) / 10000n;
 
           return {
             isDead: false,
@@ -232,15 +277,23 @@ export const usePlayerStore = create<PlayerState>()(
             activityFocus: 'mundane' as 'mundane' | 'secret',
             hasCultivatorPass: state.hasCultivatorPass,
             lastInterstitialTime: state.lastInterstitialTime,
-            health: totalMaxHealth,
+            health: currentHealth,
             maxHealth: totalMaxHealth,
-            intelligence: getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX),
-            appearance: getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX),
-            money: (
-              BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
-              BigInt(karmaEffects.startMoney)
-            ).toString(),
-            spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + karmaEffects.startSpiritualRoot,
+            intelligence: Math.max(
+              1,
+              getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX) + startIntelligencePenalty
+            ),
+            appearance: Math.max(
+              1,
+              getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX) + startAppearancePenalty
+            ),
+            money: finalMoney.toString(),
+            spiritualRoot:
+              getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) +
+              karmaEffects.startSpiritualRoot,
+            activeCurses: report.curses,
+            lastDeathCause: 'none',
+            lastRebirthReport: report,
           };
         });
       },

@@ -2,10 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
-import { useEventStore, IEventLog } from '../store/useEventStore';
+import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
-import { IconButton } from '../components/ui';
+import { getEventLogText } from '../utils/notificationUtils';
+import { EffectChips } from '../components/game/EffectChips';
+import { IEventLog } from '../types';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 
@@ -13,21 +15,27 @@ interface LogScreenProps {
   onClose?: () => void;
 }
 
-const renderItem = ({ item }: { item: IEventLog }) => {
+const LogItem = ({ item, locale }: { item: IEventLog; locale: 'ru' | 'en' }) => {
   const date = new Date(item.timestamp).toLocaleTimeString();
+  const text = getEventLogText(item, locale);
 
   return (
     <View style={styles.logItem}>
       <Text style={styles.logTime}>[{date}]</Text>
-      <Text
-        style={[
-          styles.logText,
-          item.type === 'secret' && styles.secretText,
-          item.type === 'system' && styles.systemText,
-        ]}
-      >
-        {item.text}
-      </Text>
+
+      <View style={styles.logBody}>
+        <Text
+          style={[
+            styles.logText,
+            item.type === 'secret' && styles.secretText,
+            item.type === 'system' && styles.systemText,
+          ]}
+        >
+          {text}
+        </Text>
+
+        {!!item.effects?.length ? <EffectChips effects={item.effects} /> : null}
+      </View>
     </View>
   );
 };
@@ -41,15 +49,19 @@ export default function LogScreen({ onClose }: LogScreenProps) {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{ui.log_screen.title}</Text>
-        {onClose ? (
-          <IconButton icon="close" onPress={onClose} variant="secondary" size={36} accessibilityLabel="Close log" />
+
+        {!!onClose ? (
+          <Text style={styles.closeButton} onPress={onClose}>
+            ✕
+          </Text>
         ) : null}
       </View>
+
       <View style={styles.listContainer}>
         <FlashList
           data={logs}
-          renderItem={renderItem}
-          estimatedItemSize={58}
+          renderItem={({ item }) => <LogItem item={item} locale={locale} />}
+          estimatedItemSize={84}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<Text style={styles.emptyText}>{ui.log_screen.empty}</Text>}
         />
@@ -76,6 +88,12 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: Theme.colors.text,
   },
+  closeButton: {
+    color: Theme.colors.textMuted,
+    fontSize: 24,
+    fontWeight: '900',
+    paddingHorizontal: 8,
+  },
   listContainer: {
     flex: 1,
     paddingHorizontal: 16,
@@ -95,10 +113,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+  logBody: {
+    flex: 1,
+  },
   logText: {
     color: Theme.colors.text,
     fontSize: 14,
-    flex: 1,
     flexWrap: 'wrap',
     lineHeight: 20,
   },

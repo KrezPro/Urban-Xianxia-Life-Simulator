@@ -43,3 +43,12 @@
 42. gameplayUtils.ts содержит все математические расчёты годового цикла, техник, карма-баффов, старения и порталов.
 43. DaoScreen использует закреплённый нижний блок прорыва, чтобы кнопка прорыва всегда была видна.
 44. TabNavigator содержит только 5 видимых вкладок: Life, Dao, Activities, Store, Sect.
+45. События генерируются через utils/eventGenerator.ts на основе data/eventRules.json. Генератор возвращает только ключи локализации и параметры, не готовые тексты.
+46. Тексты событий и уведомлений собираются через utils/notificationUtils.ts из locales/{lang}/eventGenerator.json.
+47. Уведомления поддерживают title, body, rarity, tone и effect chips через расширенный INotification и NotificationToast.
+48. Журнал поддерживает сгенерированные записи через IEventLog.generated, textKey, params, effects.
+49. Имена стадий берутся из locales/{lang}/stages.json через utils/stageUtils.ts, а не из технических id.
+50. Смерть фиксирует причину: old_age, health, breakthrough, portal, event. Причина используется в последствиях перерождения.
+51. Последствия перерождения рассчитываются через utils/rebirthUtils.ts и data/rebirthPenalties.json: потеря денег, ослабленное здоровье, проклятия.
+52. Проклятия действуют только одну жизнь и хранятся в usePlayerStore.activeCurses.
+53. Локализация последствий перерождения находится в locales/{lang}/rebirth.json.
