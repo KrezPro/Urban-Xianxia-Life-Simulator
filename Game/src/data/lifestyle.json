@@ -3,47 +3,47 @@
     {
       "id": "job",
       "options": [
-        { "id": "job_none", "category": "job", "tier": 0, "dailyCost": "0", "dailyIncome": "0", "requirements": {}, "effects": {} },
-        { "id": "job_parttime", "category": "job", "tier": 1, "dailyCost": "2", "dailyIncome": "25", "requirements": { "ageMin": 12, "healthMin": 20 }, "effects": {} },
-        { "id": "job_office", "category": "job", "tier": 2, "dailyCost": "5", "dailyIncome": "80", "requirements": { "ageMin": 18, "intelligence": 12, "appearance": 4, "healthMin": 30 }, "effects": {} },
-        { "id": "job_manager", "category": "job", "tier": 3, "dailyCost": "10", "dailyIncome": "220", "requirements": { "ageMin": 25, "intelligence": 25, "appearance": 12, "healthMin": 50 }, "effects": {} },
-        { "id": "job_founder", "category": "job", "tier": 4, "dailyCost": "25", "dailyIncome": "700", "requirements": { "ageMin": 30, "intelligence": 45, "appearance": 20, "healthMin": 70, "stage": "qi_condensation_1" }, "effects": {} }
+        { "id": "job_none", "category": "job", "tier": 0, "dailyCost": "0", "dailyIncome": "0", "requirements": {}, "effects": {}, "balanceNote": "No job: no income, no cost." },
+        { "id": "job_parttime", "category": "job", "tier": 1, "dailyCost": "2", "dailyIncome": "18", "requirements": { "ageMin": 12, "healthMin": 20 }, "effects": {}, "balanceNote": "Part-time: cost $2/day, income $18/day, early net about $5.8k/year." },
+        { "id": "job_office", "category": "job", "tier": 2, "dailyCost": "6", "dailyIncome": "60", "requirements": { "ageMin": 18, "intelligence": 12, "appearance": 4, "healthMin": 30 }, "effects": {}, "balanceNote": "Office: cost $6/day, income $60/day, mid net about $19.7k/year." },
+        { "id": "job_manager", "category": "job", "tier": 3, "dailyCost": "18", "dailyIncome": "170", "requirements": { "ageMin": 25, "intelligence": 25, "appearance": 12, "healthMin": 50 }, "effects": {}, "balanceNote": "Manager: cost $18/day, income $170/day, strong net about $55.5k/year." },
+        { "id": "job_founder", "category": "job", "tier": 4, "dailyCost": "60", "dailyIncome": "550", "requirements": { "ageMin": 30, "intelligence": 45, "appearance": 20, "healthMin": 70, "stage": "qi_condensation_1" }, "effects": {}, "balanceNote": "Founder: cost $60/day, income $550/day, late net about $178.9k/year." }
       ]
     },
     {
       "id": "sport",
       "options": [
-        { "id": "sport_none", "category": "sport", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {} },
-        { "id": "sport_home", "category": "sport", "tier": 1, "dailyCost": "1", "requirements": { "ageMin": 5 }, "effects": { "maxHealthPerYear": 2, "healthRegenPerYear": 5 } },
-        { "id": "sport_gym", "category": "sport", "tier": 2, "dailyCost": "5", "requirements": { "ageMin": 12 }, "effects": { "maxHealthPerYear": 5, "healthRegenPerYear": 15, "appearancePerYear": 1 } },
-        { "id": "sport_premium", "category": "sport", "tier": 3, "dailyCost": "15", "requirements": { "ageMin": 16 }, "effects": { "maxHealthPerYear": 12, "healthRegenPerYear": 35, "appearancePerYear": 2 } },
-        { "id": "sport_spirit", "category": "sport", "tier": 4, "dailyCost": "40", "requirements": { "ageMin": 16, "spiritualRoot": 10, "stage": "qi_condensation_1" }, "effects": { "maxHealthPerYear": 25, "healthRegenPerYear": 70, "appearancePerYear": 3, "qiPerYear": "50" } }
+        { "id": "sport_none", "category": "sport", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {}, "balanceNote": "No sport." },
+        { "id": "sport_home", "category": "sport", "tier": 1, "dailyCost": "1", "requirements": { "ageMin": 5 }, "effects": { "maxHealthPerYear": 1, "healthRegenPerYear": 2 }, "balanceNote": "Home sport: cost $1/day, +1 MaxHealth/year, +2 Regen/year." },
+        { "id": "sport_gym", "category": "sport", "tier": 2, "dailyCost": "5", "requirements": { "ageMin": 12 }, "effects": { "maxHealthPerYear": 2, "healthRegenPerYear": 6, "appearancePerYear": 1 }, "balanceNote": "Gym: cost $5/day, +2 MaxHealth/year, +6 Regen/year, +1 App/year." },
+        { "id": "sport_premium", "category": "sport", "tier": 3, "dailyCost": "15", "requirements": { "ageMin": 16 }, "effects": { "maxHealthPerYear": 4, "healthRegenPerYear": 12, "appearancePerYear": 1 }, "balanceNote": "Premium sport: cost $15/day, +4 MaxHealth/year, +12 Regen/year." },
+        { "id": "sport_spirit", "category": "sport", "tier": 4, "dailyCost": "40", "requirements": { "ageMin": 16, "spiritualRoot": 10, "stage": "qi_condensation_1" }, "effects": { "maxHealthPerYear": 6, "healthRegenPerYear": 25, "appearancePerYear": 2, "qiPerYear": "5" }, "balanceNote": "Spirit sport: cost $40/day, +6 MaxHealth/year, +25 Regen/year, +5 Qi/year." }
       ]
     },
     {
       "id": "food",
       "options": [
-        { "id": "food_none", "category": "food", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {} },
-        { "id": "food_street", "category": "food", "tier": 1, "dailyCost": "2", "requirements": { "ageMin": 5 }, "effects": { "healthRegenPerYear": 10 } },
-        { "id": "food_home", "category": "food", "tier": 2, "dailyCost": "5", "requirements": { "ageMin": 10 }, "effects": { "healthRegenPerYear": 25, "maxHealthPerYear": 1 } },
-        { "id": "food_premium", "category": "food", "tier": 3, "dailyCost": "12", "requirements": { "ageMin": 16 }, "effects": { "healthRegenPerYear": 50, "maxHealthPerYear": 3, "appearancePerYear": 1 } },
-        { "id": "food_spirit", "category": "food", "tier": 4, "dailyCost": "30", "requirements": { "ageMin": 16, "spiritualRoot": 10 }, "effects": { "healthRegenPerYear": 100, "maxHealthPerYear": 6, "qiPerYear": "25" } }
+        { "id": "food_none", "category": "food", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {}, "balanceNote": "No meal plan." },
+        { "id": "food_street", "category": "food", "tier": 1, "dailyCost": "2", "requirements": { "ageMin": 5 }, "effects": { "healthRegenPerYear": 4 }, "balanceNote": "Street food: cost $2/day, +4 Regen/year." },
+        { "id": "food_home", "category": "food", "tier": 2, "dailyCost": "5", "requirements": { "ageMin": 10 }, "effects": { "healthRegenPerYear": 8, "maxHealthPerYear": 1 }, "balanceNote": "Home food: cost $5/day, +1 MaxHealth/year, +8 Regen/year." },
+        { "id": "food_premium", "category": "food", "tier": 3, "dailyCost": "12", "requirements": { "ageMin": 16 }, "effects": { "healthRegenPerYear": 16, "maxHealthPerYear": 2, "appearancePerYear": 1 }, "balanceNote": "Premium food: cost $12/day, +2 MaxHealth/year, +16 Regen/year." },
+        { "id": "food_spirit", "category": "food", "tier": 4, "dailyCost": "30", "requirements": { "ageMin": 16, "spiritualRoot": 10 }, "effects": { "healthRegenPerYear": 35, "maxHealthPerYear": 3, "qiPerYear": "5" }, "balanceNote": "Spirit food: cost $30/day, +3 MaxHealth/year, +35 Regen/year, +5 Qi/year." }
       ]
     },
     {
       "id": "housing",
       "options": [
-        { "id": "housing_none", "category": "housing", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {} },
-        { "id": "housing_shelter", "category": "housing", "tier": 1, "dailyCost": "1", "requirements": { "ageMin": 10 }, "effects": { "healthRegenPerYear": 5 } },
-        { "id": "housing_room", "category": "housing", "tier": 2, "dailyCost": "4", "requirements": { "ageMin": 15 }, "effects": { "healthRegenPerYear": 15, "maxHealthPerYear": 1 } },
-        { "id": "housing_apartment", "category": "housing", "tier": 3, "dailyCost": "10", "requirements": { "ageMin": 18 }, "effects": { "healthRegenPerYear": 35, "maxHealthPerYear": 2, "appearancePerYear": 1 } },
-        { "id": "housing_condo", "category": "housing", "tier": 4, "dailyCost": "25", "requirements": { "ageMin": 25 }, "effects": { "healthRegenPerYear": 70, "maxHealthPerYear": 5, "portalSuccessBps": 100 } }
+        { "id": "housing_none", "category": "housing", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {}, "balanceNote": "No housing." },
+        { "id": "housing_shelter", "category": "housing", "tier": 1, "dailyCost": "1", "requirements": { "ageMin": 10 }, "effects": { "healthRegenPerYear": 2 }, "balanceNote": "Shelter: cost $1/day, +2 Regen/year." },
+        { "id": "housing_room", "category": "housing", "tier": 2, "dailyCost": "4", "requirements": { "ageMin": 15 }, "effects": { "healthRegenPerYear": 5, "maxHealthPerYear": 1 }, "balanceNote": "Room: cost $4/day, +1 MaxHealth/year, +5 Regen/year." },
+        { "id": "housing_apartment", "category": "housing", "tier": 3, "dailyCost": "10", "requirements": { "ageMin": 18 }, "effects": { "healthRegenPerYear": 10, "maxHealthPerYear": 2, "appearancePerYear": 1 }, "balanceNote": "Apartment: cost $10/day, +2 MaxHealth/year, +10 Regen/year." },
+        { "id": "housing_condo", "category": "housing", "tier": 4, "dailyCost": "25", "requirements": { "ageMin": 25 }, "effects": { "healthRegenPerYear": 20, "maxHealthPerYear": 3, "portalSuccessBps": 100 }, "balanceNote": "Condo: cost $25/day, +3 MaxHealth/year, +20 Regen/year, +1% portal success." }
       ]
     },
     {
       "id": "portal",
       "options": [
-        { "id": "portal_none", "category": "portal", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {} },
+        { "id": "portal_none", "category": "portal", "tier": 0, "dailyCost": "0", "requirements": {}, "effects": {}, "balanceNote": "No portals." },
         {
           "id": "portal_subway",
           "category": "portal",
@@ -52,14 +52,15 @@
           "requirements": { "ageMin": 16, "healthMin": 40 },
           "effects": {},
           "portal": {
-            "attemptCost": "50",
-            "successBaseBps": 7500,
-            "moneyMin": "800",
-            "moneyMax": "2000",
-            "qiMin": "10",
-            "qiMax": "30",
-            "failDamage": 10
-          }
+            "attemptCost": "80",
+            "successBaseBps": 6000,
+            "moneyMin": "400",
+            "moneyMax": "1000",
+            "qiMin": "3",
+            "qiMax": "8",
+            "failDamage": 8
+          },
+          "balanceNote": "Subway portal: attempt $80, 60% base success, reward $400-$1000 and 3-8 Qi, fail damage 8."
         },
         {
           "id": "portal_market",
@@ -69,14 +70,15 @@
           "requirements": { "ageMin": 18, "healthMin": 60, "stage": "qi_condensation_1" },
           "effects": {},
           "portal": {
-            "attemptCost": "150",
-            "successBaseBps": 6500,
-            "moneyMin": "3000",
-            "moneyMax": "8000",
-            "qiMin": "30",
-            "qiMax": "80",
-            "failDamage": 15
-          }
+            "attemptCost": "300",
+            "successBaseBps": 5200,
+            "moneyMin": "2000",
+            "moneyMax": "5000",
+            "qiMin": "15",
+            "qiMax": "40",
+            "failDamage": 14
+          },
+          "balanceNote": "Market portal: attempt $300, 52% base success, reward $2k-$5k and 15-40 Qi, fail damage 14."
         },
         {
           "id": "portal_club",
@@ -86,14 +88,15 @@
           "requirements": { "ageMin": 21, "healthMin": 80, "spiritualRoot": 10, "stage": "qi_condensation_3" },
           "effects": {},
           "portal": {
-            "attemptCost": "500",
-            "successBaseBps": 6000,
-            "moneyMin": "12000",
-            "moneyMax": "30000",
-            "qiMin": "100",
-            "qiMax": "250",
-            "failDamage": 25
-          }
+            "attemptCost": "1200",
+            "successBaseBps": 4800,
+            "moneyMin": "9000",
+            "moneyMax": "22000",
+            "qiMin": "70",
+            "qiMax": "160",
+            "failDamage": 24
+          },
+          "balanceNote": "Club portal: attempt $1200, 48% base success, reward $9k-$22k and 70-160 Qi, fail damage 24."
         },
         {
           "id": "portal_tower",
@@ -103,14 +106,15 @@
           "requirements": { "ageMin": 30, "healthMin": 120, "stage": "foundation_1" },
           "effects": {},
           "portal": {
-            "attemptCost": "2000",
-            "successBaseBps": 5500,
-            "moneyMin": "60000",
-            "moneyMax": "150000",
-            "qiMin": "500",
-            "qiMax": "1200",
-            "failDamage": 40
-          }
+            "attemptCost": "4000",
+            "successBaseBps": 4200,
+            "moneyMin": "50000",
+            "moneyMax": "120000",
+            "qiMin": "400",
+            "qiMax": "900",
+            "failDamage": 45
+          },
+          "balanceNote": "Tower portal: attempt $4000, 42% base success, reward $50k-$120k and 400-900 Qi, fail damage 45."
         }
       ]
     }

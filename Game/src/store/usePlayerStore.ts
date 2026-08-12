@@ -7,7 +7,7 @@ import { useInventoryStore } from './useInventoryStore';
 import { useTechniquesStore } from './useTechniquesStore';
 import { useLifestyleStore } from './useLifestyleStore';
 import { getRandomInt, safeBigInt } from '../utils/helpers';
-import { getKarmaTotalEffects } from '../utils/gameplayUtils';
+import { getBodyTemperCost, getKarmaTotalEffects } from '../utils/gameplayUtils';
 import { getCurseById, rollRebirthReport } from '../utils/rebirthUtils';
 
 interface PlayerEffects {
@@ -37,6 +37,9 @@ interface PlayerState {
   hasHydrated: boolean;
   hasCultivatorPass: boolean;
   lastInterstitialTime: number;
+  interstitialShownThisLife: boolean;
+  bodyTempering: number;
+  lastBodyTemperAge: number;
   activeCurses: string[];
   lastDeathCause: DeathCause;
   lastRebirthReport: RebirthReport | null;
@@ -45,6 +48,7 @@ interface PlayerState {
   setCultivationStage: (stage: string) => void;
   setCultivatorPass: (status: boolean) => void;
   setLastInterstitialTime: (time: number) => void;
+  setInterstitialShownThisLife: (status: boolean) => void;
   setDeathCause: (cause: DeathCause) => void;
   clearRebirthReport: () => void;
   normalizeHealth: () => void;
@@ -53,6 +57,7 @@ interface PlayerState {
   deductQi: (amount: string) => void;
   deductKarma: (amount: string) => void;
   applyEffects: (effects: PlayerEffects) => void;
+  temperBody: () => boolean;
   reincarnate: () => void;
   resetPlayer: () => void;
 }
@@ -73,6 +78,9 @@ const initialState = {
   activityFocus: 'mundane' as 'mundane' | 'secret',
   hasCultivatorPass: false,
   lastInterstitialTime: 0,
+  interstitialShownThisLife: false,
+  bodyTempering: 0,
+  lastBodyTemperAge: -1,
   activeCurses: [] as string[],
   lastDeathCause: 'none' as DeathCause,
   lastRebirthReport: null as RebirthReport | null,
@@ -80,7 +88,7 @@ const initialState = {
 
 export const usePlayerStore = create<PlayerState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       hasHydrated: false,
       setHasHydrated: (state) => set({ hasHydrated: state }),
@@ -88,36 +96,44 @@ export const usePlayerStore = create<PlayerState>()(
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
       setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
       setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
+      setInterstitialShownThisLife: (status) => set({ interstitialShownThisLife: status }),
       setDeathCause: (cause) => set({ lastDeathCause: cause }),
       clearRebirthReport: () => set({ lastRebirthReport: null }),
       normalizeHealth: () =>
         set((state) => {
           let maxHealth = state.maxHealth;
           let health = state.health;
-
           if (!Number.isFinite(maxHealth) || 1 > maxHealth) {
             maxHealth = Math.max(100, health, 1);
           }
-
           if (!Number.isFinite(health) || 0 > health) {
             health = 0;
           }
-
           if (health > maxHealth) {
             maxHealth = health;
           }
-
           const curses = Array.isArray(state.activeCurses) ? state.activeCurses : [];
           const deathCause = state.lastDeathCause || 'none';
-
-          return { health, maxHealth, activeCurses: curses, lastDeathCause: deathCause };
+          const bodyTempering = Number.isFinite(state.bodyTempering) ? state.bodyTempering : 0;
+          const lastBodyTemperAge = Number.isFinite(state.lastBodyTemperAge)
+            ? state.lastBodyTemperAge
+            : -1;
+          const interstitialShownThisLife = !!state.interstitialShownThisLife;
+          return {
+            health,
+            maxHealth,
+            activeCurses: curses,
+            lastDeathCause: deathCause,
+            bodyTempering,
+            lastBodyTemperAge,
+            interstitialShownThisLife,
+          };
         }),
       growOlder: () =>
         set((state) => {
           if (state.isDead) {
             return state;
           }
-
           return { age: state.age + 1 };
         }),
       addQi: (amount) =>
@@ -125,7 +141,6 @@ export const usePlayerStore = create<PlayerState>()(
           if (state.isDead) {
             return state;
           }
-
           const current = BigInt(state.qi);
           const add = BigInt(amount);
           return { qi: (current + add).toString() };
@@ -135,7 +150,6 @@ export const usePlayerStore = create<PlayerState>()(
           if (state.isDead) {
             return state;
           }
-
           const current = BigInt(state.qi);
           const deduct = BigInt(amount);
           const result = current - deduct;
@@ -153,123 +167,125 @@ export const usePlayerStore = create<PlayerState>()(
           if (state.isDead) {
             return state;
           }
-
           const newState: Partial<PlayerState> = {};
-
           let maxHealth = state.maxHealth;
-
           if (effects.maxHealth !== undefined) {
             maxHealth = Math.max(1, Math.min(GameConstants.MAX_HEALTH_CAP, maxHealth + effects.maxHealth));
           }
-
           let health = state.health;
-
           if (effects.health !== undefined) {
             health += effects.health;
           }
-
           health = Math.max(0, Math.min(maxHealth, health));
-
           newState.maxHealth = maxHealth;
           newState.health = health;
-
           if (effects.intelligence !== undefined) {
             newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
           }
-
           if (effects.appearance !== undefined) {
-            newState.appearance = Math.max(0, Math.min(GameConstants.APPEARANCE_CAP, state.appearance + effects.appearance));
+            newState.appearance = Math.max(
+              0,
+              Math.min(GameConstants.APPEARANCE_CAP, state.appearance + effects.appearance)
+            );
           }
-
           if (effects.karma !== undefined) {
             const currentKarma = BigInt(state.karma);
             const addKarma = BigInt(effects.karma);
             const resultKarma = currentKarma + addKarma;
             newState.karma = 0n > resultKarma ? '0' : resultKarma.toString();
           }
-
           if (effects.money !== undefined) {
             const currentMoney = BigInt(state.money);
             const addMoney = BigInt(effects.money);
             const resultMoney = currentMoney + addMoney;
             newState.money = 0n > resultMoney ? '0' : resultMoney.toString();
           }
-
           if (effects.qi !== undefined) {
             const currentQi = BigInt(state.qi);
             const addQi = BigInt(effects.qi);
             const resultQi = currentQi + addQi;
             newState.qi = 0n > resultQi ? '0' : resultQi.toString();
           }
-
           if (newState.health !== undefined && 0 === newState.health) {
             newState.isDead = true;
-
             const currentAge = BigInt(state.age);
             const finalMoney = BigInt(newState.money !== undefined ? newState.money : state.money);
             const finalQi = BigInt(newState.qi !== undefined ? newState.qi : state.qi);
-
             const ageKarma = currentAge * GameConstants.KARMA_RATES.AGE_MULTIPLIER;
             const moneyKarma = finalMoney / GameConstants.KARMA_RATES.MONEY_DIVISOR;
             const qiKarma = finalQi / GameConstants.KARMA_RATES.QI_DIVISOR;
             const earnedKarma = ageKarma + moneyKarma + qiKarma;
-
             newState.lastLifeKarmaEarned = earnedKarma.toString();
-
             const existingKarma = BigInt(newState.karma !== undefined ? newState.karma : state.karma);
             newState.karma = (existingKarma + earnedKarma).toString();
           }
-
           return newState;
         }),
+      temperBody: () => {
+        const state = get();
+        if (state.isDead) {
+          return false;
+        }
+        if (state.age < GameConstants.BODY_TEMPERING.MIN_AGE) {
+          return false;
+        }
+        if (state.lastBodyTemperAge === state.age) {
+          return false;
+        }
+        const cost = getBodyTemperCost(state.bodyTempering);
+        if (safeBigInt(state.qi) < cost) {
+          return false;
+        }
+        const nextBodyTempering = state.bodyTempering + 1;
+        set({
+          qi: (safeBigInt(state.qi) - cost).toString(),
+          bodyTempering: nextBodyTempering,
+          lastBodyTemperAge: state.age,
+        });
+        get().applyEffects({
+          maxHealth: GameConstants.BODY_TEMPERING.MAX_HEALTH_PER_LEVEL,
+          health: 2,
+        });
+        return true;
+      },
       reincarnate: () => {
         const inventory = useInventoryStore.getState().items;
         const karmaEffects = getKarmaTotalEffects(inventory);
-
         useTechniquesStore.getState().resetTechniques();
         useLifestyleStore.getState().resetLifestyle();
-
         set((state) => {
           const { STARTING_STATS } = GameConstants;
           const report = rollRebirthReport(state.lastDeathCause || 'none');
-
           let startIntelligencePenalty = 0;
           let startAppearancePenalty = 0;
-
           (report.curses || []).forEach((curseId) => {
             const curse = getCurseById(curseId);
-
             if (!curse) {
               return;
             }
-
             if (curse.startIntelligence) {
               startIntelligencePenalty += curse.startIntelligence;
             }
-
             if (curse.startAppearance) {
               startAppearancePenalty += curse.startAppearance;
             }
           });
-
+          const startBodyTempering = karmaEffects.startBodyTempering || 0;
+          const bodyMaxHealth =
+            startBodyTempering * GameConstants.BODY_TEMPERING.MAX_HEALTH_PER_LEVEL;
           const baseHealth = getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX);
           const totalMaxHealth = Math.min(
             GameConstants.MAX_HEALTH_CAP,
-            baseHealth + karmaEffects.startMaxHealth
+            baseHealth + karmaEffects.startMaxHealth + bodyMaxHealth
           );
-
           const currentHealth = Math.max(
             1,
             Math.floor((totalMaxHealth * report.healthStartBps) / 10000)
           );
-
           const baseMoney =
             BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
             safeBigInt(karmaEffects.startMoney);
-
-          const finalMoney =
-            (baseMoney * BigInt(10000 - report.moneyPenaltyBps)) / 10000n;
-
+          const finalMoney = (baseMoney * BigInt(10000 - report.moneyPenaltyBps)) / 10000n;
           return {
             isDead: false,
             age: 0,
@@ -280,15 +296,20 @@ export const usePlayerStore = create<PlayerState>()(
             activityFocus: 'mundane' as 'mundane' | 'secret',
             hasCultivatorPass: state.hasCultivatorPass,
             lastInterstitialTime: state.lastInterstitialTime,
+            interstitialShownThisLife: false,
+            bodyTempering: startBodyTempering,
+            lastBodyTemperAge: -1,
             health: currentHealth,
             maxHealth: totalMaxHealth,
             intelligence: Math.max(
               1,
-              getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX) + startIntelligencePenalty
+              getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX) +
+                startIntelligencePenalty
             ),
             appearance: Math.max(
               1,
-              getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX) + startAppearancePenalty
+              getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX) +
+                startAppearancePenalty
             ),
             money: finalMoney.toString(),
             spiritualRoot:

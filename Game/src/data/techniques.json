@@ -8,9 +8,10 @@
     "requiredIntelligence": 0,
     "requiredStage": "",
     "effectsPerLevel": {
-      "qiGainBps": 800,
-      "breakthroughChanceBps": 100
-    }
+      "qiFlatPerYear": 20,
+      "breakthroughChanceBps": 50
+    },
+    "balanceNote": "Hidden Dragon Breathing: +20 Qi/year and +0.5% breakthrough chance per level."
   },
   {
     "id": "technique_iron_meridian",
@@ -21,9 +22,10 @@
     "requiredIntelligence": 0,
     "requiredStage": "",
     "effectsPerLevel": {
-      "healthRegenBps": 600,
-      "damageReductionBps": 300
-    }
+      "healthRegenFlat": 3,
+      "damageReductionBps": 150
+    },
+    "balanceNote": "Iron Meridians: +3 Health Regen/year and +1.5% damage reduction per level."
   },
   {
     "id": "technique_jade_ledger",
@@ -34,10 +36,10 @@
     "requiredIntelligence": 12,
     "requiredStage": "",
     "effectsPerLevel": {
-      "moneyGainBps": 500,
-      "jobIncomeBps": 700,
-      "portalSuccessBps": 100
-    }
+      "moneyFlatPerYear": 150,
+      "portalSuccessBps": 50
+    },
+    "balanceNote": "Jade Ledger: +$150/year and +0.5% portal success per level."
   },
   {
     "id": "technique_spirit_sense",
@@ -48,9 +50,10 @@
     "requiredIntelligence": 0,
     "requiredStage": "qi_condensation_2",
     "effectsPerLevel": {
-      "qiGainBps": 600,
-      "breakthroughChanceBps": 100,
-      "portalSuccessBps": 100
-    }
+      "qiFlatPerYear": 15,
+      "breakthroughChanceBps": 50,
+      "portalSuccessBps": 50
+    },
+    "balanceNote": "Spirit Sense: +15 Qi/year, +0.5% breakthrough, +0.5% portal success per level."
   }
 ]

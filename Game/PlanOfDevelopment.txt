@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 18 (Добавлен счётчик пропущенных уведомлений на кнопку уведомлений в LifeScreen рядом с языком)
+[СТАТУС]: ШАГ 19 (Полный ребаланс core-loop: абсолютные значения вместо процентного разгона, возрастная/стадийная смертность, Body Tempering, реклама после реинкарнации на 1 году жизни)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -101,6 +101,14 @@
 === Фаза 14: Notification UX ===
 71. [X] Счётчик пропущенных уведомлений: missedCount в useNotificationStore и badge-кнопка рядом с языком в LifeScreen.
 
+=== Фаза 15: Полный ребаланс и Закалка тела ===
+72. [X] Убран процентный разгон дохода/Ци: работа, lifestyle, порталы, offline и события переведены на абсолютные значения и плоские бонусы.
+73. [X] Добавлена возрастная и стадийная смертность: дети и смертные уязвимее, культиваторы устойчивее, бессмертные не умирают от возраста.
+74. [X] Добавлен Body Tempering: вторая кнопка в Дао, тратит Ци, снижает болезни, смертность, урон от бедности, порталов и прорывов.
+75. [X] Изменена реклама: interstitial показывается после реинкарнации на 1 году жизни, а не по 70-секундному таймеру.
+76. [X] Обновлены стадии, техники, карма-баффы, проклятия, события и lifestyle под новый баланс.
+77. [X] Добавлены balanceNote-описания для стадий, работ, порталов, техник, карма-баффов и проклятий.
+
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/
 ├── DataForAI.txt                       // Выученные уроки по крашам Hermes и навигации
@@ -115,51 +123,51 @@ Game/
     │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
     │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
     ├── constants/
-    │   ├── GameConstants.ts             // Лимиты, кулдауны, EVENT_* таблицы, NOTIFICATION_* константы и missed badge
+    │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы
     │   └── Theme.ts                     // Темная тема
     ├── data/
     │   ├── events.json                  // Legacy-события (fallback/архив)
     │   ├── eventRules.json              // Правила генератора событий
     │   ├── rebirthPenalties.json        // Последствия смерти: деньги, здоровье, проклятия
     │   ├── items.json                   // Многоуровневые карма-баффы
-    │   ├── stages.json                  // Стадии культивации, maxAge/softAge, требования Ци
+    │   ├── stages.json                  // Стадии культивации, med/mortality/survival/breakthrough данные
     │   ├── sects.json                   // Шаблоны сект
     │   ├── rankings.json                // Seed-рейтинг
     │   ├── techniques.json              // Техники Дао
     │   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы
     ├── hooks/
-    │   ├── useIdleProgress.ts           // Offline-прогресс с балансом и модами
-    │   ├── useBreakthrough.ts           // Прорывы, причина смерти breakthrough, локали стадий
-    │   └── useYearlyCycle.ts            // Годовой цикл: survival, подписки, порталы, события (try/catch)
+    │   ├── useIdleProgress.ts           // Offline-прогресс без процентного разгона
+    │   ├── useBreakthrough.ts           // Прорывы с body tempering и новыми капами
+    │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, события
     ├── navigation/
     │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store/Sect (без Log)
     ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала (LogScreen onClose), кнопка пропущенных уведомлений рядом с языком, rebirth report, без navigate Log
-    │   ├── DaoScreen.tsx                // Путь Дао, техники, закреплённая кнопка прорыва
+    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB
+    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering
     │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы
     │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями
     │   ├── SectScreen.tsx               // Секта и рейтинг
     │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
     ├── store/
     │   ├── mmkvStorage.ts               // MMKV storage
-    │   ├── usePlayerStore.ts            // Игрок, current/max health, смерть, activeCurses, rebirth report
+    │   ├── usePlayerStore.ts            // Игрок, bodyTempering, interstitialShownThisLife, смерть
     │   ├── useEventStore.ts             // Журнал, addGeneratedLog
     │   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
     │   ├── useLocaleStore.ts            // Язык
     │   ├── useSocialStore.ts            // Секты
-    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount, pushGeneratedEventNotification
+    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount
     │   ├── useTechniquesStore.ts        // Уровни техник Дао
     │   └── useLifestyleStore.ts         // Выбранные активности
     ├── types/
-    │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport и т.д.
+    │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport, ModifierSet и т.д.
     ├── utils/
     │   ├── notificationUtils.ts         // Резолвинг уведомлений и логов по ключам/параметрам
     │   ├── timeUtils.ts                 // Дельта времени
     │   ├── helpers.ts                   // Форматирование, BigInt, random, bps
     │   ├── stageUtils.ts                // Локализованные имена стадий
     │   ├── rebirthUtils.ts              // Последствия смерти и проклятия
-    │   ├── eventGenerator.ts            // Генератор событий (защищённый tableNumber)
-    │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, старения, порталов
+    │   ├── eventGenerator.ts            // Генератор событий с body resistance
+    │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality
     └── locales/
         ├── ru/
         │   ├── ui.json                  // Базовые тексты UI

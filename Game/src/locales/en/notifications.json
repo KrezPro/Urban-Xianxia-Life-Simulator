@@ -12,6 +12,7 @@
   "breakthrough_fail_death": "Critical failure! Heavenly Tribulation destroyed you.",
   "breakthrough_saved": "Breakthrough failed, but ad buff protected your meridians.",
   "old_age_death": "Your lifespan has ended. Your body could not bear the weight of years.",
+  "age_mortality": "Your body could not survive illness and hardship.",
   "survival_unpaid": "You did not have enough money for basic needs. Your health suffered.",
   "lifestyle_disabled_no_money": "Not enough money or requirements. Some activities were disabled.",
   "portal_success": "Portal cleared! Reward: ${money}, Qi: {qi}.",
@@ -22,5 +23,6 @@
   "store_upgrade_error": "Not enough karma to upgrade.",
   "store_buy_success": "Purchased: {name}.",
   "store_buy_error": "Not enough karma to purchase.",
-  "store_pass_activated": "Cultivator Pass activated. Ads disabled."
+  "store_pass_activated": "Cultivator Pass activated. Ads disabled.",
+  "body_temper_success": "Body Tempering improved to level {level}."
 }

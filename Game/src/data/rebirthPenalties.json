@@ -70,42 +70,50 @@
     {
       "id": "curse_minor_hunger",
       "severity": "minor",
-      "modifiers": { "moneyGainBps": -300 }
+      "modifiers": { "moneyFlatPerYear": -300 },
+      "balanceNote": "Hungry Shadow: -$300/year."
     },
     {
       "id": "curse_minor_frail",
       "severity": "minor",
-      "modifiers": { "healthRegenBps": -500 }
+      "modifiers": { "healthRegenFlat": -2 },
+      "balanceNote": "Frail Body: -2 Health Regen/year."
     },
     {
       "id": "curse_minor_fog",
       "severity": "minor",
-      "startIntelligence": -3
+      "startIntelligence": -3,
+      "balanceNote": "Foggy Mind: -3 Intelligence at birth."
     },
     {
       "id": "curse_minor_rough_skin",
       "severity": "minor",
-      "startAppearance": -3
+      "startAppearance": -3,
+      "balanceNote": "Rough Skin: -3 Appearance at birth."
     },
     {
       "id": "curse_major_debt",
       "severity": "major",
-      "modifiers": { "moneyGainBps": -1000 }
+      "modifiers": { "moneyFlatPerYear": -1200 },
+      "balanceNote": "Debt of Past Life: -$1200/year."
     },
     {
       "id": "curse_major_cracked_meridians",
       "severity": "major",
-      "modifiers": { "qiGainBps": -1200 }
+      "modifiers": { "qiFlatPerYear": -30 },
+      "balanceNote": "Cracked Meridians: -30 Qi/year."
     },
     {
       "id": "curse_major_heaven_mark",
       "severity": "major",
-      "modifiers": { "breakthroughChanceBps": -700, "portalSuccessBps": -700 }
+      "modifiers": { "breakthroughChanceBps": -700, "portalSuccessBps": -700 },
+      "balanceNote": "Mark of Heaven: -7% breakthrough and portal success."
     },
     {
       "id": "curse_major_sickly",
       "severity": "major",
-      "modifiers": { "healthRegenBps": -1200 }
+      "modifiers": { "healthRegenFlat": -5 },
+      "balanceNote": "Sickly Body: -5 Health Regen/year."
     }
   ]
 }

@@ -14,34 +14,18 @@ import {
   getKarmaTotalEffects,
   processLifestyleYear,
   calculateOldAgeDeathBps,
+  calculateAgeStageDeathBps,
+  getSurvivalCost,
+  calculateUnpaidSurvivalDamage,
+  calculateMeditationQi,
 } from '../utils/gameplayUtils';
 import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
-import { increaseBigIntByBps, getRandomInt, safeBigInt } from '../utils/helpers';
+import { getRandomInt, safeBigInt } from '../utils/helpers';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
 import ruNotifications from '../locales/ru/notifications.json';
 import enNotifications from '../locales/en/notifications.json';
-
-const getSurvivalCost = (age: number): bigint => {
-  if (age < 3) {
-    return 0n;
-  }
-
-  if (age < 12) {
-    return 30n;
-  }
-
-  if (age < 18) {
-    return 80n;
-  }
-
-  if (age < 65) {
-    return 150n;
-  }
-
-  return 250n;
-};
 
 const buildFallbackEvent = (pool: 'mundane' | 'secret'): GeneratedEvent => ({
   id: 'fallback_year',
@@ -61,36 +45,50 @@ export const useYearlyCycle = () => {
   const { addLog, addGeneratedLog } = useEventStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-  const pushGeneratedEventNotification = useNotificationStore((state) => state.pushGeneratedEventNotification);
+  const pushGeneratedEventNotification = useNotificationStore(
+    (state) => state.pushGeneratedEventNotification
+  );
   const techniques = useTechniquesStore();
   const inventory = useInventoryStore();
   const lifestyle = useLifestyleStore();
-
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const notifications: any = locale === 'ru' ? ruNotifications : enNotifications;
 
   const handleGrowOlder = useCallback(() => {
     let current = usePlayerStore.getState();
-
     if (current.isDead) {
       return;
-    }
-
-    const now = Date.now();
-
-    if (!current.hasCultivatorPass) {
-      if (now - current.lastInterstitialTime > GameConstants.AD_INTERSTITIAL_COOLDOWN_MS) {
-        current.setLastInterstitialTime(now);
-        addLog(ui.interstitial_log, 'system');
-        pushUiNotification('interstitial', 'system');
-      }
     }
 
     current.growOlder();
     current = usePlayerStore.getState();
 
-    const oldAgeDeathBps = calculateOldAgeDeathBps(current.age, current.cultivationStage);
+    if (
+      current.age === GameConstants.AD_POLICY.FIRST_AGE_AFTER_REBIRTH &&
+      !current.hasCultivatorPass &&
+      !current.interstitialShownThisLife
+    ) {
+      current.setInterstitialShownThisLife(true);
+      addLog(ui.interstitial_log, 'system');
+      pushUiNotification('interstitial', 'system');
+    }
 
+    const ageStageDeathBps = calculateAgeStageDeathBps(
+      current.age,
+      current.cultivationStage,
+      current.health,
+      current.maxHealth,
+      current.bodyTempering
+    );
+    if (ageStageDeathBps > 0 && getRandomInt(0, 9999) < ageStageDeathBps) {
+      addLog(notifications.age_mortality, 'system');
+      pushUiNotification('age_mortality', 'danger');
+      current.setDeathCause('health');
+      current.applyEffects({ health: -current.health });
+      return;
+    }
+
+    const oldAgeDeathBps = calculateOldAgeDeathBps(current.age, current.cultivationStage);
     if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
       addLog(notifications.old_age_death, 'system');
       pushUiNotification('old_age_death', 'danger');
@@ -99,39 +97,31 @@ export const useYearlyCycle = () => {
       return;
     }
 
-    const survivalCost = getSurvivalCost(current.age);
-
+    const survivalCost = getSurvivalCost(current.age, current.cultivationStage);
     if (survivalCost > 0n) {
       const money = safeBigInt(current.money);
-
       if (money >= survivalCost) {
         current.applyEffects({ money: (-survivalCost).toString() });
         current = usePlayerStore.getState();
       } else {
         const unpaid = survivalCost - money;
-
         if (money > 0n) {
           current.applyEffects({ money: (-money).toString() });
           current = usePlayerStore.getState();
         }
-
         const unpaidBps = Number((unpaid * 10000n) / survivalCost);
-        const damageBps = Math.floor((800 * unpaidBps) / 10000);
-        let damage = Math.max(1, Math.floor((current.maxHealth * damageBps) / 10000));
-
-        if (current.age < 12) {
-          damage += 1;
-        }
-
+        const damage = calculateUnpaidSurvivalDamage(
+          unpaidBps,
+          current.age,
+          current.maxHealth,
+          current.bodyTempering
+        );
         current.applyEffects({ health: -damage });
         current = usePlayerStore.getState();
-
         addLog(notifications.survival_unpaid, 'system');
-
         if (unpaidBps >= 5000) {
           pushUiNotification('survival_unpaid', 'danger');
         }
-
         if (current.isDead) {
           current.setDeathCause('health');
           return;
@@ -156,6 +146,7 @@ export const useYearlyCycle = () => {
         spiritualRoot: current.spiritualRoot,
         cultivationStage: current.cultivationStage,
         age: current.age,
+        bodyTempering: current.bodyTempering,
       },
       lifestyle.selected,
       baseModifiers
@@ -173,7 +164,6 @@ export const useYearlyCycle = () => {
         health: report.healthDelta,
       });
       current = usePlayerStore.getState();
-
       if (current.isDead) {
         if (report.portalResult === 'fail') {
           current.setDeathCause('portal');
@@ -205,7 +195,6 @@ export const useYearlyCycle = () => {
         qi: report.portalQi,
       });
     }
-
     if (report.portalResult === 'fail') {
       pushUiNotification('portal_fail', 'danger', {
         damage: report.portalDamage.toString(),
@@ -217,12 +206,15 @@ export const useYearlyCycle = () => {
     }
 
     if (current.activityFocus === 'secret') {
-      const baseQi = current.spiritualRoot * GameConstants.MEDITATION_QI_MULTIPLIER;
-      const qiGain = Number(increaseBigIntByBps(baseQi.toString(), baseModifiers.qiGainBps));
-
-      current.addQi(qiGain.toString());
+      const qiGain = calculateMeditationQi(
+        {
+          spiritualRoot: current.spiritualRoot,
+          cultivationStage: current.cultivationStage,
+        },
+        baseModifiers
+      );
+      current.addQi(qiGain);
       current = usePlayerStore.getState();
-
       addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
     }
 
@@ -231,7 +223,6 @@ export const useYearlyCycle = () => {
     }
 
     let generatedEvent: GeneratedEvent;
-
     try {
       generatedEvent = generateYearEvent({
         age: current.age,
@@ -247,6 +238,7 @@ export const useYearlyCycle = () => {
           intelligence: current.intelligence,
           appearance: current.appearance,
           spiritualRoot: current.spiritualRoot,
+          bodyTempering: current.bodyTempering,
         },
         modifiers: baseModifiers,
       });
@@ -256,11 +248,8 @@ export const useYearlyCycle = () => {
 
     addGeneratedLog(generatedEvent);
     pushGeneratedEventNotification(generatedEvent);
-
     current.applyEffects(generatedEvent.effects);
-
     const afterEvent = usePlayerStore.getState();
-
     if (afterEvent.isDead) {
       afterEvent.setDeathCause('event');
     }

@@ -54,7 +54,7 @@
     "karma_earned_last_life": "Legacy earned (Karma):",
     "meditation_log": "A year passed in secret meditation. Gathered {amount} Qi energy.",
     "age_log": "You turned {age}.",
-    "interstitial_log": "[AD] Interstitial ad shown (70s cooldown).",
+    "interstitial_log": "[AD] Interstitial ad shown after reincarnation at age 1.",
     "hints": {
       "close": "Got it",
       "intelligence": {
@@ -109,15 +109,15 @@
     "items": {
       "buff_rich_family": {
         "name": "Rich Family",
-        "desc": "Upon each reincarnation, you will be born with an extra $5000."
+        "desc": "Each reincarnation starts with extra money and a small yearly income bonus."
       },
       "buff_strong_meridians": {
         "name": "Strong Meridians",
-        "desc": "Your meridian walls are fortified. Base health is increased by 50."
+        "desc": "Strengthens the body: more Max Health, regen and damage reduction."
       },
       "buff_pure_root": {
         "name": "Pure Root",
-        "desc": "Your spiritual root is naturally more receptive to Qi (+5 pts)."
+        "desc": "Improves Spiritual Root and gives flat Qi gain per year."
       }
     }
   },
@@ -133,10 +133,18 @@
     "btn_no_qi": "Insufficient Qi",
     "max_stage": "You have reached the peak of cultivation. The Heavens no longer bind you.",
     "dead_text": "The dead cannot cultivate.",
-    "btn_ad_buff": "Watch Ad (+15% & Protection)",
+    "btn_ad_buff": "Watch Ad (+10% & Protection)",
     "btn_ad_watched": "Buff Active",
     "alert_ad_title": "Advertisement",
     "alert_ad_msg": "Video watched! You received a buff for the next breakthrough.",
+    "body_title": "Body Tempering",
+    "body_level": "Level",
+    "body_cost": "Cost",
+    "body_button": "Temper Body",
+    "body_locked_age": "Your body is still too weak",
+    "body_locked_year": "Tempering available next year",
+    "body_locked_qi": "Not enough Qi",
+    "body_effect_line": "+{maxHealth} Max Health, +{regen} Regen/year, illness resistance {resistance}%",
     "log_no_qi": "Insufficient Qi energy for breakthrough.",
     "log_success": "[SUCCESS] Breakthrough successful! You reached stage: {name}. Meridians expanded.",
     "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",

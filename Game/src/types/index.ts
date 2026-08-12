@@ -59,6 +59,7 @@ export interface IPlayer {
   karma: string;
   spiritualRoot: number;
   cultivationStage: string;
+  bodyTempering?: number;
 }
 
 export interface IEventLog {
@@ -144,6 +145,11 @@ export interface ModifierSet {
   damageReductionBps: number;
   portalSuccessBps: number;
   portalMoneyBps: number;
+  moneyFlatPerYear: number;
+  qiFlatPerYear: number;
+  healthRegenFlat: number;
+  maxHealthFlat: number;
+  illnessResistanceBps: number;
 }
 
 export interface LifestyleReport {
