@@ -5,8 +5,8 @@ import ruEvents from '../locales/ru/events.json';
 import enEvents from '../locales/en/events.json';
 import ruEventGenerator from '../locales/ru/eventGenerator.json';
 import enEventGenerator from '../locales/en/eventGenerator.json';
-import ruRebirth from '../locales/ru/rebirth.json';
-import enRebirth from '../locales/en/rebirth.json';
+
+const KEY_LIKE_PATTERN = /^[a-z0-9_]+(?:\.[a-z0-9_]+)+$/i;
 
 export const applyParams = (text: string, params?: Record<string, string>): string => {
   if (!params) {
@@ -28,7 +28,7 @@ const getDictionaryBase = (dictionary: string, locale: Locale): any => {
   }
 
   if (dictionary === 'rebirth') {
-    return locale === 'ru' ? ruRebirth : enRebirth;
+    return locale === 'ru' ? ruNotifications : enNotifications;
   }
 
   return locale === 'ru' ? ruNotifications : enNotifications;
@@ -69,6 +69,8 @@ const applyResolvedParams = (text: string, params: Record<string, string | numbe
 
       if (resolved !== undefined) {
         replacement = String(resolved);
+      } else if (KEY_LIKE_PATTERN.test(rawValue)) {
+        replacement = '';
       }
     }
 
@@ -78,33 +80,56 @@ const applyResolvedParams = (text: string, params: Record<string, string | numbe
   return result;
 };
 
-export const resolveLocalizedKey = (
+const localize = (
   locale: Locale,
   dictionary: string,
   key: string,
   params?: Record<string, string | number>
-): string => {
+): string | undefined => {
   const base = getDictionaryBase(dictionary, locale);
   const raw = resolvePath(base, key);
 
-  if (raw === undefined) {
-    return key;
+  if (raw === undefined || typeof raw !== 'string') {
+    return undefined;
   }
 
-  return applyResolvedParams(String(raw), params, base);
+  return applyResolvedParams(raw, params, base);
+};
+
+const getFallbackBody = (notification: INotification, locale: Locale): string => {
+  const base: any = locale === 'ru' ? ruEventGenerator : enEventGenerator;
+
+  if (notification.type === 'danger') {
+    return base.fallback?.danger || notification.messageKey;
+  }
+
+  if (notification.kind === 'generated' || notification.kind === 'event') {
+    return base.fallback?.event || notification.messageKey;
+  }
+
+  return base.fallback?.ui || notification.messageKey;
 };
 
 export const getNotificationTitle = (notification: INotification, locale: Locale): string => {
-  if (!notification.titleKey) {
-    return '';
+  if (notification.titleKey) {
+    const resolved = localize(locale, notification.dictionary || 'eventGenerator', notification.titleKey, notification.params);
+
+    if (resolved !== undefined) {
+      return resolved;
+    }
   }
 
-  return resolveLocalizedKey(locale, notification.dictionary || 'eventGenerator', notification.titleKey, notification.params);
+  const byType = localize(locale, 'eventGenerator', `notification_titles.${notification.type}`);
+  return byType || '';
 };
 
 export const getNotificationBody = (notification: INotification, locale: Locale): string => {
   if (notification.textKey) {
-    return resolveLocalizedKey(locale, notification.dictionary || 'eventGenerator', notification.textKey, notification.params);
+    const resolved = localize(locale, notification.dictionary || 'eventGenerator', notification.textKey, notification.params);
+
+    if (resolved !== undefined) {
+      return resolved;
+    }
   }
 
   if (notification.kind === 'event') {
@@ -112,12 +137,20 @@ export const getNotificationBody = (notification: INotification, locale: Locale)
     const pool = notification.eventPool || 'mundane';
     const list = events[pool] || [];
     const found = list.find((event: any) => event.id === notification.messageKey);
-    return found ? applyParams(found.text, notification.params) : notification.messageKey;
+
+    if (found) {
+      return applyParams(found.text, notification.params);
+    }
   }
 
   const dictionary: any = locale === 'ru' ? ruNotifications : enNotifications;
-  const raw = dictionary[notification.messageKey] || notification.messageKey;
-  return applyParams(raw, notification.params);
+  const raw = dictionary[notification.messageKey];
+
+  if (raw !== undefined) {
+    return applyParams(raw, notification.params);
+  }
+
+  return getFallbackBody(notification, locale);
 };
 
 export const getNotificationText = (notification: INotification, locale: Locale): string => {
@@ -126,7 +159,14 @@ export const getNotificationText = (notification: INotification, locale: Locale)
 
 export const getEventLogText = (log: IEventLog, locale: Locale): string => {
   if (log.generated && log.textKey) {
-    return resolveLocalizedKey(locale, 'eventGenerator', log.textKey, log.params);
+    const resolved = localize(locale, 'eventGenerator', log.textKey, log.params);
+
+    if (resolved !== undefined) {
+      return resolved;
+    }
+
+    const fallback: any = locale === 'ru' ? ruEventGenerator : enEventGenerator;
+    return fallback.fallback?.event || '';
   }
 
   return log.text || '';

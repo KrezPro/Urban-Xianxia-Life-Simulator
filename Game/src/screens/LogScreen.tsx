@@ -61,7 +61,7 @@ export default function LogScreen({ onClose }: LogScreenProps) {
         <FlashList
           data={logs}
           renderItem={({ item }) => <LogItem item={item} locale={locale} />}
-          estimatedItemSize={84}
+          estimatedItemSize={96}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<Text style={styles.emptyText}>{ui.log_screen.empty}</Text>}
         />

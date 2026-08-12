@@ -56,5 +56,3 @@ export const useEventStore = create<EventState>()(
     }
   )
 );
-
-export type { IEventLog };

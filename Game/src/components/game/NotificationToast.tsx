@@ -43,6 +43,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-14)).current;
   const leavingRef = useRef(false);
+  const timerRef = useRef<any>(null);
 
   const dismiss = () => {
     if (leavingRef.current) {
@@ -50,6 +51,11 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
     }
 
     leavingRef.current = true;
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
 
     Animated.parallel([
       Animated.timing(opacity, {
@@ -68,14 +74,6 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
   };
 
   useEffect(() => {
-    const expiresAt = notification.createdAt + notification.durationMs;
-    const remaining = expiresAt - Date.now();
-
-    if (0 >= remaining) {
-      onDismiss(notification.id);
-      return;
-    }
-
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
@@ -89,14 +87,17 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
       }),
     ]).start();
 
-    const timer = setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       dismiss();
-    }, remaining);
+    }, notification.durationMs);
 
     return () => {
-      clearTimeout(timer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
-  }, []);
+  }, [notification.id]);
 
   const iconName = iconByType[notification.type] || 'information-circle';
   const accent = notification.rarity
@@ -118,7 +119,7 @@ export const NotificationToast = ({ notification, onDismiss }: NotificationToast
       ]}
     >
       <TouchableOpacity activeOpacity={0.95} onPress={dismiss} style={styles.inner}>
-        <View style={[styles.iconBadge, { borderColor: accent }]}>
+        <View style={[styles.iconBadge, { borderColor: accent }]}> 
           <Ionicons name={iconName} size={18} color={accent} />
         </View>
 

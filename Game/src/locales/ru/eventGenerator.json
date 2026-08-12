@@ -8,6 +8,19 @@
     "qi": "Ци",
     "karma": "Карма"
   },
+  "notification_titles": {
+    "mundane": "Событие",
+    "secret": "Тайное событие",
+    "system": "Система",
+    "reward": "Награда",
+    "danger": "Опасность",
+    "social": "Социальное событие"
+  },
+  "fallback": {
+    "event": "Произошло событие.",
+    "ui": "Получено уведомление.",
+    "danger": "Что-то пошло не так."
+  },
   "titles": {
     "positive_common": "Удача",
     "positive_uncommon": "Хороший знак",
@@ -29,15 +42,46 @@
     "tmpl_scene": "{actor} {action} {place}. {outcome}",
     "tmpl_simple": "{outcome}"
   },
+  "actors_child": {
+    "classmate": "Одноклассник",
+    "teacher": "Учитель",
+    "parent": "Родитель",
+    "stray_dog": "Бродячий пёс",
+    "courtyard_boy": "Дворовый мальчишка"
+  },
+  "actions_child": {
+    "teases": "дразнит вас",
+    "helps": "помогает вам",
+    "invites": "зовёт вас",
+    "scares": "пугает вас",
+    "shares": "делится с вами"
+  },
+  "places_child": {
+    "schoolyard": "в школьном дворе",
+    "stairwell": "в подъезде",
+    "park": "в парке",
+    "classroom": "в классе",
+    "library": "в библиотеке"
+  },
+  "outcomes_child_positive": {
+    "friendship": "Появляется крепкая дружба.",
+    "small_joy": "Маленькая радость делает день теплее.",
+    "lesson": "Вы усваиваете важный урок."
+  },
+  "outcomes_child_negative": {
+    "fever": "Вы заболеваете лихорадкой.",
+    "fall": "Вы падаете и обдираете колени.",
+    "hunger": "Вы весь день ходите голодным.",
+    "bullying": "Вас травят во дворе.",
+    "fear": "Вас охватывает страх."
+  },
   "actors_mundane": {
     "boss": "Босс",
     "client": "Клиент",
     "neighbor": "Сосед",
     "stranger": "Незнакомец",
     "official": "Чиновник",
-    "teacher": "Учитель",
-    "doctor": "Врач",
-    "influencer": "Инфлюенсер"
+    "doctor": "Врач"
   },
   "actions_mundane": {
     "offers": "предлагает вам возможность",

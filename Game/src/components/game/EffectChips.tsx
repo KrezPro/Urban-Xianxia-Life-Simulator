@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Theme } from '../../constants/Theme';
-import { EffectChip, Locale } from '../../types';
+import { EffectChip } from '../../types';
 import { useLocaleStore } from '../../store/useLocaleStore';
 import { formatLargeNumber } from '../../utils/helpers';
 import ruEventGenerator from '../../locales/ru/eventGenerator.json';
@@ -9,15 +9,19 @@ import enEventGenerator from '../../locales/en/eventGenerator.json';
 
 interface EffectChipsProps {
   effects: EffectChip[];
+  maxVisible?: number;
 }
 
-export const EffectChips = ({ effects }: EffectChipsProps) => {
+export const EffectChips = ({ effects, maxVisible = 4 }: EffectChipsProps) => {
   const locale = useLocaleStore((state) => state.locale);
   const dictionary: any = locale === 'ru' ? ruEventGenerator : enEventGenerator;
 
-  if (!effects || !effects.length) {
+  if (!effects || 0 === effects.length) {
     return null;
   }
+
+  const visible = effects.slice(0, maxVisible);
+  const hidden = effects.length - visible.length;
 
   const getStatLabel = (stat: EffectChip['stat']): string => {
     return dictionary.stats?.[stat] || stat;
@@ -39,7 +43,7 @@ export const EffectChips = ({ effects }: EffectChipsProps) => {
 
   return (
     <View style={styles.row}>
-      {effects.map((effect, index) => (
+      {visible.map((effect, index) => (
         <View
           key={`${effect.stat}_${index.toString()}`}
           style={[
@@ -61,6 +65,12 @@ export const EffectChips = ({ effects }: EffectChipsProps) => {
           </Text>
         </View>
       ))}
+
+      {hidden > 0 ? (
+        <View style={[styles.chip, { borderColor: Theme.colors.textMuted }]}> 
+          <Text style={[styles.chipText, { color: Theme.colors.textMuted }]}>+{hidden}</Text>
+        </View>
+      ) : null}
     </View>
   );
 };

@@ -8,6 +8,19 @@
     "qi": "Qi",
     "karma": "Karma"
   },
+  "notification_titles": {
+    "mundane": "Event",
+    "secret": "Secret Event",
+    "system": "System",
+    "reward": "Reward",
+    "danger": "Danger",
+    "social": "Social Event"
+  },
+  "fallback": {
+    "event": "Something happened.",
+    "ui": "Notification received.",
+    "danger": "Something went wrong."
+  },
   "titles": {
     "positive_common": "Luck",
     "positive_uncommon": "Good Omen",
@@ -29,15 +42,46 @@
     "tmpl_scene": "{actor} {action} {place}. {outcome}",
     "tmpl_simple": "{outcome}"
   },
+  "actors_child": {
+    "classmate": "A classmate",
+    "teacher": "A teacher",
+    "parent": "A parent",
+    "stray_dog": "A stray dog",
+    "courtyard_boy": "A courtyard boy"
+  },
+  "actions_child": {
+    "teases": "teases you",
+    "helps": "helps you",
+    "invites": "invites you",
+    "scares": "scares you",
+    "shares": "shares with you"
+  },
+  "places_child": {
+    "schoolyard": "in the schoolyard",
+    "stairwell": "in the stairwell",
+    "park": "in the park",
+    "classroom": "in the classroom",
+    "library": "in the library"
+  },
+  "outcomes_child_positive": {
+    "friendship": "A strong friendship begins.",
+    "small_joy": "A small joy warms your day.",
+    "lesson": "You learn an important lesson."
+  },
+  "outcomes_child_negative": {
+    "fever": "You catch a fever.",
+    "fall": "You fall and scrape your knees.",
+    "hunger": "You go hungry all day.",
+    "bullying": "You are bullied in the yard.",
+    "fear": "Fear grips you."
+  },
   "actors_mundane": {
     "boss": "Your boss",
     "client": "A client",
     "neighbor": "A neighbor",
     "stranger": "A stranger",
     "official": "An official",
-    "teacher": "A teacher",
-    "doctor": "A doctor",
-    "influencer": "An influencer"
+    "doctor": "A doctor"
   },
   "actions_mundane": {
     "offers": "offers you an opportunity",

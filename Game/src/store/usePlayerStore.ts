@@ -2,13 +2,9 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { zustandStorage } from './mmkvStorage';
 import { GameConstants } from '../constants/GameConstants';
-import { DeathCause, RebirthReport } from '../types';
 import { useInventoryStore } from './useInventoryStore';
-import { useTechniquesStore } from './useTechniquesStore';
-import { useLifestyleStore } from './useLifestyleStore';
 import { getRandomInt, safeBigInt } from '../utils/helpers';
-import { getKarmaTotalEffects } from '../utils/gameplayUtils';
-import { getCurseById, rollRebirthReport } from '../utils/rebirthUtils';
+import itemsData from '../data/items.json';
 
 interface PlayerEffects {
   intelligence?: number;
@@ -37,16 +33,11 @@ interface PlayerState {
   hasHydrated: boolean;
   hasCultivatorPass: boolean;
   lastInterstitialTime: number;
-  activeCurses: string[];
-  lastDeathCause: DeathCause;
-  lastRebirthReport: RebirthReport | null;
   setHasHydrated: (state: boolean) => void;
   setActivityFocus: (focus: 'mundane' | 'secret') => void;
   setCultivationStage: (stage: string) => void;
   setCultivatorPass: (status: boolean) => void;
   setLastInterstitialTime: (time: number) => void;
-  setDeathCause: (cause: DeathCause) => void;
-  clearRebirthReport: () => void;
   normalizeHealth: () => void;
   growOlder: () => void;
   addQi: (amount: string) => void;
@@ -73,9 +64,67 @@ const initialState = {
   activityFocus: 'mundane' as 'mundane' | 'secret',
   hasCultivatorPass: false,
   lastInterstitialTime: 0,
-  activeCurses: [] as string[],
-  lastDeathCause: 'none' as DeathCause,
-  lastRebirthReport: null as RebirthReport | null,
+};
+
+const getKarmaStartEffects = (items: Record<string, any>) => {
+  let startMoney = 0n;
+  let startMaxHealth = 0;
+  let startSpiritualRoot = 0;
+
+  (itemsData as any[]).forEach((def: any) => {
+    if (def.type !== 'karma_buff') {
+      return;
+    }
+
+    const inv = items[def.id];
+
+    if (!inv) {
+      return;
+    }
+
+    const level = inv.quantity || 1;
+
+    if (Array.isArray(def.levels)) {
+      const maxLevel = def.maxLevel || def.levels.length;
+      const safeLevel = Math.min(level, maxLevel);
+      const levelData = def.levels.find((l: any) => l.level === safeLevel) || def.levels[safeLevel - 1];
+      const effects = levelData?.effects || {};
+
+      if (effects.startMoney) {
+        startMoney += safeBigInt(effects.startMoney);
+      }
+
+      if (effects.startMaxHealth) {
+        startMaxHealth += Number(effects.startMaxHealth);
+      }
+
+      if (effects.startSpiritualRoot) {
+        startSpiritualRoot += Number(effects.startSpiritualRoot);
+      }
+
+      return;
+    }
+
+    const effects = def.effects || {};
+
+    if (effects.money) {
+      startMoney += safeBigInt(effects.money);
+    }
+
+    if (effects.health) {
+      startMaxHealth += Number(effects.health);
+    }
+
+    if (effects.spiritualRoot) {
+      startSpiritualRoot += Number(effects.spiritualRoot);
+    }
+  });
+
+  return {
+    startMoney,
+    startMaxHealth,
+    startSpiritualRoot,
+  };
 };
 
 export const usePlayerStore = create<PlayerState>()(
@@ -88,8 +137,6 @@ export const usePlayerStore = create<PlayerState>()(
       setCultivationStage: (stage) => set({ cultivationStage: stage }),
       setCultivatorPass: (status) => set({ hasCultivatorPass: status }),
       setLastInterstitialTime: (time) => set({ lastInterstitialTime: time }),
-      setDeathCause: (cause) => set({ lastDeathCause: cause }),
-      clearRebirthReport: () => set({ lastRebirthReport: null }),
       normalizeHealth: () =>
         set((state) => {
           let maxHealth = state.maxHealth;
@@ -171,11 +218,17 @@ export const usePlayerStore = create<PlayerState>()(
           newState.health = health;
 
           if (effects.intelligence !== undefined) {
-            newState.intelligence = Math.max(0, state.intelligence + effects.intelligence);
+            newState.intelligence = Math.max(
+              0,
+              Math.min(GameConstants.INTELLIGENCE_CAP, state.intelligence + effects.intelligence)
+            );
           }
 
           if (effects.appearance !== undefined) {
-            newState.appearance = Math.max(0, Math.min(GameConstants.APPEARANCE_CAP, state.appearance + effects.appearance));
+            newState.appearance = Math.max(
+              0,
+              Math.min(GameConstants.APPEARANCE_CAP, state.appearance + effects.appearance)
+            );
           }
 
           if (effects.karma !== undefined) {
@@ -219,53 +272,17 @@ export const usePlayerStore = create<PlayerState>()(
 
           return newState;
         }),
-      reincarnate: () => {
-        const inventory = useInventoryStore.getState().items;
-        const karmaEffects = getKarmaTotalEffects(inventory);
-
-        useTechniquesStore.getState().resetTechniques();
-        useLifestyleStore.getState().resetLifestyle();
-
+      reincarnate: () =>
         set((state) => {
           const { STARTING_STATS } = GameConstants;
-          const report = rollRebirthReport(state.lastDeathCause);
-
-          let startIntelligencePenalty = 0;
-          let startAppearancePenalty = 0;
-
-          report.curses.forEach((curseId) => {
-            const curse = getCurseById(curseId);
-
-            if (!curse) {
-              return;
-            }
-
-            if (curse.startIntelligence) {
-              startIntelligencePenalty += curse.startIntelligence;
-            }
-
-            if (curse.startAppearance) {
-              startAppearancePenalty += curse.startAppearance;
-            }
-          });
+          const inventory = useInventoryStore.getState().items;
+          const karmaEffects = getKarmaStartEffects(inventory);
 
           const baseHealth = getRandomInt(STARTING_STATS.HEALTH_MIN, STARTING_STATS.HEALTH_MAX);
           const totalMaxHealth = Math.min(
             GameConstants.MAX_HEALTH_CAP,
             baseHealth + karmaEffects.startMaxHealth
           );
-
-          const currentHealth = Math.max(
-            1,
-            Math.floor((totalMaxHealth * report.healthStartBps) / 10000)
-          );
-
-          const baseMoney =
-            BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
-            safeBigInt(karmaEffects.startMoney);
-
-          const finalMoney =
-            (baseMoney * BigInt(10000 - report.moneyPenaltyBps)) / 10000n;
 
           return {
             isDead: false,
@@ -277,26 +294,29 @@ export const usePlayerStore = create<PlayerState>()(
             activityFocus: 'mundane' as 'mundane' | 'secret',
             hasCultivatorPass: state.hasCultivatorPass,
             lastInterstitialTime: state.lastInterstitialTime,
-            health: currentHealth,
+            health: totalMaxHealth,
             maxHealth: totalMaxHealth,
             intelligence: Math.max(
-              1,
-              getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX) + startIntelligencePenalty
+              0,
+              Math.min(
+                GameConstants.INTELLIGENCE_CAP,
+                getRandomInt(STARTING_STATS.INT_MIN, STARTING_STATS.INT_MAX)
+              )
             ),
             appearance: Math.max(
-              1,
-              getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX) + startAppearancePenalty
+              0,
+              Math.min(
+                GameConstants.APPEARANCE_CAP,
+                getRandomInt(STARTING_STATS.APP_MIN, STARTING_STATS.APP_MAX)
+              )
             ),
-            money: finalMoney.toString(),
-            spiritualRoot:
-              getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) +
-              karmaEffects.startSpiritualRoot,
-            activeCurses: report.curses,
-            lastDeathCause: 'none',
-            lastRebirthReport: report,
+            money: (
+              BigInt(getRandomInt(STARTING_STATS.MONEY_MIN, STARTING_STATS.MONEY_MAX)) +
+              karmaEffects.startMoney
+            ).toString(),
+            spiritualRoot: getRandomInt(STARTING_STATS.ROOT_MIN, STARTING_STATS.ROOT_MAX) + karmaEffects.startSpiritualRoot,
           };
-        });
-      },
+        }),
       resetPlayer: () => set({ ...initialState }),
     }),
     {

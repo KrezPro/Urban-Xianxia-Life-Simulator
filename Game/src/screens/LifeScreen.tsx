@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -9,14 +10,13 @@ import { Button, Card, ProgressBar, StatRow, IconButton } from '../components/ui
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress } from '../utils/helpers';
+import { GameConstants } from '../constants/GameConstants';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
-import { getCurseById } from '../utils/rebirthUtils';
-import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
-import ruRebirth from '../locales/ru/rebirth.json';
-import enRebirth from '../locales/en/rebirth.json';
+
+type RootNavigationProp = NavigationProp<Record<string, undefined>>;
 
 interface HintData {
   title: string;
@@ -27,40 +27,44 @@ export default function LifeScreen() {
   const player = usePlayerStore();
   const { addLog } = useEventStore();
   const { locale, toggleLocale } = useLocaleStore();
-  const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
+  const pushRichNotification = useNotificationStore((state) => state.pushRichNotification);
+  const navigation = useNavigation<RootNavigationProp>();
   const { handleGrowOlder } = useYearlyCycle();
   const [hint, setHint] = useState<HintData | null>(null);
-  const [logVisible, setLogVisible] = useState(false);
 
   const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
   const hints: any = (ui as any).hints || {};
-  const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
-
-  const rebirthReport = player.lastRebirthReport;
-  const hasRebirthPenalties =
-    !!rebirthReport &&
-    (rebirthReport.moneyPenaltyBps > 0 ||
-      rebirthReport.healthStartBps < 10000 ||
-      rebirthReport.curses.length > 0);
 
   useEffect(() => {
     if (
       player.age === 0 &&
       player.money === '0' &&
-      player.health === 100 &&
       player.qi === '0' &&
       !player.isDead
     ) {
       player.reincarnate();
       addLog(ui.born_log, 'system');
-      pushUiNotification('born', 'system');
+      pushRichNotification({
+        kind: 'ui',
+        messageKey: 'born',
+        type: 'system',
+        priority: GameConstants.NOTIFICATION_PRIORITY.rebirth,
+        dictionary: 'notifications',
+      });
     }
   }, []);
 
   useEffect(() => {
     if (player.isDead) {
       addLog(ui.death_log, 'system');
-      pushUiNotification('death', 'danger');
+      pushRichNotification({
+        kind: 'ui',
+        messageKey: 'death',
+        type: 'danger',
+        priority: GameConstants.NOTIFICATION_PRIORITY.death,
+        group: 'death',
+        dictionary: 'notifications',
+      });
     }
   }, [player.isDead]);
 
@@ -84,67 +88,19 @@ export default function LifeScreen() {
   };
 
   const openLog = () => {
-    setLogVisible(true);
+    navigation.navigate('Log');
   };
 
   const handleReincarnate = () => {
     player.reincarnate();
     addLog(ui.reincarnate_log, 'system');
-    pushUiNotification('reincarnate', 'system');
-  };
-
-  const closeRebirthReport = () => {
-    player.clearRebirthReport();
-  };
-
-  const renderRebirthReport = () => {
-    if (!rebirthReport || !hasRebirthPenalties) {
-      return null;
-    }
-
-    const tierData = rebirth.tiers?.[rebirthReport.fortuneTier] || {};
-
-    return (
-      <Modal visible transparent animationType="fade" onRequestClose={closeRebirthReport}>
-        <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeRebirthReport}>
-          <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
-            <Text style={styles.modalTitle}>{rebirth.title}</Text>
-            <Text style={styles.rebirthTierTitle}>{tierData.title}</Text>
-            <Text style={styles.modalText}>{tierData.desc}</Text>
-
-            <View style={styles.rebirthRow}>
-              <Text style={styles.rebirthLine}>{rebirth.money?.[rebirthReport.moneyPenaltyKey]}</Text>
-            </View>
-
-            <View style={styles.rebirthRow}>
-              <Text style={styles.rebirthLine}>{rebirth.health?.[rebirthReport.healthStartKey]}</Text>
-            </View>
-
-            {rebirthReport.curses.map((curseId) => {
-              const curseData = rebirth.curses?.[curseId];
-
-              if (!curseData) {
-                return null;
-              }
-
-              return (
-                <View key={curseId} style={styles.curseRow}>
-                  <Text style={styles.curseName}>{curseData.name}</Text>
-                  <Text style={styles.curseDesc}>{curseData.desc}</Text>
-                </View>
-              );
-            })}
-
-            <Button
-              title={rebirth.accept}
-              onPress={closeRebirthReport}
-              variant="danger"
-              style={styles.modalButton}
-            />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
-    );
+    pushRichNotification({
+      kind: 'ui',
+      messageKey: 'reincarnate',
+      type: 'system',
+      priority: GameConstants.NOTIFICATION_PRIORITY.rebirth,
+      dictionary: 'notifications',
+    });
   };
 
   if (player.isDead) {
@@ -191,10 +147,6 @@ export default function LifeScreen() {
             />
           </Card>
         </View>
-
-        <Modal visible={logVisible} animationType="slide" onRequestClose={() => setLogVisible(false)}>
-          <LogScreen onClose={() => setLogVisible(false)} />
-        </Modal>
 
         <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
           <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
@@ -343,10 +295,6 @@ export default function LifeScreen() {
         accessibilityLabel={ui.btn_grow}
       />
 
-      <Modal visible={logVisible} animationType="slide" onRequestClose={() => setLogVisible(false)}>
-        <LogScreen onClose={() => setLogVisible(false)} />
-      </Modal>
-
       <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
           <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
@@ -362,8 +310,6 @@ export default function LifeScreen() {
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
-
-      {renderRebirthReport()}
     </SafeAreaView>
   );
 }
@@ -538,39 +484,5 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     minWidth: 160,
-  },
-  rebirthTierTitle: {
-    color: Theme.colors.danger,
-    fontSize: Theme.fontSize.md,
-    fontWeight: '900',
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  rebirthRow: {
-    width: '100%',
-    marginBottom: 6,
-  },
-  rebirthLine: {
-    color: Theme.colors.text,
-    fontSize: Theme.fontSize.sm,
-    fontWeight: '700',
-  },
-  curseRow: {
-    width: '100%',
-    backgroundColor: Theme.colors.surfaceLight,
-    borderRadius: Theme.radius.sm,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderSoft,
-    padding: Theme.spacing.sm,
-    marginBottom: 6,
-  },
-  curseName: {
-    color: Theme.colors.danger,
-    fontWeight: '900',
-    marginBottom: 2,
-  },
-  curseDesc: {
-    color: Theme.colors.textMuted,
-    fontSize: Theme.fontSize.xs,
   },
 });
