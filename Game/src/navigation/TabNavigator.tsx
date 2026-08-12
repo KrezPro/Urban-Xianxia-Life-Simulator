@@ -6,17 +6,19 @@ import LifeScreen from '../screens/LifeScreen';
 import DaoScreen from '../screens/DaoScreen';
 import StoreScreen from '../screens/StoreScreen';
 import ActivitiesScreen from '../screens/ActivitiesScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
+import { AudioManager } from '../audio/AudioManager';
+import ruUI from '../locales/ru/ui.json';
+import enUI from '../locales/en/ui.json';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const locale = useLocaleStore((state) => state.locale);
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const tabBar = extras.navigation?.tab_bar || {};
+  const ui: any = locale === 'ru' ? ruUI : enUI;
+  const tabBar = ui.tab_bar || {};
 
   return (
     <Tab.Navigator
@@ -33,17 +35,17 @@ export default function TabNavigator() {
         tabBarInactiveTintColor: Theme.colors.textDim,
         tabBarLabel: ({ color }) => {
           let key = 'life';
-
           if (route.name === 'Dao') {
             key = 'dao';
           }
-
           if (route.name === 'Activities') {
             key = 'activities';
           }
-
           if (route.name === 'Store') {
             key = 'store';
+          }
+          if (route.name === 'Settings') {
+            key = 'settings';
           }
 
           return (
@@ -63,16 +65,59 @@ export default function TabNavigator() {
             iconName = focused ? 'barbell' : 'barbell-outline';
           } else if (route.name === 'Store') {
             iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tab.Screen name="Life" component={LifeScreen} />
-      <Tab.Screen name="Dao" component={DaoScreen} />
-      <Tab.Screen name="Activities" component={ActivitiesScreen} />
-      <Tab.Screen name="Store" component={StoreScreen} />
+      <Tab.Screen
+        name="Life"
+        component={LifeScreen}
+        listeners={() => ({
+          tabPress: () => {
+            AudioManager.playTab();
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Dao"
+        component={DaoScreen}
+        listeners={() => ({
+          tabPress: () => {
+            AudioManager.playTab();
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Activities"
+        component={ActivitiesScreen}
+        listeners={() => ({
+          tabPress: () => {
+            AudioManager.playTab();
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Store"
+        component={StoreScreen}
+        listeners={() => ({
+          tabPress: () => {
+            AudioManager.playTab();
+          },
+        })}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        listeners={() => ({
+          tabPress: () => {
+            AudioManager.playTab();
+          },
+        })}
+      />
     </Tab.Navigator>
   );
 }

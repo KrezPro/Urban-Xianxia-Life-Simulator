@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ import { useSocialStore } from './store/useSocialStore';
 import { useInventoryStore } from './store/useInventoryStore';
 import { useTechniquesStore } from './store/useTechniquesStore';
 import { useLifestyleStore } from './store/useLifestyleStore';
+import { useSettingsStore } from './store/useSettingsStore';
+import { AudioManager } from './audio/AudioManager';
 import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
 import ruUI from './locales/ru/ui.json';
@@ -22,20 +24,34 @@ export default function App() {
   const inventoryHydrated = useInventoryStore((state) => state.hasHydrated);
   const techniquesHydrated = useTechniquesStore((state) => state.hasHydrated);
   const lifestyleHydrated = useLifestyleStore((state) => state.hasHydrated);
+  const settingsHydrated = useSettingsStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
-
   const uiData: any = locale === 'ru' ? ruUI : enUI;
+
+  const isReady =
+    playerHydrated &&
+    localeHydrated &&
+    socialHydrated &&
+    inventoryHydrated &&
+    techniquesHydrated &&
+    lifestyleHydrated &&
+    settingsHydrated;
 
   useIdleProgress();
 
-  if (
-    !playerHydrated ||
-    !localeHydrated ||
-    !socialHydrated ||
-    !inventoryHydrated ||
-    !techniquesHydrated ||
-    !lifestyleHydrated
-  ) {
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    void AudioManager.init();
+
+    return () => {
+      AudioManager.dispose();
+    };
+  }, [isReady]);
+
+  if (!isReady) {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>

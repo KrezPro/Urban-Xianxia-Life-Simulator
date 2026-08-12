@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
+import { AudioManager } from '../../audio/AudioManager';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'gold' | 'ghost';
 
@@ -29,11 +30,22 @@ export const Button = ({
   small = false,
 }: ButtonProps) => {
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
+
+  const handlePress = () => {
+    AudioManager.playUiPress();
+    onPress();
+  };
+
+  const handleLongPress = () => {
+    AudioManager.playUiPress();
+    onLongPress?.();
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={disabled ? undefined : onPress}
-      onLongPress={onLongPress}
+      onPress={disabled ? undefined : handlePress}
+      onLongPress={onLongPress ? handleLongPress : undefined}
       delayLongPress={300}
       style={[
         styles.button,
@@ -89,10 +101,16 @@ export const IconButton = ({
   accessibilityLabel,
 }: IconButtonProps) => {
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
+
+  const handlePress = () => {
+    AudioManager.playUiPress();
+    onPress();
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={onPress}
+      onPress={disabled ? undefined : handlePress}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -152,6 +170,7 @@ export const ProgressBar = ({ progress, color, height = 12, style }: ProgressBar
   const safe = 0 > progress ? 0 : progress;
   const clamped = 1 > safe ? safe : 1;
   const widthPercent = `${Math.floor(clamped * 100)}%`;
+
   return (
     <View style={[styles.progressContainer, { height }, style]}>
       <View
@@ -178,9 +197,6 @@ interface StatRowProps {
   scale?: number;
 }
 
-// StatRow поддерживает адаптивное масштабирование: проп scale (дефолт 1)
-// умножает бейдж, иконку, шрифты и отступы; dense (дефолт false) дополнительно
-// сжимает строку для совместимости со старыми вызовами.
 export const StatRow = ({
   icon,
   label,
@@ -193,6 +209,21 @@ export const StatRow = ({
 }: StatRowProps) => {
   const k = scale * (dense ? 0.75 : 1);
   const badge = Math.round(34 * k);
+
+  const handlePress = onPress
+    ? () => {
+        AudioManager.playUiPress();
+        onPress();
+      }
+    : undefined;
+
+  const handleLongPress = onLongPress
+    ? () => {
+        AudioManager.playUiPress();
+        onLongPress();
+      }
+    : undefined;
+
   const content = (
     <View style={[styles.statRow, { paddingVertical: Math.round(6 * k) }]}>
       <View
@@ -215,11 +246,18 @@ export const StatRow = ({
       </Text>
     </View>
   );
-  if (!onPress && !onLongPress) {
+
+  if (!handlePress && !handleLongPress) {
     return content;
   }
+
   return (
-    <TouchableOpacity activeOpacity={0.85} onPress={onPress} onLongPress={onLongPress} delayLongPress={300}>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+      delayLongPress={300}
+    >
       {content}
     </TouchableOpacity>
   );

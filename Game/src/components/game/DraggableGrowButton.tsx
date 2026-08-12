@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
 import { GameConstants } from '../../constants/GameConstants';
+import { AudioManager } from '../../audio/AudioManager';
 
 interface DraggableGrowButtonProps {
   age: number;
@@ -73,13 +74,11 @@ export const DraggableGrowButton = ({
         if (disabledRef.current) {
           return false;
         }
-
         return Math.abs(gestureState.dx) > threshold || Math.abs(gestureState.dy) > threshold;
       },
       onPanResponderGrant: () => {
         movedRef.current = false;
         startPositionRef.current = { ...positionRef.current };
-
         Animated.spring(scale, {
           toValue: 1.08,
           useNativeDriver: true,
@@ -102,7 +101,6 @@ export const DraggableGrowButton = ({
           startPositionRef.current.x + gestureState.dx,
           startPositionRef.current.y + gestureState.dy
         );
-
         applyPosition(next.x, next.y);
       },
       onPanResponderRelease: () => {
@@ -116,6 +114,7 @@ export const DraggableGrowButton = ({
         }
 
         if (!movedRef.current) {
+          AudioManager.playUiPress();
           onPressRef.current();
         }
       },
@@ -124,7 +123,6 @@ export const DraggableGrowButton = ({
           toValue: 1,
           useNativeDriver: true,
         }).start();
-
         movedRef.current = false;
       },
       onPanResponderTerminationRequest: () => true,
@@ -143,7 +141,6 @@ export const DraggableGrowButton = ({
     }
 
     const clamped = clampPosition(positionRef.current.x, positionRef.current.y);
-
     if (clamped.x !== positionRef.current.x || clamped.y !== positionRef.current.y) {
       applyPosition(clamped.x, clamped.y);
     }

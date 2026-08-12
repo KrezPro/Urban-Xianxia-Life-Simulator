@@ -102,6 +102,13 @@ Game/src/
 │       ├── NotificationToast.tsx               // Анимированный тост одного уведомления с автоскрытием
 │       ├── EffectChips.tsx                     // Чипы эффектов для уведомлений и журнала (макс 4 видимых)
 │       └── DraggableGrowButton.tsx             // Перетаскиваемая плавающая кнопка взросления (FAB в стиле корзины)
+├── audio/
+│   ├── AudioManager.ts                 // Сервис звука: клик, toggle, music loop, sync с настройками
+│   └── proceduralAudio.ts              // Процедурная генерация WAV-звуков и короткой фоновой мелодии
+├── screens/
+│   └── SettingsScreen.tsx              // Экран настроек: звук интерфейса и музыка
+└── store/
+│   └── useSettingsStore.ts             // Zustand + MMKV: soundEnabled, musicEnabled, hasHydrated
 ├── constants/
 │   ├── GameConstants.ts                        // Игровые константы: кулдауны, шансы, EVENT_* таблицы, survival, bps-капы
 │   └── Theme.ts                                // Единая тёмная неоновая тема: цвета, отступы, радиусы, шрифты, тени

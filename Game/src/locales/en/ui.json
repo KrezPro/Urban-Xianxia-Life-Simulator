@@ -5,7 +5,9 @@
   "tab_bar": {
     "life": "Life",
     "dao": "Dao",
+    "activities": "Activities",
     "store": "Store",
+    "settings": "Settings",
     "log": "Log",
     "sect": "Sect"
   },
@@ -199,5 +201,12 @@
     "log_fail_death": "[CRITICAL FAILURE] The Heavenly Tribulation was too strong. You have died.",
     "log_fail_damage": "[FAILURE] Breakthrough failed. Mana Burn occurred, you took {damage} damage.",
     "log_ad_saved": "[SAVED] Breakthrough failed, but the Ad Buff protected your meridians from damage!"
+  },
+  "settings_screen": {
+    "title": "Settings",
+    "sound": "Interface Sound",
+    "sound_desc": "Short sounds for buttons and actions.",
+    "music": "Music",
+    "music_desc": "Looping background melody."
   }
 }

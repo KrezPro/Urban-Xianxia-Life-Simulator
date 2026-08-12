@@ -7,6 +7,7 @@ import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
 import { getEventLogText } from '../utils/notificationUtils';
 import { EffectChips } from '../components/game/EffectChips';
+import { AudioManager } from '../audio/AudioManager';
 import { IEventLog } from '../types';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -22,7 +23,6 @@ const LogItem = ({ item, locale }: { item: IEventLog; locale: 'ru' | 'en' }) => 
   return (
     <View style={styles.logItem}>
       <Text style={styles.logTime}>[{date}]</Text>
-
       <View style={styles.logBody}>
         <Text
           style={[
@@ -33,7 +33,6 @@ const LogItem = ({ item, locale }: { item: IEventLog; locale: 'ru' | 'en' }) => 
         >
           {text}
         </Text>
-
         {!!item.effects?.length ? <EffectChips effects={item.effects} /> : null}
       </View>
     </View>
@@ -45,18 +44,23 @@ export default function LogScreen({ onClose }: LogScreenProps) {
   const locale = useLocaleStore((state) => state.locale);
   const ui: any = locale === 'ru' ? ruUI : enUI;
 
+  const handleClose = () => {
+    if (onClose) {
+      AudioManager.playUiPress();
+      onClose();
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{ui.log_screen.title}</Text>
-
         {!!onClose ? (
-          <Text style={styles.closeButton} onPress={onClose}>
+          <Text style={styles.closeButton} onPress={handleClose}>
             ✕
           </Text>
         ) : null}
       </View>
-
       <View style={styles.listContainer}>
         <FlashList
           data={logs}

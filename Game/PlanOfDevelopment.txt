@@ -1,280 +1,99 @@
-[СТАТУС]: ШАГ 32 (Ауровая дифференциация стадий аватара: цвет по точной стадии, кольца по тиру, частицы по индексу, подпись стадии)
+[СТАТУС]: ШАГ 33 (Настройки и аудио: вкладка Settings, звуки кнопок, фоновая музыка)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
-=== Фаза 1: Базовая архитектура (Завершено) ===
-1. [X] Expo, React Native, TypeScript.
-2. [X] Zustand + react-native-mmkv.
-3. [X] TabNavigator.
-4. [X] FlashList для журнала.
-5. [X] Базовые события взросления.
+=== Фаза 1-28: Предыдущие этапы завершены ===
+1. [X] Базовая архитектура Expo/React Native/TypeScript/Zustand/MMKV.
+2. [X] Core Loop: взросление, события, статы, прорывы, смерть, карма.
+3. [X] Локализация RU/EN.
+4. [X] Idle, реинкарнация, карма-магазин.
+5. [X] UI-кит, Theme, NotificationHost, DraggableGrowButton.
+6. [X] Техники Дао, активности, Body Tempering, порталы, rebirth penalties.
+7. [X] Генератор событий, rich-уведомления, журнал.
+8. [X] Адаптивный экран Мир, LifeAvatar, ауровая дифференциация стадий.
 
-=== Фаза 2: Core Loop (Завершено) ===
-6. [X] Инкарнация и стартовые параметры.
-7. [X] Выбор фокуса года.
-8. [X] BigInt для Ци и денег.
-9. [X] Прорывы, смерть, карма.
+=== Фаза 29: Настройки и аудио (Завершено) ===
+141. [X] Добавлена вкладка Settings в нижнюю навигацию: Life, Dao, Activities, Store, Settings.
+142. [X] Создан SettingsScreen с переключателями звука интерфейса и музыки.
+143. [X] Создан useSettingsStore: soundEnabled, musicEnabled, hasHydrated, persist через MMKV.
+144. [X] Создан процедурный аудио-движок: короткие UI-звуки и зацикленная фоновая мелодия без внешних бинарных ассетов.
+145. [X] Создан AudioManager: инициализация expo-av, кэш WAV через expo-file-system, звук кнопок, звук тумблеров, музыка.
+146. [X] Button, IconButton, StatRow, DraggableGrowButton и часть кастомных кнопок озвучены через AudioManager.
+147. [X] App.tsx гидратирует useSettingsStore и инициализирует AudioManager после готовности приложения.
+148. [X] Локали RU/EN обновлены: settings_screen, tab_bar settings/activities.
+149. [X] package.json содержит expo-av и expo-file-system.
 
-=== Фаза 3: Контент и локализация (Завершено базово) ===
-10. [X] RU/EN словари.
-11. [X] Абсурдные события и виральный тон.
-
-=== Фаза 4: Idle и реинкарнация (Завершено) ===
-12. [X] Offline progress.
-13. [X] Карма за смерть.
-14. [X] Магазин кармы.
-
-=== Фаза 5: Экономика, монетизация, социализация ===
-15. [X] IAP-заготовки.
-16. [X] Реклама и кулдауны.
-17. [X] Offline-first секты, инвайты, рейтинг.
-
-=== Фаза 6: LiveOps и деплой ===
-18. [ ] EAS Updates / OTA.
-19. [ ] Remote config.
-20. [ ] Сезонные LiveOps-флаги.
-
-=== Фаза 7: UI-кит и восстановление отсутствующих файлов ===
-21. [X] Theme.ts: темная неоновая тема.
-22. [X] components/ui/index.tsx: Button, Card, ProgressBar, StatRow, DetailsModal.
-23. [X] utils/helpers.ts: format, BigInt, random, bps.
-24. [X] Экраны используют общий UI-кит.
-25. [X] Навигация использует стабильные route names.
-26. [X] Локализация вкладок и служебных экранов.
-
-=== Фаза 8: Максимальное вовлечение ===
-27. [X] Long-press подсказки для всех статов и фокусов во вкладке Мир.
-28. [X] Система всплывающих уведомлений (NotificationHost/Toast/Store) с анимацией и автоскрытием.
-29. [X] SafeAreaView заменён на react-native-safe-area-context во всех экранах.
-30. [ ] Daily Rewards: ежедневные награды и серия входов.
-31. [ ] Quests: короткие цели и быстрые награды.
-32. [ ] Achievements: достижения, тосты, бонусы.
-33. [ ] Choice Events: события с выбором и риском.
-34. [ ] Share: смерть, прорыв, рекорд, инвайт.
-35. [ ] Onboarding: первая сессия с быстрым вознаграждением.
-36. [ ] Редкие события: jackpot, boss-демоны, darknet deals.
-
-=== Фаза 9: Техническая гигиена ===
-37. [X] AsyncStorage не используется.
-38. [X] MMKV-адаптер с memory-fallback.
-39. [X] BigInt хранится как string.
-40. [X] FlashList для больших списков.
-41. [ ] Автотесты BigInt/MMKV/FlashList.
-
-=== Фаза 10: UX улучшения ===
-42. [X] Кнопка журнала перенесена в шапку LifeScreen рядом с RU/EN, вкладка Log скрыта из tab bar.
-43. [X] Grow Older заменен перетаскиваемой DraggableGrowButton (FAB в стиле корзины).
-44. [X] Убран скролл во вкладке Мир, так как контент размещается без прокрутки.
-
-=== Фаза 11: Геймплейные системы MAX-здоровья, техник, активностей, старения и подписок ===
-45. [X] Здоровье разделено на current/max, в списке характеристик отображается MAX.
-46. [X] Добавлены техники Дао с уровнями, стоимостью, требованиями и эффектами.
-47. [X] Карма-магазин переведен на уровни 1-10 с растущей стоимостью и эффектами.
-48. [X] Добавлена вкладка Activities с работами, спортом, едой, жильем и порталами.
-49. [X] Годовой цикл учитывает подписки, доход, траты, здоровье, Ци и порталы.
-50. [X] При нехватке денег активности автоматически отключаются в порядке приоритета.
-51. [X] Techniques и Lifestyle сбрасываются при реинкарнации, карма-баффы остаются.
-52. [X] Добавлены maxAge/softAge стадий и шанс смерти от старости.
-53. [X] Нижняя навигация содержит только видимые вкладки без лишнего пустого слота.
-54. [X] Кнопка прорыва во вкладке Дао закреплена внизу и всегда видна.
-
-=== Фаза 12: Генератор событий и последствия смерти ===
-55. [X] Создан eventGenerator.ts: события зависят от возраста, фокуса, стадии Дао и активностей.
-56. [X] Создан eventRules.json: data-driven правила и эффекты событий.
-57. [X] Созданы локали eventGenerator.json для RU/EN: шаблоны, пулы слов, заголовки, статы.
-58. [X] Уведомления стали rich: title, body, rarity, effects chips.
-59. [X] Журнал поддерживает generated-события с ключами и параметрами.
-60. [X] Созданы локали stages.json и stageUtils.ts для человекочитаемых стадий.
-61. [X] Добавлены причины смерти: old_age, health, breakthrough, portal, event.
-62. [X] Создан rebirthPenalties.json и rebirthUtils.ts: денежные потери, слабое здоровье, проклятия.
-63. [X] LifeScreen показывает модальное окно последствий перерождения.
-64. [X] activeCurses влияют на модификаторы годового цикла и прорывов.
-
-=== Фаза 13: Hotfix после Шага 3 ===
-65. [X] Исправлен краш calculateEffectValue: все таблицы GameConstants читаются через tableNumber с fallback.
-66. [X] GameConstants.ts синхронизирован: добавлены все EVENT_* таблицы и NOTIFICATION_* константы.
-67. [X] Убран navigation.navigate('Log'): журнал открывается только модально (LogScreen onClose).
-68. [X] NotificationToast: таймер от монтирования, уведомления больше не исчезают мгновенно.
-69. [X] useYearlyCycle: try/catch вокруг generateYearEvent с fallback-событием.
-70. [X] Записаны уроки в Game/DataForAI.txt.
-
-=== Фаза 14: Notification UX ===
-71. [X] Счётчик пропущенных уведомлений: missedCount в useNotificationStore и badge-кнопка рядом с языком в LifeScreen.
-
-=== Фаза 15: Полный ребаланс и Закалка тела ===
-72. [X] Убран процентный разгон дохода/Ци: работа, lifestyle, порталы, offline и события переведены на абсолютные значения и плоские бонусы.
-73. [X] Добавлена возрастная и стадийная смертность: дети и смертные уязвимее, культиваторы устойчивее, бессмертные не умирают от возраста.
-74. [X] Добавлен Body Tempering: вторая кнопка в Дао, тратит Ци, снижает болезни, смертность, урон от бедности, порталов и прорывов.
-75. [X] Изменена реклама: interstitial показывается после реинкарнации на 1 году жизни, а не по 70-секундному таймеру.
-76. [X] Обновлены стадии, техники, карма-баффы, проклятия, события и lifestyle под новый баланс.
-77. [X] Добавлены balanceNote-описания для стадий, работ, порталов, техник, карма-баффов и проклятий.
-
-=== Фаза 16: Hotfix экономики, доступности активностей и стоимости Закалки тела ===
-78. [X] Добавлены affordability-утилиты: getLifestyleAnnualCost, getLifestyleAnnualIncome, getLifestyleProjectedNet, canAffordLifestyleSelection, canAffordLifestyleOption.
-79. [X] ActivitiesScreen блокирует выбор платной активности, если projected balance текущего выбора становится отрицательным.
-80. [X] Годовой цикл сохраняет автоматический сброс активностей, если денег не хватает после survival cost и годовых затрат.
-81. [X] MEDITATION_QI_MULTIPLIER понижен с 12 до 2, calculateMeditationQi дополнительно использует Math.floor.
-82. [X] Body Tempering теперь стоит Ци и монеты: moneyCost = qiCost * COST_MONEY_MULTIPLIER, базовая формула Ци изменена на 25/25.
-83. [X] usePlayerStore.temperBody проверяет и списывает Ци + деньги.
-84. [X] DaoScreen показывает двойную стоимость Закалки тела и блокирует кнопку при нехватке Ци или денег.
-
-=== Фаза 17: Сохранение техник Дао и защита Karma Store ===
-85. [X] Убран resetTechniques из usePlayerStore.reincarnate: техники Дао сохраняются между жизнями.
-86. [X] deductKarma использует safeBigInt и не допускает отрицательную Карму.
-87. [X] StoreScreen защищён от некорректного уровня, отсутствующего nextLevelData и невалидного maxLevel.
-88. [X] useInventoryStore.addItem нормализует quantity как целое число >= 0.
-89. [X] Library обновлён: техники персистентны, lifestyle сбрасывается, карма-баффы сохраняются.
-90. [X] Оплата Body Tempering проверена: DaoScreen и usePlayerStore уже используют Ци + деньги.
-
-=== Фаза 18: Сброс техник Дао и причина смерти ===
-91. [X] resetTechniques возвращён в usePlayerStore.reincarnate: техники Дао снова сбрасываются при реинкарнации.
-92. [X] LifeScreen показывает локализованную причину смерти на экране смерти.
-93. [X] При смерти отправляется уведомление death_reason с параметром reason.
-94. [X] Обновлены локали RU/EN: death_cause_label, death_causes, death_reason.
-
-=== Фаза 19: Подсказки и детализация эффектов + отключение Секты ===
-95. [X] Button в components/ui/index.tsx поддерживает onLongPress даже при визуально отключённом onPress.
-96. [X] Добавлен DetailsModal в components/ui/index.tsx для показа деталей по long-press.
-97. [X] Возраст в LifeScreen открывает подсказку с максимальной продолжительностью жизни текущей стадии.
-98. [X] DaoScreen показывает детали текущей и следующей стадии культивации по нажатию.
-99. [X] Закалка тела показывает художественное описание, а числовые эффекты — по long-press.
-100. [X] Техники Дао показывают требования/эффекты по long-press, а не в постоянном интерфейсе.
-101. [X] Магазин Кармы показывает эффекты баффов по long-press.
-102. [X] Sect удалён из TabNavigator: остались Life, Dao, Activities, Store.
-
-=== Фаза 20: Порталы — благословение и отображение наград ===
-103. [X] Данные порталов содержат attemptCost, moneyMin/moneyMax, qiMin/qiMax, breakthroughBlessingBps, failDamage, failDamageBps.
-104. [X] usePlayerStore хранит portalBlessingBps, накапливает его до PORTAL_BLESSING_CAP_BPS и сбрасывает при реинкарнации.
-105. [X] useBreakthrough учитывает portalBlessingBps в шансе прорыва и списывает благословение после реальной попытки.
-106. [X] processLifestyleYear возвращает portalBlessingGainedBps и добавляет portalQi в qiDelta при успехе портала.
-107. [X] useYearlyCycle применяет report.portalBlessingGainedBps через player.addPortalBlessing и пишет лог portal_blessing_gained.
-108. [X] ActivitiesScreen показывает блок наград портала: стоимость попытки, деньги, Ци, бонус прорыва и урон при провале.
-109. [X] DaoScreen показывает активное благословение портала, если portalBlessingBps > 0.
-110. [X] Локализация RU/EN и документация обновлены под награды порталов и благословение прорыва.
-
-=== Фаза 21: Визуализация взросления персонажа (LifeAvatar) ===
-111. [X] Создан components/game/LifeAvatar.tsx: анимированная сцена персонажа на встроенном Animated API и emoji, без графических ассетов.
-112. [X] Персонаж меняется с возрастом: младенец ползает, подросток и взрослый медитируют, старейшина-даос левитирует; аура и частицы Ци зависят от стадии культивации.
-113. [X] LifeScreen отображает сцену в hero-карточке; фон сцены реагирует на фокус года (мирские дела — день, тайный путь — ночь).
-114. [X] Локализация RU/EN accessibility-подписей сцены и документация (Library, структура проекта) обновлены.
-
-=== Фаза 22: Эмодзи рядом с возрастом, прозрачная сцена, возврат блока расходов ===
-115. [X] Сцена LifeAvatar стала прозрачной: убраны фон, рамка, «солнце/луна» и линия земли; проп activityFocus удалён из компонента.
-116. [X] Hero-карточка вкладки Мир: LifeAvatar слева, возраст справа (одна строка), бары здоровья/Ци ниже.
-117. [X] В карточку статов возвращена строка «Расходы в год»: стоимость жизни + траты выбранных активностей (BigInt), long-press показывает разбивку.
-118. [X] Локализация RU/EN (expenses_year, hints.expenses) и документация обновлены.
-
-=== Фаза 23: Вкладка Мир влезает на любой экран, бейдж-аватар, переименование в GoodLife v.2 ===
-119. [X] LifeAvatar стал круглым бейджем с кольцом ауры и частицами внутри; добавлен числовой проп size.
-120. [X] UI-кит: StatRow получил опциональный dense-режим (компактные строки) без поломки других экранов.
-121. [X] LifeScreen: адаптивные тирсы compact/tiny по высоте окна без скролла, уменьшен paddingBottom под FAB.
-122. [X] Переименование: шапка GoodLife + версионный чип v.2 (ключи title/title_version RU/EN), формат расходов "$0"/"-$X".
-
-=== Фаза 24: Hotfix вкладки Мир — без скролла, тирсы плотности, устранена чёрная полоса ===
-123. [X] Убран auto-ScrollView: скролл во вкладке Мир отсутствует полностью, контент закреплён.
-124. [X] Тирсы плотности: compact при высоте окна ниже 900pt и tiny ниже 700pt — контент сжимается и влазит на телефонах 800-844pt (ранее порог 780pt не срабатывал).
-125. [X] LifeAvatar: числовой проп size (76/64/54) вместо булева compact; бейдж, аура и эмодзи масштабируются пропорционально.
-126. [X] Устранена чёрная полоса снизу: paddingBottom уменьшен до клиренса под FAB (96/72/64), убран flex-остаток cardsArea.
-127. [X] Уроки записаны в DataForAI.txt (пороги адаптивности по реальным окнам устройств, запрет скролла в Мир, XML-безопасность commit_message).
-
-=== Фаза 25: Центровка эмодзи-бейджа и непрерывное автомасштабирование hero-блока ===
-128. [X] Эмодзи-бейдж отцентрован по горизонтали по всей ширине hero-карточки: блок возраста закреплён position absolute справа, бейдж центрируется justifyContent center.
-129. [X] Непрерывное автомасштабирование hero-блока: layoutScale = clamp(windowHeight / 800, 0.8, 1.25) управляет размером бейджа (76 * scale, кламп 54-96) и шрифтом возраста (32 * scale, кламп 24-40).
-130. [X] Library (правила 63-64) и Plan обновлены; урок 7 записан в DataForAI.txt.
-
-=== Фаза 26: Адаптивный дизайн вкладки Мир — автозаполнение и автомасштабирование ===
-131. [X] Единый коэффициент scale = clamp(windowHeight / 800, 0.75, 1.35) и хелпер sw(): все paddings, margins, шрифты, бары и чипы фокуса масштабируются под высоту экрана (телефон/планшет); ручные тиры compact/tiny удалены.
-132. [X] Автозаполнение: карточка статов получила flex: 1 и съедает свободную высоту экрана; StatRow обёрнуты в flex-View и распределяются равномерно — мёртвых чёрных полос нет ни на каком экране.
-133. [X] UI-кит: StatRow получил проп scale (бейдж, иконка, шрифты, отступы масштабируются; дефолт 1 — другие экраны не меняются), dense сохранён для совместимости.
-134. [X] Library (правило 64), Plan и DataForAI (урок 8) обновлены под адаптивный дизайн.
-
-=== Фаза 27: Эмодзи-матрица возраст x стадия Дао, FAB исключён из вертикальной компоновки ===
-135. [X] LifeAvatar: эмодзи теперь меняется для всех стадий Дао и возрастов — матрица "возрастная группа x тир стадии" (Смертный/Ци/Основание/Ядро/Бессмертный), движения по смыслу (crawl/breathe/levitate).
-136. [X] DraggableGrowButton больше не резервирует вертикаль: paddingBottom контента равен боковым отступам (sw(16)), карточка статов с flex: 1 растягивается до самого низа экрана.
-137. [X] Library (правила 62, 64), Plan и DataForAI (урок 9) обновлены.
-
-=== Фаза 28: Ауровая дифференциация стадий аватара ===
-138. [X] LifeAvatar: цвет ауры по ТОЧНОЙ стадии (9 оттенков, карта STAGE_AURA_COLORS), число пульсирующих колец ауры равно тиру (1-4, фазовый сдвиг 250мс), число частиц Ци равно 2 + stageIndex (кап 6) — все стадии визуально различимы.
-139. [X] Под бейджем выводится локализованное имя стадии (проп stageLabel через stageUtils.getStageName), чтобы игрок не путался; LifeScreen передаёт stageLabel.
-140. [X] Library (правило 62) и Plan обновлены; описание LifeAvatar в структуре проекта обновлено.
+=== Следующий шаг ===
+150. [ ] При необходимости расширить звуковые события: прорыв, покупка, ошибка, реинкарнация, уведомления.
+151. [ ] Добавить настройки громкости UI и музыки, если потребуется.
+152. [ ] Добавить больше кастомных звуков для DaoScreen/ActivitiesScreen/StoreScreen, если потребуется полное покрытие всех нажатий.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
+Game/src/
+├── App.tsx                                     // SafeAreaProvider, гидратация сторов, глобальный NotificationHost, инициализация AudioManager
+├── components/
+│   ├── ui/
+│   │   └── index.tsx                           // Единый UI-кит: Button, Card, ProgressBar, StatRow, IconButton; звуки кнопок через AudioManager
+│   └── game/
+│       ├── NotificationHost.tsx                // Глобальная очередь уведомлений поверх экранов (zIndex 1000)
+│       ├── NotificationToast.tsx               // Анимированный тост одного уведомления с автоскрытием
+│       ├── EffectChips.tsx                     // Чипы эффектов для уведомлений и журнала
+│       ├── LifeAvatar.tsx                      // Анимированный бейдж-аватар с ауровой дифференциацией стадий
+│       └── DraggableGrowButton.tsx             // Перетаскиваемая плавающая кнопка взросления; звук короткого нажатия
+├── audio/
+│   ├── AudioManager.ts                         // Сервис звука: клик, toggle, tab, success, error, music loop, sync с настройками
+│   └── proceduralAudio.ts                      // Процедурная генерация WAV-звуков и короткой фоновой мелодии
+├── screens/
+│   ├── SettingsScreen.tsx                      // Экран настроек: звук интерфейса и музыка
+│   ├── LifeScreen.tsx                          // Вкладка «Мир»: статы, фокус, журнал модал, rebirth report, FAB, звуки кастомных кнопок
+│   ├── DaoScreen.tsx                           // Вкладка «Дао»: стадия, техники, кнопка прорыва
+│   ├── ActivitiesScreen.tsx                    // Вкладка «Активности»: работа, спорт, еда, жильё, порталы
+│   ├── StoreScreen.tsx                         // Магазин кармы: многоуровневые баффы и IAP-заготовки
+│   ├── SectScreen.tsx                          // Секта и локальный рейтинг: deprecated
+│   └── LogScreen.tsx                           // Журнал судьбы (FlashList), модал с generated-событиями и effect chips; звук закрытия
+├── store/
+│   ├── mmkvStorage.ts                          // Zustand-адаптер для react-native-mmkv с memory-fallback
+│   ├── usePlayerStore.ts                       // Игрок: current/max health, activeCurses, rebirth report, смерть
+│   ├── useEventStore.ts                        // Журнал событий
+│   ├── useInventoryStore.ts                    // Инвентарь и карма-баффы
+│   ├── useLocaleStore.ts                       // Выбор языка ru/en с гидратацией
+│   ├── useSocialStore.ts                       // Секты: deprecated, но хранится
+│   ├── useTechniquesStore.ts                   // Уровни техник Дао
+│   ├── useLifestyleStore.ts                    // Выбранные активности
+│   ├── useNotificationStore.ts                 // Очередь rich-уведомлений
+│   └── useSettingsStore.ts                     // Настройки звука и музыки
+├── navigation/
+│   └── TabNavigator.tsx                        // Нижние вкладки Life/Dao/Activities/Store/Settings (5 видимых)
+├── constants/
+│   ├── GameConstants.ts                        // Игровые константы
+│   └── Theme.ts                                // Единая тёмная неоновая тема
+├── data/                                       // Data-driven контент
+├── hooks/                                      // useBreakthrough, useIdleProgress, useYearlyCycle
+├── types/
+│   └── index.ts                                // TypeScript интерфейсы
+├── utils/                                      // Игровые утилиты
+└── locales/
+    ├── ru/
+    │   ├── ui.json                             // Русские тексты UI, settings_screen, tab_bar
+    │   ├── events.json
+    │   ├── social.json
+    │   ├── notifications.json
+    │   ├── extras.json
+    │   ├── stages.json
+    │   ├── rebirth.json
+    │   └── eventGenerator.json
+    └── en/
+        ├── ui.json                             // Английские тексты UI, settings_screen, tab_bar
+        ├── events.json
+        ├── social.json
+        ├── notifications.json
+        ├── extras.json
+        ├── stages.json
+        ├── rebirth.json
+        └── eventGenerator.json
+
 Game/
-├── DataForAI.txt                       // Выученные уроки по крашам Hermes, навигации, адаптивности, центровке, XML и FAB
-└── src/
-    ├── App.tsx                          // SafeAreaProvider, гидратация сторов, глобальный NotificationHost
-    ├── components/
-    │   ├── ui/
-    │   │   └── index.tsx                // Button, Card, ProgressBar, StatRow (dense + scale), IconButton, DetailsModal
-    │   └── game/
-    │       ├── NotificationHost.tsx     // Очередь уведомлений поверх экрана
-    │       ├── NotificationToast.tsx    // Rich-тост: title, body, rarity, effects chips, таймер от монтирования
-    │       ├── EffectChips.tsx          // Чипы эффектов для уведомлений и журнала
-    │       ├── LifeAvatar.tsx           // Анимированный бейдж-аватар: emoji-матрица возраст x стадия, аура по точной стадии, кольца по тиру, частицы по индексу, подпись стадии
-    │       └── DraggableGrowButton.tsx  // Перетаскиваемая кнопка взросления (FAB)
-    ├── constants/
-    │   ├── GameConstants.ts             // Лимиты, ad policy, body tempering, survival, EVENT_* таблицы, portal blessing cap
-    │   └── Theme.ts                     // Темная тема
-    ├── data/
-    │   ├── events.json                  // Legacy-события (fallback/архив)
-    │   ├── eventRules.json              // Правила генератора событий
-    │   ├── rebirthPenalties.json        // Последствия смерти: деньги, здоровье, проклятия
-    │   ├── items.json                   // Многоуровневые карма-баффы
-    │   ├── stages.json                  // Стадии культивации, med/mortality/survival/breakthrough данные
-    │   ├── sects.json                   // Шаблоны сект
-    │   ├── rankings.json                // Seed-рейтинг
-    │   ├── techniques.json              // Техники Дао
-    │   └── lifestyle.json               // Работы, спорт, еда, жилье, порталы с наградами и благословением
-    ├── hooks/
-    │   ├── useIdleProgress.ts           // Offline-прогресс без процентного разгона
-    │   ├── useBreakthrough.ts           // Прорывы с body tempering, portal blessing и капами
-    │   └── useYearlyCycle.ts            // Годовой цикл: ad at age 1, mortality, survival, lifestyle, порталы, события
-    ├── navigation/
-    │   └── TabNavigator.tsx             // Нижние вкладки Life/Dao/Activities/Store (Sect отключён)
-    ├── screens/
-    │   ├── LifeScreen.tsx               // Модал журнала, rebirth report, FAB-overlay без резерва места, причина смерти, подсказка возраста, центрированный бейдж-аватар с ауровой дифференциацией и подписью стадии, расходы в год, адаптивный scale + flex-fill, шапка GoodLife v.2
-    │   ├── DaoScreen.tsx                // Путь Дао, техники, прорыв, Body Tempering, детали стадий/техник/тела, активное благословение портала
-    │   ├── ActivitiesScreen.tsx         // Активности: работа, спорт, еда, жилье, порталы и награды порталов
-    │   ├── StoreScreen.tsx              // Магазин Кармы с уровнями и деталями баффов по long-press
-    │   ├── SectScreen.tsx               // Секта и рейтинг (deprecated, отключён из навигации)
-    │   └── LogScreen.tsx                // Журнал с generated-событиями и effect chips, onClose
-    ├── store/
-    │   ├── mmkvStorage.ts               // MMKV storage
-    │   ├── usePlayerStore.ts            // Игрок, bodyTempering, interstitialShownThisLife, смерть, portalBlessingBps
-    │   ├── useEventStore.ts             // Журнал, addGeneratedLog
-    │   ├── useInventoryStore.ts         // Инвентарь и уровни карма-баффов
-    │   ├── useLocaleStore.ts            // Язык
-    │   ├── useSocialStore.ts            // Секты
-    │   ├── useNotificationStore.ts      // Очередь rich-уведомлений, missedCount
-    │   ├── useTechniquesStore.ts        // Уровни техник Дао (сбрасываются при реинкарнации)
-    │   └── useLifestyleStore.ts         // Выбранные активности (сбрасываются при реинкарнации)
-    ├── types/
-    │   └── index.ts                     // Интерфейсы: GeneratedEvent, EffectChip, RebirthReport, ModifierSet, LifestyleReport с portalBlessingGainedBps
-    ├── utils/
-    │   ├── notificationUtils.ts         // Резолвинг уведомлений и логов по ключам/параметрам
-    │   ├── timeUtils.ts                 // Дельта времени
-    │   ├── helpers.ts                   // Форматирование, BigInt, random, bps
-    │   ├── stageUtils.ts                // Локализованные имена стадий
-    │   ├── rebirthUtils.ts              // Последствия смерти и проклятия
-    │   ├── eventGenerator.ts            // Генератор событий с body resistance
-    │   ├── effectFormatter.ts           // Форматирование эффектов и bps-процентов
-    │   └── gameplayUtils.ts             // Расчеты карма-баффов, техник, активностей, survival, body, mortality, порталы и благословение
-    └── locales/
-        ├── ru/
-        │   ├── ui.json                  // Базовые тексты UI, GoodLife v.2, accessibility-подписи LifeAvatar, расходы в год
-        │   ├── events.json              // Legacy-события
-        │   ├── social.json              // Секты
-        │   ├── notifications.json       // Уведомления
-        │   ├── extras.json              // Навигация, техники, магазин, активности, награды порталов
-        │   ├── stages.json              // Имена стадий
-        │   ├── rebirth.json             // Последствия перерождения
-        │   └── eventGenerator.json      // Шаблоны и пулы событий
-        └── en/
-            ├── ui.json                  // Базовые тексты UI, GoodLife v.2, accessibility-подписи LifeAvatar, расходы в год
-            ├── events.json              // Legacy-события
-            ├── social.json              // Секты
-            ├── notifications.json       // Уведомления
-            ├── extras.json              // Навигация, техники, магазин, активности, награды порталов
-            ├── stages.json              // Имена стадий
-            ├── rebirth.json             // Последствия перерождения
-            └── eventGenerator.json      // Шаблоны и пулы событий
+├── PlanOfDevelopment.txt                       // Глобальный план разработки
+├── Library.txt                                 // Архитектурная библиотека
+├── DataForAI.txt                               // Выученные уроки
+└── package.json                                // Зависимости Expo/React Native, включая expo-av и expo-file-system
