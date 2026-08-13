@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import TabNavigator from './navigation/TabNavigator';
 import { NotificationHost } from './components/game/NotificationHost';
+import { LanguageSelectionOverlay } from './components/game/LanguageSelection';
 import { usePlayerStore } from './store/usePlayerStore';
 import { useLocaleStore } from './store/useLocaleStore';
 import { useSocialStore } from './store/useSocialStore';
@@ -14,8 +15,7 @@ import { useSettingsStore } from './store/useSettingsStore';
 import { initAudio, disposeAudio } from './audio/AudioManager';
 import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
-import ruUI from './locales/ru/ui.json';
-import enUI from './locales/en/ui.json';
+import { resolveLocalizedKey } from './utils/i18n';
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
@@ -26,7 +26,9 @@ export default function App() {
   const lifestyleHydrated = useLifestyleStore((state) => state.hasHydrated);
   const settingsHydrated = useSettingsStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
-  const uiData: any = locale === 'ru' ? ruUI : enUI;
+  const hasChosenLanguage = useLocaleStore((state) => state.hasChosenLanguage);
+
+  const loadingText = resolveLocalizedKey(locale, 'ui', 'app.loading');
 
   const isReady =
     playerHydrated &&
@@ -43,9 +45,7 @@ export default function App() {
     if (!isReady) {
       return;
     }
-
     initAudio?.();
-
     return () => {
       disposeAudio?.();
     };
@@ -57,9 +57,17 @@ export default function App() {
         <SafeAreaView style={styles.container}>
           <View style={styles.loadingCard}>
             <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
-            <Text style={styles.loadingText}>{uiData.app.loading}</Text>
+            <Text style={styles.loadingText}>{loadingText}</Text>
           </View>
         </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
+  if (!hasChosenLanguage) {
+    return (
+      <SafeAreaProvider>
+        <LanguageSelectionOverlay />
       </SafeAreaProvider>
     );
   }

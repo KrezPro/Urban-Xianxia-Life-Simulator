@@ -8,5 +8,13 @@
   "language": "Language",
   "language_desc": "Choose interface language.",
   "language_en": "English",
-  "language_ru": "Русский"
+  "language_ru": "Русский",
+  "language_button": "Change language",
+  "language_current": "Current language",
+  "language_selection": {
+    "title": "Choose language",
+    "subtitle": "Select the interface language. You can change it later in Settings.",
+    "confirm": "Continue",
+    "close": "Close"
+  }
 }

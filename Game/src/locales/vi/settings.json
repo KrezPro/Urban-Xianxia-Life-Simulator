@@ -1,0 +1,20 @@
+{
+  "tab_label": "Cài đặt",
+  "title": "Cài đặt",
+  "sound": "Âm thanh giao diện",
+  "sound_desc": "Âm thanh ngắn cho nút và hành động.",
+  "music": "Âm nhạc",
+  "music_desc": "Nhạc nền lặp lại.",
+  "language": "Ngôn ngữ",
+  "language_desc": "Chọn ngôn ngữ giao diện.",
+  "language_en": "English",
+  "language_ru": "Русский",
+  "language_button": "Đổi ngôn ngữ",
+  "language_current": "Ngôn ngữ hiện tại",
+  "language_selection": {
+    "title": "Chọn ngôn ngữ",
+    "subtitle": "Chọn ngôn ngữ giao diện. Bạn có thể đổi sau trong Cài đặt.",
+    "confirm": "Tiếp tục",
+    "close": "Đóng"
+  }
+}

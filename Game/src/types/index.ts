@@ -1,4 +1,27 @@
-export type Locale = 'ru' | 'en';
+export type Locale =
+  | 'en'
+  | 'vi'
+  | 'id'
+  | 'es'
+  | 'it'
+  | 'kk'
+  | 'zh-Hans'
+  | 'zh-Hant'
+  | 'ko'
+  | 'ms'
+  | 'de'
+  | 'pl'
+  | 'pt'
+  | 'ro'
+  | 'ru'
+  | 'sw'
+  | 'th'
+  | 'tr'
+  | 'fil'
+  | 'fr'
+  | 'hi'
+  | 'ja';
+
 export type ActivityFocus = 'mundane' | 'secret';
 export type SectFocus = 'mundane' | 'secret' | 'hybrid';
 export type SectRole = 'founder' | 'elder' | 'member';
