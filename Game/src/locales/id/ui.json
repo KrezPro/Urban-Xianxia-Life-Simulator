@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Membangkitkan jiwa..."
+  },
+  "tab_bar": {
+    "life": "Hidup",
+    "dao": "Dao",
+    "activities": "Aktivitas",
+    "store": "Toko",
+    "settings": "Pengaturan",
+    "log": "Log",
+    "sect": "Sekte"
+  },
+  "log_screen": {
+    "title": "Catatan Takdir",
+    "empty": "Jalan hidup Anda baru saja dimulai..."
+  },
+  "idle": {
+    "offline_secret": "Kemajuan offline: Anda bermeditasi selama {seconds}dtk. Qi didapat: {amount}.",
+    "offline_mundane": "Kemajuan offline: Anda bekerja selama {seconds}dtk. Penghasilan: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Usia",
+    "stage": "Tahap",
+    "health": "Kesehatan",
+    "intelligence": "Kecerdasan",
+    "appearance": "Penampilan",
+    "money": "Uang",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Bertambah Tua (+1 tahun)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Anda lahir ke dunia ini. Kisah Anda dimulai...",
+    "death_log": "Anda telah mati. Jiwa Anda memasuki siklus Samsara tanpa akhir...",
+    "reincarnate_log": "Roda Samsara telah berputar. Anda terlahir kembali di tubuh baru.",
+    "age": "Usia",
+    "health": "Kesehatan",
+    "intelligence": "Kecerdasan",
+    "appearance": "Penampilan",
+    "money": "Uang",
+    "expenses_year": "Pengeluaran tahunan",
+    "spiritual_root": "Akar Spiritual",
+    "qi": "Energi Qi",
+    "karma": "Karma",
+    "focus_title": "Fokus tahun ini:",
+    "focus_mundane": "Kehidupan Fana",
+    "focus_secret": "Jalan Rahasia",
+    "btn_grow": "Bertambah Tua (+1 tahun)",
+    "btn_reincarnate": "Reinkarnasi",
+    "btn_log": "Catatan",
+    "dead_title": "ANDA TELAH MATI",
+    "dead_subtitle": "Perjalanan hidup Anda telah terhenti.",
+    "death_cause_label": "Penyebab kematian:",
+    "death_causes": {
+      "none": "Tidak diketahui",
+      "old_age": "Usia tua",
+      "health": "Gagal kesehatan",
+      "breakthrough": "Gagal terobosan",
+      "portal": "Kecelakaan portal",
+      "event": "Peristiwa takdir"
+    },
+    "karma_accumulated": "Total Karma:",
+    "karma_earned_last_life": "Warisan didapat (Karma):",
+    "meditation_log": "Setahun berlalu dalam meditasi rahasia. Mengumpulkan {amount} energi Qi.",
+    "age_log": "Anda berumur {age} tahun.",
+    "interstitial_log": "[IKLAN] Iklan interstisial ditampilkan setelah reinkarnasi pada usia 1 tahun.",
+    "avatar": {
+      "aria_child": "Seorang bayi merangkak di jalan kehidupan",
+      "aria_teen": "Seorang pemuda mengambil langkah pertamanya",
+      "aria_adult": "Orang dewasa bermeditasi dalam",
+      "aria_mature": "Seorang master dalam meditasi mendalam",
+      "aria_elder": "Seorang tetua di usia senja perjalanannya"
+    },
+    "hints": {
+      "close": "Mengerti",
+      "intelligence": {
+        "title": "Kecerdasan",
+        "text": "Meningkatkan peluang sukses terobosan dan membantu dalam studi, pekerjaan, dan kejadian duniawi."
+      },
+      "health": {
+        "title": "Kesehatan",
+        "text": "Jika kesehatan mencapai 0, Anda mati dan bereinkarnasi. Lindungilah."
+      },
+      "appearance": {
+        "title": "Penampilan",
+        "text": "Mempengaruhi acara sosial, hubungan, dan beberapa peluang duniawi."
+      },
+      "money": {
+        "title": "Uang",
+        "text": "Dibutuhkan untuk hidup, kontribusi sekte, dan peluang di masa depan."
+      },
+      "expenses": {
+        "title": "Pengeluaran tahunan",
+        "text": "Biaya hidup: {survival} per tahun. Gaya hidup (pekerjaan, olahraga, makanan, rumah, portal): {lifestyle} per tahun. Jika Anda tidak bisa membayar biaya hidup, kesehatan Anda menurun."
+      },
+      "spiritual_root": {
+        "title": "Akar Spiritual",
+        "text": "Menentukan kecepatan akumulasi Qi dan potensi kultivasi."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Terkumpul melintasi berbagai kehidupan dan dihabiskan untuk peningkatan permanen di Toko Karma."
+      },
+      "focus_mundane": {
+        "title": "Kehidupan Fana",
+        "text": "Fokus pada uang, pendidikan, dan karier. Peluang lebih rendah untuk kejadian rahasia."
+      },
+      "focus_secret": {
+        "title": "Jalan Rahasia",
+        "text": "Fokus pada kultivasi: Anda mendapatkan Qi dan lebih sering menemui kejadian rahasia."
+      },
+      "age": {
+        "title": "Usia",
+        "text": "Batas umur maksimum tahap Anda saat ini: {maxAge} tahun. Usia tua bisa datang lebih awal, terutama setelah {softAge} tahun."
+      },
+      "age_immortal": {
+        "title": "Usia",
+        "text": "Tahap ini abadi: usia tua tidak lagi membunuh Anda."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Toko Karma",
+    "karma_balance": "Karma Anda",
+    "btn_buy": "Beli",
+    "btn_bought": "Dimiliki",
+    "btn_no_karma": "Kurang",
+    "cost": "Harga",
+    "iap_section": "Premium & Monetisasi",
+    "iap_pass": "Pas Kultivator",
+    "iap_pass_desc": "Menonaktifkan semua iklan interstisial selamanya dan mendukung pengembang.",
+    "iap_ad": "Iklan Penyelamat",
+    "iap_ad_desc": "Tersedia di tab Dao sebelum melakukan terobosan (perlindungan kematian).",
+    "btn_iap_buy": "Beli Pas",
+    "btn_iap_active": "Aktif",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Keluarga Kaya",
+        "desc": "Setiap reinkarnasi dimulai dengan uang ekstra dan sedikit bonus penghasilan tahunan."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridian Kuat",
+        "desc": "Memperkuat tubuh: lebih banyak Maks Kesehatan, pemulihan, dan pengurangan kerusakan."
+      },
+      "buff_pure_root": {
+        "name": "Akar Murni",
+        "desc": "Meningkatkan Akar Spiritual dan memberikan bonus Qi tetap per tahun."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Jalan Dao",
+    "stage": "Tahap",
+    "unknown": "Tidak diketahui",
+    "qi_energy": "Energi Qi",
+    "next_stage": "Langkah Berikutnya",
+    "req_qi": "Qi Dibutuhkan",
+    "success_chance": "Peluang Sukses",
+    "btn_breakthrough": "Coba Terobosan",
+    "btn_no_qi": "Qi Tidak Cukup",
+    "max_stage": "Anda telah mencapai puncak kultivasi. Langit tidak lagi mengikat Anda.",
+    "dead_text": "Orang mati tidak bisa berkultivasi.",
+    "btn_ad_buff": "Tonton Iklan (+10% & Perlindungan)",
+    "btn_ad_watched": "Buff Aktif",
+    "alert_ad_title": "Iklan",
+    "alert_ad_msg": "Video selesai ditonton! Anda menerima buff untuk terobosan berikutnya.",
+    "body_title": "Penempaan Tubuh",
+    "body_level": "Level",
+    "body_cost": "Biaya",
+    "body_button": "Tempa Tubuh",
+    "body_locked_age": "Tubuh Anda masih terlalu lemah",
+    "body_locked_year": "Penempaan tersedia tahun depan",
+    "body_locked_qi": "Qi tidak cukup",
+    "body_effect_line": "+{maxHealth} Maks Kesehatan, +{regen} Pemulihan/tahun, resistensi penyakit {resistance}%",
+    "body_desc": "Tubuh ditempa melalui rasa sakit, keringat, dan tekad, menjadi wadah bagi kekuatan sejati.",
+    "details_close": "Tutup",
+    "body_details_title": "Efek Penempaan Tubuh",
+    "body_details_max_health": "Maks Kesehatan",
+    "body_details_regen": "Pemulihan/tahun",
+    "body_details_illness": "Resistensi penyakit",
+    "body_details_mortality": "Pengurangan mortalitas",
+    "body_details_survival": "Diskon biaya hidup",
+    "body_details_breakthrough": "Diskon kerusakan terobosan",
+    "body_details_portal": "Diskon kerusakan portal",
+    "stage_info_max_age": "Batas usia maksimum",
+    "stage_info_soft_age": "Usia tua dimulai pada",
+    "stage_info_meditation": "Meditasi Qi",
+    "stage_info_mortality": "Mortalitas",
+    "stage_info_survival": "Biaya hidup",
+    "stage_info_breakthrough_damage": "Bahaya terobosan",
+    "stage_info_required_qi": "Qi Dibutuhkan",
+    "stage_info_immortal": "Abadi: usia tua tidak membunuh",
+    "portal_blessing_active": "Berkah portal aktif: +{percent}",
+    "log_no_qi": "Energi Qi tidak cukup untuk terobosan.",
+    "log_success": "[SUKSES] Terobosan berhasil! Anda mencapai tahap: {name}. Meridian meluas.",
+    "log_fail_death": "[GAGAL KRITIS] Kesengsaraan Langit terlalu kuat. Anda telah mati.",
+    "log_fail_damage": "[GAGAL] Terobosan gagal. Terjadi Pembakaran Mana, Anda menerima {damage} kerusakan.",
+    "log_ad_saved": "[DISELAMATKAN] Terobosan gagal, namun Buff Iklan melindungi meridian Anda dari kerusakan!"
+  },
+  "settings_screen": {
+    "title": "Pengaturan",
+    "sound": "Suara Antarmuka",
+    "sound_desc": "Suara pendek untuk tombol dan tindakan.",
+    "music": "Musik",
+    "music_desc": "Melodi latar belakang yang berulang."
+  }
+}

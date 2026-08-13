@@ -2,49 +2,49 @@
   "mundane": [
     {
       "id": "m1",
-      "text": "Kamu belajar keras sepanjang tahun. Pengetahuanmu bertambah.",
+      "text": "Anda belajar keras sepanjang tahun. Pengetahuan Anda meluas.",
       "effects": { "intelligence": 2 }
     },
     {
       "id": "m2",
-      "text": "Kamu terkena virus serius dan dirawat di rumah sakit.",
+      "text": "Anda terkena virus mematikan dan harus dirawat di rumah sakit.",
       "effects": { "health": -15 }
     },
     {
       "id": "m3",
-      "text": "Kamu menemukan kerja paruh waktu yang bagus dan menabung sedikit dolar.",
+      "text": "Anda menemukan pekerjaan paruh waktu yang baik dan berhasil menabung beberapa dolar.",
       "effects": { "money": 150 }
     },
     {
       "id": "m_boss",
-      "text": "Bosmu ternyata iblis tingkat rendah yang menyamar! Kamu merusak printernya, didenda, tapi mengasah semangatmu.",
+      "text": "Bos Anda ternyata adalah iblis tingkat rendah yang menyamar! Anda merusak printernya, didenda, tetapi menyehatkan roh Anda.",
       "effects": { "money": -50, "intelligence": 3 }
     },
     {
       "id": "m_darknet",
-      "text": "Kamu tak sengaja membeli 'batu bercahaya' di darknet. Itu bijih radioaktif. Kesehatan turun, tapi kamu merasakan energi aneh.",
+      "text": "Anda secara tidak sengaja membeli 'batu bercahaya' di darknet. Ternyata itu bijih radioaktif. Kesehatan turun, tetapi Anda merasakan energi aneh.",
       "effects": { "health": -20, "qi": "10" }
     }
   ],
   "secret": [
     {
       "id": "s1",
-      "text": "Kamu menemukan vena spiritual tersembunyi di taman tua. Energi Qi memenuhi tubuhmu.",
+      "text": "Anda tersandung pada urat spiritual tersembunyi di taman tua. Energi Qi memenuhi Anda.",
       "effects": { "qi": "50" }
     },
     {
       "id": "s2",
-      "text": "Saat meditasi malam, terjadi Mana Burn parah. Meridianmu rusak.",
+      "text": "Selama meditasi malam, terjadi Pembakaran Mana parah. Meridian Anda rusak.",
       "effects": { "health": -20, "qi": "-15" }
     },
     {
       "id": "s3",
-      "text": "Kamu menolong anjing liar yang ternyata roh penjaga. Karmamu membaik.",
+      "text": "Anda membantu anjing liar yang ternyata adalah roh penjaga. Karma Anda membaik.",
       "effects": { "karma": 10 }
     },
     {
       "id": "s_gopnik",
-      "text": "Preman jalanan yang ternyata kultivator sesat menghadangmu. Kamu melawan mereka dengan 'Tapak Angin Besi' dan mengambil uang mereka.",
+      "text": "Preman jalanan yang ternyata kultivator liar memojokkan Anda. Anda melawan mereka dengan 'Telapak Angin Besi' dan mengambil uang mereka.",
       "effects": { "money": 200, "karma": -2 }
     }
   ]
