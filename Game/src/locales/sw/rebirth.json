@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Kuzaliwa Upya",
+  "accept": "Kubali hatima",
+  "tiers": {
+    "blessed": {
+      "title": "Kuzaliwa Upya Kulikobarikiwa",
+      "desc": "Mbingu ni zenye huruma. Hupati hasara yoyote mpya."
+    },
+    "uneasy": {
+      "title": "Kuzaliwa Upya Kusikotulia",
+      "desc": "Maisha yako yaliyopita yameacha alama nyepesi kwenye hatima yako mpya."
+    },
+    "troubled": {
+      "title": "Kuzaliwa Upya kwa Shida",
+      "desc": "Karma ya maisha yako ya nyuma inaelemea mwili wako mpya."
+    },
+    "severe": {
+      "title": "Kuzaliwa Upya Kutisha",
+      "desc": "Umeingia katika ulimwengu mpya ukiwa na hasara kubwa."
+    },
+    "doomed": {
+      "title": "Kuzaliwa Upya Kulikolaaniwa",
+      "desc": "Mbingu zimekupa kisogo. Maisha yako mapya yameanza katika giza."
+    }
+  },
+  "money": {
+    "money_loss_0": "Urithi umehifadhiwa.",
+    "money_loss_25": "Umepoteza 25% ya urithi.",
+    "money_loss_50": "Umepoteza 50% ya urithi.",
+    "money_loss_75": "Umepoteza 75% ya urithi.",
+    "money_loss_100": "Umepoteza urithi wote."
+  },
+  "health": {
+    "health_start_100": "Mwili wako una afya njema.",
+    "health_start_85": "Mwili wako umedhoofika kidogo.",
+    "health_start_70": "Mwili wako umedhoofika sana.",
+    "health_start_55": "Ulizaliwa ukiwa dhaifu.",
+    "health_start_40": "Upo kwenye ukingo wa kifo."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Kivuli chenye Njaa",
+      "desc": "Mapato yamepungua kwa 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Mwili Dhaifu",
+      "desc": "Kupona kwa afya kumepungua kwa 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Akili yenye Ukungu",
+      "desc": "Akili imepungua kwa 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Ngozi Mbaya",
+      "desc": "Muonekano umepungua kwa 3."
+    },
+    "curse_major_debt": {
+      "name": "Deni la Maisha Yaliyopita",
+      "desc": "Mapato yamepungua kwa 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridian Zilizopasuka",
+      "desc": "Kupata Qi kumepungua kwa 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Alama ya Mbinguni",
+      "desc": "Nafasi ya kuvuka mipaka na kufanikiwa kwenye lango imepungua kwa 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Mwili wa Magonjwa",
+      "desc": "Kupona kwa afya kumepungua kwa 12%."
+    }
+  }
+}

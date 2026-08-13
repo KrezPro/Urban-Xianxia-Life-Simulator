@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Maisha",
+      "dao": "Dao",
+      "activities": "Shughuli",
+      "store": "Duka",
+      "sect": "Madhehebu"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Afya/mwaka",
+    "healthRegenPerYear": "+{value} Kupona/mwaka",
+    "appearancePerYear": "+{value} Muonekano/mwaka",
+    "qiPerYear": "+{value} Qi/mwaka",
+    "portalSuccessBps": "+{value}% mafanikio ya lango",
+    "qiFlatPerYear": "+{value} Qi/mwaka",
+    "moneyFlatPerYear": "+${value}/mwaka",
+    "healthRegenFlat": "+{value} Kupona/mwaka",
+    "damageReductionBps": "+{value}% kupunguza uharibifu",
+    "breakthroughChanceBps": "+{value}% nafasi ya kuvuka",
+    "startMoney": "Kuanza: +${value}",
+    "startMaxHealth": "Kuanza: +{value} Afya",
+    "startSpiritualRoot": "Kuanza: +{value} Mzizi",
+    "startBodyTempering": "Kuanza: +{value} Kuimarisha"
+  },
+  "life": {
+    "survival_cost_line": "Gharama za maisha: -${amount}/mwaka",
+    "survival_cost_hint": {
+      "title": "Gharama za maisha",
+      "text": "Gharama za lazima za kila mwaka kwa chakula, nyumba na usalama. Zinatozwa hata kama hakuna shughuli iliyochaguliwa. Ikiwa unakosa pesa, afya yako itadorora."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Gharama za maisha: -${amount}.",
+    "lifestyle_money_delta": "Faida ya shughuli za kila mwaka: {amount}.",
+    "portal_blessing_gained": "Baraka ya lango: +{percent}% kwenye nafasi ijayo ya kuvuka mipaka."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Mbinu za Dao",
+      "level": "Kiwango",
+      "max": "Mwisho",
+      "cost": "Gharama",
+      "upgrade": "Boresha",
+      "locked": "Imefungwa",
+      "not_enough_money": "Pesa haitoshi",
+      "current_effects": "Sasa",
+      "next_effects": "Inayofuata",
+      "requirements": {
+        "spiritual_root": "Mzizi wa Kiroho",
+        "intelligence": "Akili",
+        "stage": "Hatua"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Pumzi ya Joka Lililofichwa",
+          "desc": "Mbinu ya msingi ya kupumua. Inaongeza upataji wa Qi na nafasi ya kuvuka mipaka."
+        },
+        "technique_iron_meridian": {
+          "name": "Meridian za Chuma",
+          "desc": "Huuimarisha mwili na meridian. Huboresha kupona kwa afya na kupunguza uharibifu."
+        },
+        "technique_jade_ledger": {
+          "name": "Leja ya Jade",
+          "desc": "Mbinu ya kawaida ya utajiri. Inaongeza mapato, ufanisi wa kazi na mafanikio kwenye lango."
+        },
+        "technique_spirit_sense": {
+          "name": "Hisia ya Roho",
+          "desc": "Mbinu ya mtazamo kwa hatua za mwisho. Inaongeza Qi, kuvuka mipaka na mafanikio ya lango."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Kiwango",
+    "max_level": "Kiwango cha mwisho",
+    "next_cost": "Gharama ijayo",
+    "current_effects": "Sasa",
+    "next_effects": "Inayofuata",
+    "effects_note": "Athari za kuanza zinatumika baada ya kuzaliwa upya. Athari za kila mwaka zinatumika kila mwaka.",
+    "details_close": "Funga"
+  },
+  "activities": {
+    "title": "Shughuli",
+    "dead_text": "Wafu hawawezi kuchagua shughuli.",
+    "select": "Chagua",
+    "selected": "Imechaguliwa",
+    "disable": "Zima",
+    "locked": "Imefungwa",
+    "daily_cost": "Gharama/siku",
+    "daily_income": "Mapato/siku",
+    "yearly_cost": "Gharama/mwaka",
+    "yearly_income": "Mapato/mwaka",
+    "net_yearly": "Faida/mwaka",
+    "effects_title": "Athari/mwaka",
+    "requirements_label": "Mahitaji",
+    "none": "Hakuna",
+    "categories": {
+      "job": "Kazi",
+      "sport": "Michezo",
+      "food": "Chakula",
+      "housing": "Nyumba",
+      "portal": "Malango"
+    },
+    "requirements": {
+      "age": "Umri",
+      "intelligence": "Akili",
+      "appearance": "Muonekano",
+      "spiritual_root": "Mzizi",
+      "health": "Afya",
+      "max_health": "Afya ya Juu",
+      "stage": "Hatua"
+    },
+    "portal_rewards": {
+      "title": "Zawadi za Lango",
+      "attempt_cost": "Gharama ya jaribio: ${cost}",
+      "reward_money": "Pesa: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Bonasi ya kuvuka: +{percent}%",
+      "fail_damage_bps": "Kushindwa: uharibifu wa {percent}% ya Afya ya Juu",
+      "fail_damage_flat": "Kushindwa: uharibifu wa {damage}"
+    },
+    "options": {
+      "job_none": { "name": "Hakuna Kazi", "desc": "Hakuna mapato na hakuna majukumu." },
+      "job_parttime": { "name": "Muda wa Ziada", "desc": "Kazi ndogo na usafirishaji." },
+      "job_office": { "name": "Karani wa Ofisi", "desc": "Inachosha lakini imara." },
+      "job_manager": { "name": "Meneja", "desc": "Majukumu zaidi, pesa zaidi." },
+      "job_founder": { "name": "Mwanzilishi wa Teknolojia", "desc": "Kampuni mpya inayochanganya IT na teknolojia ya kiroho." },
+      "sport_none": { "name": "Hakuna Michezo", "desc": "Hakuna shughuli za kimwili." },
+      "sport_home": { "name": "Mazoezi ya Nyumbani", "desc": "Kupiga push-up uani." },
+      "sport_gym": { "name": "Gym", "desc": "Kujiunga na gym ya ndani." },
+      "sport_premium": { "name": "Klabu ya Premium", "desc": "Wakufunzi, bwawa na kupona." },
+      "sport_spirit": { "name": "Mafunzo ya Kiroho", "desc": "Mafunzo ya mwili na meridian." },
+      "food_none": { "name": "Hakuna Mpango wa Chakula", "desc": "Vitafunio vya haraka." },
+      "food_street": { "name": "Chakula cha Mitaani", "desc": "Noodles na baa za nishati." },
+      "food_home": { "name": "Chakula cha Nyumbani", "desc": "Chakula cha kawaida, kizuri." },
+      "food_premium": { "name": "Milo ya Premium", "desc": "Bidhaa bora na lishe kamili." },
+      "food_spirit": { "name": "Chakula cha Kiroho", "desc": "Milo iliyotengenezwa kutokana na mimea ya kiroho." },
+      "housing_none": { "name": "Hakuna Nyumba", "desc": "Kulala popote unapoweza." },
+      "housing_shelter": { "name": "Kambi ya Kujihifadhi", "desc": "Paa dogo juu ya kichwa chako." },
+      "housing_room": { "name": "Chumba cha Kupanga", "desc": "Chumba kimoja kidogo kwenye nyumba nzee." },
+      "housing_apartment": { "name": "Ghorofa", "desc": "Ghorofa safi na usingizi mzuri." },
+      "housing_condo": { "name": "Kondo", "desc": "Jengo la kisasa lenye ulinzi." },
+      "portal_none": { "name": "Hakuna Malango", "desc": "Hakuna safari hatari." },
+      "portal_subway": { "name": "Barabara ya Chini Iliyotelekezwa", "desc": "Njia za zamani zenye macho ya ajabu." },
+      "portal_market": { "name": "Soko la Roho la Usiku", "desc": "Magendo ya tembe na biashara haramu." },
+      "portal_club": { "name": "Klabu ya Mapepo", "desc": "Klabu ya siri ambapo mapepo hucheza kamari na binadamu." },
+      "portal_tower": { "name": "Mnara wa Roho", "desc": "Jaribio kwa wakuzaji hodari." }
+    }
+  }
+}

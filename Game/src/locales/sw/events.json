@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Ulijifunza kwa bidii mwaka mzima. Maarifa yako yalipanuka.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Uliambukizwa virusi hatari na kulazwa hospitalini.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Ulipata kazi nzuri ya muda na kuweka akiba ya dola chache.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Bosi wako kumbe alikuwa demoni wa ngazi ya chini aliyejificha! Uliharibu printa yake, ukapigwa faini, lakini ukaiimarisha roho yako.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Ulinunua 'jiwe linalong'aa' kwenye darknet kimakosa. Ilikuwa ni madini ya mionzi. Afya yako ilishuka, lakini unahisi nishati ya ajabu.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Ulikumbana na mshipa wa kiroho uliofichwa katika mbuga ya zamani. Nishati ya Qi inakujaza.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Wakati wa kutafakari usiku, Kuungua kwa Mana kukali kulitokea. Meridian zako zimeharibika.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Ulimsaidia mbwa wa mtaani ambaye kumbe alikuwa roho mlinzi. Karma yako iliboreka.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Wahuni wa mtaani ambao waliishia kuwa wakuzaji waasi walikuzingira. Uliwapiga kwa 'Kiganja cha Upepo wa Chuma' na kuchukua pesa zao.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

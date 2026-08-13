@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Kuamsha roho..."
+  },
+  "tab_bar": {
+    "life": "Maisha",
+    "dao": "Dao",
+    "activities": "Shughuli",
+    "store": "Duka",
+    "settings": "Mipangilio",
+    "log": "Rekodi",
+    "sect": "Madhehebu"
+  },
+  "log_screen": {
+    "title": "Rekodi ya Hatima",
+    "empty": "Njia yako ya maisha ndio inaanza..."
+  },
+  "idle": {
+    "offline_secret": "Maendeleo ya nje ya mtandao: Ulitafakari kwa {seconds}s. Qi iliyopatikana: {amount}.",
+    "offline_mundane": "Maendeleo ya nje ya mtandao: Ulifanya kazi kwa {seconds}s. Mapato: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Wasifu",
+    "age": "Umri",
+    "stage": "Hatua",
+    "health": "Afya",
+    "intelligence": "Akili",
+    "appearance": "Muonekano",
+    "money": "Pesa",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Kua (+Mwaka 1)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Ulizaliwa katika ulimwengu huu. Hadithi yako inaanza...",
+    "death_log": "Umekufa. Roho yako inaingia kwenye mzunguko usio na mwisho wa Samsara...",
+    "reincarnate_log": "Gurudumu la Samsara limegeuka. Umezaliwa upya katika mwili mpya.",
+    "age": "Umri",
+    "health": "Afya",
+    "intelligence": "Akili",
+    "appearance": "Muonekano",
+    "money": "Pesa",
+    "expenses_year": "Gharama za mwaka",
+    "spiritual_root": "Mzizi wa Kiroho",
+    "qi": "Nishati ya Qi",
+    "karma": "Karma",
+    "focus_title": "Lengo kwa mwaka huu:",
+    "focus_mundane": "Maisha ya Kawaida",
+    "focus_secret": "Njia ya Siri",
+    "btn_grow": "Kua (+Mwaka 1)",
+    "btn_reincarnate": "Kuzaliwa Upya",
+    "btn_log": "Rekodi",
+    "dead_title": "UMEkUFA",
+    "dead_subtitle": "Safari yako ya maisha imekatishwa.",
+    "death_cause_label": "Sababu ya kifo:",
+    "death_causes": {
+      "none": "Haijulikani",
+      "old_age": "Uzee",
+      "health": "Kufeli kwa afya",
+      "breakthrough": "Kushindwa kuvuka mipaka",
+      "portal": "Ajali ya lango",
+      "event": "Tukio la hatima"
+    },
+    "karma_accumulated": "Jumla ya Karma:",
+    "karma_earned_last_life": "Urithi uliopatikana (Karma):",
+    "meditation_log": "Mwaka mmoja ulipita katika tafakari ya siri. Ulikusanya nishati ya Qi {amount}.",
+    "age_log": "Umetimiza miaka {age}.",
+    "interstitial_log": "[TANGAZO] Tangazo limeonyeshwa baada ya kuzaliwa upya ukiwa na umri wa mwaka 1.",
+    "avatar": {
+      "aria_child": "Mtoto anatambaa kwenye njia ya maisha",
+      "aria_teen": "Kijana anachukua hatua zake za kwanza",
+      "aria_adult": "Mtu mzima aliye katika tafakari ya kina",
+      "aria_mature": "Mwalimu aliyezamia katika kutafakari",
+      "aria_elder": "Mzee katika jioni ya njia yake"
+    },
+    "hints": {
+      "close": "Nimeelewa",
+      "intelligence": {
+        "title": "Akili",
+        "text": "Huongeza nafasi ya mafanikio ya kuvuka mipaka na kusaidia katika masomo, kazi na matukio ya kawaida."
+      },
+      "health": {
+        "title": "Afya",
+        "text": "Ikiwa afya itafikia 0, unakufa na kuzaliwa upya. Ilinde."
+      },
+      "appearance": {
+        "title": "Muonekano",
+        "text": "Huathiri matukio ya kijamii, mahusiano na baadhi ya fursa za kawaida."
+      },
+      "money": {
+        "title": "Pesa",
+        "text": "Inahitajika kwa maisha, michango ya madhehebu na fursa za baadaye."
+      },
+      "expenses": {
+        "title": "Gharama za mwaka",
+        "text": "Gharama za maisha: {survival} kwa mwaka. Mtindo wa maisha (kazi, michezo, chakula, nyumba, malango): {lifestyle} kwa mwaka. Ikiwa huwezi kulipia gharama za maisha, afya yako inadorora."
+      },
+      "spiritual_root": {
+        "title": "Mzizi wa Kiroho",
+        "text": "Huamua kasi ya mkusanyiko wa Qi na uwezo wa kukua kiroho."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Hukusanywa kupitia maisha tofauti na kutumika kwa uboreshaji wa kudumu kwenye Duka la Karma."
+      },
+      "focus_mundane": {
+        "title": "Maisha ya Kawaida",
+        "text": "Zingatia pesa, masomo na taaluma. Uwezekano mdogo wa kukutana na matukio ya siri."
+      },
+      "focus_secret": {
+        "title": "Njia ya Siri",
+        "text": "Zingatia ukuzaji: unapata Qi na unakutana na matukio ya siri mara nyingi zaidi."
+      },
+      "age": {
+        "title": "Umri",
+        "text": "Ukomo wa umri wa hatua yako ya sasa: miaka {maxAge}. Uzee unaweza kuja mapema, haswa baada ya miaka {softAge}."
+      },
+      "age_immortal": {
+        "title": "Umri",
+        "text": "Hatua hii ni ya kutokufa: uzee haukuui tena."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Duka la Karma",
+    "karma_balance": "Karma Yako",
+    "btn_buy": "Nunua",
+    "btn_bought": "Unamiliki",
+    "btn_no_karma": "Haipatikani",
+    "cost": "Gharama",
+    "iap_section": "Premium & Usaidizi",
+    "iap_pass": "Pasi ya Mkuzaji",
+    "iap_pass_desc": "Huzima matangazo yote ya ndani milele na inasaidia msanidi programu.",
+    "iap_ad": "Tangazo la Kuokoa Maisha",
+    "iap_ad_desc": "Inapatikana kwenye kichupo cha Dao kabla ya kuvuka mipaka (ulinzi wa kifo).",
+    "btn_iap_buy": "Nunua Pasi",
+    "btn_iap_active": "Imewashwa",
+    "btn_info": "Maelezo",
+    "items": {
+      "buff_rich_family": {
+        "name": "Familia Tajiri",
+        "desc": "Kila kuzaliwa upya huanza na pesa za ziada na bonasi ndogo ya mapato ya kila mwaka."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridian Imara",
+        "desc": "Huuimarisha mwili: Afya ya Juu zaidi, kuzaliwa upya kwa seli na kupunguza uharibifu."
+      },
+      "buff_pure_root": {
+        "name": "Mzizi Safi",
+        "desc": "Huboresha Mzizi wa Kiroho na hutoa ongezeko la Qi la kudumu kwa mwaka."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Njia ya Dao",
+    "stage": "Hatua",
+    "unknown": "Haijulikani",
+    "qi_energy": "Nishati ya Qi",
+    "next_stage": "Hatua Inayofuata",
+    "req_qi": "Qi Inayohitajika",
+    "success_chance": "Nafasi ya Kufaulu",
+    "btn_breakthrough": "Jaribu Kuvuka Mipaka",
+    "btn_no_qi": "Qi Haitoshi",
+    "max_stage": "Umefikia kilele cha ukuzaji. Mbingu hazikufungi tena.",
+    "dead_text": "Wafu hawawezi kukuza.",
+    "btn_ad_buff": "Tazama Tangazo (+10% & Ulinzi)",
+    "btn_ad_watched": "Ulinzi Upo",
+    "alert_ad_title": "Tangazo",
+    "alert_ad_msg": "Video imetazamwa! Umepokea ulinzi kwa ajili ya kuvuka mipaka ijayo.",
+    "body_title": "Kuimarisha Mwili",
+    "body_level": "Kiwango",
+    "body_cost": "Gharama",
+    "body_button": "Imarisha Mwili",
+    "body_locked_age": "Mwili wako bado ni dhaifu mno",
+    "body_locked_year": "Kuimarisha kutapatikana mwaka ujao",
+    "body_locked_qi": "Qi haitoshi",
+    "body_effect_line": "+{maxHealth} Afya, +{regen} Kupona/mwaka, ukinzani wa magonjwa {resistance}%",
+    "body_desc": "Mwili huimarishwa kupitia maumivu, jasho na nia, na kuwa chombo cha nguvu ya kweli.",
+    "details_close": "Funga",
+    "body_details_title": "Athari za Kuimarisha Mwili",
+    "body_details_max_health": "Afya ya Juu",
+    "body_details_regen": "Kupona/mwaka",
+    "body_details_illness": "Ukinzani wa magonjwa",
+    "body_details_mortality": "Kupunguza vifo",
+    "body_details_survival": "Punguzo la gharama za maisha",
+    "body_details_breakthrough": "Kupunguza uharibifu wa kuvuka mipaka",
+    "body_details_portal": "Kupunguza uharibifu kwenye lango",
+    "stage_info_max_age": "Ukomo wa umri",
+    "stage_info_soft_age": "Uzee unaanza",
+    "stage_info_meditation": "Tafakari ya Qi",
+    "stage_info_mortality": "Vifo",
+    "stage_info_survival": "Gharama za maisha",
+    "stage_info_breakthrough_damage": "Hatari ya kuvuka mipaka",
+    "stage_info_required_qi": "Qi Inayohitajika",
+    "stage_info_immortal": "Asiyekufa: uzee haukuui tena",
+    "portal_blessing_active": "Baraka ya lango inafanya kazi: +{percent}",
+    "log_no_qi": "Nishati ya Qi haitoshi kwa kuvuka mipaka.",
+    "log_success": "[MAFANIKIO] Umefanikiwa kuvuka mipaka! Umefikia hatua: {name}. Meridian zako zimepanuka.",
+    "log_fail_death": "[KUFELI VIBAYA] Dhiki ya Mbinguni ilikuwa na nguvu mno. Umekufa.",
+    "log_fail_damage": "[KUSHINDWA] Kuvuka mipaka kumeshindikana. Kuungua kwa Mana kumetokea, umepokea uharibifu wa {damage}.",
+    "log_ad_saved": "[UMEoKOKA] Kuvuka mipaka kumeshindikana, lakini Kinga ya Tangazo ililinda meridian zako dhidi ya uharibifu!"
+  },
+  "settings_screen": {
+    "title": "Mipangilio",
+    "sound": "Sauti ya Kiolesura",
+    "sound_desc": "Sauti fupi za vitufe na vitendo.",
+    "music": "Muziki",
+    "music_desc": "Muziki wa nyuma unaojirudia."
+  }
+}

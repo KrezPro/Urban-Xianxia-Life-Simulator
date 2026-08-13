@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Mipangilio",
+  "title": "Mipangilio",
+  "sound": "Sauti ya Kiolesura",
+  "sound_desc": "Sauti fupi za vitufe na vitendo.",
+  "music": "Muziki",
+  "music_desc": "Muziki wa nyuma unaojirudia.",
+  "language": "Lugha",
+  "language_desc": "Chagua lugha ya kiolesura.",
+  "language_button": "Badilisha lugha",
+  "language_current": "Lugha ya sasa",
+  "language_close": "Funga",
+  "language_selection": {
+    "title": "Chagua lugha",
+    "subtitle": "Chagua lugha ya kiolesura. Unaweza kuibadilisha baadaye kwenye Mipangilio.",
+    "confirm": "Thibitisha",
+    "close": "Funga"
+  }
+}

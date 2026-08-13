@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Madhehebu",
+    "loading": "Inapakia mtandao wa kijamii...",
+    "tab_my_sect": "Madhehebu Yangu",
+    "tab_leaderboard": "Ubao wa Viongozi",
+    "empty_title": "Madhehebu ya Shirika",
+    "empty_text": "Unda madhehebu ya shirika ya siri au weka nambari ya mwaliko ili ujiunge kwenye pambano la ushawishi.",
+    "invite_placeholder": "Nambari ya mwaliko",
+    "btn_create": "Unda Madhehebu",
+    "btn_join": "Jiunge kwa Nambari",
+    "join_error": "Nambari ya mwaliko sio sahihi. Inatarajiwa herufi 8 za A-Z au 0-9.",
+    "invite_code": "Nambari ya Mwaliko",
+    "share_invite": "Shiriki Mwaliko",
+    "funds": "Fedha",
+    "influence": "Ushawishi",
+    "season": "Msimu",
+    "members": "Wanachama",
+    "player_name": "Wewe",
+    "contribution": "Mchango",
+    "btn_leave": "Ondoka kwenye Madhehebu",
+    "leave_confirm_title": "Uondoke kwenye madhehebu?",
+    "leave_confirm_message": "Utapoteza mchango wako wa sasa kwenye madhehebu, lakini unaweza kujiunga na jingine.",
+    "yes": "Ndio",
+    "no": "Ghairi",
+    "leaderboard_empty": "Ubao wa viongozi uko tupu kwa sasa.",
+    "default_name": "Neo Lotus Syndicate",
+    "default_tag": "NLS"
+  }
+}
