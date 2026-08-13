@@ -1,8 +1,7 @@
 import { Locale } from '../types';
-import ruStages from '../locales/ru/stages.json';
-import enStages from '../locales/en/stages.json';
+import { resolveLocalizedKey } from './i18n';
 
 export const getStageName = (stageId: string, locale: Locale): string => {
-  const dictionary: any = locale === 'ru' ? ruStages : enStages;
-  return dictionary[stageId] || stageId;
+  const resolved = resolveLocalizedKey(locale, 'stages', stageId);
+  return resolved || stageId;
 };

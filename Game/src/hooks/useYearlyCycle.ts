@@ -24,12 +24,7 @@ import { getCurseModifiers } from '../utils/rebirthUtils';
 import { generateYearEvent } from '../utils/eventGenerator';
 import { getRandomInt, safeBigInt, formatLargeNumber } from '../utils/helpers';
 import { formatBpsPercent } from '../utils/effectFormatter';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
-import ruNotifications from '../locales/ru/notifications.json';
-import enNotifications from '../locales/en/notifications.json';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
+import { resolveLocalizedKey } from '../utils/i18n';
 
 const buildFallbackEvent = (pool: 'mundane' | 'secret'): GeneratedEvent => ({
   id: 'fallback_year',
@@ -56,13 +51,18 @@ export const useYearlyCycle = () => {
   const inventory = useInventoryStore();
   const lifestyle = useLifestyleStore();
 
-  const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
-  const notifications: any = locale === 'ru' ? ruNotifications : enNotifications;
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const logs: any = extras.logs || {};
-
   const handleGrowOlder = useCallback(() => {
+    const tUiLife = (key: string, params?: Record<string, string | number>) =>
+      resolveLocalizedKey(locale, 'ui', `life_screen.${key}`, params);
+
+    const tNotification = (key: string, params?: Record<string, string | number>) =>
+      resolveLocalizedKey(locale, 'notifications', key, params);
+
+    const tExtrasLog = (key: string, params?: Record<string, string | number>) =>
+      resolveLocalizedKey(locale, 'extras', `logs.${key}`, params);
+
     let current = usePlayerStore.getState();
+
     if (current.isDead) {
       return;
     }
@@ -76,7 +76,10 @@ export const useYearlyCycle = () => {
       !current.interstitialShownThisLife
     ) {
       current.setInterstitialShownThisLife(true);
-      addLog(ui.interstitial_log, 'system');
+      const interstitialLog = tUiLife('interstitial_log');
+      if (interstitialLog) {
+        addLog(interstitialLog, 'system');
+      }
       pushUiNotification('interstitial', 'system');
     }
 
@@ -87,8 +90,12 @@ export const useYearlyCycle = () => {
       current.maxHealth,
       current.bodyTempering
     );
+
     if (ageStageDeathBps > 0 && getRandomInt(0, 9999) < ageStageDeathBps) {
-      addLog(notifications.age_mortality, 'system');
+      const ageMortalityLog = tNotification('age_mortality');
+      if (ageMortalityLog) {
+        addLog(ageMortalityLog, 'system');
+      }
       pushUiNotification('age_mortality', 'danger');
       current.setDeathCause('health');
       current.applyEffects({ health: -current.health });
@@ -96,8 +103,12 @@ export const useYearlyCycle = () => {
     }
 
     const oldAgeDeathBps = calculateOldAgeDeathBps(current.age, current.cultivationStage);
+
     if (oldAgeDeathBps > 0 && getRandomInt(0, 9999) < oldAgeDeathBps) {
-      addLog(notifications.old_age_death, 'system');
+      const oldAgeDeathLog = tNotification('old_age_death');
+      if (oldAgeDeathLog) {
+        addLog(oldAgeDeathLog, 'system');
+      }
       pushUiNotification('old_age_death', 'danger');
       current.setDeathCause('old_age');
       current.applyEffects({ health: -current.health });
@@ -105,23 +116,29 @@ export const useYearlyCycle = () => {
     }
 
     const survivalCost = getSurvivalCost(current.age, current.cultivationStage);
+
     if (survivalCost > 0n) {
       const money = safeBigInt(current.money);
+
       if (money >= survivalCost) {
         current.applyEffects({ money: (-survivalCost).toString() });
         current = usePlayerStore.getState();
-        if (logs.survival_cost_paid) {
-          addLog(
-            logs.survival_cost_paid.replace('{amount}', formatLargeNumber(survivalCost.toString())),
-            'system'
-          );
+
+        const survivalPaidLog = tExtrasLog('survival_cost_paid', {
+          amount: formatLargeNumber(survivalCost.toString()),
+        });
+
+        if (survivalPaidLog) {
+          addLog(survivalPaidLog, 'system');
         }
       } else {
         const unpaid = survivalCost - money;
+
         if (money > 0n) {
           current.applyEffects({ money: (-money).toString() });
           current = usePlayerStore.getState();
         }
+
         const unpaidBps = Number((unpaid * 10000n) / survivalCost);
         const damage = calculateUnpaidSurvivalDamage(
           unpaidBps,
@@ -129,12 +146,19 @@ export const useYearlyCycle = () => {
           current.maxHealth,
           current.bodyTempering
         );
+
         current.applyEffects({ health: -damage });
         current = usePlayerStore.getState();
-        addLog(notifications.survival_unpaid, 'system');
+
+        const survivalUnpaidLog = tNotification('survival_unpaid');
+        if (survivalUnpaidLog) {
+          addLog(survivalUnpaidLog, 'system');
+        }
+
         if (unpaidBps >= 5000) {
           pushUiNotification('survival_unpaid', 'danger');
         }
+
         if (current.isDead) {
           current.setDeathCause('health');
           return;
@@ -167,7 +191,12 @@ export const useYearlyCycle = () => {
 
     if (report.disabled.length > 0) {
       report.disabled.forEach((category) => lifestyle.disableOption(category));
-      addLog(notifications.lifestyle_disabled_no_money, 'system');
+
+      const disabledLog = tNotification('lifestyle_disabled_no_money');
+      if (disabledLog) {
+        addLog(disabledLog, 'system');
+      }
+
       pushUiNotification('lifestyle_disabled_no_money', 'danger');
     }
 
@@ -177,6 +206,7 @@ export const useYearlyCycle = () => {
         health: report.healthDelta,
       });
       current = usePlayerStore.getState();
+
       if (current.isDead) {
         if (report.portalResult === 'fail') {
           current.setDeathCause('portal');
@@ -195,11 +225,17 @@ export const useYearlyCycle = () => {
     if (report.moneyDelta !== '0') {
       current.applyEffects({ money: report.moneyDelta });
       current = usePlayerStore.getState();
+
       const delta = safeBigInt(report.moneyDelta);
       const abs = delta < 0n ? (-delta).toString() : delta.toString();
       const signedAmount = `${delta < 0n ? '-' : '+'}$${formatLargeNumber(abs)}`;
-      if (logs.lifestyle_money_delta) {
-        addLog(logs.lifestyle_money_delta.replace('{amount}', signedAmount), 'system');
+
+      const lifestyleMoneyLog = tExtrasLog('lifestyle_money_delta', {
+        amount: signedAmount,
+      });
+
+      if (lifestyleMoneyLog) {
+        addLog(lifestyleMoneyLog, 'system');
       }
     }
 
@@ -226,14 +262,13 @@ export const useYearlyCycle = () => {
     if (report.portalResult === 'success' && report.portalBlessingGainedBps > 0) {
       current.addPortalBlessing(report.portalBlessingGainedBps);
       current = usePlayerStore.getState();
-      if (logs.portal_blessing_gained) {
-        addLog(
-          logs.portal_blessing_gained.replace(
-            '{percent}',
-            formatBpsPercent(report.portalBlessingGainedBps)
-          ),
-          'secret'
-        );
+
+      const portalBlessingLog = tExtrasLog('portal_blessing_gained', {
+        percent: formatBpsPercent(report.portalBlessingGainedBps),
+      });
+
+      if (portalBlessingLog) {
+        addLog(portalBlessingLog, 'secret');
       }
     }
 
@@ -242,8 +277,10 @@ export const useYearlyCycle = () => {
         1,
         Math.floor((current.maxHealth * activePortalOption.portal.failDamageBps) / 10000)
       );
+
       current.applyEffects({ health: -extraDamage });
       current = usePlayerStore.getState();
+
       if (current.isDead) {
         current.setDeathCause('portal');
         return;
@@ -262,9 +299,17 @@ export const useYearlyCycle = () => {
         },
         baseModifiers
       );
+
       current.addQi(qiGain);
       current = usePlayerStore.getState();
-      addLog(ui.meditation_log.replace('{amount}', qiGain.toString()), 'secret');
+
+      const meditationLog = tUiLife('meditation_log', {
+        amount: qiGain.toString(),
+      });
+
+      if (meditationLog) {
+        addLog(meditationLog, 'secret');
+      }
     }
 
     if (current.isDead) {
@@ -272,6 +317,7 @@ export const useYearlyCycle = () => {
     }
 
     let generatedEvent: GeneratedEvent;
+
     try {
       generatedEvent = generateYearEvent({
         age: current.age,
@@ -300,6 +346,7 @@ export const useYearlyCycle = () => {
     current.applyEffects(generatedEvent.effects);
 
     const afterEvent = usePlayerStore.getState();
+
     if (afterEvent.isDead) {
       afterEvent.setDeathCause('event');
     }

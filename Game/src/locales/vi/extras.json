@@ -1,0 +1,16 @@
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Đời",
+      "dao": "Đạo",
+      "activities": "Hoạt động",
+      "store": "Cửa hàng",
+      "sect": "Tông môn"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Chi phí sinh hoạt: -${amount}.",
+    "lifestyle_money_delta": "Hoạt động hằng năm: {amount}.",
+    "portal_blessing_gained": "Phước lành cổng: +{percent}% cơ hội đột phá tiếp theo."
+  }
+}

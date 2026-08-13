@@ -1,5 +1,9 @@
 {
   "app": {
     "loading": "Đang đánh thức linh hồn..."
+  },
+  "life_screen": {
+    "interstitial_log": "[QUẢNG CÁO] Quảng cáo xen kẽ đã hiển thị sau khi trùng sinh ở tuổi 1.",
+    "meditation_log": "Một năm trôi qua trong thiền định bí mật. Thu thập được {amount} Khí."
   }
 }
