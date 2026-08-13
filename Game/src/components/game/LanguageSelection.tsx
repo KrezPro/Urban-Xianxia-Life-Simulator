@@ -32,12 +32,16 @@ const LanguageSelectionContent = ({
   const t = (key: string): string => resolveLocalizedKey(selected, 'settings', key);
 
   return (
-    <View style={styles.contentWrapper}>
+    <View style={styles.content}>
       <Card variant="primary" style={styles.card}>
         <Text style={styles.title}>{t('language_selection.title')}</Text>
         <Text style={styles.subtitle}>{t('language_selection.subtitle')}</Text>
 
-        <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
+        <ScrollView
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        >
           {SUPPORTED_LOCALES.map((item) => {
             const active = selected === item.code;
             return (
@@ -92,12 +96,14 @@ export const LanguageSelectionOverlay = () => {
 
   return (
     <SafeAreaView style={styles.overlayContainer}>
-      <LanguageSelectionContent
-        initialLocale={initialLocale}
-        onConfirm={(nextLocale) => {
-          setLocaleAndMarkChosen(nextLocale);
-        }}
-      />
+      <View style={styles.overlayContent}>
+        <LanguageSelectionContent
+          initialLocale={initialLocale}
+          onConfirm={(nextLocale) => {
+            setLocaleAndMarkChosen(nextLocale);
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -112,7 +118,13 @@ export const LanguageSelectionModal = ({ visible, onClose }: LanguageSelectionMo
   const setLocale = useLocaleStore((state) => state.setLocale);
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      statusBarTranslucent
+    >
       <View style={styles.modalBackdrop}>
         <View style={styles.modalContainer}>
           {visible ? (
@@ -138,13 +150,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Theme.colors.background,
   },
-  contentWrapper: {
+  overlayContent: {
     flex: 1,
     padding: Theme.spacing.md,
     justifyContent: 'center',
   },
+  content: {
+    width: '100%',
+  },
   card: {
-    maxHeight: '92%',
+    maxHeight: '100%',
   },
   title: {
     color: Theme.colors.text,
@@ -159,6 +174,7 @@ const styles = StyleSheet.create({
     marginBottom: Theme.spacing.md,
   },
   list: {
+    maxHeight: 320,
     flexGrow: 0,
     marginBottom: Theme.spacing.md,
   },
@@ -208,6 +224,9 @@ const styles = StyleSheet.create({
     padding: Theme.spacing.md,
   },
   modalContainer: {
-    maxHeight: '90%',
+    width: '100%',
+    maxWidth: 480,
+    maxHeight: '92%',
+    alignSelf: 'center',
   },
 });
