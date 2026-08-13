@@ -7,9 +7,7 @@ import { DEFAULT_LOCALE, isLocale } from '../constants/Locales';
 interface LocaleState {
   locale: Locale;
   hasHydrated: boolean;
-  hasChosenLanguage: boolean;
   setLocale: (locale: Locale) => void;
-  setLocaleAndMarkChosen: (locale: Locale) => void;
   toggleLocale: () => void;
   setHasHydrated: (state: boolean) => void;
 }
@@ -19,9 +17,7 @@ export const useLocaleStore = create<LocaleState>()(
     (set) => ({
       locale: DEFAULT_LOCALE,
       hasHydrated: false,
-      hasChosenLanguage: false,
       setLocale: (locale) => set({ locale }),
-      setLocaleAndMarkChosen: (locale) => set({ locale, hasChosenLanguage: true }),
       toggleLocale: () =>
         set((state) => ({
           locale: state.locale === 'ru' ? DEFAULT_LOCALE : 'ru',
@@ -33,21 +29,17 @@ export const useLocaleStore = create<LocaleState>()(
       storage: createJSONStorage(() => zustandStorage),
       merge: (persistedState, currentState) => {
         const persisted = persistedState as Partial<LocaleState> | undefined;
+
         if (!persisted) {
           return currentState;
         }
 
-        const nextLocale = isLocale(persisted.locale) ? persisted.locale : currentState.locale;
-        const hasChosenLanguage =
-          typeof persisted.hasChosenLanguage === 'boolean'
-            ? persisted.hasChosenLanguage
-            : Boolean(persisted.locale);
+        const nextLocale = isLocale(persisted.locale) ? persisted.locale : DEFAULT_LOCALE;
 
         return {
           ...currentState,
           ...persisted,
           locale: nextLocale,
-          hasChosenLanguage,
           hasHydrated: currentState.hasHydrated,
         };
       },

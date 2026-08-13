@@ -11,10 +11,5 @@
   "language_ru": "Русский",
   "language_button": "Выбрать язык",
   "language_current": "Текущий язык",
-  "language_selection": {
-    "title": "Выберите язык",
-    "subtitle": "Выберите язык интерфейса. Позже его можно изменить в настройках.",
-    "confirm": "Продолжить",
-    "close": "Закрыть"
-  }
+  "language_close": "Закрыть"
 }

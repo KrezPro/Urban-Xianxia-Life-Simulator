@@ -2,35 +2,35 @@ import { Locale } from '../types';
 
 export interface SupportedLocale {
   code: Locale;
-  nativeName: string;
   englishName: string;
+  nativeName: string;
 }
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
 export const SUPPORTED_LOCALES: SupportedLocale[] = [
-  { code: 'en', nativeName: 'English', englishName: 'English' },
-  { code: 'vi', nativeName: 'Tiếng Việt', englishName: 'Vietnamese' },
-  { code: 'id', nativeName: 'Bahasa Indonesia', englishName: 'Indonesian' },
-  { code: 'es', nativeName: 'Español', englishName: 'Spanish' },
-  { code: 'it', nativeName: 'Italiano', englishName: 'Italian' },
-  { code: 'kk', nativeName: 'Қазақша', englishName: 'Kazakh' },
-  { code: 'zh-Hans', nativeName: '中文（简体）', englishName: 'Chinese (Simplified)' },
-  { code: 'zh-Hant', nativeName: '中文（繁體）', englishName: 'Chinese (Traditional)' },
-  { code: 'ko', nativeName: '한국어', englishName: 'Korean' },
-  { code: 'ms', nativeName: 'Bahasa Melayu', englishName: 'Malay' },
-  { code: 'de', nativeName: 'Deutsch', englishName: 'German' },
-  { code: 'pl', nativeName: 'Polski', englishName: 'Polish' },
-  { code: 'pt', nativeName: 'Português', englishName: 'Portuguese' },
-  { code: 'ro', nativeName: 'Română', englishName: 'Romanian' },
-  { code: 'ru', nativeName: 'Русский', englishName: 'Russian' },
-  { code: 'sw', nativeName: 'Kiswahili', englishName: 'Swahili' },
-  { code: 'th', nativeName: 'ไทย', englishName: 'Thai' },
-  { code: 'tr', nativeName: 'Türkçe', englishName: 'Turkish' },
-  { code: 'fil', nativeName: 'Filipino', englishName: 'Filipino' },
-  { code: 'fr', nativeName: 'Français', englishName: 'French' },
-  { code: 'hi', nativeName: 'हिन्दी', englishName: 'Hindi' },
-  { code: 'ja', nativeName: '日本語', englishName: 'Japanese' },
+  { code: 'en', englishName: 'English', nativeName: 'English' },
+  { code: 'vi', englishName: 'Vietnamese', nativeName: 'Tiếng Việt' },
+  { code: 'id', englishName: 'Indonesian', nativeName: 'Bahasa Indonesia' },
+  { code: 'es', englishName: 'Spanish', nativeName: 'Español' },
+  { code: 'it', englishName: 'Italian', nativeName: 'Italiano' },
+  { code: 'kk', englishName: 'Kazakh', nativeName: 'Қазақша' },
+  { code: 'zh-Hans', englishName: 'Chinese (Simplified)', nativeName: '中文（简体）' },
+  { code: 'zh-Hant', englishName: 'Chinese (Traditional)', nativeName: '中文（繁體）' },
+  { code: 'ko', englishName: 'Korean', nativeName: '한국어' },
+  { code: 'ms', englishName: 'Malay', nativeName: 'Bahasa Melayu' },
+  { code: 'de', englishName: 'German', nativeName: 'Deutsch' },
+  { code: 'pl', englishName: 'Polish', nativeName: 'Polski' },
+  { code: 'pt', englishName: 'Portuguese', nativeName: 'Português' },
+  { code: 'ro', englishName: 'Romanian', nativeName: 'Română' },
+  { code: 'ru', englishName: 'Russian', nativeName: 'Русский' },
+  { code: 'sw', englishName: 'Swahili', nativeName: 'Kiswahili' },
+  { code: 'th', englishName: 'Thai', nativeName: 'ไทย' },
+  { code: 'tr', englishName: 'Turkish', nativeName: 'Türkçe' },
+  { code: 'fil', englishName: 'Filipino', nativeName: 'Filipino' },
+  { code: 'fr', englishName: 'French', nativeName: 'Français' },
+  { code: 'hi', englishName: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'ja', englishName: 'Japanese', nativeName: '日本語' },
 ];
 
 export const isLocale = (value: unknown): value is Locale => {
@@ -70,7 +70,7 @@ export const normalizeLocale = (raw?: string | null): Locale | undefined => {
     zh: 'zh-Hans',
   };
 
-  const candidate = aliases[primary] ?? primary;
+  const candidate: string = aliases[primary] ?? primary;
   return isLocale(candidate) ? candidate : undefined;
 };
 
@@ -83,5 +83,6 @@ export const getDeviceLocaleCandidate = (): Locale | undefined => {
   } catch {
     return undefined;
   }
+
   return undefined;
 };
