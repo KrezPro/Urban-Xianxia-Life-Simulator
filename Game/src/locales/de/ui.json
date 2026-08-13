@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Seele wird erweckt..."
+  },
+  "tab_bar": {
+    "life": "Leben",
+    "dao": "Dao",
+    "activities": "Aktivitäten",
+    "store": "Shop",
+    "settings": "Einstell.",
+    "log": "Tagebuch",
+    "sect": "Sekte"
+  },
+  "log_screen": {
+    "title": "Schicksals-Tagebuch",
+    "empty": "Dein Lebensweg fängt gerade erst an..."
+  },
+  "idle": {
+    "offline_secret": "Offline-Fortschritt: Du hast {seconds}s lang meditiert. Verdientes Qi: {amount}.",
+    "offline_mundane": "Offline-Fortschritt: Du hast {seconds}s lang gearbeitet. Verdient: {amount} $."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Alter",
+    "stage": "Stufe",
+    "health": "Gesundheit",
+    "intelligence": "Intelligenz",
+    "appearance": "Aussehen",
+    "money": "Geld",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Älter werden (+1 Jahr)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Du wurdest in diese Welt geboren. Deine Geschichte beginnt...",
+    "death_log": "Du bist gestorben. Deine Seele betritt den endlosen Zyklus des Samsara...",
+    "reincarnate_log": "Das Rad des Samsara hat sich gedreht. Du bist in einem neuen Körper wiedergeboren.",
+    "age": "Alter",
+    "health": "Gesundheit",
+    "intelligence": "Intelligenz",
+    "appearance": "Aussehen",
+    "money": "Geld",
+    "expenses_year": "Jährliche Ausgaben",
+    "spiritual_root": "Spirituelle Wurzel",
+    "qi": "Qi-Energie",
+    "karma": "Karma",
+    "focus_title": "Fokus für dieses Jahr:",
+    "focus_mundane": "Sterbliches Leben",
+    "focus_secret": "Geheimer Pfad",
+    "btn_grow": "Älter werden (+1 Jahr)",
+    "btn_reincarnate": "Reinkarnieren",
+    "btn_log": "Tagebuch",
+    "dead_title": "DU BIST TOT",
+    "dead_subtitle": "Deine Lebensreise wurde unterbrochen.",
+    "death_cause_label": "Todesursache:",
+    "death_causes": {
+      "none": "Unbekannt",
+      "old_age": "Altersschwäche",
+      "health": "Gesundheitsversagen",
+      "breakthrough": "Fehlschlag beim Durchbruch",
+      "portal": "Portalunfall",
+      "event": "Schicksalhaftes Ereignis"
+    },
+    "karma_accumulated": "Gesamtes Karma:",
+    "karma_earned_last_life": "Verdientes Vermächtnis (Karma):",
+    "meditation_log": "Ein Jahr verging in geheimer Meditation. {amount} Qi-Energie gesammelt.",
+    "age_log": "Du bist {age} Jahre alt geworden.",
+    "interstitial_log": "[WERBUNG] Interstitial-Anzeige nach der Reinkarnation im Alter von 1 Jahr eingeblendet.",
+    "avatar": {
+      "aria_child": "Ein Baby krabbelt auf dem Lebensweg",
+      "aria_teen": "Ein Jugendlicher macht seine ersten Schritte",
+      "aria_adult": "Ein Erwachsener in tiefer Meditation",
+      "aria_mature": "Ein Meister in tiefer Meditation",
+      "aria_elder": "Ein Ältester am Lebensabend"
+    },
+    "hints": {
+      "close": "Verstanden",
+      "intelligence": {
+        "title": "Intelligenz",
+        "text": "Erhöht die Erfolgschance beim Durchbruch und hilft bei Studium, Arbeit und weltlichen Ereignissen."
+      },
+      "health": {
+        "title": "Gesundheit",
+        "text": "Wenn die Gesundheit auf 0 sinkt, stirbst du und wirst wiedergeboren. Beschütze sie."
+      },
+      "appearance": {
+        "title": "Aussehen",
+        "text": "Beeinflusst gesellschaftliche Ereignisse, Beziehungen und einige weltliche Gelegenheiten."
+      },
+      "money": {
+        "title": "Geld",
+        "text": "Notwendig für den Lebensunterhalt, Sektenbeiträge und zukünftige Möglichkeiten."
+      },
+      "expenses": {
+        "title": "Jährliche Ausgaben",
+        "text": "Lebenshaltungskosten: {survival} pro Jahr. Lebensstil (Arbeit, Sport, Essen, Wohnen, Portale): {lifestyle} pro Jahr. Wenn du die Lebenshaltungskosten nicht bezahlen kannst, leidet deine Gesundheit."
+      },
+      "spiritual_root": {
+        "title": "Spirituelle Wurzel",
+        "text": "Bestimmt die Geschwindigkeit der Qi-Ansammlung und das Kultivierungspotenzial."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Sammelt sich über mehrere Leben hinweg an und kann für permanente Upgrades im Karma-Shop ausgegeben werden."
+      },
+      "focus_mundane": {
+        "title": "Sterbliches Leben",
+        "text": "Fokus auf Geld, Studium und Karriere. Geringere Chance auf geheime Ereignisse."
+      },
+      "focus_secret": {
+        "title": "Geheimer Pfad",
+        "text": "Fokus auf Kultivierung: Du erhältst Qi und begegnest häufiger geheimen Ereignissen."
+      },
+      "age": {
+        "title": "Alter",
+        "text": "Maximale Lebensspanne deiner aktuellen Stufe: {maxAge} Jahre. Das Alter kann dich früher einholen, besonders ab {softAge} Jahren."
+      },
+      "age_immortal": {
+        "title": "Alter",
+        "text": "Diese Stufe ist unsterblich: Altersschwäche bringt dich nicht mehr um."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Karma-Shop",
+    "karma_balance": "Dein Karma",
+    "btn_buy": "Kaufen",
+    "btn_bought": "Im Besitz",
+    "btn_no_karma": "Nicht genug",
+    "cost": "Kosten",
+    "iap_section": "Premium & Monetarisierung",
+    "iap_pass": "Kultivator-Pass",
+    "iap_pass_desc": "Deaktiviert alle Interstitial-Anzeigen für immer und unterstützt den Entwickler.",
+    "iap_ad": "Lebensretter-Werbung",
+    "iap_ad_desc": "Verfügbar im Dao-Tab vor einem Durchbruch (Schutz vor dem Tod).",
+    "btn_iap_buy": "Pass kaufen",
+    "btn_iap_active": "Aktiv",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Reiche Familie",
+        "desc": "Jede Reinkarnation beginnt mit zusätzlichem Geld und einem kleinen jährlichen Einkommensbonus."
+      },
+      "buff_strong_meridians": {
+        "name": "Starke Meridiane",
+        "desc": "Stärkt den Körper: mehr Max. Gesundheit, Regeneration und Schadensreduzierung."
+      },
+      "buff_pure_root": {
+        "name": "Reine Wurzel",
+        "desc": "Verbessert die Spirituelle Wurzel und gewährt einen festen Qi-Zuwachs pro Jahr."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Dao-Pfad",
+    "stage": "Stufe",
+    "unknown": "Unbekannt",
+    "qi_energy": "Qi-Energie",
+    "next_stage": "Nächster Schritt",
+    "req_qi": "Benötigtes Qi",
+    "success_chance": "Erfolgschance",
+    "btn_breakthrough": "Durchbruch versuchen",
+    "btn_no_qi": "Nicht genug Qi",
+    "max_stage": "Du hast den Gipfel der Kultivierung erreicht. Die Himmel binden dich nicht mehr.",
+    "dead_text": "Die Toten können nicht kultivieren.",
+    "btn_ad_buff": "Werbung ansehen (+10% & Schutz)",
+    "btn_ad_watched": "Buff Aktiv",
+    "alert_ad_title": "Werbung",
+    "alert_ad_msg": "Video angesehen! Du hast einen Buff für den nächsten Durchbruch erhalten.",
+    "body_title": "Körperhärtung",
+    "body_level": "Level",
+    "body_cost": "Kosten",
+    "body_button": "Körper härten",
+    "body_locked_age": "Dein Körper ist noch zu schwach",
+    "body_locked_year": "Härtung nächstes Jahr verfügbar",
+    "body_locked_qi": "Nicht genug Qi",
+    "body_effect_line": "+{maxHealth} Max. Ges., +{regen} Regen/Jahr, Krankheitsresistenz {resistance}%",
+    "body_desc": "Der Körper wird durch Schmerz, Schweiß und Willen gestählt und wird zu einem Gefäß für wahre Macht.",
+    "details_close": "Schließen",
+    "body_details_title": "Effekte der Körperhärtung",
+    "body_details_max_health": "Max. Gesundheit",
+    "body_details_regen": "Regeneration/Jahr",
+    "body_details_illness": "Krankheitsresistenz",
+    "body_details_mortality": "Reduktion der Sterblichkeit",
+    "body_details_survival": "Rabatt auf Lebenshaltungskosten",
+    "body_details_breakthrough": "Durchbruch-Schadensreduktion",
+    "body_details_portal": "Portal-Schadensreduktion",
+    "stage_info_max_age": "Maximale Lebensspanne",
+    "stage_info_soft_age": "Altersschwäche beginnt ab",
+    "stage_info_meditation": "Qi-Meditation",
+    "stage_info_mortality": "Sterblichkeit",
+    "stage_info_survival": "Lebenshaltungskosten",
+    "stage_info_breakthrough_damage": "Gefahr beim Durchbruch",
+    "stage_info_required_qi": "Benötigtes Qi",
+    "stage_info_immortal": "Unsterblich: Das Alter tötet nicht mehr",
+    "portal_blessing_active": "Aktiver Portal-Segen: +{percent}",
+    "log_no_qi": "Nicht genug Qi-Energie für den Durchbruch.",
+    "log_success": "[ERFOLG] Durchbruch erfolgreich! Du hast die Stufe erreicht: {name}. Deine Meridiane haben sich erweitert.",
+    "log_fail_death": "[KRITISCHER FEHLSCHLAG] Die Himmlische Drangsal war zu stark. Du bist gestorben.",
+    "log_fail_damage": "[FEHLSCHLAG] Durchbruch gescheitert. Manabrand aufgetreten, du hast {damage} Schaden erlitten.",
+    "log_ad_saved": "[GERETTET] Durchbruch gescheitert, aber der Werbe-Buff hat deine Meridiane vor Schaden bewahrt!"
+  },
+  "settings_screen": {
+    "title": "Einstellungen",
+    "sound": "Interface-Sound",
+    "sound_desc": "Kurze Töne für Tasten und Aktionen.",
+    "music": "Musik",
+    "music_desc": "Hintergrundmelodie in Endlosschleife."
+  }
+}

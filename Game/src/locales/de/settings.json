@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Einstellungen",
+  "title": "Einstellungen",
+  "sound": "Interface-Sound",
+  "sound_desc": "Kurze Töne für Tasten und Aktionen.",
+  "music": "Musik",
+  "music_desc": "Hintergrundmelodie in Endlosschleife.",
+  "language": "Sprache",
+  "language_desc": "Wähle die Sprache der Benutzeroberfläche.",
+  "language_button": "Sprache ändern",
+  "language_current": "Aktuelle Sprache",
+  "language_close": "Schließen",
+  "language_selection": {
+    "title": "Sprache auswählen",
+    "subtitle": "Wähle die Sprache der Benutzeroberfläche. Du kannst sie später in den Einstellungen ändern.",
+    "confirm": "Bestätigen",
+    "close": "Schließen"
+  }
+}

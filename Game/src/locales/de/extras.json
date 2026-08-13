@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Leben",
+      "dao": "Dao",
+      "activities": "Aktivitäten",
+      "store": "Shop",
+      "sect": "Sekte"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Max. Ges./Jahr",
+    "healthRegenPerYear": "+{value} Regen/Jahr",
+    "appearancePerYear": "+{value} Aussehen/Jahr",
+    "qiPerYear": "+{value} Qi/Jahr",
+    "portalSuccessBps": "+{value}% Portal-Erfolg",
+    "qiFlatPerYear": "+{value} Qi/Jahr",
+    "moneyFlatPerYear": "+{value} $/Jahr",
+    "healthRegenFlat": "+{value} Regen/Jahr",
+    "damageReductionBps": "+{value}% Schadensreduktion",
+    "breakthroughChanceBps": "+{value}% Durchbruchschance",
+    "startMoney": "Start: +{value} $",
+    "startMaxHealth": "Start: +{value} Max. Ges.",
+    "startSpiritualRoot": "Start: +{value} Spirituelle Wurzel",
+    "startBodyTempering": "Start: +{value} Körperhärtung"
+  },
+  "life": {
+    "survival_cost_line": "Lebenshaltungskosten: -{amount} $/Jahr",
+    "survival_cost_hint": {
+      "title": "Lebenshaltungskosten",
+      "text": "Obligatorische jährliche Ausgaben für Essen, Unterkunft und Sicherheit. Sie fallen auch an, wenn keine Aktivitäten ausgewählt sind. Wenn dir das Geld fehlt, leidet deine Gesundheit."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Lebenshaltungskosten: -{amount} $.",
+    "lifestyle_money_delta": "Jährliches Nettoeinkommen der Aktivitäten: {amount}.",
+    "portal_blessing_gained": "Portal-Segen: +{percent}% auf die nächste Durchbruchschance."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Dao-Techniken",
+      "level": "Level",
+      "max": "Max",
+      "cost": "Kosten",
+      "upgrade": "Verbessern",
+      "locked": "Gesperrt",
+      "not_enough_money": "Nicht genug Geld",
+      "current_effects": "Aktuell",
+      "next_effects": "Nächste",
+      "requirements": {
+        "spiritual_root": "Spirituelle Wurzel",
+        "intelligence": "Intelligenz",
+        "stage": "Stufe"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Atem des Verborgenen Drachen",
+          "desc": "Eine grundlegende Atemtechnik. Erhöht den Qi-Zuwachs und die Durchbruchschance."
+        },
+        "technique_iron_meridian": {
+          "name": "Eiserne Meridiane",
+          "desc": "Stählt den Körper und die Meridiane. Verbessert die Gesundheitsregeneration und reduziert erlittenen Schaden."
+        },
+        "technique_jade_ledger": {
+          "name": "Jade-Hauptbuch",
+          "desc": "Eine weltliche Reichtumstechnik. Erhöht Einkommen, Arbeitseffizienz und den Portal-Erfolg."
+        },
+        "technique_spirit_sense": {
+          "name": "Geistersinn",
+          "desc": "Eine Wahrnehmungstechnik für das spätere Spiel. Verstärkt Qi, Durchbrüche und den Portal-Erfolg."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Level",
+    "max_level": "Max. Level",
+    "next_cost": "Kosten nächstes Level",
+    "current_effects": "Aktuell",
+    "next_effects": "Nächste",
+    "effects_note": "Starteffekte wirken nach der Reinkarnation. Jährliche Effekte werden jedes Jahr angewendet.",
+    "details_close": "Schließen"
+  },
+  "activities": {
+    "title": "Aktivitäten",
+    "dead_text": "Die Toten können keine Aktivitäten wählen.",
+    "select": "Auswählen",
+    "selected": "Ausgewählt",
+    "disable": "Deaktivieren",
+    "locked": "Gesperrt",
+    "daily_cost": "Kosten/Tag",
+    "daily_income": "Einkommen/Tag",
+    "yearly_cost": "Kosten/Jahr",
+    "yearly_income": "Einkommen/Jahr",
+    "net_yearly": "Netto/Jahr",
+    "effects_title": "Effekte/Jahr",
+    "requirements_label": "Voraussetzungen",
+    "none": "Keine",
+    "categories": {
+      "job": "Arbeit",
+      "sport": "Sport",
+      "food": "Essen",
+      "housing": "Wohnen",
+      "portal": "Portale"
+    },
+    "requirements": {
+      "age": "Alter",
+      "intelligence": "Intelligenz",
+      "appearance": "Aussehen",
+      "spiritual_root": "Spir. Wurzel",
+      "health": "Gesundheit",
+      "max_health": "Max. Ges.",
+      "stage": "Stufe"
+    },
+    "portal_rewards": {
+      "title": "Portal-Belohnungen",
+      "attempt_cost": "Kosten für den Versuch: {cost} $",
+      "reward_money": "Geld: {min}–{max} $",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Durchbruchs-Bonus: +{percent}%",
+      "fail_damage_bps": "Fehlschlag: {percent}% Max. Ges. Schaden",
+      "fail_damage_flat": "Fehlschlag: {damage} Schaden"
+    },
+    "options": {
+      "job_none": { "name": "Keine Arbeit", "desc": "Kein Einkommen und keine Verpflichtungen." },
+      "job_parttime": { "name": "Teilzeit", "desc": "Kleine Besorgungen und Lieferungen." },
+      "job_office": { "name": "Büroangestellter", "desc": "Langweilig, aber stabil." },
+      "job_manager": { "name": "Manager", "desc": "Mehr Verantwortung, mehr Geld." },
+      "job_founder": { "name": "Tech-Gründer", "desc": "Ein Startup, das IT und spirituelle Technologie verbindet." },
+      "sport_none": { "name": "Kein Sport", "desc": "Keine körperliche Aktivität." },
+      "sport_home": { "name": "Heimtraining", "desc": "Liegestütze im Garten." },
+      "sport_gym": { "name": "Fitnessstudio", "desc": "Mitgliedschaft im örtlichen Fitnessstudio." },
+      "sport_premium": { "name": "Premium-Club", "desc": "Trainer, Pool und Erholung." },
+      "sport_spirit": { "name": "Geist-Training", "desc": "Training des Körpers und der Meridiane." },
+      "food_none": { "name": "Kein Ernährungsplan", "desc": "Snacks unterwegs." },
+      "food_street": { "name": "Streetfood", "desc": "Nudeln und Energieriegel." },
+      "food_home": { "name": "Hausmannskost", "desc": "Regelmäßige, anständige Mahlzeiten." },
+      "food_premium": { "name": "Premium-Mahlzeiten", "desc": "Hochwertige Produkte und Diät." },
+      "food_spirit": { "name": "Spirituelle Küche", "desc": "Gerichte aus spirituellen Kräutern." },
+      "housing_none": { "name": "Obdachlos", "desc": "Schlafen, wo immer du kannst." },
+      "housing_shelter": { "name": "Notunterkunft", "desc": "Ein minimales Dach über dem Kopf." },
+      "housing_room": { "name": "Zimmer", "desc": "Ein kleines Zimmer in einem alten Haus." },
+      "housing_apartment": { "name": "Wohnung", "desc": "Eine saubere Wohnung und anständiger Schlaf." },
+      "housing_condo": { "name": "Eigentumswohnung", "desc": "Modernes Gebäude mit Sicherheit." },
+      "portal_none": { "name": "Keine Portale", "desc": "Keine riskanten Expeditionen." },
+      "portal_subway": { "name": "Verlassene U-Bahn", "desc": "Alte Tunnel mit seltsamen Augen." },
+      "portal_market": { "name": "Spiritueller Nachtmarkt", "desc": "Pillenschmuggel und zwielichtige Geschäfte." },
+      "portal_club": { "name": "Dämonenclub", "desc": "Ein Untergrundclub, in dem Dämonen mit Menschen spielen." },
+      "portal_tower": { "name": "Geisterturm", "desc": "Eine Prüfung für robuste Kultivatoren." }
+    }
+  }
+}

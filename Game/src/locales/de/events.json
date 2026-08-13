@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Du hast das ganze Jahr hart gelernt. Dein Wissen hat sich erweitert.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Du hast dir ein schweres Virus eingefangen und warst im Krankenhaus.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Du hast einen guten Teilzeitjob gefunden und ein paar Dollar gespart.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Dein Boss entpuppte sich als verkleideter niederrangiger Dämon! Du hast seinen Drucker zerstört, wurdest gebüßt, aber dein Geist wurde gehärtet.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Du hast aus Versehen einen 'leuchtenden Stein' im Darknet gekauft. Es war radioaktives Erz. Deine Gesundheit sank, aber du spürst eine seltsame Energie.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Du bist über eine versteckte spirituelle Ader in einem alten Park gestolpert. Qi-Energie erfüllt dich.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Während einer nächtlichen Meditation trat ein schwerer Manabrand auf. Deine Meridiane sind beschädigt.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Du hast einem streunenden Hund geholfen, der sich als Schutzgeist entpuppte. Dein Karma hat sich verbessert.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Straßenschläger, die sich als abtrünnige Kultivatoren entpuppten, haben dich in die Enge getrieben. Du hast sie mit der 'Eisenwind-Palme' abgewehrt und ihr Bargeld genommen.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

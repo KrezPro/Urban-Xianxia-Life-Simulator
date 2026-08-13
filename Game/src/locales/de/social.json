@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Sekte",
+    "loading": "Soziale Ebene wird geladen...",
+    "tab_my_sect": "Meine Sekte",
+    "tab_leaderboard": "Rangliste",
+    "empty_title": "Unternehmenssekte",
+    "empty_text": "Gründe eine geheime Unternehmenssekte oder gib einen Einladungscode ein, um in den Kampf um Einfluss einzutreten.",
+    "invite_placeholder": "Einladungscode",
+    "btn_create": "Sekte gründen",
+    "btn_join": "Mit Code beitreten",
+    "join_error": "Ungültiger Einladungscode. Es werden 8 Zeichen (A-Z oder 0-9) erwartet.",
+    "invite_code": "Einladungscode",
+    "share_invite": "Einladung teilen",
+    "funds": "Geldmittel",
+    "influence": "Einfluss",
+    "season": "Saison",
+    "members": "Mitglieder",
+    "player_name": "Du",
+    "contribution": "Beitrag",
+    "btn_leave": "Sekte verlassen",
+    "leave_confirm_title": "Sekte verlassen?",
+    "leave_confirm_message": "Du verlierst deinen aktuellen Sektenbeitrag, kannst aber einer anderen beitreten.",
+    "yes": "Ja",
+    "no": "Abbrechen",
+    "leaderboard_empty": "Die Rangliste ist derzeit leer.",
+    "default_name": "Neo Lotus Syndikat",
+    "default_tag": "NLS"
+  }
+}

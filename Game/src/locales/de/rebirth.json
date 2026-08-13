@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Wiedergeburt",
+  "accept": "Schicksal akzeptieren",
+  "tiers": {
+    "blessed": {
+      "title": "Gesegnete Reinkarnation",
+      "desc": "Die Himmel sind barmherzig. Du erleidest keine neuen Verluste."
+    },
+    "uneasy": {
+      "title": "Unruhige Reinkarnation",
+      "desc": "Dein früheres Leben hat dein neues Schicksal leicht gezeichnet."
+    },
+    "troubled": {
+      "title": "Geplagte Reinkarnation",
+      "desc": "Das Karma deines vergangenen Lebens lastet schwer auf deinem neuen Körper."
+    },
+    "severe": {
+      "title": "Schwere Reinkarnation",
+      "desc": "Du hast die neue Welt mit schweren Verlusten betreten."
+    },
+    "doomed": {
+      "title": "Verdammte Reinkarnation",
+      "desc": "Die Himmel haben sich von dir abgewandt. Dein neues Leben begann in Dunkelheit."
+    }
+  },
+  "money": {
+    "money_loss_0": "Erbe erhalten.",
+    "money_loss_25": "25% des Erbes verloren.",
+    "money_loss_50": "50% des Erbes verloren.",
+    "money_loss_75": "75% des Erbes verloren.",
+    "money_loss_100": "Du hast dein gesamtes Erbe verloren."
+  },
+  "health": {
+    "health_start_100": "Dein Körper ist gesund.",
+    "health_start_85": "Dein Körper ist leicht geschwächt.",
+    "health_start_70": "Dein Körper ist merklich geschwächt.",
+    "health_start_55": "Du wurdest schwach geboren.",
+    "health_start_40": "Du stehst an der Schwelle des Todes."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Hungriger Schatten",
+      "desc": "Einkommen um 3% reduziert."
+    },
+    "curse_minor_frail": {
+      "name": "Gebrechlicher Körper",
+      "desc": "Gesundheitsregeneration um 5% reduziert."
+    },
+    "curse_minor_fog": {
+      "name": "Benebelter Verstand",
+      "desc": "Intelligenz um 3 reduziert."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Raue Haut",
+      "desc": "Aussehen um 3 reduziert."
+    },
+    "curse_major_debt": {
+      "name": "Schuld des vergangenen Lebens",
+      "desc": "Einkommen um 10% reduziert."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Gerissene Meridiane",
+      "desc": "Qi-Zuwachs um 12% reduziert."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Mal des Himmels",
+      "desc": "Durchbruchschance und Portal-Erfolg um 7% reduziert."
+    },
+    "curse_major_sickly": {
+      "name": "Kränklicher Körper",
+      "desc": "Gesundheitsregeneration um 12% reduziert."
+    }
+  }
+}
