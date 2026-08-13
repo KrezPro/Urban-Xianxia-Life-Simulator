@@ -14,7 +14,7 @@ interface LocaleState {
 export const useLocaleStore = create<LocaleState>()(
   persist(
     (set) => ({
-      locale: 'ru',
+      locale: 'en',
       hasHydrated: false,
       setLocale: (locale) => set({ locale }),
       toggleLocale: () => set((state) => ({ locale: state.locale === 'ru' ? 'en' : 'ru' })),

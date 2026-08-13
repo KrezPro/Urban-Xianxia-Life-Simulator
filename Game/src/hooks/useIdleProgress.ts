@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useEventStore } from '../store/useEventStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -38,6 +39,7 @@ export const useIdleProgress = () => {
     }
     const lastLoginStr = storage.getString('lastLoginTime');
     const now = Date.now();
+
     if (lastLoginStr) {
       const lastLogin = Number(lastLoginStr);
       const { deltaMs, deltaSeconds } = calculateOfflineDelta(lastLogin, now);
@@ -48,6 +50,7 @@ export const useIdleProgress = () => {
           getTechniqueModifiers(useTechniquesStore.getState().levels),
           getKarmaTotalEffects(useInventoryStore.getState().items)
         );
+
         if (activityFocus === 'secret') {
           const dailyQi =
             spiritualRoot *
@@ -87,6 +90,29 @@ export const useIdleProgress = () => {
         }
       }
     }
+
     storage.set('lastLoginTime', now.toString());
   }, [hasHydrated]);
+
+  // Автосохранение времени последней активности.
+  // Прогресс самих игровых сторов уже пишется в MMKV при каждом изменении,
+  // а здесь мы фиксируем момент последней сессии для корректного offline-прогресса.
+  useEffect(() => {
+    const saveLastActive = () => {
+      storage.set('lastLoginTime', Date.now().toString());
+    };
+
+    const interval = setInterval(saveLastActive, 60000);
+
+    const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' || nextAppState === 'background' || nextAppState === 'inactive') {
+        saveLastActive();
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      subscription.remove();
+    };
+  }, []);
 };

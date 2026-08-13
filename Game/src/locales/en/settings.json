@@ -4,5 +4,9 @@
   "sound": "Interface Sound",
   "sound_desc": "Short sounds for buttons and actions.",
   "music": "Music",
-  "music_desc": "Looping background melody."
+  "music_desc": "Looping background melody.",
+  "language": "Language",
+  "language_desc": "Choose interface language.",
+  "language_en": "English",
+  "language_ru": "Русский"
 }
