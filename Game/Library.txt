@@ -1,5 +1,4 @@
 # АРХИТЕКТУРНАЯ БИБЛИОТЕКА ПРОЕКТА
-
 1. Стейт-менеджмент: только Zustand. Сторы: Player, Event, Inventory, Locale, Social, Notification, Techniques, Lifestyle, Settings.
 2. Хранилище: только react-native-mmkv через zustandStorage. Паттерн hasHydrated обязателен.
 3. Списки: FlashList для журнала и потенциально больших рейтингов. FlatList для логов не использовать.
@@ -17,7 +16,7 @@
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
 17. Если экран импортирует helpers или UI-кит, эти файлы должны существовать до запуска сборки.
-18. Новые файлы всегда получают короткое описание в структуре проекта.
+18. Новые файлы всегда получать короткое описание в структуре проекта.
 19. Кнопки должны поддерживать варианты primary, secondary, danger, gold, ghost, small, disabled, icon и onLongPress.
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect отключена в пользовательской навигации. Код секты остаётся в проекте как deprecated.
@@ -36,7 +35,7 @@
 34. Активности образа жизни хранятся в useLifestyleStore как selected: LifestyleSelection и сбрасываются при реинкарнации.
 35. Годовой цикл рассчитывается в useYearlyCycle и использует processLifestyleYear из utils/gameplayUtils.ts.
 36. Карма-баффы стали многоуровневыми: quantity в useInventoryStore означает текущий уровень баффа.
-37. Локализация вкладок находится в ui.json tab_bar; дополнительные игровые словари остаются в extras.json.
+37. Локализация дополнительных вкладок, техник, магазина и активностей вынесена в locales/{lang}/extras.json; локализация экрана настроек — в locales/{lang}/settings.json.
 38. Все проценты в игре хранятся как basis points (bps): 1% = 100 bps, 100% = 10000 bps.
 39. Стадии культивации имеют maxAge и softAge. Смертный не может жить бесконечно: после maxAge применяется шанс смерти от старости.
 40. useYearlyCycle обрабатывает: survival cost, подписки, доход, здоровье, Ци, порталы, события, старение и отключение неоплаченных активностей.
@@ -49,24 +48,24 @@
 47. NotificationToast запускает таймер автоскрытия от момента монтирования, а не от createdAt.
 48. useNotificationStore имеет pushGeneratedEventNotification и очередь NOTIFICATION_MAX_QUEUE=3, NOTIFICATION_MAX_VISIBLE=1.
 49. Уроки по крашам и навигации записаны в Game/DataForAI.txt.
-50. Пропущенные уведомления считаются в useNotificationStore.missedCount.
-51. Body Tempering стоит Ци и деньги: moneyCost = qiCost * GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER.
-52. Покупки в магазине Кармы идут по цепочке StoreScreen -> player.deductKarma -> inventory.addItem.
+50. Пропущенные уведомления считаются в useNotificationStore.missedCount: если новое уведомление приходит при уже занятом видимом слоте, счётчик растёт. Кнопка сброса badge находится в LifeScreen рядом с переключателем языка.
+51. Body Tempering стоит Ци и деньги: moneyCost = qiCost * GameConstants.BODY_TEMPERING.COST_MONEY_MULTIPLIER. Если множитель отсутствует или некорректен, использовать fallback 2.
+52. Покупки в магазине Кармы идут по цепочке StoreScreen -> player.deductKarma -> inventory.addItem. quantity всегда нормализуется как целое число >= 0.
 53. Причина смерти хранится в player.lastDeathCause, отображается в LifeScreen и передаётся в уведомлении death_reason.
-54. DetailsModal из components/ui/index.tsx используется для показа деталей по long-press.
-55. Числовые эффекты техник, карма-баффов, стадий и закалки тела показываются в деталях по long-press.
-56. Портальные награды показываются в ActivitiesScreen только если соответствующее значение существует и больше нуля.
+54. DetailsModal из components/ui/index.tsx используется для показа деталей по long-press в DaoScreen и StoreScreen.
+55. Числовые эффекты техник, карма-баффов, стадий и закалки тела показываются в деталях по long-press, а не в постоянном интерфейсе.
+56. Портальные награды показываются в ActivitiesScreen только если соответствующее значение существует и больше нуля: деньги/Ци диапазоны, breakthroughBlessingBps, attemptCost, failDamage/failDamageBps.
 57. processLifestyleYear возвращает portalBlessingGainedBps; при успехе портала portalQi добавляется к qiDelta, portalMoney добавляется к moneyDelta.
-58. useYearlyCycle применяет report.portalBlessingGainedBps через player.addPortalBlessing.
-59. DaoScreen показывает активное благословение портала только при player.portalBlessingBps > 0.
-60. LifeAvatar строится только на встроенном Animated API и emoji, без графических ассетов и без react-native-reanimated.
-61. Возрастные группы LifeAvatar синхронизированы с порогами eventGenerator.ts.
-62. LifeAvatar — круглый бейдж с цветовой ауровой дифференциацией стадий и подписью стадии.
-63. Hero-карточка вкладки Мир: бейдж LifeAvatar центрируется по всей ширине карточки, блок возраста закреплён справа.
-64. Адаптивный дизайн вкладки Мир: scale = clamp(windowHeight / 800, 0.75, 1.35), sw(v) = Math.round(v * scale), карточка статов flex:1.
-65. useSettingsStore хранит soundEnabled и musicEnabled в MMKV и использует hasHydrated.
-66. AudioManager является singleton-сервисом и инициализируется в App.tsx после гидратации сторов.
-67. Аудио генерируется процедурно в proceduralAudio.ts, кэшируется в FileSystem как WAV и проигрывается через expo-av.
-68. Button, IconButton, StatRow и DraggableGrowButton вызывают AudioManager.playUiPress автоматически; кастомные кнопки вызывают звук вручную.
-69. soundEnabled отключает только короткие UI-звуки; musicEnabled управляет фоновой музыкой независимо.
-70. Музыкальный loop не требует внешних бинарных ассетов и не использует copyrighted-файлы.
+58. useYearlyCycle применяет report.portalBlessingGainedBps через player.addPortalBlessing и пишет лог extras.logs.portal_blessing_gained.
+59. DaoScreen показывает активное благословение портала только при player.portalBlessingBps > 0. Благословение накапливается до PORTAL_BLESSING_CAP_BPS и списывается useBreakthrough после реальной попытки прорыва.
+60. LifeAvatar строится только на встроенном Animated API (import { Animated } from 'react-native') и emoji, без графических ассетов и без react-native-reanimated. Все анимации используют useNativeDriver: true.
+61. Возрастные группы LifeAvatar синхронизированы с порогами eventGenerator.ts: child меньше 12, teen меньше 18, adult меньше 50, mature меньше 80, elder от 80. Функция getAvatarAgeGroup экспортируется из LifeAvatar.tsx.
+62. LifeAvatar — круглый бейдж с числовым пропом size и четырёхслойной дифференциацией стадий, чтобы игрок не путался: (1) эмодзи матрицей "возраст x тир" (Смертный/Ци/Основание/Ядро/Бессмертный); (2) цвет ауры по ТОЧНОЙ стадии (9 оттенков: qi1 #38BDF8, qi2 #22D3EE, qi3 #2DD4BF, f1 #A855F7, f2 #C084FC, f3 #E879F9, core #FBBF24, immortal #F8FAFF; смертный без ауры); (3) число пульсирующих колец ауры равно тиру (1-4, фазовый сдвиг 250мс); (4) число частиц Ци равно 2 + stageIndex (кап 6). Под бейджем — локализованное имя стадии (проп stageLabel через stageUtils.getStageName). Движения: crawl (младенец-смертный), breathe (tier 0-1), levitate (tier 2+ и elder).
+63. Hero-карточка вкладки Мир: бейдж LifeAvatar центрируется по всей ширине карточки (heroTopRow justifyContent center), блок возраста закреплён position absolute справа и не сбивает центровку. В карточке статов есть строка «Расходы в год»: getSurvivalCost(age, stage) + сумма getLifestyleAnnualCost выбранных активностей (BigInt); формат "$0" при нуле и "-$X" при ненуле; long-press открывает подсказку hints.expenses с разбивкой по стоимости жизни и образу жизни.
+64. Адаптивный дизайн вкладки Мир (автозаполнение и автомасштаб, без скролла и без ручных тиров): единый коэффициент scale = clamp(windowHeight / 800, 0.75, 1.35), хелпер sw(v) = Math.round(v * scale); все paddings/margins/шрифты/высоты баров/чипы фокуса вычисляются через sw(). LifeAvatar size = clamp(sw(76), 54, 96), шрифт возраста = clamp(sw(32), 24, 40). Карточка статов получает flex: 1 и съедает свободную высоту экрана; каждая StatRow обёрнута в View с flex: 1 и justifyContent center для равномерного распределения строк (мёртвых полос нет). StatRow принимает проп scale (дефолт 1) и масштабирует бейдж/иконку/шрифты/padding — другие экраны не меняются; проп dense сохранён для совместимости. paddingBottom контента равен боковым отступам (sw(16)): DraggableGrowButton — перетаскиваемый абсолютный overlay и НЕ резервирует место в вертикальной компоновке.
+65. Вкладка Settings: SettingsScreen с тумблерами «Звук интерфейса» и «Музыка»; тексты в locales/{lang}/settings.json (tab_label, title, sound, sound_desc, music, music_desc).
+66. useSettingsStore: soundEnabled/musicEnabled (дефолт true), persist в MMKV, hasHydrated; App гидратирует его вместе с остальными сторами.
+67. AudioManager экспортирует standalone-функции playUiPress/playTab/playSuccess/playError/playToggle/initAudio/disposeAudio/syncMusic плюс default-объект для совместимости; все вызовы в UI только через optional call (playUiPress?.()).
+68. Аудио-политика: в тесте (__DEV__ === true) звук и музыка не инициализируются; в release APK/AAB работают. expo-av/expo-file-system подключаются guarded require внутри try/catch; WAV генерируются процедурно и кэшируются в FileSystem.
+69. Metro-гигиена: статические require резолвятся на этапе сборки (try/catch не спасает от отсутствия пакета в node_modules — после правки package.json обязателен npm install); битый JSON в импортах даёт TransformError SyntaxError lineNumber 0 — JSON-файлы писать начисто и валидно.
+70. Озвучка: Button/IconButton/StatRow/DraggableGrowButton играют playUiPress автоматически; кастомные TouchableOpacity (журнал, RU/EN, возраст, фокус-чипы, стадии Дао, закрытие журнала) вызывают playUiPress?.() вручную; смена вкладок играет playTab?.(); тумблеры настроек играют playToggle?.().

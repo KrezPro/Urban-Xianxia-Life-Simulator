@@ -14,3 +14,5 @@
 12. Звуки вызывать ТОЛЬКО через standalone-функции с optional call: playUiPress?.(), playTab?.(), playToggle?.(). Никогда через навигацию по объекту (AudioManager.xxx) — иначе TypeError "Cannot read property 'playUiPress' of undefined".
 13. WAV-звуки и фоновой loop генерируются процедурно (proceduralAudio.ts) и кэшируются в FileSystem как base64 WAV: без бинарных ассетов и без copyrighted-файлов.
 14. useSettingsStore (soundEnabled/musicEnabled) персистится в MMKV с hasHydrated; App гидратирует его до запуска и вызывает initAudio?.() после готовности всех сторов.
+15. Metro TransformError "SyntaxError" с lineNumber 0 = битый/невалидный JSON-файл в графе импортов (JSON.parse падает без номера строки). Лечится перезаписью JSON начисто.
+16. Metro резолвит ВСЕ статические require (даже внутри try/catch) на этапе сборки: если JS-пакет отсутствует в node_modules, бандл падает TransformError до рантайма. После правки package.json ОБЯЗАТЕЛЕН npm install в папке Game.
