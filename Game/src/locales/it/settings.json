@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Impostazioni",
+  "title": "Impostazioni",
+  "sound": "Suono dell'interfaccia",
+  "sound_desc": "Suoni brevi per pulsanti e azioni.",
+  "music": "Musica",
+  "music_desc": "Melodia di sottofondo in loop.",
+  "language": "Lingua",
+  "language_desc": "Scegli la lingua dell'interfaccia.",
+  "language_button": "Cambia lingua",
+  "language_current": "Lingua attuale",
+  "language_close": "Chiudi",
+  "language_selection": {
+    "title": "Scegli la lingua",
+    "subtitle": "Seleziona la lingua dell'interfaccia. Potrai cambiarla in seguito nelle Impostazioni.",
+    "confirm": "Conferma",
+    "close": "Chiudi"
+  }
+}

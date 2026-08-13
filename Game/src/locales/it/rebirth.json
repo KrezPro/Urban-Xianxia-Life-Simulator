@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Rinascita",
+  "accept": "Accetta il destino",
+  "tiers": {
+    "blessed": {
+      "title": "Reincarnazione Benedetta",
+      "desc": "I cieli sono misericordiosi. Non subisci nuove perdite."
+    },
+    "uneasy": {
+      "title": "Reincarnazione Inquieta",
+      "desc": "La tua vita precedente ha lasciato un lieve segno sul tuo nuovo destino."
+    },
+    "troubled": {
+      "title": "Reincarnazione Tormentata",
+      "desc": "Il karma della tua vita passata pesa sul tuo nuovo corpo."
+    },
+    "severe": {
+      "title": "Reincarnazione Severa",
+      "desc": "Sei entrato nel nuovo mondo con gravi perdite."
+    },
+    "doomed": {
+      "title": "Reincarnazione Condannata",
+      "desc": "I cieli ti hanno voltato le spalle. La tua nuova vita è iniziata nell'oscurità."
+    }
+  },
+  "money": {
+    "money_loss_0": "Eredità preservata.",
+    "money_loss_25": "Perso il 25% dell'eredità.",
+    "money_loss_50": "Perso il 50% dell'eredità.",
+    "money_loss_75": "Perso il 75% dell'eredità.",
+    "money_loss_100": "Hai perso tutta la tua eredità."
+  },
+  "health": {
+    "health_start_100": "Il tuo corpo è sano.",
+    "health_start_85": "Il tuo corpo è leggermente indebolito.",
+    "health_start_70": "Il tuo corpo è notevolmente indebolito.",
+    "health_start_55": "Sei nato debole.",
+    "health_start_40": "Sei sull'orlo della morte."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Ombra Affamata",
+      "desc": "Le entrate sono ridotte del 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Corpo Fragile",
+      "desc": "Il recupero della salute è ridotto del 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Mente Nebbiosa",
+      "desc": "Intelligenza ridotta di 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Pelle Ruvida",
+      "desc": "Aspetto ridotto di 3."
+    },
+    "curse_major_debt": {
+      "name": "Debito della Vita Passata",
+      "desc": "Le entrate sono ridotte del 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridiani Incrinati",
+      "desc": "Il guadagno di Qi è ridotto del 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Marchio del Cielo",
+      "desc": "Probabilità di sfondamento e successo nei portali ridotta del 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Corpo Cagionevole",
+      "desc": "Il recupero della salute è ridotto del 12%."
+    }
+  }
+}

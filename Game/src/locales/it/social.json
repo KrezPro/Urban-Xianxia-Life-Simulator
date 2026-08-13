@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Setta",
+    "loading": "Caricamento del livello sociale...",
+    "tab_my_sect": "La Mia Setta",
+    "tab_leaderboard": "Classifica",
+    "empty_title": "Setta Aziendale",
+    "empty_text": "Crea una setta aziendale segreta o inserisci un codice di invito per unirti alla lotta per l'influenza.",
+    "invite_placeholder": "Codice invito",
+    "btn_create": "Crea Setta",
+    "btn_join": "Unisciti con Codice",
+    "join_error": "Codice invito non valido. Sono richiesti 8 caratteri (A-Z o 0-9).",
+    "invite_code": "Codice di Invito",
+    "share_invite": "Condividi Invito",
+    "funds": "Fondi",
+    "influence": "Influenza",
+    "season": "Stagione",
+    "members": "Membri",
+    "player_name": "Tu",
+    "contribution": "Contributo",
+    "btn_leave": "Abbandona Setta",
+    "leave_confirm_title": "Abbandonare la setta?",
+    "leave_confirm_message": "Perderai il tuo contributo attuale alla setta, ma potrai unirti a un'altra.",
+    "yes": "Sì",
+    "no": "Annulla",
+    "leaderboard_empty": "La classifica è vuota per ora.",
+    "default_name": "Sindacato del Loto Neo",
+    "default_tag": "SLN"
+  }
+}

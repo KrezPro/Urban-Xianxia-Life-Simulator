@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Risveglio dell'anima..."
+  },
+  "tab_bar": {
+    "life": "Vita",
+    "dao": "Dao",
+    "activities": "Attività",
+    "store": "Negozio",
+    "settings": "Impost.",
+    "log": "Diario",
+    "sect": "Setta"
+  },
+  "log_screen": {
+    "title": "Diario del Destino",
+    "empty": "Il cammino della tua vita è appena iniziato..."
+  },
+  "idle": {
+    "offline_secret": "Progresso offline: Hai meditato per {seconds}s. Qi ottenuto: {amount}.",
+    "offline_mundane": "Progresso offline: Hai lavorato per {seconds}s. Guadagnato: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profilo",
+    "age": "Età",
+    "stage": "Stadio",
+    "health": "Salute",
+    "intelligence": "Intelligenza",
+    "appearance": "Aspetto",
+    "money": "Denaro",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Cresci (+1 anno)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Sei nato in questo mondo. La tua storia ha inizio...",
+    "death_log": "Sei morto. La tua anima entra nel ciclo infinito del Samsara...",
+    "reincarnate_log": "La Ruota del Samsara ha girato. Sei rinato in un nuovo corpo.",
+    "age": "Età",
+    "health": "Salute",
+    "intelligence": "Intelligenza",
+    "appearance": "Aspetto",
+    "money": "Denaro",
+    "expenses_year": "Spese annuali",
+    "spiritual_root": "Radice Spirituale",
+    "qi": "Energia Qi",
+    "karma": "Karma",
+    "focus_title": "Focus per quest'anno:",
+    "focus_mundane": "Vita Mortale",
+    "focus_secret": "Sentiero Segreto",
+    "btn_grow": "Cresci (+1 anno)",
+    "btn_reincarnate": "Reincarnati",
+    "btn_log": "Diario",
+    "dead_title": "SEI MORTO",
+    "dead_subtitle": "Il viaggio della tua vita si è interrotto.",
+    "death_cause_label": "Causa della morte:",
+    "death_causes": {
+      "none": "Sconosciuta",
+      "old_age": "Vecchiaia",
+      "health": "Problemi di salute",
+      "breakthrough": "Sfondamento fallito",
+      "portal": "Incidente nel portale",
+      "event": "Evento fatale"
+    },
+    "karma_accumulated": "Karma Totale:",
+    "karma_earned_last_life": "Eredità ottenuta (Karma):",
+    "meditation_log": "È trascorso un anno in meditazione segreta. Hai raccolto {amount} di energia Qi.",
+    "age_log": "Hai compiuto {age} anni.",
+    "interstitial_log": "[ANNUNCIO] Annuncio interstitial mostrato dopo la reincarnazione all'età di 1 anno.",
+    "avatar": {
+      "aria_child": "Un bambino gattona sul sentiero della vita",
+      "aria_teen": "Un giovane compie i suoi primi passi",
+      "aria_adult": "Un adulto in profonda meditazione",
+      "aria_mature": "Un maestro in profonda meditazione",
+      "aria_elder": "Un anziano al tramonto del suo cammino"
+    },
+    "hints": {
+      "close": "Capito",
+      "intelligence": {
+        "title": "Intelligenza",
+        "text": "Aumenta la probabilità di successo negli sfondamenti e aiuta con studio, lavoro ed eventi mortali."
+      },
+      "health": {
+        "title": "Salute",
+        "text": "Se la salute scende a 0, muori e ti reincarni. Proteggila."
+      },
+      "appearance": {
+        "title": "Aspetto",
+        "text": "Influenza eventi sociali, relazioni e alcune opportunità mondane."
+      },
+      "money": {
+        "title": "Denaro",
+        "text": "Necessario per vivere, per i contributi alla setta e per le opportunità future."
+      },
+      "expenses": {
+        "title": "Spese annuali",
+        "text": "Costo della vita: {survival} all'anno. Stile di vita (lavoro, sport, cibo, casa, portali): {lifestyle} all'anno. Se non puoi pagare il costo della vita, la tua salute ne risentirà."
+      },
+      "spiritual_root": {
+        "title": "Radice Spirituale",
+        "text": "Determina la velocità di accumulo del Qi e il potenziale di coltivazione."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Si accumula attraverso le vite e viene speso per potenziamenti permanenti nel Negozio del Karma."
+      },
+      "focus_mundane": {
+        "title": "Vita Mortale",
+        "text": "Concentrati su denaro, studio e carriera. Minore probabilità di incontrare eventi segreti."
+      },
+      "focus_secret": {
+        "title": "Sentiero Segreto",
+        "text": "Concentrati sulla coltivazione: ottieni Qi e incontri eventi segreti più spesso."
+      },
+      "age": {
+        "title": "Età",
+        "text": "Aspettativa di vita massima per il tuo stadio attuale: {maxAge} anni. La vecchiaia potrebbe arrivare prima, specialmente dopo i {softAge} anni."
+      },
+      "age_immortal": {
+        "title": "Età",
+        "text": "Questo stadio è immortale: la vecchiaia non può più ucciderti."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Negozio del Karma",
+    "karma_balance": "Il tuo Karma",
+    "btn_buy": "Compra",
+    "btn_bought": "Posseduto",
+    "btn_no_karma": "Insufficiente",
+    "cost": "Costo",
+    "iap_section": "Premium & Monetizzazione",
+    "iap_pass": "Pass del Coltivatore",
+    "iap_pass_desc": "Disattiva per sempre tutti gli annunci interstitial e supporta lo sviluppatore.",
+    "iap_ad": "Annuncio Salvavita",
+    "iap_ad_desc": "Disponibile nella scheda Dao prima di uno sfondamento (protezione dalla morte).",
+    "btn_iap_buy": "Compra Pass",
+    "btn_iap_active": "Attivo",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Famiglia Ricca",
+        "desc": "Ogni reincarnazione inizia con denaro extra e un piccolo bonus di reddito annuale."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridiani Forti",
+        "desc": "Rafforza il corpo: più Salute Max, rigenerazione e riduzione dei danni."
+      },
+      "buff_pure_root": {
+        "name": "Radice Pura",
+        "desc": "Migliora la Radice Spirituale e conferisce un bonus fisso di Qi all'anno."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Sentiero del Dao",
+    "stage": "Stadio",
+    "unknown": "Sconosciuto",
+    "qi_energy": "Energia Qi",
+    "next_stage": "Prossimo Passo",
+    "req_qi": "Qi Richiesto",
+    "success_chance": "Probabilità di Successo",
+    "btn_breakthrough": "Tenta Sfondamento",
+    "btn_no_qi": "Qi Insufficiente",
+    "max_stage": "Hai raggiunto l'apice della coltivazione. I Cieli non ti vincolano più.",
+    "dead_text": "I morti non possono coltivare.",
+    "btn_ad_buff": "Guarda Video (+10% & Protezione)",
+    "btn_ad_watched": "Buff Attivo",
+    "alert_ad_title": "Annuncio",
+    "alert_ad_msg": "Video completato! Hai ricevuto un buff per il prossimo sfondamento.",
+    "body_title": "Tempra del Corpo",
+    "body_level": "Livello",
+    "body_cost": "Costo",
+    "body_button": "Tempra Corpo",
+    "body_locked_age": "Il tuo corpo è ancora troppo debole",
+    "body_locked_year": "Tempra disponibile dal prossimo anno",
+    "body_locked_qi": "Qi insufficiente",
+    "body_effect_line": "+{maxHealth} Salute Max, +{regen} Rig./anno, res. malattie {resistance}%",
+    "body_desc": "Il corpo viene temprato attraverso dolore, sudore e forza di volontà, diventando un ricettacolo per il vero potere.",
+    "details_close": "Chiudi",
+    "body_details_title": "Effetti Tempra del Corpo",
+    "body_details_max_health": "Salute Max",
+    "body_details_regen": "Rigenerazione/anno",
+    "body_details_illness": "Resistenza alle malattie",
+    "body_details_mortality": "Riduzione della mortalità",
+    "body_details_survival": "Riduzione costo della vita",
+    "body_details_breakthrough": "Riduzione danni da sfondamento",
+    "body_details_portal": "Riduzione danni da portale",
+    "stage_info_max_age": "Aspettativa di vita massima",
+    "stage_info_soft_age": "La vecchiaia inizia a",
+    "stage_info_meditation": "Meditazione Qi",
+    "stage_info_mortality": "Mortalità",
+    "stage_info_survival": "Costo della vita",
+    "stage_info_breakthrough_damage": "Pericolo sfondamento",
+    "stage_info_required_qi": "Qi Richiesto",
+    "stage_info_immortal": "Immortale: la vecchiaia non uccide più",
+    "portal_blessing_active": "Benedizione del portale attiva: +{percent}",
+    "log_no_qi": "Energia Qi insufficiente per lo sfondamento.",
+    "log_success": "[SUCCESSO] Sfondamento riuscito! Hai raggiunto lo stadio: {name}. I tuoi meridiani si sono espansi.",
+    "log_fail_death": "[FALLIMENTO CRITICO] La Tribolazione Celeste era troppo forte. Sei morto.",
+    "log_fail_damage": "[FALLIMENTO] Sfondamento fallito. Si è verificata una Bruciatura del Mana, hai subito {damage} danni.",
+    "log_ad_saved": "[SALVATO] Lo sfondamento è fallito, ma il Buff Video ha protetto i tuoi meridiani dai danni!"
+  },
+  "settings_screen": {
+    "title": "Impostazioni",
+    "sound": "Suono dell'interfaccia",
+    "sound_desc": "Suoni brevi per pulsanti e azioni.",
+    "music": "Musica",
+    "music_desc": "Melodia di sottofondo in loop."
+  }
+}

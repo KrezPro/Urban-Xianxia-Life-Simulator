@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Hai studiato duramente tutto l'anno. Le tue conoscenze si sono espanse.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Hai contratto un grave virus e sei finito in ospedale.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Hai trovato un buon lavoro part-time e hai risparmiato qualche dollaro.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Il tuo capo si è rivelato un demone di basso livello travestito! Hai rotto la sua stampante e preso una multa, ma hai temprato il tuo spirito.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Hai comprato per sbaglio una 'roccia luminosa' sul darknet. Era minerale radioattivo. La salute è calata, ma avverti una strana energia.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Ti sei imbattuto in una vena spirituale nascosta in un vecchio parco. L'energia Qi ti pervade.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Durante la meditazione notturna si è verificata una grave Bruciatura del Mana. I tuoi meridiani sono danneggiati.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Hai aiutato un cane randagio che si è rivelato essere uno spirito guardiano. Il tuo karma è migliorato.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Dei teppisti da strada, che si sono rivelati coltivatori rinnegati, ti hanno messo all'angolo. Li hai respinti con il 'Palmo del Vento di Ferro' e hai preso i loro soldi.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }
