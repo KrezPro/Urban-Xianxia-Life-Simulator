@@ -7,7 +7,7 @@ import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
 import { getEventLogText } from '../utils/notificationUtils';
 import { EffectChips } from '../components/game/EffectChips';
-import { AudioManager } from '../audio/AudioManager';
+import { playUiPress } from '../audio/AudioManager';
 import { IEventLog } from '../types';
 import ruUI from '../locales/ru/ui.json';
 import enUI from '../locales/en/ui.json';
@@ -46,7 +46,7 @@ export default function LogScreen({ onClose }: LogScreenProps) {
 
   const handleClose = () => {
     if (onClose) {
-      AudioManager.playUiPress();
+      playUiPress?.();
       onClose();
     }
   };

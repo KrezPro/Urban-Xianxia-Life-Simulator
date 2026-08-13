@@ -17,7 +17,7 @@ import { useLifestyleStore } from '../store/useLifestyleStore';
 import { Button, Card, ProgressBar, StatRow } from '../components/ui';
 import { DraggableGrowButton } from '../components/game/DraggableGrowButton';
 import { LifeAvatar, getAvatarAgeGroup } from '../components/game/LifeAvatar';
-import { AudioManager } from '../audio/AudioManager';
+import { playUiPress } from '../audio/AudioManager';
 import { Theme } from '../constants/Theme';
 import { formatLargeNumber, getBigIntProgress, safeBigInt } from '../utils/helpers';
 import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils/gameplayUtils';
@@ -50,6 +50,11 @@ export default function LifeScreen() {
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
 
+  // Адаптивный дизайн: единый непрерывный коэффициент масштаба от высоты окна.
+  // 800pt — базовый телефон (scale 1), маленькие экраны сжимаются (до 0.75),
+  // планшеты растут (до 1.35). Все метрики вычисляются через sw().
+  // DraggableGrowButton (FAB) в вертикальной компоновке НЕ участвует:
+  // paddingBottom равен боковым отступам, кнопка — абсолютный overlay.
   const { height: windowHeight } = useWindowDimensions();
   const scale = Math.min(1.35, Math.max(0.75, windowHeight / 800));
   const sw = (v: number) => Math.round(v * scale);
@@ -107,8 +112,10 @@ export default function LifeScreen() {
   const avatarLabels: any = (ui as any).avatar || {};
   const avatarGroup = getAvatarAgeGroup(player.age);
   const avatarAria = avatarLabels['aria_' + avatarGroup] || '';
+  // Локализованное имя стадии для подписи под бейджем аватара.
   const stageLabel = getStageName(player.cultivationStage, locale);
 
+  // Ежегодные расходы: стоимость жизни по возрасту/стадии + траты выбранных активностей.
   const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
   let lifestyleCost = 0n;
   (Object.keys(lifestyle.selected) as LifestyleCategory[]).forEach((category) => {
@@ -120,7 +127,7 @@ export default function LifeScreen() {
 
   const totalExpensesBig = safeBigInt(survivalCost.toString()) + lifestyleCost;
   const expensesValue =
-    totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : '$0';
+    totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : `$0`;
 
   const openHint = (key: string) => {
     const hintData = hints[key];
@@ -189,37 +196,37 @@ export default function LifeScreen() {
   };
 
   const handleOpenLog = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     openLog();
   };
 
   const handleToggleLocale = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     toggleLocale();
   };
 
   const handleAgeHintPress = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     openAgeHint();
   };
 
   const handleFocusMundane = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     player.setActivityFocus('mundane');
   };
 
   const handleFocusSecret = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     player.setActivityFocus('secret');
   };
 
   const handleFocusMundaneLong = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     openHint('focus_mundane');
   };
 
   const handleFocusSecretLong = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     openHint('focus_secret');
   };
 
@@ -435,6 +442,8 @@ export default function LifeScreen() {
           </Text>
         </Card>
 
+        {/* Автозаполнение: карточка статов растягивается flex:1 и съедает всю
+            свободную высоту экрана; строки распределены равномерно. */}
         <Card style={{ padding: sw(12), marginBottom: sw(10), flex: 1 }}>
           <View style={styles.statFlex}>
             <StatRow
