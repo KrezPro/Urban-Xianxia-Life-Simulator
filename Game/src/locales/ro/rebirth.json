@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Renaștere",
+  "accept": "Acceptă-ți destinul",
+  "tiers": {
+    "blessed": {
+      "title": "Reîncarnare Binecuvântată",
+      "desc": "Cerurile sunt milostive. Nu suferi pierderi noi."
+    },
+    "uneasy": {
+      "title": "Reîncarnare Neliniștită",
+      "desc": "Viața ta anterioară a lăsat o urmă ușoară asupra noului tău destin."
+    },
+    "troubled": {
+      "title": "Reîncarnare Zbuciumată",
+      "desc": "Karma din viața ta trecută apasă greu pe noul tău corp."
+    },
+    "severe": {
+      "title": "Reîncarnare Severă",
+      "desc": "Ai intrat în noua lume cu pierderi grele."
+    },
+    "doomed": {
+      "title": "Reîncarnare Blestemată",
+      "desc": "Cerurile s-au întors de la tine. Noua ta viață a început în întuneric."
+    }
+  },
+  "money": {
+    "money_loss_0": "Moștenire păstrată în totalitate.",
+    "money_loss_25": "Ai pierdut 25% din moștenire.",
+    "money_loss_50": "Ai pierdut 50% din moștenire.",
+    "money_loss_75": "Ai pierdut 75% din moștenire.",
+    "money_loss_100": "Ai pierdut toată moștenirea."
+  },
+  "health": {
+    "health_start_100": "Corpul tău este perfect sănătos.",
+    "health_start_85": "Corpul tău este ușor slăbit.",
+    "health_start_70": "Corpul tău este vizibil slăbit.",
+    "health_start_55": "Te-ai născut firav.",
+    "health_start_40": "Ești la un pas de moarte."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Umbră Flămândă",
+      "desc": "Veniturile sunt reduse cu 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Corp Firav",
+      "desc": "Recuperarea sănătății scade cu 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Minte Încețoșată",
+      "desc": "Inteligența scade cu 3 puncte."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Piele Aspră",
+      "desc": "Aspectul scade cu 3 puncte."
+    },
+    "curse_major_debt": {
+      "name": "Datoria Vieții Trecute",
+      "desc": "Veniturile sunt reduse cu 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridiane Fisurate",
+      "desc": "Câștigul de Qi scade cu 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Semnul Cerului",
+      "desc": "Șansa de avansare și succesul în portal scad cu 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Corp Bolnăvicios",
+      "desc": "Recuperarea sănătății scade cu 12%."
+    }
+  }
+}

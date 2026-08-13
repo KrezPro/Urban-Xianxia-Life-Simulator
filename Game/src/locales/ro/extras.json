@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Viață",
+      "dao": "Dao",
+      "activities": "Activități",
+      "store": "Magazin",
+      "sect": "Sectă"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Sănătate Max/an",
+    "healthRegenPerYear": "+{value} Regen/an",
+    "appearancePerYear": "+{value} Aspect/an",
+    "qiPerYear": "+{value} Qi/an",
+    "portalSuccessBps": "+{value}% succes portal",
+    "qiFlatPerYear": "+{value} Qi/an",
+    "moneyFlatPerYear": "+${value}/an",
+    "healthRegenFlat": "+{value} Regen/an",
+    "damageReductionBps": "+{value}% reducere daune",
+    "breakthroughChanceBps": "+{value}% șansă avansare",
+    "startMoney": "Start: +${value}",
+    "startMaxHealth": "Start: +{value} Sănătate Max",
+    "startSpiritualRoot": "Start: +{value} Rădăcină Spir.",
+    "startBodyTempering": "Start: +{value} Călirea Corpului"
+  },
+  "life": {
+    "survival_cost_line": "Costul vieții: -${amount}/an",
+    "survival_cost_hint": {
+      "title": "Costurile vieții",
+      "text": "Cheltuieli anuale obligatorii pentru hrană, locuință și siguranță. Se taxează chiar dacă nu este selectată nicio activitate. Dacă îți lipsesc banii, sănătatea ta va avea de suferit."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Costul vieții: -${amount}.",
+    "lifestyle_money_delta": "Profit net anual activități: {amount}.",
+    "portal_blessing_gained": "Binecuvântarea portalului: +{percent}% la următoarea șansă de avansare."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Tehnici Dao",
+      "level": "Nivel",
+      "max": "Max",
+      "cost": "Cost",
+      "upgrade": "Îmbunătățește",
+      "locked": "Blocat",
+      "not_enough_money": "Bani insuficienți",
+      "current_effects": "Curent",
+      "next_effects": "Următor",
+      "requirements": {
+        "spiritual_root": "Rădăcină Spirituală",
+        "intelligence": "Inteligență",
+        "stage": "Stadiu"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Respirația Dragonului Ascuns",
+          "desc": "O tehnică de bază de respirație. Crește câștigul de Qi și șansa de avansare."
+        },
+        "technique_iron_meridian": {
+          "name": "Meridianele de Fier",
+          "desc": "Călește corpul și meridianele. Îmbunătățește recuperarea sănătății și reduce daunele."
+        },
+        "technique_jade_ledger": {
+          "name": "Registrul de Jad",
+          "desc": "O tehnică pământească de bogăție. Crește veniturile, eficiența muncii și succesul în portaluri."
+        },
+        "technique_spirit_sense": {
+          "name": "Simțul Spiritului",
+          "desc": "O tehnică de percepție avansată. Stimulează semnificativ Qi-ul, avansările și succesul în portaluri."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Nivel",
+    "max_level": "Nivel max",
+    "next_cost": "Cost nivel următor",
+    "current_effects": "Curent",
+    "next_effects": "Următor",
+    "effects_note": "Efectele de început se aplică după reîncarnare. Efectele anuale se aplică în fiecare an.",
+    "details_close": "Închide"
+  },
+  "activities": {
+    "title": "Activități",
+    "dead_text": "Cei morți nu pot alege activități.",
+    "select": "Selectează",
+    "selected": "Selectat",
+    "disable": "Dezactivează",
+    "locked": "Blocat",
+    "daily_cost": "Cost/zi",
+    "daily_income": "Venit/zi",
+    "yearly_cost": "Cost/an",
+    "yearly_income": "Venit/an",
+    "net_yearly": "Net/an",
+    "effects_title": "Efecte/an",
+    "requirements_label": "Cerințe",
+    "none": "Niciuna",
+    "categories": {
+      "job": "Muncă",
+      "sport": "Sport",
+      "food": "Hrană",
+      "housing": "Locuință",
+      "portal": "Portaluri"
+    },
+    "requirements": {
+      "age": "Vârstă",
+      "intelligence": "Inteligență",
+      "appearance": "Aspect",
+      "spiritual_root": "Rădăcină Spir.",
+      "health": "Sănătate",
+      "max_health": "Sănătate Max",
+      "stage": "Stadiu"
+    },
+    "portal_rewards": {
+      "title": "Recompense Portal",
+      "attempt_cost": "Cost încercare: ${cost}",
+      "reward_money": "Bani: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Bonus de avansare: +{percent}%",
+      "fail_damage_bps": "Eșec: {percent}% din Sănătatea Max. ca daune",
+      "fail_damage_flat": "Eșec: {damage} daune"
+    },
+    "options": {
+      "job_none": { "name": "Fără Muncă", "desc": "Fără venituri și fără obligații." },
+      "job_parttime": { "name": "Part-time", "desc": "Mici comisioane și livrări." },
+      "job_office": { "name": "Funcționar", "desc": "Plictisitor, dar stabil." },
+      "job_manager": { "name": "Manager", "desc": "Mai multă responsabilitate, mai mulți bani." },
+      "job_founder": { "name": "Fondator Tech", "desc": "Un startup care îmbină IT-ul și tehnologia spirituală." },
+      "sport_none": { "name": "Fără Sport", "desc": "Zero activitate fizică." },
+      "sport_home": { "name": "Antrenament Acasă", "desc": "Flotări în curte." },
+      "sport_gym": { "name": "Sală de Sport", "desc": "Abonament la sala locală." },
+      "sport_premium": { "name": "Club Premium", "desc": "Antrenori, piscină și recuperare." },
+      "sport_spirit": { "name": "Antrenament Spiritual", "desc": "Antrenamentul corpului și al meridianelor." },
+      "food_none": { "name": "Fără Plan Alimentar", "desc": "Gustări pe fugă." },
+      "food_street": { "name": "Mâncare de Stradă", "desc": "Tăiței și batoane energizante." },
+      "food_home": { "name": "Mâncare Gătită", "desc": "Mese obișnuite și decente." },
+      "food_premium": { "name": "Mese Premium", "desc": "Produse de calitate și dietă." },
+      "food_spirit": { "name": "Bucătărie Spirituală", "desc": "Mâncăruri făcute din ierburi spirituale." },
+      "housing_none": { "name": "Fără Locuință", "desc": "Dormi oriunde poți." },
+      "housing_shelter": { "name": "Adăpost", "desc": "Un acoperiș minim deasupra capului." },
+      "housing_room": { "name": "Cameră", "desc": "O cameră mică într-o casă veche." },
+      "housing_apartment": { "name": "Apartament", "desc": "Un apartament curat și un somn liniștit." },
+      "housing_condo": { "name": "Complex Rezidențial", "desc": "Clădire modernă cu securitate." },
+      "portal_none": { "name": "Fără Portaluri", "desc": "Fără expediții riscante." },
+      "portal_subway": { "name": "Metrou Abandonat", "desc": "Tunele vechi cu ochi ciudați." },
+      "portal_market": { "name": "Piața Spirituală de Noapte", "desc": "Contrabandă de pilule și afaceri dubioase." },
+      "portal_club": { "name": "Clubul Demonilor", "desc": "Un club subteran unde demonii pariază cu oamenii." },
+      "portal_tower": { "name": "Turnul Spiritual", "desc": "O încercare pentru cultivatorii robuști." }
+    }
+  }
+}

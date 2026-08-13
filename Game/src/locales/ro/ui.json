@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Trezirea sufletului..."
+  },
+  "tab_bar": {
+    "life": "Viață",
+    "dao": "Dao",
+    "activities": "Activități",
+    "store": "Magazin",
+    "settings": "Setări",
+    "log": "Jurnal",
+    "sect": "Sectă"
+  },
+  "log_screen": {
+    "title": "Jurnalul Destinului",
+    "empty": "Calea vieții tale abia începe..."
+  },
+  "idle": {
+    "offline_secret": "Progres offline: Ai meditat timp de {seconds}s. Qi obținut: {amount}.",
+    "offline_mundane": "Progres offline: Ai muncit timp de {seconds}s. Câștigat: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Vârstă",
+    "stage": "Stadiu",
+    "health": "Sănătate",
+    "intelligence": "Inteligență",
+    "appearance": "Aspect",
+    "money": "Bani",
+    "qi": "Qi",
+    "karma": "Karmă",
+    "btn_grow": "Îmbătrânește (+1 an)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Te-ai născut în această lume. Povestea ta începe...",
+    "death_log": "Ai murit. Sufletul tău intră în ciclul nesfârșit al Samsarei...",
+    "reincarnate_log": "Roata Samsarei s-a întors. Ai renăscut într-un corp nou.",
+    "age": "Vârstă",
+    "health": "Sănătate",
+    "intelligence": "Inteligență",
+    "appearance": "Aspect",
+    "money": "Bani",
+    "expenses_year": "Cheltuieli anuale",
+    "spiritual_root": "Rădăcină Spirituală",
+    "qi": "Energie Qi",
+    "karma": "Karmă",
+    "focus_title": "Focalizare pentru acest an:",
+    "focus_mundane": "Viață Muritoare",
+    "focus_secret": "Calea Secretă",
+    "btn_grow": "Îmbătrânește (+1 an)",
+    "btn_reincarnate": "Reîncarnare",
+    "btn_log": "Jurnal",
+    "dead_title": "EȘTI MORT",
+    "dead_subtitle": "Călătoria vieții tale a fost întreruptă.",
+    "death_cause_label": "Cauza morții:",
+    "death_causes": {
+      "none": "Necunoscută",
+      "old_age": "Bătrânețe",
+      "health": "Deteriorarea sănătății",
+      "breakthrough": "Eșec la avansare",
+      "portal": "Accident de portal",
+      "event": "Eveniment fatal"
+    },
+    "karma_accumulated": "Karmă Totală:",
+    "karma_earned_last_life": "Moștenire obținută (Karmă):",
+    "meditation_log": "A trecut un an de meditație secretă. Ai adunat {amount} energie Qi.",
+    "age_log": "Ai împlinit {age} ani.",
+    "interstitial_log": "[RECLAMĂ] Anunț interstițial afișat după reîncarnarea la vârsta de 1 an.",
+    "avatar": {
+      "aria_child": "Un bebeluș se târăște pe calea vieții",
+      "aria_teen": "Un tânăr făcând primii săi pași",
+      "aria_adult": "Un adult în meditație profundă",
+      "aria_mature": "Un maestru scufundat în Dao",
+      "aria_elder": "Un bătrân la amurgul drumului său"
+    },
+    "hints": {
+      "close": "Am înțeles",
+      "intelligence": {
+        "title": "Inteligență",
+        "text": "Crește șansa de succes la avansare și ajută la studiu, muncă și evenimente lumești."
+      },
+      "health": {
+        "title": "Sănătate",
+        "text": "Dacă sănătatea ajunge la 0, mori și te reîncarnezi. Protejeaz-o."
+      },
+      "appearance": {
+        "title": "Aspect",
+        "text": "Afectează evenimentele sociale, relațiile și unele oportunități muritoare."
+      },
+      "money": {
+        "title": "Bani",
+        "text": "Necesar pentru a trăi, contribuții pentru sectă și oportunități viitoare."
+      },
+      "expenses": {
+        "title": "Cheltuieli anuale",
+        "text": "Costul vieții: {survival} pe an. Stil de viață (muncă, sport, hrană, locuință, portaluri): {lifestyle} pe an. Dacă nu îți permiți costul vieții, sănătatea ta va avea de suferit."
+      },
+      "spiritual_root": {
+        "title": "Rădăcină Spirituală",
+        "text": "Determină viteza de acumulare a Qi-ului și potențialul de cultivare."
+      },
+      "karma": {
+        "title": "Karmă",
+        "text": "Se acumulează de-a lungul vieților și este cheltuită pentru upgrade-uri permanente în Magazinul Karma."
+      },
+      "focus_mundane": {
+        "title": "Viață Muritoare",
+        "text": "Concentrează-te pe bani, studii și carieră. Șanse mai mici de a întâlni evenimente secrete."
+      },
+      "focus_secret": {
+        "title": "Calea Secretă",
+        "text": "Concentrează-te pe cultivare: câștigi Qi și întâlnești mai des evenimente secrete."
+      },
+      "age": {
+        "title": "Vârstă",
+        "text": "Speranța maximă de viață a stadiului tău actual: {maxAge} ani. Bătrânețea poate veni mai devreme, mai ales după {softAge} ani."
+      },
+      "age_immortal": {
+        "title": "Vârstă",
+        "text": "Acest stadiu este nemuritor: bătrânețea nu te mai poate ucide."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Magazin Karmă",
+    "karma_balance": "Karma Ta",
+    "btn_buy": "Cumpără",
+    "btn_bought": "Deținut",
+    "btn_no_karma": "Insuficient",
+    "cost": "Cost",
+    "iap_section": "Premium & Monetizare",
+    "iap_pass": "Permis de Cultivator",
+    "iap_pass_desc": "Dezactivează definitiv toate reclamele interstițiale și sprijină dezvoltatorul.",
+    "iap_ad": "Reclamă Salvatoare",
+    "iap_ad_desc": "Disponibilă în tab-ul Dao înainte de o avansare (protecție împotriva morții).",
+    "btn_iap_buy": "Cumpără Permis",
+    "btn_iap_active": "Activ",
+    "btn_info": "Informații",
+    "items": {
+      "buff_rich_family": {
+        "name": "Familie Bogată",
+        "desc": "Fiecare reîncarnare începe cu bani în plus și un mic bonus anual de venit."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridiane Puternice",
+        "desc": "Întărește corpul: mai multă Sănătate Maximă, regenerare și reducerea daunelor."
+      },
+      "buff_pure_root": {
+        "name": "Rădăcină Pură",
+        "desc": "Îmbunătățește Rădăcina Spirituală și oferă un câștig fix de Qi pe an."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Calea Dao",
+    "stage": "Stadiu",
+    "unknown": "Necunoscut",
+    "qi_energy": "Energie Qi",
+    "next_stage": "Următorul Pas",
+    "req_qi": "Qi Necesar",
+    "success_chance": "Șansă de Succes",
+    "btn_breakthrough": "Încearcă Avansarea",
+    "btn_no_qi": "Qi Insuficient",
+    "max_stage": "Ai atins apogeul cultivării. Cerurile nu te mai leagă.",
+    "dead_text": "Cei morți nu pot cultiva.",
+    "btn_ad_buff": "Vezi Reclamă (+10% & Protecție)",
+    "btn_ad_watched": "Buff Activ",
+    "alert_ad_title": "Reclamă",
+    "alert_ad_msg": "Video vizionat! Ai primit un buff pentru următoarea avansare.",
+    "body_title": "Călirea Corpului",
+    "body_level": "Nivel",
+    "body_cost": "Cost",
+    "body_button": "Călește Corpul",
+    "body_locked_age": "Corpul tău este încă prea slab",
+    "body_locked_year": "Călirea va fi disponibilă anul viitor",
+    "body_locked_qi": "Qi insuficient",
+    "body_effect_line": "+{maxHealth} Sănătate Max, +{regen} Regen/an, rezistență la boli {resistance}%",
+    "body_desc": "Corpul este călit prin durere, transpirație și voință, devenind un recipient pentru adevărata putere.",
+    "details_close": "Închide",
+    "body_details_title": "Efectele Călirii Corpului",
+    "body_details_max_health": "Sănătate Maximă",
+    "body_details_regen": "Regenerare/an",
+    "body_details_illness": "Rezistență la boli",
+    "body_details_mortality": "Reducerea mortalității",
+    "body_details_survival": "Reducerea costului vieții",
+    "body_details_breakthrough": "Reducerea daunelor la avansare",
+    "body_details_portal": "Reducerea daunelor din portaluri",
+    "stage_info_max_age": "Speranță maximă de viață",
+    "stage_info_soft_age": "Bătrânețea începe la",
+    "stage_info_meditation": "Meditație Qi",
+    "stage_info_mortality": "Mortalitate",
+    "stage_info_survival": "Costul vieții",
+    "stage_info_breakthrough_damage": "Pericol la avansare",
+    "stage_info_required_qi": "Qi Necesar",
+    "stage_info_immortal": "Nemuritor: bătrânețea nu te mai ucide",
+    "portal_blessing_active": "Binecuvântarea portalului activă: +{percent}",
+    "log_no_qi": "Energie Qi insuficientă pentru avansare.",
+    "log_success": "[SUCCES] Avansare reușită! Ai atins stadiul: {name}. Meridianele s-au extins.",
+    "log_fail_death": "[EȘEC CRITIC] Tribulația Cerească a fost prea puternică. Ai murit.",
+    "log_fail_damage": "[EȘEC] Avansarea a eșuat. A apărut o Arsură de Mana, ai suferit {damage} daune.",
+    "log_ad_saved": "[SALVAT] Avansarea a eșuat, dar Buff-ul Publicitar ți-a protejat meridianele de daune!"
+  },
+  "settings_screen": {
+    "title": "Setări",
+    "sound": "Sunet Interfață",
+    "sound_desc": "Sunete scurte pentru butoane și acțiuni.",
+    "music": "Muzică",
+    "music_desc": "Melodie de fundal în buclă."
+  }
+}

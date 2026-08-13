@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Sectă",
+    "loading": "Se încarcă nivelul social...",
+    "tab_my_sect": "Secta Mea",
+    "tab_leaderboard": "Clasament",
+    "empty_title": "Sectă Corporativă",
+    "empty_text": "Creează o sectă corporativă secretă sau introdu un cod de invitație pentru a intra în lupta pentru influență.",
+    "invite_placeholder": "Cod invitație",
+    "btn_create": "Creează Sectă",
+    "btn_join": "Alătură-te prin Cod",
+    "join_error": "Cod de invitație invalid. Se așteaptă 8 caractere A-Z sau 0-9.",
+    "invite_code": "Cod Invitație",
+    "share_invite": "Distribuie",
+    "funds": "Fonduri",
+    "influence": "Influență",
+    "season": "Sezon",
+    "members": "Membri",
+    "player_name": "Tu",
+    "contribution": "Contribuție",
+    "btn_leave": "Părăsește Secta",
+    "leave_confirm_title": "Părăsești secta?",
+    "leave_confirm_message": "Vei pierde contribuția ta actuală la sectă, dar te poți alătura alteia.",
+    "yes": "Da",
+    "no": "Anulează",
+    "leaderboard_empty": "Clasamentul este gol pentru moment.",
+    "default_name": "Sindicatul Neo Lotus",
+    "default_tag": "SNL"
+  }
+}

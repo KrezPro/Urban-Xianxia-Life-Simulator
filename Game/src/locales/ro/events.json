@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Ai studiat din greu tot anul. Cunoștințele tale s-au extins.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Ai contactat un virus grav și ai stat în spital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Ai găsit un loc de muncă part-time bun și ai economisit câțiva dolari.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Șeful tău s-a dovedit a fi un demon de nivel inferior deghizat! I-ai stricat imprimanta, ai primit o amendă, dar ți-ai călit spiritul.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Ai cumpărat din greșeală o 'piatră strălucitoare' pe darknet. Era minereu radioactiv. Sănătatea ta a scăzut, dar simți o energie stranie.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Ai dat peste o venă spirituală ascunsă într-un parc vechi. Energia Qi te umple.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "În timpul meditației de noapte, a apărut o Arsură de Mana severă. Meridianele tale sunt deteriorate.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Ai ajutat un câine maidanez care s-a dovedit a fi un spirit păzitor. Karma ta s-a îmbunătățit.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Câțiva huligani, care de fapt erau cultivatori renegați, te-au încolțit. I-ai respins cu 'Palma Vântului de Fier' și le-ai luat banii.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Setări",
+  "title": "Setări",
+  "sound": "Sunet Interfață",
+  "sound_desc": "Sunete scurte pentru butoane și acțiuni.",
+  "music": "Muzică",
+  "music_desc": "Melodie de fundal în buclă.",
+  "language": "Limbă",
+  "language_desc": "Alege limba interfeței.",
+  "language_button": "Schimbă limba",
+  "language_current": "Limba actuală",
+  "language_close": "Închide",
+  "language_selection": {
+    "title": "Alege limba",
+    "subtitle": "Selectează limba interfeței. O poți schimba ulterior din Setări.",
+    "confirm": "Confirmă",
+    "close": "Închide"
+  }
+}
