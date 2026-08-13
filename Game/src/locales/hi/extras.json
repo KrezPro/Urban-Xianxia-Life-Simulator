@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "जीवन",
+      "dao": "दाओ",
+      "activities": "गतिविधियां",
+      "store": "स्टोर",
+      "sect": "संप्रदाय"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} अधिकतम स्वास्थ्य/वर्ष",
+    "healthRegenPerYear": "+{value} रीजेन/वर्ष",
+    "appearancePerYear": "+{value} रूप/वर्ष",
+    "qiPerYear": "+{value} ची/वर्ष",
+    "portalSuccessBps": "+{value}% पोर्टल सफलता",
+    "qiFlatPerYear": "+{value} ची/वर्ष",
+    "moneyFlatPerYear": "+${value}/वर्ष",
+    "healthRegenFlat": "+{value} रीजेन/वर्ष",
+    "damageReductionBps": "+{value}% क्षति में कमी",
+    "breakthroughChanceBps": "+{value}% स्तर पार की संभावना",
+    "startMoney": "प्रारंभ: +${value}",
+    "startMaxHealth": "प्रारंभ: +{value} अधिकतम स्वास्थ्य",
+    "startSpiritualRoot": "प्रारंभ: +{value} आध्यात्मिक जड़",
+    "startBodyTempering": "प्रारंभ: +{value} शरीर शोधन"
+  },
+  "life": {
+    "survival_cost_line": "रहने का खर्च: -${amount}/वर्ष",
+    "survival_cost_hint": {
+      "title": "रहने का खर्च",
+      "text": "भोजन, आवास और सुरक्षा के लिए अनिवार्य वार्षिक खर्च। यदि कोई गतिविधि नहीं चुनी गई है तो भी यह लिया जाता है। यदि आपके पास पैसे नहीं हैं, तो आपका स्वास्थ्य खराब होगा।"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "रहने का खर्च: -${amount}।",
+    "lifestyle_money_delta": "गतिविधियों का वार्षिक शुद्ध लाभ: {amount}।",
+    "portal_blessing_gained": "पोर्टल आशीर्वाद: अगले स्तर पार की संभावना में +{percent}%।"
+  },
+  "dao": {
+    "techniques": {
+      "title": "दाओ तकनीकें",
+      "level": "स्तर",
+      "max": "अधिकतम",
+      "cost": "लागत",
+      "upgrade": "अपग्रेड",
+      "locked": "लॉक",
+      "not_enough_money": "पर्याप्त पैसे नहीं",
+      "current_effects": "वर्तमान",
+      "next_effects": "अगला",
+      "requirements": {
+        "spiritual_root": "आध्यात्मिक जड़",
+        "intelligence": "बुद्धि",
+        "stage": "चरण"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "छिपी हुई ड्रैगन सांस",
+          "desc": "एक बुनियादी सांस लेने की तकनीक। ची लाभ और स्तर पार की संभावना को बढ़ाती है।"
+        },
+        "technique_iron_meridian": {
+          "name": "लौह मेरिडियन",
+          "desc": "शरीर और मेरिडियन को मजबूत करता है। स्वास्थ्य सुधार में मदद करता है और नुकसान को कम करता है।"
+        },
+        "technique_jade_ledger": {
+          "name": "जेड लेजर",
+          "desc": "एक सांसारिक धन तकनीक। आय, कार्यकुशलता और पोर्टल सफलता को बढ़ाती है।"
+        },
+        "technique_spirit_sense": {
+          "name": "आत्मा की भावना",
+          "desc": "अंत के खेल की धारणा तकनीक। ची, स्तर पार और पोर्टल सफलता को बढ़ाती है।"
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "स्तर",
+    "max_level": "अधिकतम स्तर",
+    "next_cost": "अगले स्तर की लागत",
+    "current_effects": "वर्तमान",
+    "next_effects": "अगला",
+    "effects_note": "प्रारंभिक प्रभाव पुनर्जन्म के बाद लागू होते हैं। वार्षिक प्रभाव प्रत्येक वर्ष लागू होते हैं।",
+    "details_close": "बंद करें"
+  },
+  "activities": {
+    "title": "गतिविधियां",
+    "dead_text": "मृत लोग गतिविधियां नहीं चुन सकते।",
+    "select": "चुनें",
+    "selected": "चुना गया",
+    "disable": "अक्षम करें",
+    "locked": "लॉक",
+    "daily_cost": "लागत/दिन",
+    "daily_income": "आय/दिन",
+    "yearly_cost": "लागत/वर्ष",
+    "yearly_income": "आय/वर्ष",
+    "net_yearly": "शुद्ध/वर्ष",
+    "effects_title": "प्रभाव/वर्ष",
+    "requirements_label": "आवश्यकताएं",
+    "none": "कोई नहीं",
+    "categories": {
+      "job": "काम",
+      "sport": "खेल",
+      "food": "भोजन",
+      "housing": "आवास",
+      "portal": "पोर्टल"
+    },
+    "requirements": {
+      "age": "आयु",
+      "intelligence": "बुद्धि",
+      "appearance": "रूप",
+      "spiritual_root": "जड़",
+      "health": "स्वास्थ्य",
+      "max_health": "अधिकतम स्वास्थ्य",
+      "stage": "चरण"
+    },
+    "portal_rewards": {
+      "title": "पोर्टल पुरस्कार",
+      "attempt_cost": "प्रयास की लागत: ${cost}",
+      "reward_money": "पैसा: ${min}–${max}",
+      "reward_qi": "ची: {min}–{max}",
+      "breakthrough_bonus": "स्तर पार बोनस: +{percent}%",
+      "fail_damage_bps": "विफलता: अधिकतम स्वास्थ्य का {percent}% नुकसान",
+      "fail_damage_flat": "विफलता: {damage} का नुकसान"
+    },
+    "options": {
+      "job_none": { "name": "कोई काम नहीं", "desc": "कोई आय नहीं और कोई दायित्व नहीं।" },
+      "job_parttime": { "name": "पार्ट-टाइम", "desc": "छोटे काम और डिलीवरी।" },
+      "job_office": { "name": "कार्यालय क्लर्क", "desc": "उबाऊ लेकिन स्थिर।" },
+      "job_manager": { "name": "प्रबंधक", "desc": "अधिक जिम्मेदारी, अधिक पैसा।" },
+      "job_founder": { "name": "टेक संस्थापक", "desc": "आईटी और आध्यात्मिक तकनीक का मिश्रण एक स्टार्टअप।" },
+      "sport_none": { "name": "कोई खेल नहीं", "desc": "कोई शारीरिक गतिविधि नहीं।" },
+      "sport_home": { "name": "घर पर कसरत", "desc": "आंगन में पुश-अप।" },
+      "sport_gym": { "name": "जिम", "desc": "स्थानीय जिम की सदस्यता।" },
+      "sport_premium": { "name": "प्रीमियम क्लब", "desc": "ट्रेनर, पूल और रिकवरी।" },
+      "sport_spirit": { "name": "आत्मा का प्रशिक्षण", "desc": "शरीर और मेरिडियन का प्रशिक्षण।" },
+      "food_none": { "name": "कोई भोजन योजना नहीं", "desc": "चलते-फिरते नाश्ता।" },
+      "food_street": { "name": "स्ट्रीट फूड", "desc": "नूडल्स और एनर्जी बार।" },
+      "food_home": { "name": "घर का खाना", "desc": "नियमित और सभ्य भोजन।" },
+      "food_premium": { "name": "प्रीमियम भोजन", "desc": "गुणवत्ता वाले उत्पाद और आहार।" },
+      "food_spirit": { "name": "आध्यात्मिक व्यंजन", "desc": "आध्यात्मिक जड़ी-बूटियों से बने व्यंजन।" },
+      "housing_none": { "name": "कोई आवास नहीं", "desc": "जहां भी जगह मिले सो जाओ।" },
+      "housing_shelter": { "name": "आश्रय", "desc": "सिर के ऊपर बस एक छत।" },
+      "housing_room": { "name": "कमरा", "desc": "एक पुराने घर में छोटा कमरा।" },
+      "housing_apartment": { "name": "अपार्टमेंट", "desc": "एक साफ अपार्टमेंट और अच्छी नींद।" },
+      "housing_condo": { "name": "कोंडो", "desc": "सुरक्षा के साथ आधुनिक इमारत।" },
+      "portal_none": { "name": "कोई पोर्टल नहीं", "desc": "कोई जोखिम भरा अभियान नहीं।" },
+      "portal_subway": { "name": "परित्यक्त सबवे", "desc": "अजीब आंखों वाली पुरानी सुरंगें।" },
+      "portal_market": { "name": "रात का आध्यात्मिक बाजार", "desc": "गोलियों की तस्करी और संदिग्ध सौदे।" },
+      "portal_club": { "name": "दानव क्लब", "desc": "एक भूमिगत क्लब जहां राक्षस मनुष्यों के साथ जुआ खेलते हैं।" },
+      "portal_tower": { "name": "स्पिरिट टॉवर", "desc": "मजबूत कल्टीवेटर्स के लिए एक परीक्षा।" }
+    }
+  }
+}
