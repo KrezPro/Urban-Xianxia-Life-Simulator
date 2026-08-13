@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Despertando a alma..."
+  },
+  "tab_bar": {
+    "life": "Vida",
+    "dao": "Dao",
+    "activities": "Atividades",
+    "store": "Loja",
+    "settings": "Config.",
+    "log": "Diário",
+    "sect": "Seita"
+  },
+  "log_screen": {
+    "title": "Diário do Destino",
+    "empty": "O caminho da sua vida está apenas começando..."
+  },
+  "idle": {
+    "offline_secret": "Progresso offline: Você meditou por {seconds}s. Qi obtido: {amount}.",
+    "offline_mundane": "Progresso offline: Você trabalhou por {seconds}s. Ganhou: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Perfil",
+    "age": "Idade",
+    "stage": "Estágio",
+    "health": "Vida",
+    "intelligence": "Inteligência",
+    "appearance": "Aparência",
+    "money": "Dinheiro",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Envelhecer (+1 ano)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Você nasceu neste mundo. Sua história começa...",
+    "death_log": "Você morreu. Sua alma entra no ciclo infinito do Samsara...",
+    "reincarnate_log": "A Roda do Samsara girou. Você renasceu em um novo corpo.",
+    "age": "Idade",
+    "health": "Vida",
+    "intelligence": "Inteligência",
+    "appearance": "Aparência",
+    "money": "Dinheiro",
+    "expenses_year": "Despesas anuais",
+    "spiritual_root": "Raiz Espiritual",
+    "qi": "Energia Qi",
+    "karma": "Karma",
+    "focus_title": "Foco para este ano:",
+    "focus_mundane": "Vida Mortal",
+    "focus_secret": "Caminho Secreto",
+    "btn_grow": "Envelhecer (+1 ano)",
+    "btn_reincarnate": "Reencarnar",
+    "btn_log": "Diário",
+    "dead_title": "VOCÊ ESTÁ MORTO",
+    "dead_subtitle": "A jornada da sua vida foi interrompida.",
+    "death_cause_label": "Causa da morte:",
+    "death_causes": {
+      "none": "Desconhecida",
+      "old_age": "Velhice",
+      "health": "Falha de saúde",
+      "breakthrough": "Falha no avanço",
+      "portal": "Acidente no portal",
+      "event": "Evento fatídico"
+    },
+    "karma_accumulated": "Karma Total:",
+    "karma_earned_last_life": "Legado ganho (Karma):",
+    "meditation_log": "Um ano se passou em meditação secreta. Coletou {amount} de energia Qi.",
+    "age_log": "Você completou {age} anos.",
+    "interstitial_log": "[ANÚNCIO] Anúncio intersticial exibido após reencarnar com 1 ano de idade.",
+    "avatar": {
+      "aria_child": "Um bebê engatinha pelo caminho da vida",
+      "aria_teen": "Um jovem dando seus primeiros passos",
+      "aria_adult": "Um adulto em meditação profunda",
+      "aria_mature": "Um mestre em profunda meditação",
+      "aria_elder": "Um ancião no crepúsculo de seu caminho"
+    },
+    "hints": {
+      "close": "Entendi",
+      "intelligence": {
+        "title": "Inteligência",
+        "text": "Aumenta a chance de sucesso em avanços e ajuda com estudos, trabalho e eventos mortais."
+      },
+      "health": {
+        "title": "Vida",
+        "text": "Se a vida chegar a 0, você morre e reencarna. Proteja-a."
+      },
+      "appearance": {
+        "title": "Aparência",
+        "text": "Afeta eventos sociais, relacionamentos e algumas oportunidades mortais."
+      },
+      "money": {
+        "title": "Dinheiro",
+        "text": "Necessário para viver, contribuições para a seita e oportunidades futuras."
+      },
+      "expenses": {
+        "title": "Despesas anuais",
+        "text": "Custo de vida: {survival} por ano. Estilo de vida (trabalho, esporte, comida, moradia, portais): {lifestyle} por ano. Se você não puder pagar o custo de vida, sua saúde sofrerá."
+      },
+      "spiritual_root": {
+        "title": "Raiz Espiritual",
+        "text": "Determina a velocidade de acúmulo de Qi e o potencial de cultivo."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Acumula ao longo das vidas e é gasto em melhorias permanentes na Loja de Karma."
+      },
+      "focus_mundane": {
+        "title": "Vida Mortal",
+        "text": "Foque no dinheiro, estudos e carreira. Menor chance de encontrar eventos secretos."
+      },
+      "focus_secret": {
+        "title": "Caminho Secreto",
+        "text": "Foque no cultivo: você ganha Qi e encontra eventos secretos com mais frequência."
+      },
+      "age": {
+        "title": "Idade",
+        "text": "Expectativa de vida máxima do seu estágio atual: {maxAge} anos. A velhice pode chegar mais cedo, especialmente após {softAge} anos."
+      },
+      "age_immortal": {
+        "title": "Idade",
+        "text": "Este estágio é imortal: a velhice não te mata mais."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Loja de Karma",
+    "karma_balance": "Seu Karma",
+    "btn_buy": "Comprar",
+    "btn_bought": "Adquirido",
+    "btn_no_karma": "Insuficiente",
+    "cost": "Custo",
+    "iap_section": "Premium e Monetização",
+    "iap_pass": "Passe de Cultivador",
+    "iap_pass_desc": "Desativa todos os anúncios intersticiais para sempre e apoia o desenvolvedor.",
+    "iap_ad": "Anúncio Salva-Vidas",
+    "iap_ad_desc": "Disponível na aba Dao antes de um avanço (proteção contra morte).",
+    "btn_iap_buy": "Comprar Passe",
+    "btn_iap_active": "Ativo",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Família Rica",
+        "desc": "Cada reencarnação começa com mais dinheiro e um pequeno bônus de renda anual."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridianos Fortes",
+        "desc": "Fortalece o corpo: mais Vida Máx., regeneração e redução de dano."
+      },
+      "buff_pure_root": {
+        "name": "Raiz Pura",
+        "desc": "Melhora a Raiz Espiritual e concede um ganho fixo de Qi por ano."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Caminho do Dao",
+    "stage": "Estágio",
+    "unknown": "Desconhecido",
+    "qi_energy": "Energia Qi",
+    "next_stage": "Próximo Passo",
+    "req_qi": "Qi Necessário",
+    "success_chance": "Chance de Sucesso",
+    "btn_breakthrough": "Tentar Avanço",
+    "btn_no_qi": "Qi Insuficiente",
+    "max_stage": "Você alcançou o pico do cultivo. Os Céus não o prendem mais.",
+    "dead_text": "Os mortos não podem cultivar.",
+    "btn_ad_buff": "Ver Anúncio (+10% & Proteção)",
+    "btn_ad_watched": "Bônus Ativo",
+    "alert_ad_title": "Anúncio",
+    "alert_ad_msg": "Vídeo assistido! Você recebeu um bônus para o próximo avanço.",
+    "body_title": "Refinamento Corporal",
+    "body_level": "Nível",
+    "body_cost": "Custo",
+    "body_button": "Refinar Corpo",
+    "body_locked_age": "Seu corpo ainda é muito fraco",
+    "body_locked_year": "Refinamento disponível no próximo ano",
+    "body_locked_qi": "Qi insuficiente",
+    "body_effect_line": "+{maxHealth} Vida Máx., +{regen} Regen/ano, resist. a doenças {resistance}%",
+    "body_desc": "O corpo é refinado através da dor, suor e vontade, tornando-se um recipiente para o verdadeiro poder.",
+    "details_close": "Fechar",
+    "body_details_title": "Efeitos do Refinamento Corporal",
+    "body_details_max_health": "Vida Máx.",
+    "body_details_regen": "Regen/ano",
+    "body_details_illness": "Resistência a doenças",
+    "body_details_mortality": "Redução de mortalidade",
+    "body_details_survival": "Redução no custo de vida",
+    "body_details_breakthrough": "Redução de dano no avanço",
+    "body_details_portal": "Redução de dano em portais",
+    "stage_info_max_age": "Expectativa de vida",
+    "stage_info_soft_age": "A velhice começa aos",
+    "stage_info_meditation": "Meditação de Qi",
+    "stage_info_mortality": "Mortalidade",
+    "stage_info_survival": "Custo de vida",
+    "stage_info_breakthrough_damage": "Perigo do avanço",
+    "stage_info_required_qi": "Qi Necessário",
+    "stage_info_immortal": "Imortal: a velhice não mata mais",
+    "portal_blessing_active": "Bênção de portal ativa: +{percent}",
+    "log_no_qi": "Energia Qi insuficiente para o avanço.",
+    "log_success": "[SUCESSO] Avanço bem-sucedido! Você alcançou o estágio: {name}. Seus meridianos se expandiram.",
+    "log_fail_death": "[FALHA CRÍTICA] A Tribulação Celestial foi forte demais. Você morreu.",
+    "log_fail_damage": "[FALHA] O avanço falhou. Ocorreu uma Queima de Mana, você sofreu {damage} de dano.",
+    "log_ad_saved": "[SALVO] O avanço falhou, mas o Bônus de Anúncio protegeu seus meridianos de danos!"
+  },
+  "settings_screen": {
+    "title": "Configurações",
+    "sound": "Som da Interface",
+    "sound_desc": "Sons curtos para botões e ações.",
+    "music": "Música",
+    "music_desc": "Melodia de fundo em loop."
+  }
+}

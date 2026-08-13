@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Seita",
+    "loading": "Carregando camada social...",
+    "tab_my_sect": "Minha Seita",
+    "tab_leaderboard": "Tabela de Classificação",
+    "empty_title": "Seita Corporativa",
+    "empty_text": "Crie uma seita corporativa secreta ou insira um código de convite para entrar na luta por influência.",
+    "invite_placeholder": "Código de convite",
+    "btn_create": "Criar Seita",
+    "btn_join": "Entrar por Código",
+    "join_error": "Código de convite inválido. Esperado 8 caracteres de A-Z ou 0-9.",
+    "invite_code": "Código de Convite",
+    "share_invite": "Compartilhar Convite",
+    "funds": "Fundos",
+    "influence": "Influência",
+    "season": "Temporada",
+    "members": "Membros",
+    "player_name": "Você",
+    "contribution": "Contribuição",
+    "btn_leave": "Deixar a Seita",
+    "leave_confirm_title": "Deixar a seita?",
+    "leave_confirm_message": "Você perderá sua contribuição atual para a seita, mas poderá se juntar a outra.",
+    "yes": "Sim",
+    "no": "Cancelar",
+    "leaderboard_empty": "A tabela de classificação está vazia por enquanto.",
+    "default_name": "Sindicato de Lótus Neo",
+    "default_tag": "SLN"
+  }
+}

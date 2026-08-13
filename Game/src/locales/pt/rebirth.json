@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Renascimento",
+  "accept": "Aceitar destino",
+  "tiers": {
+    "blessed": {
+      "title": "Reencarnação Abençoada",
+      "desc": "Os céus são misericordiosos. Você não sofre novas perdas."
+    },
+    "uneasy": {
+      "title": "Reencarnação Inquieta",
+      "desc": "Sua vida anterior deixou uma marca leve no seu novo destino."
+    },
+    "troubled": {
+      "title": "Reencarnação Conturbada",
+      "desc": "O karma da sua vida passada pesa no seu novo corpo."
+    },
+    "severe": {
+      "title": "Reencarnação Severa",
+      "desc": "Você entrou no novo mundo com graves perdas."
+    },
+    "doomed": {
+      "title": "Reencarnação Condenada",
+      "desc": "Os céus deram as costas para você. Sua nova vida começou na escuridão."
+    }
+  },
+  "money": {
+    "money_loss_0": "Herança preservada.",
+    "money_loss_25": "Perdeu 25% da herança.",
+    "money_loss_50": "Perdeu 50% da herança.",
+    "money_loss_75": "Perdeu 75% da herança.",
+    "money_loss_100": "Você perdeu toda a sua herança."
+  },
+  "health": {
+    "health_start_100": "Seu corpo está saudável.",
+    "health_start_85": "Seu corpo está ligeiramente enfraquecido.",
+    "health_start_70": "Seu corpo está notavelmente enfraquecido.",
+    "health_start_55": "Você nasceu fraco.",
+    "health_start_40": "Você está à beira da morte."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Sombra Faminta",
+      "desc": "A renda é reduzida em 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Corpo Frágil",
+      "desc": "Recuperação de saúde reduzida em 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Mente Nebulosa",
+      "desc": "Inteligência reduzida em 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Pele Áspera",
+      "desc": "Aparência reduzida em 3."
+    },
+    "curse_major_debt": {
+      "name": "Dívida de Vida Passada",
+      "desc": "A renda é reduzida em 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridianos Rachados",
+      "desc": "Ganho de Qi reduzido em 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Marca do Céu",
+      "desc": "Chance de avanço e sucesso em portais reduzida em 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Corpo Doentio",
+      "desc": "Recuperação de saúde reduzida em 12%."
+    }
+  }
+}

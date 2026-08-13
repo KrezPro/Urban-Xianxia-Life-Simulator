@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Configurações",
+  "title": "Configurações",
+  "sound": "Som da Interface",
+  "sound_desc": "Sons curtos para botões e ações.",
+  "music": "Música",
+  "music_desc": "Melodia de fundo em loop.",
+  "language": "Idioma",
+  "language_desc": "Escolha o idioma da interface.",
+  "language_button": "Mudar idioma",
+  "language_current": "Idioma atual",
+  "language_close": "Fechar",
+  "language_selection": {
+    "title": "Escolha o idioma",
+    "subtitle": "Selecione o idioma da interface. Você pode alterá-lo depois em Configurações.",
+    "confirm": "Confirmar",
+    "close": "Fechar"
+  }
+}

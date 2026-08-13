@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Você estudou muito o ano todo. Seu conhecimento aumentou.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Você pegou um vírus grave e ficou no hospital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Você encontrou um bom emprego de meio período e economizou alguns dólares.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Seu chefe era um demônio de baixo nível disfarçado! Você quebrou a impressora dele, foi multado, mas refinou seu espírito.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Você acidentalmente comprou uma 'pedra brilhante' na darknet. Era um minério radioativo. Sua saúde caiu, mas você sente uma energia estranha.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Você tropeçou em uma veia espiritual escondida em um parque antigo. A energia Qi te preenche.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Durante a meditação noturna, ocorreu uma severa Queima de Mana. Seus meridianos foram danificados.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Você ajudou um cachorro de rua que na verdade era um espírito guardião. Seu karma melhorou.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Bandidos de rua que na verdade eram cultivadores renegados te encurralaram. Você os derrotou com a 'Palma do Vento de Ferro' e pegou o dinheiro deles.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }
