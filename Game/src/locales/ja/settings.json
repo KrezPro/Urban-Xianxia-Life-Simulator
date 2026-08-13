@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "設定",
+  "title": "設定",
+  "sound": "インターフェース音",
+  "sound_desc": "ボタンやアクションの短い効果音。",
+  "music": "音楽",
+  "music_desc": "ループする背景音楽。",
+  "language": "言語",
+  "language_desc": "インターフェースの言語を選択します。",
+  "language_button": "言語を変更",
+  "language_current": "現在の言語",
+  "language_close": "閉じる",
+  "language_selection": {
+    "title": "言語の選択",
+    "subtitle": "インターフェースの言語を選択してください。後で設定から変更できます。",
+    "confirm": "確認",
+    "close": "閉じる"
+  }
+}

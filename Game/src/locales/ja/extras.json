@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "人生",
+      "dao": "道",
+      "activities": "活動",
+      "store": "ストア",
+      "sect": "門派"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "最大健康/年：+{value}",
+    "healthRegenPerYear": "回復/年：+{value}",
+    "appearancePerYear": "魅力/年：+{value}",
+    "qiPerYear": "気/年：+{value}",
+    "portalSuccessBps": "ポータル成功率：+{value}%",
+    "qiFlatPerYear": "気/年：+{value}",
+    "moneyFlatPerYear": "収入/年：+${value}",
+    "healthRegenFlat": "回復/年：+{value}",
+    "damageReductionBps": "ダメージ軽減：+{value}%",
+    "breakthroughChanceBps": "突破成功率：+{value}%",
+    "startMoney": "初期資金：+${value}",
+    "startMaxHealth": "初期最大健康：+{value}",
+    "startSpiritualRoot": "初期霊根：+{value}",
+    "startBodyTempering": "初期肉体鍛錬：+{value}"
+  },
+  "life": {
+    "survival_cost_line": "生活費：-${amount}/年",
+    "survival_cost_hint": {
+      "title": "生活費",
+      "text": "食費、住居、安全のための必須の年間支出です。活動を選択しなくても差し引かれます。お金が足りない場合、健康が損なわれます。"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "生活費：-${amount}。",
+    "lifestyle_money_delta": "活動の年間純収支：{amount}。",
+    "portal_blessing_gained": "ポータルの祝福：次回の突破成功率が +{percent}% 増加しました。"
+  },
+  "dao": {
+    "techniques": {
+      "title": "道の功法",
+      "level": "レベル",
+      "max": "最大",
+      "cost": "コスト",
+      "upgrade": "強化",
+      "locked": "未解放",
+      "not_enough_money": "お金が足りません",
+      "current_effects": "現在の効果",
+      "next_effects": "次の効果",
+      "requirements": {
+        "spiritual_root": "霊根",
+        "intelligence": "知力",
+        "stage": "境界"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "潜龍の呼吸",
+          "desc": "基本的な呼吸法。気の獲得量と突破の成功率を増加させます。"
+        },
+        "technique_iron_meridian": {
+          "name": "鉄の経絡",
+          "desc": "肉体と経絡を鍛え上げます。健康の回復を改善し、受けるダメージを減らします。"
+        },
+        "technique_jade_ledger": {
+          "name": "玉の帳簿",
+          "desc": "俗世の蓄財の術。収入、仕事の効率、ポータルの成功率を増加させます。"
+        },
+        "technique_spirit_sense": {
+          "name": "霊識",
+          "desc": "後期の感知功法。気、突破、ポータルの探索成功率を高めます。"
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "レベル",
+    "max_level": "最大レベル",
+    "next_cost": "次のレベルのコスト",
+    "current_effects": "現在の効果",
+    "next_effects": "次の効果",
+    "effects_note": "初期効果は転生後に適用されます。年間効果は毎年適用されます。",
+    "details_close": "閉じる"
+  },
+  "activities": {
+    "title": "活動",
+    "dead_text": "死者は活動を選択できません。",
+    "select": "選択",
+    "selected": "選択中",
+    "disable": "解除",
+    "locked": "未解放",
+    "daily_cost": "コスト/日",
+    "daily_income": "収入/日",
+    "yearly_cost": "コスト/年",
+    "yearly_income": "収入/年",
+    "net_yearly": "純収支/年",
+    "effects_title": "効果/年",
+    "requirements_label": "条件",
+    "none": "なし",
+    "categories": {
+      "job": "仕事",
+      "sport": "スポーツ",
+      "food": "食事",
+      "housing": "住居",
+      "portal": "ポータル"
+    },
+    "requirements": {
+      "age": "年齢",
+      "intelligence": "知力",
+      "appearance": "魅力",
+      "spiritual_root": "霊根",
+      "health": "健康",
+      "max_health": "最大健康",
+      "stage": "境界"
+    },
+    "portal_rewards": {
+      "title": "ポータルの報酬",
+      "attempt_cost": "挑戦コスト：${cost}",
+      "reward_money": "お金：${min}–${max}",
+      "reward_qi": "気：{min}–{max}",
+      "breakthrough_bonus": "突破ボーナス：+{percent}%",
+      "fail_damage_bps": "失敗時：最大健康の {percent}% のダメージ",
+      "fail_damage_flat": "失敗時：{damage} のダメージ"
+    },
+    "options": {
+      "job_none": { "name": "無職", "desc": "収入も義務もありません。" },
+      "job_parttime": { "name": "アルバイト", "desc": "小さなお使いや配達。" },
+      "job_office": { "name": "会社員", "desc": "退屈ですが安定しています。" },
+      "job_manager": { "name": "マネージャー", "desc": "より多くの責任と、より多くのお金。" },
+      "job_founder": { "name": "IT創業者", "desc": "ITと霊的技術を融合させたスタートアップ。" },
+      "sport_none": { "name": "スポーツなし", "desc": "身体活動は一切しません。" },
+      "sport_home": { "name": "自宅トレーニング", "desc": "庭での腕立て伏せ。" },
+      "sport_gym": { "name": "ジム", "desc": "地元のジムのメンバーシップ。" },
+      "sport_premium": { "name": "プレミアムクラブ", "desc": "トレーナー、プール、そして回復施設。" },
+      "sport_spirit": { "name": "霊的トレーニング", "desc": "肉体と経絡の鍛錬。" },
+      "food_none": { "name": "食事計画なし", "desc": "急いで済ませる軽食。" },
+      "food_street": { "name": "屋台の食事", "desc": "麺類やエネルギーバー。" },
+      "food_home": { "name": "家庭料理", "desc": "まともな普通の食事。" },
+      "food_premium": { "name": "プレミアムな食事", "desc": "高品質な食材とダイエット。" },
+      "food_spirit": { "name": "霊薬膳", "desc": "霊草で作られた料理。" },
+      "housing_none": { "name": "家なし", "desc": "寝られる場所ならどこでも。" },
+      "housing_shelter": { "name": "シェルター", "desc": "頭上を覆う最低限の屋根。" },
+      "housing_room": { "name": "賃貸部屋", "desc": "古い家の小さな部屋。" },
+      "housing_apartment": { "name": "アパート", "desc": "清潔なアパートと適切な睡眠。" },
+      "housing_condo": { "name": "高級マンション", "desc": "セキュリティの整った近代的な建物。" },
+      "portal_none": { "name": "ポータルなし", "desc": "危険な遠征はしません。" },
+      "portal_subway": { "name": "廃地下鉄", "desc": "奇妙な目が見つめる古いトンネル。" },
+      "portal_market": { "name": "夜の霊市場", "desc": "丸薬の密輸や怪しい取引。" },
+      "portal_club": { "name": "悪魔のクラブ", "desc": "悪魔が人間と賭け事をする地下クラブ。" },
+      "portal_tower": { "name": "霊の塔", "desc": "頑強な修道者のための試練。" }
+    }
+  }
+}

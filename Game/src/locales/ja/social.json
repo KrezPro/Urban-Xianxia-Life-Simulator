@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "門派",
+    "loading": "ソーシャルレイヤーを読み込んでいます...",
+    "tab_my_sect": "自分の門派",
+    "tab_leaderboard": "ランキング",
+    "empty_title": "企業門派",
+    "empty_text": "秘密の企業門派を作成するか、招待コードを入力して影響力争いに参加しましょう。",
+    "invite_placeholder": "招待コード",
+    "btn_create": "門派を作成",
+    "btn_join": "コードで参加",
+    "join_error": "無効な招待コードです。A-Zまたは0-9の8文字が必要です。",
+    "invite_code": "招待コード",
+    "share_invite": "招待をシェア",
+    "funds": "資金",
+    "influence": "影響力",
+    "season": "シーズン",
+    "members": "メンバー",
+    "player_name": "あなた",
+    "contribution": "貢献度",
+    "btn_leave": "門派を脱退",
+    "leave_confirm_title": "門派を脱退しますか？",
+    "leave_confirm_message": "現在の門派への貢献度は失われますが、別の門派に参加することができます。",
+    "yes": "はい",
+    "no": "キャンセル",
+    "leaderboard_empty": "現在ランキングは空です。",
+    "default_name": "ネオ・ロータス・シンジケート",
+    "default_tag": "NLS"
+  }
+}

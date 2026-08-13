@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "魂を覚醒させています..."
+  },
+  "tab_bar": {
+    "life": "人生",
+    "dao": "道(ダオ)",
+    "activities": "活動",
+    "store": "ストア",
+    "settings": "設定",
+    "log": "記録",
+    "sect": "門派"
+  },
+  "log_screen": {
+    "title": "運命の記録",
+    "empty": "あなたの人生の道はまだ始まったばかりです..."
+  },
+  "idle": {
+    "offline_secret": "オフライン進行：{seconds}秒間瞑想しました。獲得した気：{amount}。",
+    "offline_mundane": "オフライン進行：{seconds}秒間働きました。獲得：${amount}。"
+  },
+  "profile_screen": {
+    "title": "プロフィール",
+    "age": "年齢",
+    "stage": "境界",
+    "health": "健康",
+    "intelligence": "知力",
+    "appearance": "魅力",
+    "money": "お金",
+    "qi": "気",
+    "karma": "カルマ",
+    "btn_grow": "歳をとる (+1年)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "あなたはこの世界に生まれました。あなたの物語が始まります...",
+    "death_log": "あなたは死亡しました。あなたの魂は終わりのない輪廻のサイクルへと入ります...",
+    "reincarnate_log": "輪廻の輪が回りました。あなたは新しい肉体で転生しました。",
+    "age": "年齢",
+    "health": "健康",
+    "intelligence": "知力",
+    "appearance": "魅力",
+    "money": "お金",
+    "expenses_year": "年間支出",
+    "spiritual_root": "霊根",
+    "qi": "気",
+    "karma": "カルマ",
+    "focus_title": "今年の方針：",
+    "focus_mundane": "俗世の生活",
+    "focus_secret": "修道の道",
+    "btn_grow": "歳をとる (+1年)",
+    "btn_reincarnate": "転生する",
+    "btn_log": "記録",
+    "dead_title": "あなたは死亡しました",
+    "dead_subtitle": "あなたの人生の旅は中断されました。",
+    "death_cause_label": "死因：",
+    "death_causes": {
+      "none": "不明",
+      "old_age": "老衰",
+      "health": "健康の悪化",
+      "breakthrough": "突破の失敗",
+      "portal": "ポータルの事故",
+      "event": "運命的な出来事"
+    },
+    "karma_accumulated": "累計カルマ：",
+    "karma_earned_last_life": "前世の遺産 (カルマ)：",
+    "meditation_log": "秘密の瞑想の中で一年が過ぎました。{amount} の気を集めました。",
+    "age_log": "あなたは {age} 歳になりました。",
+    "interstitial_log": "[広告] 1歳での転生後にインタースティシャル広告が表示されました。",
+    "avatar": {
+      "aria_child": "人生の道を這い進む赤ん坊",
+      "aria_teen": "最初の一歩を踏み出す若者",
+      "aria_adult": "深い瞑想に沈む大人",
+      "aria_mature": "深い瞑想に耽る達人",
+      "aria_elder": "道の夕暮れにいる長老"
+    },
+    "hints": {
+      "close": "了解",
+      "intelligence": {
+        "title": "知力",
+        "text": "突破の成功率を高め、勉強、仕事、俗世の出来事において役立ちます。"
+      },
+      "health": {
+        "title": "健康",
+        "text": "健康が0になると死亡し、転生します。健康を維持してください。"
+      },
+      "appearance": {
+        "title": "魅力",
+        "text": "社交的な出来事、人間関係、およびいくつかの俗世の機会に影響を与えます。"
+      },
+      "money": {
+        "title": "お金",
+        "text": "生活、門派への貢献、および将来の機会に必要です。"
+      },
+      "expenses": {
+        "title": "年間支出",
+        "text": "生活費：年間 {survival}。ライフスタイル（仕事、スポーツ、食事、住居、ポータル）：年間 {lifestyle}。生活費を払えない場合、健康が損なわれます。"
+      },
+      "spiritual_root": {
+        "title": "霊根",
+        "text": "気の蓄積速度と修行の可能性を決定します。"
+      },
+      "karma": {
+        "title": "カルマ",
+        "text": "前世から蓄積され、カルマストアでの永久的なアップグレードに使用されます。"
+      },
+      "focus_mundane": {
+        "title": "俗世の生活",
+        "text": "お金、勉強、キャリアに焦点を当てます。秘密の出来事に遭遇する確率は低くなります。"
+      },
+      "focus_secret": {
+        "title": "修道の道",
+        "text": "修行に焦点を当てます：気を得て、秘密の出来事により頻繁に遭遇します。"
+      },
+      "age": {
+        "title": "年齢",
+        "text": "現在の境界での最大寿命：{maxAge} 歳。特に {softAge} 歳を過ぎると、老いが早く訪れる可能性があります。"
+      },
+      "age_immortal": {
+        "title": "年齢",
+        "text": "この境界は不老不死です：老衰で死ぬことはもうありません。"
+      }
+    }
+  },
+  "store_screen": {
+    "title": "カルマストア",
+    "karma_balance": "あなたのカルマ",
+    "btn_buy": "購入",
+    "btn_bought": "所有",
+    "btn_no_karma": "不足",
+    "cost": "コスト",
+    "iap_section": "プレミアム＆支援",
+    "iap_pass": "修道者パス",
+    "iap_pass_desc": "すべてのインタースティシャル広告を永久に無効にし、開発者を支援します。",
+    "iap_ad": "救命広告",
+    "iap_ad_desc": "道(ダオ)タブで突破の前に利用可能（死亡保護）。",
+    "btn_iap_buy": "パスを購入",
+    "btn_iap_active": "有効",
+    "btn_info": "情報",
+    "items": {
+      "buff_rich_family": {
+        "name": "裕福な家庭",
+        "desc": "毎回の転生で初期資金が増え、少額の年間収入ボーナスを得ます。"
+      },
+      "buff_strong_meridians": {
+        "name": "強靭な経絡",
+        "desc": "肉体を強化します：最大健康、回復量が増加し、受けるダメージが減少します。"
+      },
+      "buff_pure_root": {
+        "name": "純粋な霊根",
+        "desc": "霊根を改善し、毎年固定の気ボーナスを与えます。"
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "道(ダオ)の道",
+    "stage": "境界",
+    "unknown": "不明",
+    "qi_energy": "気",
+    "next_stage": "次の段階",
+    "req_qi": "必要な気",
+    "success_chance": "成功率",
+    "btn_breakthrough": "突破を試みる",
+    "btn_no_qi": "気が不足しています",
+    "max_stage": "あなたは修行の頂点に達しました。天はもはやあなたを縛りません。",
+    "dead_text": "死者は修行できません。",
+    "btn_ad_buff": "広告を見る (+10% & 保護)",
+    "btn_ad_watched": "バフ有効",
+    "alert_ad_title": "広告",
+    "alert_ad_msg": "動画の視聴が完了しました！ 次の突破のためのバフを受け取りました。",
+    "body_title": "肉体鍛錬",
+    "body_level": "レベル",
+    "body_cost": "コスト",
+    "body_button": "肉体を鍛える",
+    "body_locked_age": "あなたの肉体はまだ弱すぎます",
+    "body_locked_year": "鍛錬は来年から利用可能です",
+    "body_locked_qi": "気が足りません",
+    "body_effect_line": "最大健康 +{maxHealth}、回復/年 +{regen}、病気耐性 {resistance}%",
+    "body_desc": "肉体は痛み、汗、そして意志を通じて鍛えられ、真の力を宿す器となります。",
+    "details_close": "閉じる",
+    "body_details_title": "肉体鍛錬の効果",
+    "body_details_max_health": "最大健康",
+    "body_details_regen": "回復/年",
+    "body_details_illness": "病気耐性",
+    "body_details_mortality": "死亡率の低下",
+    "body_details_survival": "生活費の割引",
+    "body_details_breakthrough": "突破ダメージの軽減",
+    "body_details_portal": "ポータルダメージの軽減",
+    "stage_info_max_age": "最大寿命",
+    "stage_info_soft_age": "老いが始まる年齢",
+    "stage_info_meditation": "気の瞑想",
+    "stage_info_mortality": "死亡率",
+    "stage_info_survival": "生活費",
+    "stage_info_breakthrough_damage": "突破時の危険",
+    "stage_info_required_qi": "必要な気",
+    "stage_info_immortal": "不老不死：老衰で死なない",
+    "portal_blessing_active": "有効なポータルの祝福：+{percent}",
+    "log_no_qi": "突破するための気が不足しています。",
+    "log_success": "[成功] 突破成功！ 境界：{name} に到達しました。経絡が拡張されました。",
+    "log_fail_death": "[致命的な失敗] 天劫が強すぎました。あなたは死亡しました。",
+    "log_fail_damage": "[失敗] 突破に失敗しました。マナバーンが発生し、{damage} のダメージを受けました。",
+    "log_ad_saved": "[保護] 突破に失敗しましたが、広告バフがあなたの経絡をダメージから守りました！"
+  },
+  "settings_screen": {
+    "title": "設定",
+    "sound": "インターフェース音",
+    "sound_desc": "ボタンやアクションの短い効果音。",
+    "music": "音楽",
+    "music_desc": "ループする背景音楽。"
+  }
+}

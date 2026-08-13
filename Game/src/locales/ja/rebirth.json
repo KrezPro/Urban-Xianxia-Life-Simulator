@@ -1,1 +1,74 @@
-{}
+{
+  "title": "転生",
+  "accept": "運命を受け入れる",
+  "tiers": {
+    "blessed": {
+      "title": "祝福された転生",
+      "desc": "天は慈悲深いです。あなたは新たな損失を被ることはありません。"
+    },
+    "uneasy": {
+      "title": "不安な転生",
+      "desc": "あなたの前世は、新たな運命にわずかな痕跡を残しました。"
+    },
+    "troubled": {
+      "title": "波乱の転生",
+      "desc": "前世のカルマが新しい肉体に重くのしかかっています。"
+    },
+    "severe": {
+      "title": "過酷な転生",
+      "desc": "あなたは大きな損失を抱えて新しい世界に入りました。"
+    },
+    "doomed": {
+      "title": "破滅の転生",
+      "desc": "天はあなたを見放しました。あなたの新しい人生は暗闇の中で始まりました。"
+    }
+  },
+  "money": {
+    "money_loss_0": "遺産は保護されました。",
+    "money_loss_25": "遺産の 25% を失いました。",
+    "money_loss_50": "遺産の 50% を失いました。",
+    "money_loss_75": "遺産の 75% を失いました。",
+    "money_loss_100": "遺産をすべて失いました。"
+  },
+  "health": {
+    "health_start_100": "あなたの体は健康です。",
+    "health_start_85": "あなたの体はわずかに弱っています。",
+    "health_start_70": "あなたの体は著しく弱っています。",
+    "health_start_55": "あなたは虚弱な状態で生まれました。",
+    "health_start_40": "あなたは死の淵に立っています。"
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "飢えた影",
+      "desc": "収入が 3% 減少します。"
+    },
+    "curse_minor_frail": {
+      "name": "虚弱な体",
+      "desc": "健康の回復が 5% 減少します。"
+    },
+    "curse_minor_fog": {
+      "name": "霧がかった精神",
+      "desc": "知力が 3 減少します。"
+    },
+    "curse_minor_rough_skin": {
+      "name": "荒れた肌",
+      "desc": "魅力が 3 減少します。"
+    },
+    "curse_major_debt": {
+      "name": "前世の借金",
+      "desc": "収入が 10% 減少します。"
+    },
+    "curse_major_cracked_meridians": {
+      "name": "ひび割れた経絡",
+      "desc": "気の獲得量が 12% 減少します。"
+    },
+    "curse_major_heaven_mark": {
+      "name": "天の烙印",
+      "desc": "突破の成功率とポータルの成功率が 7% 減少します。"
+    },
+    "curse_major_sickly": {
+      "name": "病弱な体",
+      "desc": "健康の回復が 12% 減少します。"
+    }
+  }
+}
