@@ -20,12 +20,9 @@ import {
 } from '../utils/gameplayUtils';
 import { getStageName } from '../utils/stageUtils';
 import { buildEffectLines } from '../utils/effectFormatter';
+import { resolveLocalizedKey } from '../utils/i18n';
 import { playUiPress } from '../audio/AudioManager';
 import techniquesData from '../data/techniques.json';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
 
 interface DetailsData {
   title: string;
@@ -41,10 +38,31 @@ export default function DaoScreen() {
   const [hasAdBuff, setHasAdBuff] = useState(false);
   const [details, setDetails] = useState<DetailsData | null>(null);
 
-  const ui: any = locale === 'ru' ? ruUI.dao_screen : enUI.dao_screen;
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const techniquesUI = extras.dao?.techniques || {};
-  const effectLabels = extras.effect_labels || {};
+  const tDao = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'ui', `dao_screen.${key}`, params);
+
+  const tTec = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'extras', `dao.techniques.${key}`, params);
+
+  const tEffectLabel = (key: string): string =>
+    resolveLocalizedKey(locale, 'extras', `effect_labels.${key}`);
+
+  const effectLabels = {
+    maxHealthPerYear: tEffectLabel('maxHealthPerYear'),
+    healthRegenPerYear: tEffectLabel('healthRegenPerYear'),
+    appearancePerYear: tEffectLabel('appearancePerYear'),
+    qiPerYear: tEffectLabel('qiPerYear'),
+    portalSuccessBps: tEffectLabel('portalSuccessBps'),
+    qiFlatPerYear: tEffectLabel('qiFlatPerYear'),
+    moneyFlatPerYear: tEffectLabel('moneyFlatPerYear'),
+    healthRegenFlat: tEffectLabel('healthRegenFlat'),
+    damageReductionBps: tEffectLabel('damageReductionBps'),
+    breakthroughChanceBps: tEffectLabel('breakthroughChanceBps'),
+    startMoney: tEffectLabel('startMoney'),
+    startMaxHealth: tEffectLabel('startMaxHealth'),
+    startSpiritualRoot: tEffectLabel('startSpiritualRoot'),
+    startBodyTempering: tEffectLabel('startBodyTempering'),
+  };
 
   const currentStageName = getStageName(player.cultivationStage, locale);
   const currentStageDef = getStageDefinition(player.cultivationStage);
@@ -61,7 +79,6 @@ export default function DaoScreen() {
   const bodyAlreadyThisYear = player.lastBodyTemperAge === player.age;
   const bodyEnoughQi = isGreaterOrEqualBigInt(player.qi, bodyCost.toString());
   const bodyEnoughMoney = isGreaterOrEqualBigInt(player.money, bodyMoneyCost.toString());
-
   const canTemperBody =
     !player.isDead &&
     bodyOldEnough &&
@@ -70,16 +87,16 @@ export default function DaoScreen() {
     bodyEnoughMoney;
 
   const bodyButtonTitle = !bodyOldEnough
-    ? ui.body_locked_age
+    ? tDao('body_locked_age')
     : bodyAlreadyThisYear
-    ? ui.body_locked_year
-    : !bodyEnoughQi
-    ? ui.body_locked_qi
-    : !bodyEnoughMoney
-    ? techniquesUI.not_enough_money
-    : ui.body_button;
+      ? tDao('body_locked_year')
+      : !bodyEnoughQi
+        ? tDao('body_locked_qi')
+        : !bodyEnoughMoney
+          ? tTec('not_enough_money')
+          : tDao('body_button');
 
-  const bodyCostText = `${formatLargeNumber(bodyCost.toString())} ${ui.qi_energy} / $${formatLargeNumber(
+  const bodyCostText = `${formatLargeNumber(bodyCost.toString())} ${tDao('qi_energy')} / $${formatLargeNumber(
     bodyMoneyCost.toString()
   )}`;
 
@@ -93,22 +110,20 @@ export default function DaoScreen() {
     if (!stage) {
       return;
     }
-
     const lines: string[] = [];
     if (stage.maxAge > 0) {
-      lines.push(`${ui.stage_info_max_age}: ${stage.maxAge}`);
-      lines.push(`${ui.stage_info_soft_age}: ${stage.softAge}`);
+      lines.push(`${tDao('stage_info_max_age')}: ${stage.maxAge}`);
+      lines.push(`${tDao('stage_info_soft_age')}: ${stage.softAge}`);
     } else {
-      lines.push(ui.stage_info_immortal);
+      lines.push(tDao('stage_info_immortal'));
     }
-    lines.push(`${ui.stage_info_meditation}: x${stage.qiMeditationMultiplier}`);
-    lines.push(`${ui.stage_info_mortality}: ${formatBps(stage.mortalityBps)}`);
-    lines.push(`${ui.stage_info_survival}: ${formatBps(stage.survivalCostBps)}`);
-    lines.push(`${ui.stage_info_breakthrough_damage}: ${formatBps(stage.breakthroughDamageBps)}`);
+    lines.push(`${tDao('stage_info_meditation')}: x${stage.qiMeditationMultiplier}`);
+    lines.push(`${tDao('stage_info_mortality')}: ${formatBps(stage.mortalityBps)}`);
+    lines.push(`${tDao('stage_info_survival')}: ${formatBps(stage.survivalCostBps)}`);
+    lines.push(`${tDao('stage_info_breakthrough_damage')}: ${formatBps(stage.breakthroughDamageBps)}`);
     if (isNext && stage.requiredQi) {
-      lines.push(`${ui.stage_info_required_qi}: ${formatLargeNumber(stage.requiredQi)}`);
+      lines.push(`${tDao('stage_info_required_qi')}: ${formatLargeNumber(stage.requiredQi)}`);
     }
-
     setDetails({
       title: getStageName(stage.id, locale),
       lines,
@@ -127,40 +142,64 @@ export default function DaoScreen() {
 
   const openBodyDetails = () => {
     const lines = [
-      `${ui.body_details_max_health}: +${bodyEffects.maxHealth}`,
-      `${ui.body_details_regen}: +${bodyEffects.regenPerYear}`,
-      `${ui.body_details_illness}: ${formatBps(bodyEffects.illnessResistanceBps)}`,
-      `${ui.body_details_mortality}: ${formatBps(bodyEffects.mortalityReductionBps)}`,
-      `${ui.body_details_survival}: ${formatBps(bodyEffects.survivalReductionBps)}`,
-      `${ui.body_details_breakthrough}: ${formatBps(bodyEffects.breakthroughReductionBps)}`,
-      `${ui.body_details_portal}: ${formatBps(bodyEffects.portalReductionBps)}`,
+      `${tDao('body_details_max_health')}: +${bodyEffects.maxHealth}`,
+      `${tDao('body_details_regen')}: +${bodyEffects.regenPerYear}`,
+      `${tDao('body_details_illness')}: ${formatBps(bodyEffects.illnessResistanceBps)}`,
+      `${tDao('body_details_mortality')}: ${formatBps(bodyEffects.mortalityReductionBps)}`,
+      `${tDao('body_details_survival')}: ${formatBps(bodyEffects.survivalReductionBps)}`,
+      `${tDao('body_details_breakthrough')}: ${formatBps(bodyEffects.breakthroughReductionBps)}`,
+      `${tDao('body_details_portal')}: ${formatBps(bodyEffects.portalReductionBps)}`,
     ];
     setDetails({
-      title: ui.body_details_title,
+      title: tDao('body_details_title'),
       lines,
     });
   };
 
-  const openTechniqueDetails = (technique: any, currentLevel: number, isMax: boolean, requirementText: string) => {
+  const getTechniqueName = (techniqueId: string): string => {
+    return tTec(`items.${techniqueId}.name`) || techniqueId;
+  };
+
+  const getTechniqueDesc = (techniqueId: string): string => {
+    return tTec(`items.${techniqueId}.desc`);
+  };
+
+  const getRequirementText = (technique: any): string => {
+    const parts: string[] = [];
+    if (technique.requiredSpiritualRoot) {
+      parts.push(`${tTec('requirements.spiritual_root')}: ${technique.requiredSpiritualRoot}`);
+    }
+    if (technique.requiredIntelligence) {
+      parts.push(`${tTec('requirements.intelligence')}: ${technique.requiredIntelligence}`);
+    }
+    if (technique.requiredStage) {
+      parts.push(`${tTec('requirements.stage')}: ${getStageName(technique.requiredStage, locale)}`);
+    }
+    return parts.join(', ');
+  };
+
+  const openTechniqueDetails = (
+    technique: any,
+    currentLevel: number,
+    isMax: boolean,
+    requirementText: string
+  ) => {
     const lines: string[] = [];
     if (requirementText) {
       lines.push(requirementText);
     }
-
     const currentLines = buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel);
     const nextLines = !isMax
       ? buildEffectLines(technique.effectsPerLevel, effectLabels, currentLevel + 1)
       : [];
-
     if (currentLines.length > 0) {
-      lines.push(techniquesUI.current_effects);
+      lines.push(tTec('current_effects'));
       currentLines.forEach((line) => lines.push(line));
     }
     if (nextLines.length > 0) {
-      lines.push(techniquesUI.next_effects);
+      lines.push(tTec('next_effects'));
       nextLines.forEach((line) => lines.push(line));
     }
-
     setDetails({
       title: getTechniqueName(technique.id),
       lines,
@@ -169,7 +208,7 @@ export default function DaoScreen() {
 
   const handleWatchAd = () => {
     setHasAdBuff(true);
-    Alert.alert(ui.alert_ad_title, ui.alert_ad_msg);
+    Alert.alert(tDao('alert_ad_title'), tDao('alert_ad_msg'));
   };
 
   const handleBreakthrough = () => {
@@ -180,7 +219,6 @@ export default function DaoScreen() {
     if (!canTemperBody) {
       return;
     }
-
     const nextLevel = bodyLevel + 1;
     const success = player.temperBody();
     if (success) {
@@ -192,40 +230,16 @@ export default function DaoScreen() {
     }
   };
 
-  const getTechniqueName = (techniqueId: string): string => {
-    return techniquesUI.items?.[techniqueId]?.name || techniqueId;
-  };
-
-  const getTechniqueDesc = (techniqueId: string): string => {
-    return techniquesUI.items?.[techniqueId]?.desc || '';
-  };
-
-  const getRequirementText = (technique: any): string => {
-    const parts: string[] = [];
-    if (technique.requiredSpiritualRoot) {
-      parts.push(`${techniquesUI.requirements?.spiritual_root}: ${technique.requiredSpiritualRoot}`);
-    }
-    if (technique.requiredIntelligence) {
-      parts.push(`${techniquesUI.requirements?.intelligence}: ${technique.requiredIntelligence}`);
-    }
-    if (technique.requiredStage) {
-      parts.push(`${techniquesUI.requirements?.stage}: ${getStageName(technique.requiredStage, locale)}`);
-    }
-    return parts.join(', ');
-  };
-
   const handleUpgradeTechnique = (technique: any) => {
     const currentLevel = techniques.levels?.[technique.id] || 0;
     const cost = getTechniqueCost(technique.id, currentLevel);
     const meets = meetsTechniqueRequirements(technique.id, player);
     const canAfford = isGreaterOrEqualBigInt(player.money, cost);
     const isMax = currentLevel >= technique.maxLevel;
-
     if (isMax || !meets || !canAfford) {
       pushUiNotification('technique_upgrade_error', 'danger');
       return;
     }
-
     player.applyEffects({ money: `-${cost}` });
     techniques.incrementTechnique(technique.id);
     pushUiNotification('technique_upgrade_success', 'reward', {
@@ -242,7 +256,7 @@ export default function DaoScreen() {
         <NotificationHost />
         <View style={styles.centerContainer}>
           <Card variant="danger" style={styles.deadCard}>
-            <Text style={styles.deadText}>{ui.dead_text}</Text>
+            <Text style={styles.deadText}>{tDao('dead_text')}</Text>
           </Card>
         </View>
       </SafeAreaView>
@@ -253,42 +267,41 @@ export default function DaoScreen() {
     <SafeAreaView style={styles.container}>
       <NotificationHost />
       <View style={styles.header}>
-        <Text style={styles.title}>{ui.title}</Text>
+        <Text style={styles.title}>{tDao('title')}</Text>
         <Card variant="primary" style={styles.stageCard}>
-          <Text style={styles.stageLabel}>{ui.stage}</Text>
+          <Text style={styles.stageLabel}>{tDao('stage')}</Text>
           <TouchableOpacity onPress={handleCurrentStagePress} delayLongPress={300}>
             <Text style={styles.stageName}>{currentStageName}</Text>
           </TouchableOpacity>
           <Text style={styles.qiValue}>
-            {ui.qi_energy}: {formatLargeNumber(player.qi)}
+            {tDao('qi_energy')}: {formatLargeNumber(player.qi)}
           </Text>
           <ProgressBar progress={progress} color={Theme.colors.info} height={14} style={styles.progress} />
         </Card>
       </View>
-
       <ScrollView contentContainerStyle={styles.content}>
         {nextStage ? (
           <Card style={styles.nextCard}>
-            <Text style={styles.nextStageTitle}>{ui.next_stage}</Text>
+            <Text style={styles.nextStageTitle}>{tDao('next_stage')}</Text>
             <TouchableOpacity onPress={handleNextStagePress} delayLongPress={300}>
               <Text style={styles.nextStageName}>{nextStageName}</Text>
             </TouchableOpacity>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{ui.req_qi}</Text>
+              <Text style={styles.infoLabel}>{tDao('req_qi')}</Text>
               <Text style={styles.infoValue}>{formatLargeNumber(nextStage.requiredQi)}</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{ui.success_chance}</Text>
+              <Text style={styles.infoLabel}>{tDao('success_chance')}</Text>
               <Text style={[styles.infoValue, { color: Theme.colors.success }]}>{chancePercent}%</Text>
             </View>
             {player.portalBlessingBps > 0 ? (
               <Text style={styles.portalBlessingText}>
-                {(ui.portal_blessing_active || '').replace('{percent}', formatBps(player.portalBlessingBps))}
+                {tDao('portal_blessing_active', { percent: formatBps(player.portalBlessingBps) })}
               </Text>
             ) : null}
             {!player.hasCultivatorPass ? (
               <Button
-                title={hasAdBuff ? ui.btn_ad_watched : ui.btn_ad_buff}
+                title={hasAdBuff ? tDao('btn_ad_watched') : tDao('btn_ad_buff')}
                 onPress={handleWatchAd}
                 disabled={hasAdBuff}
                 variant="gold"
@@ -299,20 +312,19 @@ export default function DaoScreen() {
           </Card>
         ) : (
           <Card variant="gold" style={styles.maxCard}>
-            <Text style={styles.maxStageText}>{ui.max_stage}</Text>
+            <Text style={styles.maxStageText}>{tDao('max_stage')}</Text>
           </Card>
         )}
-
         <Card variant="primary" style={styles.bodyCard}>
           <View style={styles.techniqueHeader}>
-            <Text style={styles.techniqueName}>{ui.body_title}</Text>
+            <Text style={styles.techniqueName}>{tDao('body_title')}</Text>
             <Text style={styles.techniqueLevel}>
-              {ui.body_level}: {bodyLevel}
+              {tDao('body_level')}: {bodyLevel}
             </Text>
           </View>
-          <Text style={styles.techniqueDesc}>{ui.body_desc}</Text>
+          <Text style={styles.techniqueDesc}>{tDao('body_desc')}</Text>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{ui.body_cost}</Text>
+            <Text style={styles.infoLabel}>{tDao('body_cost')}</Text>
             <Text style={styles.infoValue}>{bodyCostText}</Text>
           </View>
           <Button
@@ -325,8 +337,7 @@ export default function DaoScreen() {
             style={styles.techniqueButton}
           />
         </Card>
-
-        <Text style={styles.sectionTitle}>{techniquesUI.title}</Text>
+        <Text style={styles.sectionTitle}>{tTec('title')}</Text>
         {safeTechniques.map((technique: any) => {
           const currentLevel = techniques.levels?.[technique.id] || 0;
           const isMax = currentLevel >= technique.maxLevel;
@@ -334,22 +345,20 @@ export default function DaoScreen() {
           const cost = getTechniqueCost(technique.id, currentLevel);
           const canAfford = isGreaterOrEqualBigInt(player.money, cost);
           const requirementText = getRequirementText(technique);
-
-          let buttonTitle = techniquesUI.upgrade;
+          let buttonTitle = tTec('upgrade');
           if (isMax) {
-            buttonTitle = techniquesUI.max;
+            buttonTitle = tTec('max');
           } else if (!meets) {
-            buttonTitle = techniquesUI.locked;
+            buttonTitle = tTec('locked');
           } else if (!canAfford) {
-            buttonTitle = techniquesUI.not_enough_money;
+            buttonTitle = tTec('not_enough_money');
           }
-
           return (
             <Card key={technique.id} style={styles.techniqueCard}>
               <View style={styles.techniqueHeader}>
                 <Text style={styles.techniqueName}>{getTechniqueName(technique.id)}</Text>
                 <Text style={styles.techniqueLevel}>
-                  {techniquesUI.level}: {currentLevel}/{technique.maxLevel}
+                  {tTec('level')}: {currentLevel}/{technique.maxLevel}
                 </Text>
               </View>
               <Text style={styles.techniqueDesc}>{getTechniqueDesc(technique.id)}</Text>
@@ -358,14 +367,16 @@ export default function DaoScreen() {
               ) : null}
               {!isMax ? (
                 <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>{techniquesUI.cost}</Text>
+                  <Text style={styles.infoLabel}>{tTec('cost')}</Text>
                   <Text style={styles.infoValue}>${formatLargeNumber(cost)}</Text>
                 </View>
               ) : null}
               <Button
                 title={buttonTitle}
                 onPress={() => handleUpgradeTechnique(technique)}
-                onLongPress={() => openTechniqueDetails(technique, currentLevel, isMax, requirementText)}
+                onLongPress={() =>
+                  openTechniqueDetails(technique, currentLevel, isMax, requirementText)
+                }
                 disabled={isMax || !meets || !canAfford}
                 variant={isMax ? 'secondary' : meets && canAfford ? 'gold' : 'ghost'}
                 icon="sparkles"
@@ -375,16 +386,15 @@ export default function DaoScreen() {
           );
         })}
       </ScrollView>
-
       {nextStage ? (
         <View style={styles.bottomBar}>
           <Card variant="primary" style={styles.bottomCard}>
             <View style={styles.bottomInfoRow}>
-              <Text style={styles.bottomLabel}>{ui.req_qi}</Text>
+              <Text style={styles.bottomLabel}>{tDao('req_qi')}</Text>
               <Text style={styles.bottomValue}>{formatLargeNumber(nextStage.requiredQi)}</Text>
             </View>
             <Button
-              title={canBreakthrough ? ui.btn_breakthrough : ui.btn_no_qi}
+              title={canBreakthrough ? tDao('btn_breakthrough') : tDao('btn_no_qi')}
               onPress={handleBreakthrough}
               disabled={!canBreakthrough}
               variant="primary"
@@ -394,12 +404,11 @@ export default function DaoScreen() {
           </Card>
         </View>
       ) : null}
-
       <DetailsModal
         visible={details !== null}
         title={details?.title || ''}
         lines={details?.lines || []}
-        closeLabel={ui.details_close}
+        closeLabel={tDao('details_close')}
         onClose={() => setDetails(null)}
       />
     </SafeAreaView>

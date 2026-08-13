@@ -23,13 +23,10 @@ import { formatLargeNumber, getBigIntProgress, safeBigInt } from '../utils/helpe
 import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils/gameplayUtils';
 import { getStageName } from '../utils/stageUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
+import { resolveLocalizedKey } from '../utils/i18n';
 import { LifestyleCategory } from '../types';
 import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
-import ruRebirth from '../locales/ru/rebirth.json';
-import enRebirth from '../locales/en/rebirth.json';
 
 interface HintData {
   title: string;
@@ -49,22 +46,46 @@ export default function LifeScreen() {
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
 
-  // Адаптивный дизайн: единый непрерывный коэффициент масштаба от высоты окна.
-  // 800pt — базовый телефон (scale 1), маленькие экраны сжимаются (до 0.75),
-  // планшеты растут (до 1.35). Все метрики вычисляются через sw().
-  // DraggableGrowButton (FAB) в вертикальной компоновке НЕ участвует:
-  // paddingBottom равен боковым отступам, кнопка — абсолютный overlay.
   const { height: windowHeight } = useWindowDimensions();
   const scale = Math.min(1.35, Math.max(0.75, windowHeight / 800));
   const sw = (v: number) => Math.round(v * scale);
   const avatarSize = Math.min(96, Math.max(54, sw(76)));
   const ageFontSize = Math.min(40, Math.max(24, sw(32)));
 
-  const ui: any = locale === 'ru' ? ruUI.life_screen : enUI.life_screen;
-  const hints: any = (ui as any).hints || {};
-  const rebirth: any = locale === 'ru' ? ruRebirth : enRebirth;
-  const deathCauses: any = (ui as any).death_causes || {};
-  const deathCauseText = deathCauses[player.lastDeathCause] || deathCauses.none || '';
+  const tLife = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'ui', `life_screen.${key}`, params);
+
+  const tRebirth = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'rebirth', key, params);
+
+  const foundStageIndex = (stagesData as any[]).findIndex(
+    (stage) => stage.id === player.cultivationStage
+  );
+  const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
+  const nextStage = (stagesData as any[])[currentStageIndex + 1];
+  const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
+  const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
+  const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
+
+  const avatarGroup = getAvatarAgeGroup(player.age);
+  const avatarAria = tLife(`avatar.aria_${avatarGroup}`);
+  const stageLabel = getStageName(player.cultivationStage, locale);
+
+  const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
+  let lifestyleCost = 0n;
+  (Object.keys(lifestyle.selected) as LifestyleCategory[]).forEach((category) => {
+    const option = getOptionById(lifestyle.selected[category]);
+    if (option) {
+      lifestyleCost += getLifestyleAnnualCost(option);
+    }
+  });
+  const totalExpensesBig = safeBigInt(survivalCost.toString()) + lifestyleCost;
+  const expensesValue =
+    totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : '$0';
+
+  const deathCauseText =
+    tLife(`death_causes.${player.lastDeathCause || 'none'}`) || tLife('death_causes.none');
+
   const rebirthReport = player.lastRebirthReport;
   const hasRebirthPenalties =
     !!rebirthReport &&
@@ -81,16 +102,23 @@ export default function LifeScreen() {
       !player.isDead
     ) {
       player.reincarnate();
-      addLog(ui.born_log, 'system');
+      const bornLog = tLife('born_log');
+      if (bornLog) {
+        addLog(bornLog, 'system');
+      }
       pushUiNotification('born', 'system');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (player.isDead) {
       if (!deathNotificationSentRef.current) {
         deathNotificationSentRef.current = true;
-        addLog(ui.death_log, 'system');
+        const deathLog = tLife('death_log');
+        if (deathLog) {
+          addLog(deathLog, 'system');
+        }
         pushUiNotification('death_reason', 'danger', {
           reason: deathCauseText,
         });
@@ -98,42 +126,18 @@ export default function LifeScreen() {
     } else {
       deathNotificationSentRef.current = false;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.isDead]);
 
-  const foundStageIndex = stagesData.findIndex((stage) => stage.id === player.cultivationStage);
-  const currentStageIndex = 0 > foundStageIndex ? 0 : foundStageIndex;
-  const nextStage = (stagesData as any[])[currentStageIndex + 1];
-  const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
-  const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
-  const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
-  const avatarLabels: any = (ui as any).avatar || {};
-  const avatarGroup = getAvatarAgeGroup(player.age);
-  const avatarAria = avatarLabels['aria_' + avatarGroup] || '';
-
-  // Локализованное имя стадии для подписи под бейджем аватара.
-  const stageLabel = getStageName(player.cultivationStage, locale);
-
-  // Ежегодные расходы: стоимость жизни по возрасту/стадии + траты выбранных активностей.
-  const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
-  let lifestyleCost = 0n;
-  (Object.keys(lifestyle.selected) as LifestyleCategory[]).forEach((category) => {
-    const option = getOptionById(lifestyle.selected[category]);
-    if (option) {
-      lifestyleCost += getLifestyleAnnualCost(option);
-    }
-  });
-  const totalExpensesBig = safeBigInt(survivalCost.toString()) + lifestyleCost;
-  const expensesValue =
-    totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : `$0`;
-
   const openHint = (key: string) => {
-    const hintData = hints[key];
-    if (!hintData) {
+    const title = tLife(`hints.${key}.title`);
+    const text = tLife(`hints.${key}.text`);
+    if (!title && !text) {
       return;
     }
     setHint({
-      title: hintData.title || key,
-      text: hintData.text || '',
+      title: title || key,
+      text,
     });
   };
 
@@ -145,39 +149,35 @@ export default function LifeScreen() {
       return;
     }
     if (stage.maxAge > 0) {
-      const ageHint = hints.age;
-      if (!ageHint) {
+      const title = tLife('hints.age.title');
+      const text = tLife('hints.age.text', {
+        maxAge: stage.maxAge,
+        softAge: stage.softAge,
+      });
+      if (!title && !text) {
         return;
       }
-      setHint({
-        title: ageHint.title || '',
-        text: (ageHint.text || '')
-          .replace('{maxAge}', String(stage.maxAge))
-          .replace('{softAge}', String(stage.softAge)),
-      });
+      setHint({ title, text });
       return;
     }
-    const immortalHint = hints.age_immortal;
-    if (!immortalHint) {
+    const title = tLife('hints.age_immortal.title');
+    const text = tLife('hints.age_immortal.text');
+    if (!title && !text) {
       return;
     }
-    setHint({
-      title: immortalHint.title || '',
-      text: immortalHint.text || '',
-    });
+    setHint({ title, text });
   };
 
   const openExpensesHint = () => {
-    const expensesHint = hints.expenses;
-    if (!expensesHint) {
+    const title = tLife('hints.expenses.title');
+    const text = tLife('hints.expenses.text', {
+      survival: `$${formatLargeNumber(survivalCost.toString())}`,
+      lifestyle: `$${formatLargeNumber(lifestyleCost.toString())}`,
+    });
+    if (!title && !text) {
       return;
     }
-    setHint({
-      title: expensesHint.title || '',
-      text: (expensesHint.text || '')
-        .replace('{survival}', `$${formatLargeNumber(survivalCost.toString())}`)
-        .replace('{lifestyle}', `$${formatLargeNumber(lifestyleCost.toString())}`),
-    });
+    setHint({ title, text });
   };
 
   const openLog = () => {
@@ -217,7 +217,10 @@ export default function LifeScreen() {
 
   const handleReincarnate = () => {
     player.reincarnate();
-    addLog(ui.reincarnate_log, 'system');
+    const reincarnateLog = tLife('reincarnate_log');
+    if (reincarnateLog) {
+      addLog(reincarnateLog, 'system');
+    }
     pushUiNotification('reincarnate', 'system');
   };
 
@@ -227,9 +230,9 @@ export default function LifeScreen() {
 
   const titleBlock = (
     <View style={styles.titleRow}>
-      <Text style={[styles.title, { fontSize: sw(24) }]}>{ui.title}</Text>
+      <Text style={[styles.title, { fontSize: sw(24) }]}>{tLife('title')}</Text>
       <View style={styles.versionChip}>
-        <Text style={styles.versionChipText}>{ui.title_version}</Text>
+        <Text style={styles.versionChipText}>{tLife('title_version')}</Text>
       </View>
     </View>
   );
@@ -240,7 +243,7 @@ export default function LifeScreen() {
       onPress={handleOpenLog}
       activeOpacity={0.85}
       accessibilityRole="button"
-      accessibilityLabel={ui.btn_log}
+      accessibilityLabel={tLife('btn_log')}
     >
       <Ionicons name="book-outline" size={20} color={Theme.colors.text} />
       {missedNotifications > 0 ? (
@@ -255,34 +258,42 @@ export default function LifeScreen() {
     if (!rebirthReport || !hasRebirthPenalties) {
       return null;
     }
-    const tierData = rebirth.tiers?.[rebirthReport.fortuneTier] || {};
     return (
       <Modal visible transparent animationType="fade" onRequestClose={closeRebirthReport}>
         <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeRebirthReport}>
           <TouchableOpacity activeOpacity={1} onPress={() => undefined} style={styles.modalCard}>
-            <Text style={styles.modalTitle}>{rebirth.title}</Text>
-            <Text style={styles.rebirthTierTitle}>{tierData.title}</Text>
-            <Text style={styles.modalText}>{tierData.desc}</Text>
+            <Text style={styles.modalTitle}>{tRebirth('title')}</Text>
+            <Text style={styles.rebirthTierTitle}>
+              {tRebirth(`tiers.${rebirthReport.fortuneTier}.title`)}
+            </Text>
+            <Text style={styles.modalText}>
+              {tRebirth(`tiers.${rebirthReport.fortuneTier}.desc`)}
+            </Text>
             <View style={styles.rebirthRow}>
-              <Text style={styles.rebirthLine}>{rebirth.money?.[rebirthReport.moneyPenaltyKey]}</Text>
+              <Text style={styles.rebirthLine}>
+                {tRebirth(`money.${rebirthReport.moneyPenaltyKey}`)}
+              </Text>
             </View>
             <View style={styles.rebirthRow}>
-              <Text style={styles.rebirthLine}>{rebirth.health?.[rebirthReport.healthStartKey]}</Text>
+              <Text style={styles.rebirthLine}>
+                {tRebirth(`health.${rebirthReport.healthStartKey}`)}
+              </Text>
             </View>
             {(rebirthReport.curses || []).map((curseId) => {
-              const curseData = rebirth.curses?.[curseId];
-              if (!curseData) {
+              const curseName = tRebirth(`curses.${curseId}.name`);
+              const curseDesc = tRebirth(`curses.${curseId}.desc`);
+              if (!curseName && !curseDesc) {
                 return null;
               }
               return (
                 <View key={curseId} style={styles.curseRow}>
-                  <Text style={styles.curseName}>{curseData.name}</Text>
-                  <Text style={styles.curseDesc}>{curseData.desc}</Text>
+                  <Text style={styles.curseName}>{curseName}</Text>
+                  <Text style={styles.curseDesc}>{curseDesc}</Text>
                 </View>
               );
             })}
             <Button
-              title={rebirth.accept}
+              title={tRebirth('accept')}
               onPress={closeRebirthReport}
               variant="danger"
               style={styles.modalButton}
@@ -306,7 +317,7 @@ export default function LifeScreen() {
           <Text style={styles.modalTitle}>{hint?.title}</Text>
           <Text style={styles.modalText}>{hint?.text}</Text>
           <Button
-            title={hints.close}
+            title={tLife('hints.close')}
             onPress={() => setHint(null)}
             variant="primary"
             small
@@ -326,22 +337,24 @@ export default function LifeScreen() {
             <View style={styles.headerActions}>{logButton}</View>
           </View>
           <Card variant="danger" style={styles.deadCard}>
-            <Text style={styles.deadTitle}>{ui.dead_title}</Text>
-            <Text style={styles.deadSubtitle}>{ui.dead_subtitle}</Text>
+            <Text style={styles.deadTitle}>{tLife('dead_title')}</Text>
+            <Text style={styles.deadSubtitle}>{tLife('dead_subtitle')}</Text>
             <View style={styles.karmaRow}>
-              <Text style={styles.karmaLabel}>{ui.death_cause_label}</Text>
+              <Text style={styles.karmaLabel}>{tLife('death_cause_label')}</Text>
               <Text style={styles.karmaValue}>{deathCauseText}</Text>
             </View>
             <View style={styles.karmaRow}>
-              <Text style={styles.karmaLabel}>{ui.karma_earned_last_life}</Text>
-              <Text style={styles.karmaValue}>+{formatLargeNumber(player.lastLifeKarmaEarned)}</Text>
+              <Text style={styles.karmaLabel}>{tLife('karma_earned_last_life')}</Text>
+              <Text style={styles.karmaValue}>
+                +{formatLargeNumber(player.lastLifeKarmaEarned)}
+              </Text>
             </View>
             <View style={styles.karmaRow}>
-              <Text style={styles.karmaLabel}>{ui.karma_accumulated}</Text>
+              <Text style={styles.karmaLabel}>{tLife('karma_accumulated')}</Text>
               <Text style={styles.karmaValue}>{formatLargeNumber(player.karma)}</Text>
             </View>
             <Button
-              title={ui.btn_reincarnate}
+              title={tLife('btn_reincarnate')}
               onPress={handleReincarnate}
               variant="danger"
               icon="refresh"
@@ -362,10 +375,7 @@ export default function LifeScreen() {
           {titleBlock}
           <View style={styles.headerActions}>{logButton}</View>
         </View>
-        <Card
-          variant="primary"
-          style={[styles.heroCard, { padding: sw(12), marginBottom: sw(10) }]}
-        >
+        <Card variant="primary" style={[styles.heroCard, { padding: sw(12), marginBottom: sw(10) }]}>
           <View style={[styles.heroTopRow, { marginBottom: sw(8) }]}>
             <LifeAvatar
               age={player.age}
@@ -375,7 +385,9 @@ export default function LifeScreen() {
               size={avatarSize}
             />
             <View style={styles.heroAgeBlock}>
-              <Text style={[styles.heroAgeLabel, { fontSize: sw(13), marginBottom: 2 }]}>{ui.age}</Text>
+              <Text style={[styles.heroAgeLabel, { fontSize: sw(13), marginBottom: 2 }]}>
+                {tLife('age')}
+              </Text>
               <TouchableOpacity onPress={handleAgeHintPress} onLongPress={handleAgeHintPress} delayLongPress={300}>
                 <Text style={[styles.heroAgeValue, { fontSize: ageFontSize }]}>{player.age}</Text>
               </TouchableOpacity>
@@ -388,7 +400,7 @@ export default function LifeScreen() {
             style={{ marginBottom: sw(6) }}
           />
           <Text style={[styles.heroProgressLabel, { fontSize: sw(11), marginBottom: sw(6) }]}>
-            {ui.health}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
+            {tLife('health')}: {formatLargeNumber(player.health)}/{formatLargeNumber(player.maxHealth)}
           </Text>
           <ProgressBar
             progress={qiProgress}
@@ -397,16 +409,14 @@ export default function LifeScreen() {
             style={{ marginBottom: sw(6) }}
           />
           <Text style={[styles.heroProgressLabel, { fontSize: sw(11), marginBottom: 0 }]}>
-            {ui.qi}: {formatLargeNumber(player.qi)}
+            {tLife('qi')}: {formatLargeNumber(player.qi)}
           </Text>
         </Card>
-        {/* Автозаполнение: карточка статов растягивается flex:1 и съедает всю
-            свободную высоту экрана; строки распределены равномерно. */}
         <Card style={{ padding: sw(12), marginBottom: sw(10), flex: 1 }}>
           <View style={styles.statFlex}>
             <StatRow
               icon="school"
-              label={ui.intelligence}
+              label={tLife('intelligence')}
               value={player.intelligence.toString()}
               color={Theme.colors.secondary}
               scale={scale}
@@ -416,7 +426,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="heart"
-              label={ui.health}
+              label={tLife('health')}
               value={formatLargeNumber(player.maxHealth)}
               color={Theme.colors.success}
               scale={scale}
@@ -426,7 +436,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="diamond"
-              label={ui.appearance}
+              label={tLife('appearance')}
               value={player.appearance.toString()}
               color={Theme.colors.warning}
               scale={scale}
@@ -436,7 +446,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="cash"
-              label={ui.money}
+              label={tLife('money')}
               value={`$${formatLargeNumber(player.money)}`}
               color={Theme.colors.gold}
               scale={scale}
@@ -446,7 +456,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="wallet-outline"
-              label={ui.expenses_year}
+              label={tLife('expenses_year')}
               value={expensesValue}
               color={Theme.colors.danger}
               scale={scale}
@@ -456,7 +466,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="flame"
-              label={ui.spiritual_root}
+              label={tLife('spiritual_root')}
               value={player.spiritualRoot.toString()}
               color={Theme.colors.info}
               scale={scale}
@@ -466,7 +476,7 @@ export default function LifeScreen() {
           <View style={styles.statFlex}>
             <StatRow
               icon="sparkles"
-              label={ui.karma}
+              label={tLife('karma')}
               value={formatLargeNumber(player.karma)}
               color={Theme.colors.primarySoft}
               scale={scale}
@@ -476,7 +486,7 @@ export default function LifeScreen() {
         </Card>
         <Card style={{ padding: sw(12) }}>
           <Text style={[styles.focusTitle, { fontSize: sw(13), marginBottom: sw(6) }]}>
-            {ui.focus_title}
+            {tLife('focus_title')}
           </Text>
           <View style={styles.focusRow}>
             <TouchableOpacity
@@ -496,7 +506,7 @@ export default function LifeScreen() {
                   player.activityFocus === 'mundane' && styles.focusChipTextActive,
                 ]}
               >
-                {ui.focus_mundane}
+                {tLife('focus_mundane')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -515,7 +525,7 @@ export default function LifeScreen() {
                   player.activityFocus === 'secret' && styles.focusChipTextActive,
                 ]}
               >
-                {ui.focus_secret}
+                {tLife('focus_secret')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -524,7 +534,7 @@ export default function LifeScreen() {
       <DraggableGrowButton
         age={player.age}
         onPress={handleGrowOlder}
-        accessibilityLabel={ui.btn_grow}
+        accessibilityLabel={tLife('btn_grow')}
       />
       {logModal}
       {hintModal}
