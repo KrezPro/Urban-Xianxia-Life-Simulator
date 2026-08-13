@@ -166,14 +166,24 @@ Game/src/
     │   ├── rebirth.json                        // Русские тексты последствий перерождения и проклятий
     │   └── eventGenerator.json                 // Русские шаблоны, пулы слов, заголовки событий
     └── en/
-        ├── ui.json                             // Английские тексты UI, хинты long-press, кнопки
-        ├── events.json                         // Английские тексты legacy-событий
-        ├── social.json                         // Английские тексты сект и рейтинга
-        ├── notifications.json                  // Английские тексты тостов уведомлений
-        ├── extras.json                         // Английская локализация техник, магазина, активностей, навигации
-        ├── stages.json                         // Английские имена стадий культивации
-        ├── rebirth.json                        // Английские тексты последствий перерождения и проклятий
-        └── eventGenerator.json                 // Английские шаблоны, пулы слов, заголовки событий
+    │    ├── ui.json                             // Английские тексты UI, хинты long-press, кнопки
+    │    ├── events.json                         // Английские тексты legacy-событий
+    │    ├── social.json                         // Английские тексты сект и рейтинга
+    │    ├── notifications.json                  // Английские тексты тостов уведомлений
+    │    ├── extras.json                         // Английская локализация техник, магазина, активностей, навигации
+    │    ├── stages.json                         // Английские имена стадий культивации
+    │    ├── rebirth.json                        // Английские тексты последствий перерождения и проклятий
+    │    └── eventGenerator.json                 // Английские шаблоны, пулы слов, заголовки событий
+     └── {lang}/                                 // Создаются генератором: vi, id, es, it, kk, zh-Hans, zh-Hant, ko, ms, de, pl, pt, ro, sw, th, tr, fil, fr, hi, ja
+│       ├── ui.json
+│       ├── events.json
+│       ├── social.json
+│       ├── notifications.json
+│       ├── extras.json
+│       ├── stages.json
+│       ├── rebirth.json
+│       ├── eventGenerator.json
+│       └── settings.json
 
 Game/
 ├── PlanOfDevelopment.txt                       // Глобальный план разработки с чеклистом задач и статусами
