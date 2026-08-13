@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Paramètres",
+  "title": "Paramètres",
+  "sound": "Son de l'interface",
+  "sound_desc": "Sons courts pour les boutons et les actions.",
+  "music": "Musique",
+  "music_desc": "Mélodie de fond en boucle.",
+  "language": "Langue",
+  "language_desc": "Choisissez la langue de l'interface.",
+  "language_button": "Changer de langue",
+  "language_current": "Langue actuelle",
+  "language_close": "Fermer",
+  "language_selection": {
+    "title": "Choisir la langue",
+    "subtitle": "Sélectionnez la langue de l'interface. Vous pourrez la modifier plus tard dans les Paramètres.",
+    "confirm": "Confirmer",
+    "close": "Fermer"
+  }
+}

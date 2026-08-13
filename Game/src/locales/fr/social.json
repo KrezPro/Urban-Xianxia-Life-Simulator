@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Secte",
+    "loading": "Chargement de la couche sociale...",
+    "tab_my_sect": "Ma Secte",
+    "tab_leaderboard": "Classement",
+    "empty_title": "Secte Corporative",
+    "empty_text": "Créez une secte corporative secrète ou entrez un code d'invitation pour rejoindre la lutte d'influence.",
+    "invite_placeholder": "Code d'invitation",
+    "btn_create": "Créer une Secte",
+    "btn_join": "Rejoindre par Code",
+    "join_error": "Code d'invitation invalide. 8 caractères attendus (A-Z ou 0-9).",
+    "invite_code": "Code d'Invitation",
+    "share_invite": "Partager le Code",
+    "funds": "Fonds",
+    "influence": "Influence",
+    "season": "Saison",
+    "members": "Membres",
+    "player_name": "Vous",
+    "contribution": "Contribution",
+    "btn_leave": "Quitter la Secte",
+    "leave_confirm_title": "Quitter la secte ?",
+    "leave_confirm_message": "Vous perdrez votre contribution actuelle à la secte, mais vous pourrez en rejoindre une autre.",
+    "yes": "Oui",
+    "no": "Annuler",
+    "leaderboard_empty": "Le classement est vide pour le moment.",
+    "default_name": "Syndicat du Néo-Lotus",
+    "default_tag": "SNL"
+  }
+}

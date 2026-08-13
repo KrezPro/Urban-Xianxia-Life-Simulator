@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Vous avez étudié dur toute l'année. Vos connaissances se sont élargies.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Vous avez attrapé un virus grave et avez dû être hospitalisé.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Vous avez trouvé un bon travail à temps partiel et avez mis de l'argent de côté.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Votre patron s'est avéré être un démon de bas rang déguisé ! Vous avez cassé son imprimante et écopé d'une amende, mais votre esprit s'est endurci.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Vous avez accidentellement acheté une 'pierre brillante' sur le darknet. C'était du minerai radioactif. Votre santé a baissé, mais vous ressentez une énergie étrange.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Vous êtes tombé sur une veine spirituelle cachée dans un vieux parc. L'énergie Qi vous remplit.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Pendant votre méditation nocturne, une grave Brûlure de Mana s'est produite. Vos méridiens sont endommagés.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Vous avez aidé un chien errant qui s'est avéré être un esprit gardien. Votre karma s'est amélioré.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Des voyous des rues qui se sont avérés être des cultivateurs renégats vous ont coincé. Vous les avez repoussés avec la 'Paume du Vent de Fer' et avez pris leur argent.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

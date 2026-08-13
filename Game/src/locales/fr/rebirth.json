@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Renaissance",
+  "accept": "Accepter son destin",
+  "tiers": {
+    "blessed": {
+      "title": "Réincarnation Bénie",
+      "desc": "Les cieux sont cléments. Vous ne subissez aucune nouvelle perte."
+    },
+    "uneasy": {
+      "title": "Réincarnation Malaise",
+      "desc": "Votre vie antérieure a laissé une légère marque sur votre nouveau destin."
+    },
+    "troubled": {
+      "title": "Réincarnation Troublée",
+      "desc": "Le karma de votre vie passée pèse sur votre nouveau corps."
+    },
+    "severe": {
+      "title": "Réincarnation Sévère",
+      "desc": "Vous entrez dans le nouveau monde avec de lourdes pertes."
+    },
+    "doomed": {
+      "title": "Réincarnation Condamnée",
+      "desc": "Les cieux se sont détournés de vous. Votre nouvelle vie a commencé dans les ténèbres."
+    }
+  },
+  "money": {
+    "money_loss_0": "Héritage préservé.",
+    "money_loss_25": "Vous avez perdu 25% de l'héritage.",
+    "money_loss_50": "Vous avez perdu 50% de l'héritage.",
+    "money_loss_75": "Vous avez perdu 75% de l'héritage.",
+    "money_loss_100": "Vous avez perdu tout l'héritage."
+  },
+  "health": {
+    "health_start_100": "Votre corps est en bonne santé.",
+    "health_start_85": "Votre corps est légèrement affaibli.",
+    "health_start_70": "Votre corps est visiblement affaibli.",
+    "health_start_55": "Vous êtes né faible.",
+    "health_start_40": "Vous êtes au bord de la mort."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Ombre Affamée",
+      "desc": "Revenus réduits de 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Corps Fragile",
+      "desc": "Récupération de santé réduite de 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Esprit Embrumé",
+      "desc": "Intelligence réduite de 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Peau Rugueuse",
+      "desc": "Apparence réduite de 3."
+    },
+    "curse_major_debt": {
+      "name": "Dette d'une Vie Passée",
+      "desc": "Revenus réduits de 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Méridiens Fissurés",
+      "desc": "Gain de Qi réduit de 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Marque Céleste",
+      "desc": "Chances de percée et succès des portails réduits de 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Corps Maladif",
+      "desc": "Récupération de santé réduite de 12%."
+    }
+  }
+}

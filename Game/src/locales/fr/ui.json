@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Éveil de l'âme..."
+  },
+  "tab_bar": {
+    "life": "Vie",
+    "dao": "Dao",
+    "activities": "Activités",
+    "store": "Boutique",
+    "settings": "Paramètres",
+    "log": "Journal",
+    "sect": "Secte"
+  },
+  "log_screen": {
+    "title": "Journal du Destin",
+    "empty": "Le chemin de votre vie ne fait que commencer..."
+  },
+  "idle": {
+    "offline_secret": "Progression hors ligne : Vous avez médité pendant {seconds}s. Qi obtenu : {amount}.",
+    "offline_mundane": "Progression hors ligne : Vous avez travaillé pendant {seconds}s. Gagné : {amount} $."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Âge",
+    "stage": "Stade",
+    "health": "Santé",
+    "intelligence": "Intelligence",
+    "appearance": "Apparence",
+    "money": "Argent",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Vieillir (+1 an)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Vous êtes né dans ce monde. Votre histoire commence...",
+    "death_log": "Vous êtes mort. Votre âme entre dans le cycle infini du Samsara...",
+    "reincarnate_log": "La Roue du Samsara a tourné. Vous renaissez dans un nouveau corps.",
+    "age": "Âge",
+    "health": "Santé",
+    "intelligence": "Intelligence",
+    "appearance": "Apparence",
+    "money": "Argent",
+    "expenses_year": "Dépenses annuelles",
+    "spiritual_root": "Racine Spirituelle",
+    "qi": "Énergie Qi",
+    "karma": "Karma",
+    "focus_title": "Objectif pour cette année :",
+    "focus_mundane": "Vie Mortelle",
+    "focus_secret": "Chemin Secret",
+    "btn_grow": "Vieillir (+1 an)",
+    "btn_reincarnate": "Réincarner",
+    "btn_log": "Journal",
+    "dead_title": "VOUS ÊTES MORT",
+    "dead_subtitle": "Le voyage de votre vie a été interrompu.",
+    "death_cause_label": "Cause de la mort :",
+    "death_causes": {
+      "none": "Inconnue",
+      "old_age": "Vieillesse",
+      "health": "Défaillance de santé",
+      "breakthrough": "Échec de la percée",
+      "portal": "Accident de portail",
+      "event": "Événement fatidique"
+    },
+    "karma_accumulated": "Karma Total :",
+    "karma_earned_last_life": "Héritage gagné (Karma) :",
+    "meditation_log": "Une année s'est écoulée en méditation secrète. Vous avez accumulé {amount} d'énergie Qi.",
+    "age_log": "Vous avez fêté vos {age} ans.",
+    "interstitial_log": "[ANNONCE] Annonce interstitielle affichée après réincarnation à l'âge d'1 an.",
+    "avatar": {
+      "aria_child": "Un bébé rampe sur le chemin de la vie",
+      "aria_teen": "Un jeune fait ses premiers pas",
+      "aria_adult": "Un adulte en méditation profonde",
+      "aria_mature": "Un maître en profonde méditation",
+      "aria_elder": "Un ancien au crépuscule de son chemin"
+    },
+    "hints": {
+      "close": "Compris",
+      "intelligence": {
+        "title": "Intelligence",
+        "text": "Augmente les chances de réussite des percées et aide pour les études, le travail et les événements de la vie mortelle."
+      },
+      "health": {
+        "title": "Santé",
+        "text": "Si la santé atteint 0, vous mourez et vous réincarnez. Protégez-la."
+      },
+      "appearance": {
+        "title": "Apparence",
+        "text": "Affecte les événements sociaux, les relations et certaines opportunités mortelles."
+      },
+      "money": {
+        "title": "Argent",
+        "text": "Nécessaire pour vivre, pour les contributions à la secte et les opportunités futures."
+      },
+      "expenses": {
+        "title": "Dépenses annuelles",
+        "text": "Coût de la vie : {survival} par an. Mode de vie (travail, sport, alimentation, logement, portails) : {lifestyle} par an. Si vous ne pouvez pas payer, votre santé en souffrira."
+      },
+      "spiritual_root": {
+        "title": "Racine Spirituelle",
+        "text": "Détermine la vitesse d'accumulation du Qi et le potentiel de cultivation."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "S'accumule à travers les vies et se dépense en améliorations permanentes dans la Boutique de Karma."
+      },
+      "focus_mundane": {
+        "title": "Vie Mortelle",
+        "text": "Concentrez-vous sur l'argent, les études et la carrière. Moins de chance de rencontrer des événements secrets."
+      },
+      "focus_secret": {
+        "title": "Chemin Secret",
+        "text": "Concentrez-vous sur la cultivation : vous gagnez du Qi et rencontrez des événements secrets plus souvent."
+      },
+      "age": {
+        "title": "Âge",
+        "text": "Durée de vie maximale de votre stade actuel : {maxAge} ans. La vieillesse peut frapper plus tôt, surtout après {softAge} ans."
+      },
+      "age_immortal": {
+        "title": "Âge",
+        "text": "Ce stade est immortel : la vieillesse ne vous tue plus."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Boutique de Karma",
+    "karma_balance": "Votre Karma",
+    "btn_buy": "Acheter",
+    "btn_bought": "Possédé",
+    "btn_no_karma": "Insuffisant",
+    "cost": "Coût",
+    "iap_section": "Premium & Monétisation",
+    "iap_pass": "Pass Cultivateur",
+    "iap_pass_desc": "Désactive toutes les publicités interstitielles pour toujours et soutient le développeur.",
+    "iap_ad": "Publicité Salvatrice",
+    "iap_ad_desc": "Disponible dans l'onglet Dao avant une percée (protection contre la mort).",
+    "btn_iap_buy": "Acheter le Pass",
+    "btn_iap_active": "Actif",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Famille Riche",
+        "desc": "Chaque réincarnation commence avec plus d'argent et un petit bonus de revenu annuel."
+      },
+      "buff_strong_meridians": {
+        "name": "Méridiens Solides",
+        "desc": "Renforce le corps : plus de Santé Max, de régénération et réduction des dégâts."
+      },
+      "buff_pure_root": {
+        "name": "Racine Pure",
+        "desc": "Améliore la Racine Spirituelle et donne un gain fixe de Qi par an."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Chemin du Dao",
+    "stage": "Stade",
+    "unknown": "Inconnu",
+    "qi_energy": "Énergie Qi",
+    "next_stage": "Prochaine Étape",
+    "req_qi": "Qi Requis",
+    "success_chance": "Chances de Succès",
+    "btn_breakthrough": "Tenter une Percée",
+    "btn_no_qi": "Qi Insuffisant",
+    "max_stage": "Vous avez atteint le sommet de la cultivation. Les Cieux ne vous lient plus.",
+    "dead_text": "Les morts ne peuvent pas cultiver.",
+    "btn_ad_buff": "Voir Publicité (+10% & Protection)",
+    "btn_ad_watched": "Bonus Actif",
+    "alert_ad_title": "Publicité",
+    "alert_ad_msg": "Vidéo regardée ! Vous avez reçu un bonus pour la prochaine percée.",
+    "body_title": "Trempe Corporelle",
+    "body_level": "Niveau",
+    "body_cost": "Coût",
+    "body_button": "Tremper le Corps",
+    "body_locked_age": "Votre corps est encore trop faible",
+    "body_locked_year": "Trempe disponible l'année prochaine",
+    "body_locked_qi": "Pas assez de Qi",
+    "body_effect_line": "+{maxHealth} Santé Max, +{regen} Régé/an, résis. maladies {resistance}%",
+    "body_desc": "Le corps est trempé par la douleur, la sueur et la volonté, devenant un réceptacle pour le véritable pouvoir.",
+    "details_close": "Fermer",
+    "body_details_title": "Effets de la Trempe Corporelle",
+    "body_details_max_health": "Santé Max",
+    "body_details_regen": "Régénération/an",
+    "body_details_illness": "Résistance aux maladies",
+    "body_details_mortality": "Réduction de mortalité",
+    "body_details_survival": "Réduction du coût de la vie",
+    "body_details_breakthrough": "Réduction de dégâts de percée",
+    "body_details_portal": "Réduction de dégâts des portails",
+    "stage_info_max_age": "Espérance de vie",
+    "stage_info_soft_age": "La vieillesse commence à",
+    "stage_info_meditation": "Méditation de Qi",
+    "stage_info_mortality": "Mortalité",
+    "stage_info_survival": "Coût de la vie",
+    "stage_info_breakthrough_damage": "Danger de la percée",
+    "stage_info_required_qi": "Qi Requis",
+    "stage_info_immortal": "Immortel : la vieillesse ne tue plus",
+    "portal_blessing_active": "Bénédiction de portail active : +{percent}",
+    "log_no_qi": "Énergie Qi insuffisante pour la percée.",
+    "log_success": "[SUCCÈS] Percée réussie ! Vous avez atteint le stade : {name}. Vos méridiens se sont élargis.",
+    "log_fail_death": "[ÉCHEC CRITIQUE] La Tribulation Céleste était trop forte. Vous êtes mort.",
+    "log_fail_damage": "[ÉCHEC] Échec de la percée. Une Brûlure de Mana s'est produite, vous avez subi {damage} dégâts.",
+    "log_ad_saved": "[SAUVÉ] La percée a échoué, mais le Bonus Publicitaire a protégé vos méridiens des dégâts !"
+  },
+  "settings_screen": {
+    "title": "Paramètres",
+    "sound": "Son de l'interface",
+    "sound_desc": "Sons courts pour les boutons et les actions.",
+    "music": "Musique",
+    "music_desc": "Mélodie de fond en boucle."
+  }
+}
