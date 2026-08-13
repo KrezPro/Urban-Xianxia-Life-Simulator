@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Przebudzenie duszy..."
+  },
+  "tab_bar": {
+    "life": "Życie",
+    "dao": "Dao",
+    "activities": "Aktywności",
+    "store": "Sklep",
+    "settings": "Ustawienia",
+    "log": "Dziennik",
+    "sect": "Sekta"
+  },
+  "log_screen": {
+    "title": "Dziennik Przeznaczenia",
+    "empty": "Twoja ścieżka życia dopiero się zaczyna..."
+  },
+  "idle": {
+    "offline_secret": "Postęp offline: Medytowałeś przez {seconds}s. Zdobyte Qi: {amount}.",
+    "offline_mundane": "Postęp offline: Pracowałeś przez {seconds}s. Zarobiono: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Wiek",
+    "stage": "Etap",
+    "health": "Zdrowie",
+    "intelligence": "Inteligencja",
+    "appearance": "Wygląd",
+    "money": "Pieniądze",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Dorośnij (+1 rok)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Przychodzisz na ten świat. Twoja historia się zaczyna...",
+    "death_log": "Umierasz. Twoja dusza wkracza w nieskończony cykl Samsary...",
+    "reincarnate_log": "Koło Samsary się obróciło. Odradzasz się w nowym ciele.",
+    "age": "Wiek",
+    "health": "Zdrowie",
+    "intelligence": "Inteligencja",
+    "appearance": "Wygląd",
+    "money": "Pieniądze",
+    "expenses_year": "Wydatki roczne",
+    "spiritual_root": "Duchowy Korzeń",
+    "qi": "Energia Qi",
+    "karma": "Karma",
+    "focus_title": "Skupienie na ten rok:",
+    "focus_mundane": "Śmiertelne Życie",
+    "focus_secret": "Sekretna Ścieżka",
+    "btn_grow": "Dorośnij (+1 rok)",
+    "btn_reincarnate": "Reinkarnacja",
+    "btn_log": "Dziennik",
+    "dead_title": "NIE ŻYJESZ",
+    "dead_subtitle": "Twoja podróż przez życie została przerwana.",
+    "death_cause_label": "Przyczyna śmierci:",
+    "death_causes": {
+      "none": "Nieznana",
+      "old_age": "Starość",
+      "health": "Niewydolność organizmu",
+      "breakthrough": "Porażka przy przełomie",
+      "portal": "Wypadek w portalu",
+      "event": "Zdarzenie losowe"
+    },
+    "karma_accumulated": "Całkowita Karma:",
+    "karma_earned_last_life": "Zdobyte dziedzictwo (Karma):",
+    "meditation_log": "Rok minął na sekretnej medytacji. Zebrano {amount} energii Qi.",
+    "age_log": "Kończysz {age} lat.",
+    "interstitial_log": "[REKLAMA] Wyświetlono reklamę po reinkarnacji w wieku 1 roku.",
+    "avatar": {
+      "aria_child": "Dziecko pełzające po ścieżce życia",
+      "aria_teen": "Młodzieniec stawiający pierwsze kroki",
+      "aria_adult": "Dorosły w głębokiej medytacji",
+      "aria_mature": "Mistrz pogrążony w transie",
+      "aria_elder": "Starszy u schyłku swojej drogi"
+    },
+    "hints": {
+      "close": "Rozumiem",
+      "intelligence": {
+        "title": "Inteligencja",
+        "text": "Zwiększa szansę na sukces przełomu i pomaga w nauce, pracy oraz zwykłych wydarzeniach."
+      },
+      "health": {
+        "title": "Zdrowie",
+        "text": "Jeśli twoje zdrowie spadnie do 0, umierasz i poddajesz się reinkarnacji. Chroń je."
+      },
+      "appearance": {
+        "title": "Wygląd",
+        "text": "Wpływa na wydarzenia społeczne, relacje i niektóre życiowe okazje."
+      },
+      "money": {
+        "title": "Pieniądze",
+        "text": "Niezbędne do życia, składek dla sekty i przyszłych możliwości."
+      },
+      "expenses": {
+        "title": "Wydatki roczne",
+        "text": "Koszty życia: {survival} na rok. Styl życia (praca, sport, jedzenie, dom, portale): {lifestyle} na rok. Jeśli brakuje ci środków na koszty życia, ucierpi twoje zdrowie."
+      },
+      "spiritual_root": {
+        "title": "Duchowy Korzeń",
+        "text": "Określa szybkość gromadzenia Qi i potencjał do kultywacji."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Gromadzi się przez wiele żyć i służy do zakupu trwałych ulepszeń w Sklepie Karmy."
+      },
+      "focus_mundane": {
+        "title": "Śmiertelne Życie",
+        "text": "Skup się na pieniądzach, nauce i karierze. Mniejsza szansa na spotkanie sekretnych zdarzeń."
+      },
+      "focus_secret": {
+        "title": "Sekretna Ścieżka",
+        "text": "Skup się na kultywacji: zdobywasz Qi i znacznie częściej natrafiasz na sekretne zdarzenia."
+      },
+      "age": {
+        "title": "Wiek",
+        "text": "Maksymalna długość życia dla twojego obecnego etapu to: {maxAge} lat. Starość może nadejść wcześniej, szczególnie po przekroczeniu {softAge} roku życia."
+      },
+      "age_immortal": {
+        "title": "Wiek",
+        "text": "Osiągnąłeś etap nieśmiertelności: starość nie może cię już zabić."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Sklep Karmy",
+    "karma_balance": "Twoja Karma",
+    "btn_buy": "Kup",
+    "btn_bought": "Posiadane",
+    "btn_no_karma": "Brak Karmy",
+    "cost": "Koszt",
+    "iap_section": "Premium & Wsparcie",
+    "iap_pass": "Karnet Kultywatora",
+    "iap_pass_desc": "Trwale wyłącza wszystkie reklamy pełnoekranowe i wspiera twórcę.",
+    "iap_ad": "Reklama Ratunkowa",
+    "iap_ad_desc": "Dostępna w zakładce Dao przed próbą przełomu (ochrona przed śmiercią).",
+    "btn_iap_buy": "Kup Karnet",
+    "btn_iap_active": "Aktywny",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Bogata Rodzina",
+        "desc": "Każda reinkarnacja zaczyna się z dodatkowymi pieniędzmi i małym rocznym bonusem do dochodów."
+      },
+      "buff_strong_meridians": {
+        "name": "Silne Meridiany",
+        "desc": "Wzmacnia ciało: więcej Maksymalnego Zdrowia, regeneracji oraz zmniejszenie obrażeń."
+      },
+      "buff_pure_root": {
+        "name": "Czysty Korzeń",
+        "desc": "Ulepsza Duchowy Korzeń, dając stały roczny przyrost Qi."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Ścieżka Dao",
+    "stage": "Etap",
+    "unknown": "Nieznany",
+    "qi_energy": "Energia Qi",
+    "next_stage": "Kolejny Krok",
+    "req_qi": "Wymagane Qi",
+    "success_chance": "Szansa na Sukces",
+    "btn_breakthrough": "Spróbuj Przełomu",
+    "btn_no_qi": "Brak Qi",
+    "max_stage": "Osiągnąłeś szczyt kultywacji. Niebiosa już cię nie wiążą.",
+    "dead_text": "Zmarli nie mogą kultywować.",
+    "btn_ad_buff": "Obejrzyj Reklamę (+10% & Ochrona)",
+    "btn_ad_watched": "Buff Aktywny",
+    "alert_ad_title": "Reklama",
+    "alert_ad_msg": "Wideo obejrzane! Otrzymujesz buffa do kolejnego przełomu.",
+    "body_title": "Hartowanie Ciała",
+    "body_level": "Poziom",
+    "body_cost": "Koszt",
+    "body_button": "Hartuj Ciało",
+    "body_locked_age": "Twoje ciało jest jeszcze za słabe",
+    "body_locked_year": "Hartowanie dostępne w przyszłym roku",
+    "body_locked_qi": "Niewystarczająca ilość Qi",
+    "body_effect_line": "+{maxHealth} Maks Zdrowia, +{regen} Regen/rok, odporność {resistance}%",
+    "body_desc": "Ciało hartowane jest przez ból, pot i wole, stając się naczyniem dla prawdziwej mocy.",
+    "details_close": "Zamknij",
+    "body_details_title": "Efekty Hartowania Ciała",
+    "body_details_max_health": "Maksymalne Zdrowie",
+    "body_details_regen": "Regeneracja/rok",
+    "body_details_illness": "Odporność na choroby",
+    "body_details_mortality": "Redukcja śmiertelności",
+    "body_details_survival": "Zniżka na koszty życia",
+    "body_details_breakthrough": "Redukcja obrażeń z przełomu",
+    "body_details_portal": "Redukcja obrażeń w portalach",
+    "stage_info_max_age": "Maksymalna długość życia",
+    "stage_info_soft_age": "Starość zaczyna się od",
+    "stage_info_meditation": "Medytacja Qi",
+    "stage_info_mortality": "Śmiertelność",
+    "stage_info_survival": "Koszty życia",
+    "stage_info_breakthrough_damage": "Zagrożenie przy przełomie",
+    "stage_info_required_qi": "Wymagane Qi",
+    "stage_info_immortal": "Nieśmiertelny: starość już nie zabija",
+    "portal_blessing_active": "Aktywne błogosławieństwo portalu: +{percent}",
+    "log_no_qi": "Niewystarczająca ilość Qi na przełom.",
+    "log_success": "[SUKCES] Przełom udany! Osiągnięto etap: {name}. Twoje meridiany się rozszerzyły.",
+    "log_fail_death": "[KRYTYCZNA PORAŻKA] Niebiańska Tribulacja była zbyt silna. Giniesz.",
+    "log_fail_damage": "[PORAŻKA] Przełom nieudany. Doszło do Spalenia Many, otrzymujesz {damage} obrażeń.",
+    "log_ad_saved": "[OCALONY] Przełom nieudany, ale Buff z Reklamy uchronił twoje meridiany przed uszkodzeniem!"
+  },
+  "settings_screen": {
+    "title": "Ustawienia",
+    "sound": "Dźwięk interfejsu",
+    "sound_desc": "Krótkie dźwięki przycisków i akcji.",
+    "music": "Muzyka",
+    "music_desc": "Zapętlona melodia w tle."
+  }
+}

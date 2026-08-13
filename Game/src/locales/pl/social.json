@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Sekta",
+    "loading": "Ładowanie warstwy społecznościowej...",
+    "tab_my_sect": "Moja Sekta",
+    "tab_leaderboard": "Tabela Liderów",
+    "empty_title": "Sekta Korporacyjna",
+    "empty_text": "Stwórz tajną sektę korporacyjną lub wpisz kod zaproszenia, by dołączyć do walki o wpływy.",
+    "invite_placeholder": "Kod zaproszenia",
+    "btn_create": "Stwórz Sektę",
+    "btn_join": "Dołącz przez Kod",
+    "join_error": "Nieprawidłowy kod. Oczekiwano 8 znaków (A-Z lub 0-9).",
+    "invite_code": "Kod Zaproszenia",
+    "share_invite": "Udostępnij",
+    "funds": "Fundusze",
+    "influence": "Wpływy",
+    "season": "Sezon",
+    "members": "Członkowie",
+    "player_name": "Ty",
+    "contribution": "Wkład",
+    "btn_leave": "Opuść Sektę",
+    "leave_confirm_title": "Opuścić sektę?",
+    "leave_confirm_message": "Stracisz swój obecny wkład w rozwój sekty, ale będziesz mógł dołączyć do innej.",
+    "yes": "Tak",
+    "no": "Anuluj",
+    "leaderboard_empty": "Tabela liderów jest na razie pusta.",
+    "default_name": "Syndykat Neo Lotosu",
+    "default_tag": "SNL"
+  }
+}

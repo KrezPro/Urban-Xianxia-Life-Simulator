@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Ustawienia",
+  "title": "Ustawienia",
+  "sound": "Dźwięk interfejsu",
+  "sound_desc": "Krótkie dźwięki przycisków i akcji.",
+  "music": "Muzyka",
+  "music_desc": "Zapętlona melodia w tle.",
+  "language": "Język",
+  "language_desc": "Wybierz język interfejsu.",
+  "language_button": "Zmień język",
+  "language_current": "Obecny język",
+  "language_close": "Zamknij",
+  "language_selection": {
+    "title": "Wybierz język",
+    "subtitle": "Wybierz język interfejsu. Możesz go później zmienić w Ustawieniach.",
+    "confirm": "Zatwierdź",
+    "close": "Zamknij"
+  }
+}

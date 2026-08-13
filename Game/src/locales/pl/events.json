@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Przez cały rok ciężko się uczyłeś. Twoja wiedza znacznie się poszerzyła.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Złapałeś poważnego wirusa i trafiłeś do szpitala.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Znalazłeś dobrą pracę dorywczą i zaoszczędziłeś parę dolarów.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Twój szef okazał się być ukrytym demonem niskiego szczebla! Rozwaliłeś jego drukarkę i dostałeś grzywnę, ale twój duch uległ zahartowaniu.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Przypadkowo kupiłeś „świecący kamień” w darknecie. Okazało się, że to radioaktywna ruda. Twoje zdrowie spadło, ale czujesz dziwną energię.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Natknąłeś się na ukrytą duchową żyłę w starym parku. Energia Qi przenika twoje ciało.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Podczas nocnej medytacji doświadczyłeś silnego Spalenia Many. Twoje meridiany zostały uszkodzone.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Pomogłeś bezdomnemu psu, który okazał się duchem-strażnikiem. Twoja Karma uległa poprawie.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Zwykli dresiarze, którzy okazali się zbuntowanymi kultywatorami, zapędzili cię w róg. Odparłeś ich „Dłonią Żelaznego Wiatru” i zwinąłeś im gotówkę.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

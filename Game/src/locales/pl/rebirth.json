@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Odrodzenie",
+  "accept": "Zaakceptuj los",
+  "tiers": {
+    "blessed": {
+      "title": "Błogosławiona Reinkarnacja",
+      "desc": "Niebiosa są litościwe. Nie ponosisz żadnych nowych strat."
+    },
+    "uneasy": {
+      "title": "Niespokojna Reinkarnacja",
+      "desc": "Twoje poprzednie życie odcisnęło delikatne piętno na nowym losie."
+    },
+    "troubled": {
+      "title": "Problematyczna Reinkarnacja",
+      "desc": "Karma z przeszłości stanowi brzemię dla twojego nowego ciała."
+    },
+    "severe": {
+      "title": "Surowa Reinkarnacja",
+      "desc": "Wkroczyłeś w nowy świat z potężnymi stratami."
+    },
+    "doomed": {
+      "title": "Przeklęta Reinkarnacja",
+      "desc": "Niebiosa się od ciebie odwróciły. Twoje nowe życie rozpoczęło się w ciemności."
+    }
+  },
+  "money": {
+    "money_loss_0": "Spadek w pełni zachowany.",
+    "money_loss_25": "Stracono 25% spadku.",
+    "money_loss_50": "Stracono 50% spadku.",
+    "money_loss_75": "Stracono 75% spadku.",
+    "money_loss_100": "Straciłeś cały spadek."
+  },
+  "health": {
+    "health_start_100": "Twoje ciało jest zdrowe.",
+    "health_start_85": "Twoje ciało jest nieco osłabione.",
+    "health_start_70": "Twoje ciało jest wyraźnie osłabione.",
+    "health_start_55": "Urodziłeś się słaby i chorowity.",
+    "health_start_40": "Znajdujesz się na skraju śmierci."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Głodny Cień",
+      "desc": "Dochody zredukowane o 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Wątłe Ciało",
+      "desc": "Regeneracja zdrowia zredukowana o 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Zmglenie Umysłu",
+      "desc": "Inteligencja obniżona o 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Szorstka Skóra",
+      "desc": "Wygląd obniżony o 3."
+    },
+    "curse_major_debt": {
+      "name": "Dług z Poprzedniego Życia",
+      "desc": "Dochody zredukowane o 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Pęknięte Meridiany",
+      "desc": "Przyrost Qi zredukowany o 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Znamię Niebios",
+      "desc": "Szansa na przełom oraz sukces w portalu zredukowana o 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Chorobliwe Ciało",
+      "desc": "Regeneracja zdrowia zredukowana o 12%."
+    }
+  }
+}

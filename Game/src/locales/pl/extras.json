@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Życie",
+      "dao": "Dao",
+      "activities": "Aktywności",
+      "store": "Sklep",
+      "sect": "Sekta"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Maks. Zdrowia/rok",
+    "healthRegenPerYear": "+{value} Regen/rok",
+    "appearancePerYear": "+{value} Wyglądu/rok",
+    "qiPerYear": "+{value} Qi/rok",
+    "portalSuccessBps": "+{value}% szans w portalu",
+    "qiFlatPerYear": "+{value} Qi/rok",
+    "moneyFlatPerYear": "+${value}/rok",
+    "healthRegenFlat": "+{value} Regen/rok",
+    "damageReductionBps": "+{value}% redukcji obrażeń",
+    "breakthroughChanceBps": "+{value}% szans na przełom",
+    "startMoney": "Start: +${value}",
+    "startMaxHealth": "Start: +{value} Maks. Zdrowia",
+    "startSpiritualRoot": "Start: +{value} Duchowy Korzeń",
+    "startBodyTempering": "Start: +{value} Hartowanie Ciała"
+  },
+  "life": {
+    "survival_cost_line": "Koszty życia: -${amount}/rok",
+    "survival_cost_hint": {
+      "title": "Koszty utrzymania",
+      "text": "Obowiązkowe coroczne wydatki na jedzenie, dach nad głową i bezpieczeństwo. Pobierane nawet, gdy nie wybrano żadnych aktywności. Brak środków odbije się na twoim zdrowiu."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Koszty życia: -${amount}.",
+    "lifestyle_money_delta": "Roczny bilans aktywności: {amount}.",
+    "portal_blessing_gained": "Błogosławieństwo portalu: +{percent}% do kolejnej szansy na przełom."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Techniki Dao",
+      "level": "Poziom",
+      "max": "Maks",
+      "cost": "Koszt",
+      "upgrade": "Ulepsz",
+      "locked": "Zablokowane",
+      "not_enough_money": "Brak środków",
+      "current_effects": "Obecne",
+      "next_effects": "Kolejne",
+      "requirements": {
+        "spiritual_root": "Duchowy Korzeń",
+        "intelligence": "Inteligencja",
+        "stage": "Etap"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Oddech Ukrytego Smoka",
+          "desc": "Podstawowa technika oddechowa. Zwiększa przyrost Qi oraz szanse na udany przełom."
+        },
+        "technique_iron_meridian": {
+          "name": "Żelazne Meridiany",
+          "desc": "Hartuje ciało i meridiany. Poprawia regenerację zdrowia i zmniejsza otrzymywane obrażenia."
+        },
+        "technique_jade_ledger": {
+          "name": "Nefrytowa Księga",
+          "desc": "Technika śmiertelnego bogactwa. Zwiększa dochody, wydajność w pracy oraz szanse w portalach."
+        },
+        "technique_spirit_sense": {
+          "name": "Duchowy Zmysł",
+          "desc": "Zaawansowana technika percepcji. Znacznie zwiększa Qi, przełomy i powodzenie w portalach."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Poziom",
+    "max_level": "Maks. poziom",
+    "next_cost": "Koszt kolejnego poziomu",
+    "current_effects": "Obecne",
+    "next_effects": "Kolejne",
+    "effects_note": "Efekty startowe mają zastosowanie po reinkarnacji. Efekty roczne aplikowane są co rok.",
+    "details_close": "Zamknij"
+  },
+  "activities": {
+    "title": "Aktywności",
+    "dead_text": "Zmarli nie mogą wybierać aktywności.",
+    "select": "Wybierz",
+    "selected": "Wybrano",
+    "disable": "Wyłącz",
+    "locked": "Zablokowane",
+    "daily_cost": "Koszt/dzień",
+    "daily_income": "Dochód/dzień",
+    "yearly_cost": "Koszt/rok",
+    "yearly_income": "Dochód/rok",
+    "net_yearly": "Netto/rok",
+    "effects_title": "Efekty/rok",
+    "requirements_label": "Wymagania",
+    "none": "Brak",
+    "categories": {
+      "job": "Praca",
+      "sport": "Sport",
+      "food": "Jedzenie",
+      "housing": "Mieszkanie",
+      "portal": "Portale"
+    },
+    "requirements": {
+      "age": "Wiek",
+      "intelligence": "Int",
+      "appearance": "Wygląd",
+      "spiritual_root": "Korzeń",
+      "health": "Zdrowie",
+      "max_health": "Maks Zdrowia",
+      "stage": "Etap"
+    },
+    "portal_rewards": {
+      "title": "Nagrody z Portalu",
+      "attempt_cost": "Koszt wejścia: ${cost}",
+      "reward_money": "Pieniądze: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Bonus do przełomu: +{percent}%",
+      "fail_damage_bps": "Porażka: {percent}% obrażeń Maks Zdrowia",
+      "fail_damage_flat": "Porażka: {damage} obrażeń"
+    },
+    "options": {
+      "job_none": { "name": "Brak Pracy", "desc": "Brak dochodów i brak obowiązków." },
+      "job_parttime": { "name": "Praca Dorywcza", "desc": "Drobne zlecenia i dostawy." },
+      "job_office": { "name": "Urzędnik", "desc": "Nudna, ale stabilna praca." },
+      "job_manager": { "name": "Menadżer", "desc": "Większa odpowiedzialność, większe pieniądze." },
+      "job_founder": { "name": "Założyciel Startupu", "desc": "Firma łącząca IT z technologią duchową." },
+      "sport_none": { "name": "Brak Sportu", "desc": "Zero aktywności fizycznej." },
+      "sport_home": { "name": "Trening w Domu", "desc": "Pompki na podwórku." },
+      "sport_gym": { "name": "Siłownia", "desc": "Karnet na lokalnej siłowni." },
+      "sport_premium": { "name": "Klub Premium", "desc": "Trenerzy, basen i odnowa biologiczna." },
+      "sport_spirit": { "name": "Trening Duchowy", "desc": "Trening ciała i meridianów." },
+      "food_none": { "name": "Brak Diety", "desc": "Przekąski w biegu." },
+      "food_street": { "name": "Jedzenie Uliczne", "desc": "Makaron i batony energetyczne." },
+      "food_home": { "name": "Domowe Obiady", "desc": "Zwykłe, przyzwoite posiłki." },
+      "food_premium": { "name": "Posiłki Premium", "desc": "Jakościowe produkty i ścisła dieta." },
+      "food_spirit": { "name": "Duchowa Kuchnia", "desc": "Dania przygotowane z duchowych ziół." },
+      "housing_none": { "name": "Bezdomność", "desc": "Spisz gdzie popadnie." },
+      "housing_shelter": { "name": "Schronisko", "desc": "Minimalny dach nad głową." },
+      "housing_room": { "name": "Wynajęty Pokój", "desc": "Mały pokój w starym domu." },
+      "housing_apartment": { "name": "Mieszkanie", "desc": "Czysty apartament zapewniający dobry sen." },
+      "housing_condo": { "name": "Luksusowy Apartament", "desc": "Nowoczesny budynek z ochroną." },
+      "portal_none": { "name": "Brak Portali", "desc": "Zero ryzykownych wypraw." },
+      "portal_subway": { "name": "Opuszczone Metro", "desc": "Stare tunele pełne dziwnych oczu." },
+      "portal_market": { "name": "Nocny Rynek Duchów", "desc": "Przemyt pigułek i mroczne interesy." },
+      "portal_club": { "name": "Klub Demonów", "desc": "Podziemny klub, w którym demony grają z ludźmi." },
+      "portal_tower": { "name": "Duchowa Wieża", "desc": "Próba dla najtwardszych kultywatorów." }
+    }
+  }
+}
