@@ -1,1 +1,20 @@
-17. Metro bundler НЕ ПОДДЕРЖИВАЕТ динамический require(moduleId) с переменной — только статические импорты. Для graceful degradation при отсутствии нативного модуля использовать статические import + try/catch вокруг вызовов.
+# ВЫУЧЕННЫЕ УРОКИ (DataForAI)
+
+1. Hermes: таблицы GameConstants читать ТОЛЬКО через tableNumber(table, key, fallback) — защита от "Cannot convert undefined value to object".
+2. navigation.navigate('Log') ЗАПРЕЩЁН: журнал открывается только модалом LogScreen с onClose из LifeScreen.
+3. NotificationToast: таймер автоскрытия запускается от момента монтирования, а не от createdAt, иначе тосты исчезают мгновенно.
+4. generateYearEvent в useYearlyCycle обёрнут в try/catch с buildFallbackEvent(): год не должен крашить приложение.
+5. Адаптивность вкладки Мир: пороги подбираются по реальным окнам устройств (800-844pt); скролл во вкладке Мир ЗАПРЕЩЁН.
+6. commit_message должен быть XML-безопасным: без символов &, <, > и без переносов, ломающих CDATA/теги.
+7. Центровка hero-блока: бейдж аватара центрируется по всей ширине (heroTopRow justifyContent center), блок возраста — position absolute справа.
+8. Адаптивный дизайн вкладки Мир: единый scale = clamp(windowHeight / 800, 0.75, 1.35), хелпер sw(v) = Math.round(v * scale); карточка статов flex: 1 без мёртвых полос.
+9. DraggableGrowButton — абсолютный перетаскиваемый overlay: НЕ резервирует вертикальное место (paddingBottom равен боковым отступам).
+10. Нативные модули (expo-av, expo-file-system) НЕЛЬЗЯ импортировать статически в аудио-слое: статический import крашит старый dev-клиент на загрузке бандла ("Cannot find native module 'ExponentAV'").
+11. В тесте (__DEV__ === true: expo start / dev-клиент / Expo Go) аудио НЕ инициализируется вовсе; в release APK/AAB (__DEV__ === false) звук и музыка работают.
+12. Звуки вызывать ТОЛЬКО через standalone-функции с optional call: playUiPress?.(), playTab?.(), playToggle?.(). Никогда через навигацию по объекту (AudioManager.xxx) — иначе TypeError "Cannot read property 'playUiPress' of undefined".
+13. WAV-звуки и фоновой loop генерируются процедурно (proceduralAudio.ts) и кэшируются в FileSystem как base64 WAV: без бинарных ассетов и без copyrighted-файлов.
+14. useSettingsStore (soundEnabled/musicEnabled) персистится в MMKV с hasHydrated; App гидратирует его до запуска и вызывает initAudio?.() после готовности всех сторов.
+15. Metro TransformError "SyntaxError" с lineNumber 0 = битый/невалидный JSON-файл в графе импортов (JSON.parse падает без номера строки). Лечится перезаписью JSON начисто.
+16. Metro резолвит ВСЕ статические require на этапе сборки: если JS-пакет отсутствует в node_modules, бандл падает TransformError до рантайма. После правки package.json ОБЯЗАТЕЛЕН npm install в папке Game.
+17. Metro bundler НЕ ПОДДЕРЖИВАЕТ динамический require(переменная): "Invalid call at line N: require(moduleId)". Аргумент require обязан быть литеральной строкой.
+18. Правильный паттерн optional native-модуля: literal require('expo-av') ВНУТРИ try/catch (в функции инициализации, не на верхнем уровне модуля). Metro статически включает пакет в бандл, рантайм-ошибка отсутствия нативки ловится, аудио деградирует в тишину; в бинарах с нативкой (release APK/AAB, Expo Go) модуль загружается и звук работает.

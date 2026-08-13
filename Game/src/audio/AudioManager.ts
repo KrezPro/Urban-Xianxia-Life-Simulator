@@ -1,7 +1,13 @@
-import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
+
+// Нативные модули подключаются ТОЛЬКО через guarded require с ЛИТЕРАЛЬНОЙ
+// строкой внутри try/catch: Metro статически резолвит зависимость на этапе
+// сборки (пакеты есть в node_modules), а рантайм-ошибка «Cannot find native
+// module 'ExponentAV'» на старых dev-клиентах ловится и деградирует в тишину.
+// СТАТИЧЕСКИЙ import expo-av крашит старый dev-клиент на загрузке бандла,
+// а require(переменная) ломает Metro-трансформ («Invalid call»).
+declare const require: (moduleId: string) => any;
 
 const getIsDev = (): boolean => {
   try {
@@ -15,10 +21,10 @@ interface InternalAudioState {
   initialized: boolean;
   initializing: boolean;
   available: boolean;
-  clickPool: Audio.Sound[];
+  clickPool: any[];
   clickIndex: number;
-  simpleSounds: Partial<Record<GeneratedAudioName, Audio.Sound>>;
-  musicSound: Audio.Sound | null;
+  simpleSounds: Partial<Record<GeneratedAudioName, any>>;
+  musicSound: any;
   unsubscribeSettings: (() => void) | null;
 }
 
@@ -41,7 +47,7 @@ const canPlayUi = (): boolean => {
   }
 };
 
-const playSound = async (sound: Audio.Sound | undefined): Promise<void> => {
+const playSound = async (sound: any): Promise<void> => {
   if (!sound) {
     return;
   }
@@ -159,12 +165,13 @@ export const syncMusic = (): void => {
 };
 
 const loadSound = async (
+  AudioClass: any,
   uri: string,
   isLooping: boolean,
   volume: number
-): Promise<Audio.Sound | null> => {
+): Promise<any> => {
   try {
-    const sound = new Audio.Sound();
+    const sound = new AudioClass();
     await sound.loadAsync({ uri }, { shouldPlay: false, isLooping });
     await sound.setVolumeAsync(volume);
     return sound;
@@ -174,15 +181,36 @@ const loadSound = async (
 };
 
 const initAsync = async (): Promise<void> => {
+  let av: any = null;
+  let fs: any = null;
+
   try {
-    await Audio.setAudioModeAsync({
+    av = require('expo-av');
+  } catch {
+    av = null;
+  }
+
+  try {
+    fs = require('expo-file-system');
+  } catch {
+    fs = null;
+  }
+
+  if (!av || !av.Audio || !av.Audio.Sound || !fs) {
+    // Нативные модули отсутствуют в бинаре: деградируем в тишину без краша.
+    state.initializing = false;
+    return;
+  }
+
+  try {
+    await av.Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       playsInSilentModeIOS: true,
       staysActiveInBackground: false,
       shouldDuckAndroid: true,
     });
 
-    const baseDir = FileSystem.cacheDirectory || FileSystem.documentDirectory;
+    const baseDir = fs.cacheDirectory || fs.documentDirectory;
     if (!baseDir) {
       state.initializing = false;
       return;
@@ -190,7 +218,7 @@ const initAsync = async (): Promise<void> => {
 
     const audioDir = `${baseDir}audio/`;
     try {
-      await FileSystem.makeDirectoryAsync(audioDir, { intermediates: true });
+      await fs.makeDirectoryAsync(audioDir, { intermediates: true });
     } catch {
       // Папка может уже существовать.
     }
@@ -218,7 +246,7 @@ const initAsync = async (): Promise<void> => {
     const missing: GeneratedAudioName[] = [];
     for (const name of names) {
       try {
-        const info = await FileSystem.getInfoAsync(fileUris[name]);
+        const info = await fs.getInfoAsync(fileUris[name]);
         if (!info.exists) {
           missing.push(name);
         }
@@ -230,14 +258,14 @@ const initAsync = async (): Promise<void> => {
     if (missing.length > 0) {
       const assets = generateAudioAssets();
       for (const name of missing) {
-        await FileSystem.writeAsStringAsync(fileUris[name], assets[name], {
-          encoding: FileSystem.EncodingType.Base64,
+        await fs.writeAsStringAsync(fileUris[name], assets[name], {
+          encoding: fs.EncodingType.Base64,
         });
       }
     }
 
     for (let i = 0; i < 3; i += 1) {
-      const sound = await loadSound(fileUris.click, false, 0.5);
+      const sound = await loadSound(av.Audio.Sound, fileUris.click, false, 0.5);
       if (sound) {
         state.clickPool.push(sound);
       }
@@ -245,13 +273,13 @@ const initAsync = async (): Promise<void> => {
 
     const simpleNames: GeneratedAudioName[] = ['toggleOn', 'toggleOff', 'tab', 'success', 'error'];
     for (const name of simpleNames) {
-      const sound = await loadSound(fileUris[name], false, 0.5);
+      const sound = await loadSound(av.Audio.Sound, fileUris[name], false, 0.5);
       if (sound) {
         state.simpleSounds[name] = sound;
       }
     }
 
-    state.musicSound = await loadSound(fileUris.music, true, 0.16);
+    state.musicSound = await loadSound(av.Audio.Sound, fileUris.music, true, 0.16);
 
     state.unsubscribeSettings = useSettingsStore.subscribe((current, prev) => {
       if (current.musicEnabled !== prev.musicEnabled) {
@@ -268,7 +296,7 @@ const initAsync = async (): Promise<void> => {
     state.initializing = false;
     syncMusic();
   } catch {
-    // Нативный модуль недоступен, деградируем в тишину.
+    // Любая ошибка аудио не должна ломать игру.
     state.initializing = false;
   }
 };
@@ -280,7 +308,7 @@ export const initAudio = (): void => {
     }
 
     if (getIsDev()) {
-      // Тест на телефоне: звук и музыка не запускаются.
+      // Тест на телефоне (expo start / dev-клиент): звук и музыка не запускаются.
       return;
     }
 
@@ -300,7 +328,7 @@ export const disposeAudio = (): void => {
       state.unsubscribeSettings = null;
     }
 
-    const unload = async (sound: Audio.Sound | undefined) => {
+    const unload = async (sound: any) => {
       if (!sound) {
         return;
       }
