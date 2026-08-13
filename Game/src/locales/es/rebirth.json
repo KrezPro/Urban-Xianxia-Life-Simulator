@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Renacimiento",
+  "accept": "Aceptar destino",
+  "tiers": {
+    "blessed": {
+      "title": "Renacimiento Bendecido",
+      "desc": "Los cielos son misericordiosos. No sufres nuevas pérdidas."
+    },
+    "uneasy": {
+      "title": "Renacimiento Inquieto",
+      "desc": "Tu vida anterior dejó una marca ligera en tu nuevo destino."
+    },
+    "troubled": {
+      "title": "Renacimiento Problemático",
+      "desc": "El karma de tu vida pasada pesa sobre tu nuevo cuerpo."
+    },
+    "severe": {
+      "title": "Renacimiento Severo",
+      "desc": "Entraste al nuevo mundo con grandes pérdidas."
+    },
+    "doomed": {
+      "title": "Renacimiento Condenado",
+      "desc": "Los cielos te dieron la espalda. Tu nueva vida comenzó en la oscuridad."
+    }
+  },
+  "money": {
+    "money_loss_0": "Herencia conservada.",
+    "money_loss_25": "Perdiste 25% de la herencia.",
+    "money_loss_50": "Perdiste 50% de la herencia.",
+    "money_loss_75": "Perdiste 75% de la herencia.",
+    "money_loss_100": "Perdiste toda la herencia."
+  },
+  "health": {
+    "health_start_100": "Tu cuerpo está sano.",
+    "health_start_85": "Tu cuerpo está ligeramente debilitado.",
+    "health_start_70": "Tu cuerpo está notablemente debilitado.",
+    "health_start_55": "Naciste débil.",
+    "health_start_40": "Estás al borde de la muerte."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Sombra Hambrienta",
+      "desc": "Ingresos reducidos 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Cuerpo Frágil",
+      "desc": "Recuperación de salud reducida 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Mente Nublada",
+      "desc": "Inteligencia reducida 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Piel Áspera",
+      "desc": "Apariencia reducida 3."
+    },
+    "curse_major_debt": {
+      "name": "Deuda de Vida Pasada",
+      "desc": "Ingresos reducidos 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridianos Agrietados",
+      "desc": "Ganancia de Qi reducida 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Marca del Cielo",
+      "desc": "Probabilidad de avance y éxito de portal reducidas 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Cuerpo Enfermizo",
+      "desc": "Recuperación de salud reducida 12%."
+    }
+  }
+}

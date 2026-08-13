@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Kelahiran Kembali",
+  "accept": "Terima takdir",
+  "tiers": {
+    "blessed": {
+      "title": "Kelahiran Kembali Diberkati",
+      "desc": "Langit bermurah hati. Kamu tidak menderita kerugian baru."
+    },
+    "uneasy": {
+      "title": "Kelahiran Kembali Gelisah",
+      "desc": "Kehidupan sebelumnya meninggalkan bekas ringan pada takdirmu yang baru."
+    },
+    "troubled": {
+      "title": "Kelahiran Kembali Bermasalah",
+      "desc": "Karma kehidupan masa lalu membebani tubuh barumu."
+    },
+    "severe": {
+      "title": "Kelahiran Kembali Berat",
+      "desc": "Kamu memasuki dunia baru dengan kerugian besar."
+    },
+    "doomed": {
+      "title": "Kelahiran Kembali Terkutuk",
+      "desc": "Langit berpaling darimu. Hidup barumu dimulai dalam kegelapan."
+    }
+  },
+  "money": {
+    "money_loss_0": "Warisan dipertahankan.",
+    "money_loss_25": "Kehilangan 25% warisan.",
+    "money_loss_50": "Kehilangan 50% warisan.",
+    "money_loss_75": "Kehilangan 75% warisan.",
+    "money_loss_100": "Kamu kehilangan seluruh warisan."
+  },
+  "health": {
+    "health_start_100": "Tubuhmu sehat.",
+    "health_start_85": "Tubuhmu sedikit lemah.",
+    "health_start_70": "Tubuhmu terasa lemah.",
+    "health_start_55": "Kamu lahir lemah.",
+    "health_start_40": "Kamu berada di ambang kematian."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Bayangan Lapar",
+      "desc": "Pendapatan berkurang 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Tubuh Rapuh",
+      "desc": "Pemulihan kesehatan berkurang 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Pikiran Kabur",
+      "desc": "Kecerdasan berkurang 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Kulit Kasar",
+      "desc": "Penampilan berkurang 3."
+    },
+    "curse_major_debt": {
+      "name": "Utang Kehidupan Lalu",
+      "desc": "Pendapatan berkurang 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridian Retak",
+      "desc": "Perolehan Qi berkurang 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Tanda Surga",
+      "desc": "Peluang terobosan dan keberhasilan portal berkurang 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Tubuh Sakit-sakitan",
+      "desc": "Pemulihan kesehatan berkurang 12%."
+    }
+  }
+}

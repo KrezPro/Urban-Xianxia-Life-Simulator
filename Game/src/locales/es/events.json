@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Estudiaste duro todo el año. Tu conocimiento se amplió.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Contraíste un virus grave y estuviste en el hospital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Encontraste un buen trabajo de medio tiempo y ahorraste algo de dinero.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "¡Tu jefe resultó ser un demonio de bajo nivel disfrazado! Rompiste su impresora, te multaron, pero templaste tu espíritu.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Compraste por accidente una 'roca brillante' en la darknet. Era mineral radiactivo. La salud bajó, pero sientes una energía extraña.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Encontraste una vena espiritual oculta en un parque viejo. La energía Qi te llena.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Durante la meditación nocturna, ocurrió un Mana Burn grave. Tus meridianos quedaron dañados.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Ayudaste a un perro callejero que resultó ser un espíritu guardián. Tu karma mejoró.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Unos matones callejeros que resultaron ser cultivadores renegados te acorralaron. Los ahuyentaste con la 'Palma del Viento de Hierro' y tomaste su dinero.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

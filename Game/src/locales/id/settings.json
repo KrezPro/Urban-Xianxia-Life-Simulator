@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Pengaturan",
+  "title": "Pengaturan",
+  "sound": "Suara Antarmuka",
+  "sound_desc": "Suara pendek untuk tombol dan aksi.",
+  "music": "Musik",
+  "music_desc": "Musik latar berulang.",
+  "language": "Bahasa",
+  "language_desc": "Pilih bahasa antarmuka.",
+  "language_button": "Ganti bahasa",
+  "language_current": "Bahasa saat ini",
+  "language_close": "Tutup",
+  "language_selection": {
+    "title": "Pilih bahasa",
+    "subtitle": "Pilih bahasa antarmuka. Anda dapat mengubahnya nanti di Pengaturan.",
+    "confirm": "Konfirmasi",
+    "close": "Tutup"
+  }
+}

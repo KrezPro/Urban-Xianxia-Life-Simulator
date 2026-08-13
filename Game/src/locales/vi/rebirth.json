@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Tái sinh",
+  "accept": "Chấp nhận số mệnh",
+  "tiers": {
+    "blessed": {
+      "title": "Tái Sinh Phước Lành",
+      "desc": "Trời cao thương xót. Bạn không chịu tổn thất mới."
+    },
+    "uneasy": {
+      "title": "Tái Sinh Bất An",
+      "desc": "Kiếp trước để lại dấu ấn nhẹ trên vận mệnh mới."
+    },
+    "troubled": {
+      "title": "Tái Sinh Phiền Muộn",
+      "desc": "Nghiệp kiếp trước đè nặng thân mới."
+    },
+    "severe": {
+      "title": "Tái Sinh Nặng Nề",
+      "desc": "Bạn bước vào thế giới mới với tổn thất nặng nề."
+    },
+    "doomed": {
+      "title": "Tái Sinh Tuyệt Mệnh",
+      "desc": "Trời cao quay lưng. Cuộc đời mới bắt đầu trong bóng tối."
+    }
+  },
+  "money": {
+    "money_loss_0": "Thừa kế được giữ nguyên.",
+    "money_loss_25": "Mất 25% thừa kế.",
+    "money_loss_50": "Mất 50% thừa kế.",
+    "money_loss_75": "Mất 75% thừa kế.",
+    "money_loss_100": "Bạn mất toàn bộ thừa kế."
+  },
+  "health": {
+    "health_start_100": "Thân thể khỏe mạnh.",
+    "health_start_85": "Thân thể hơi suy yếu.",
+    "health_start_70": "Thân thể suy yếu rõ rệt.",
+    "health_start_55": "Bạn sinh ra yếu ớt.",
+    "health_start_40": "Bạn cận kề cái chết."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Bóng Đói",
+      "desc": "Thu nhập giảm 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Thể Chất Yếu Ớt",
+      "desc": "Hồi phục sức khỏe giảm 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Tâm Trí Sương Mù",
+      "desc": "Trí tuệ giảm 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Da Thô Ráp",
+      "desc": "Ngoại hình giảm 3."
+    },
+    "curse_major_debt": {
+      "name": "Nợ Kiếp Trước",
+      "desc": "Thu nhập giảm 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Kinh Mạch Nứt Vỡ",
+      "desc": "Thu nhận Khí giảm 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Dấu Ấn Trời",
+      "desc": "Cơ hội đột phá và thành công cổng giảm 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Thân Thể Bệnh Tật",
+      "desc": "Hồi phục sức khỏe giảm 12%."
+    }
+  }
+}

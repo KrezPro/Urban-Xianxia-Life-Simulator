@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Ajustes",
+  "title": "Ajustes",
+  "sound": "Sonido de interfaz",
+  "sound_desc": "Sonidos cortos para botones y acciones.",
+  "music": "Música",
+  "music_desc": "Melodía de fondo en bucle.",
+  "language": "Idioma",
+  "language_desc": "Elige el idioma de la interfaz.",
+  "language_button": "Cambiar idioma",
+  "language_current": "Idioma actual",
+  "language_close": "Cerrar",
+  "language_selection": {
+    "title": "Elegir idioma",
+    "subtitle": "Selecciona el idioma de la interfaz. Puedes cambiarlo luego en Ajustes.",
+    "confirm": "Confirmar",
+    "close": "Cerrar"
+  }
+}

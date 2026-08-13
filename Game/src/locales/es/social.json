@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Secta",
+    "loading": "Cargando capa social...",
+    "tab_my_sect": "Mi Secta",
+    "tab_leaderboard": "Clasificación",
+    "empty_title": "Secta Corporativa",
+    "empty_text": "Crea una secta corporativa oculta o introduce un código de invitación para unirte a la lucha por la influencia.",
+    "invite_placeholder": "Código de invitación",
+    "btn_create": "Crear Secta",
+    "btn_join": "Unirse con código",
+    "join_error": "Código de invitación inválido. Se esperan 8 caracteres A-Z o 0-9.",
+    "invite_code": "Código de Invitación",
+    "share_invite": "Compartir Invitación",
+    "funds": "Fondos",
+    "influence": "Influencia",
+    "season": "Temporada",
+    "members": "Miembros",
+    "player_name": "Tú",
+    "contribution": "Contribución",
+    "btn_leave": "Abandonar Secta",
+    "leave_confirm_title": "¿Abandonar secta?",
+    "leave_confirm_message": "Perderás tu contribución actual a la secta, pero puedes unirte a otra.",
+    "yes": "Sí",
+    "no": "Cancelar",
+    "leaderboard_empty": "La clasificación está vacía por ahora.",
+    "default_name": "Neo Lotus Syndicate",
+    "default_tag": "NLS"
+  }
+}

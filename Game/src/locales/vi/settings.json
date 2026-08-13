@@ -7,14 +7,13 @@
   "music_desc": "Nhạc nền lặp lại.",
   "language": "Ngôn ngữ",
   "language_desc": "Chọn ngôn ngữ giao diện.",
-  "language_en": "English",
-  "language_ru": "Русский",
   "language_button": "Đổi ngôn ngữ",
   "language_current": "Ngôn ngữ hiện tại",
+  "language_close": "Đóng",
   "language_selection": {
     "title": "Chọn ngôn ngữ",
     "subtitle": "Chọn ngôn ngữ giao diện. Bạn có thể đổi sau trong Cài đặt.",
-    "confirm": "Tiếp tục",
+    "confirm": "Xác nhận",
     "close": "Đóng"
   }
 }

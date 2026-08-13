@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Tông môn",
+    "loading": "Đang tải tầng xã hội...",
+    "tab_my_sect": "Tông môn của ta",
+    "tab_leaderboard": "Bảng xếp hạng",
+    "empty_title": "Tông môn Doanh nghiệp",
+    "empty_text": "Tạo một tông môn doanh nghiệp ẩn hoặc nhập mã mời để tham gia cuộc tranh giành ảnh hưởng.",
+    "invite_placeholder": "Mã mời",
+    "btn_create": "Tạo tông môn",
+    "btn_join": "Tham gia bằng mã",
+    "join_error": "Mã mời không hợp lệ. Cần 8 ký tự A-Z hoặc 0-9.",
+    "invite_code": "Mã mời",
+    "share_invite": "Chia sẻ lời mời",
+    "funds": "Quỹ",
+    "influence": "Ảnh hưởng",
+    "season": "Mùa",
+    "members": "Thành viên",
+    "player_name": "Bạn",
+    "contribution": "Đóng góp",
+    "btn_leave": "Rời tông môn",
+    "leave_confirm_title": "Rời tông môn?",
+    "leave_confirm_message": "Bạn sẽ mất đóng góp tông môn hiện tại, nhưng có thể gia nhập tông môn khác.",
+    "yes": "Có",
+    "no": "Hủy",
+    "leaderboard_empty": "Bảng xếp hạng tạm thời trống.",
+    "default_name": "Neo Lotus Syndicate",
+    "default_tag": "NLS"
+  }
+}
