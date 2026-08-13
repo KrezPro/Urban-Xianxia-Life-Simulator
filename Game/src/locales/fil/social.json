@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Sekta",
+    "loading": "Nilo-load ang social layer...",
+    "tab_my_sect": "Aking Sekta",
+    "tab_leaderboard": "Leaderboard",
+    "empty_title": "Corporate na Sekta",
+    "empty_text": "Lumikha ng isang lihim na corporate sekta o maglagay ng invite code upang sumali sa pakikibaka para sa impluwensya.",
+    "invite_placeholder": "Invite code",
+    "btn_create": "Lumikha ng Sekta",
+    "btn_join": "Sumali gamit ang Code",
+    "join_error": "Di-wastong invite code. Inaasahan ang 8 character A-Z o 0-9.",
+    "invite_code": "Invite Code",
+    "share_invite": "I-share ang Invite",
+    "funds": "Pondo",
+    "influence": "Impluwensya",
+    "season": "Season",
+    "members": "Mga Miyembro",
+    "player_name": "Ikaw",
+    "contribution": "Kontribusyon",
+    "btn_leave": "Umalis sa Sekta",
+    "leave_confirm_title": "Umalis sa sekta?",
+    "leave_confirm_message": "Mawawala ang iyong kasalukuyang kontribusyon sa sekta, ngunit maaari kang sumali sa iba.",
+    "yes": "Oo",
+    "no": "Kanselahin",
+    "leaderboard_empty": "Walang laman ang leaderboard sa ngayon.",
+    "default_name": "Neo Lotus Syndicate",
+    "default_tag": "NLS"
+  }
+}

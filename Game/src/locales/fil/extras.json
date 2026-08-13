@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Buhay",
+      "dao": "Dao",
+      "activities": "Mga Aktibidad",
+      "store": "Tindahan",
+      "sect": "Sekta"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Max Health/taon",
+    "healthRegenPerYear": "+{value} Regen/taon",
+    "appearancePerYear": "+{value} Hitsura/taon",
+    "qiPerYear": "+{value} Qi/taon",
+    "portalSuccessBps": "+{value}% tagumpay sa portal",
+    "qiFlatPerYear": "+{value} Qi/taon",
+    "moneyFlatPerYear": "+${value}/taon",
+    "healthRegenFlat": "+{value} Regen/taon",
+    "damageReductionBps": "+{value}% pagbawas ng pinsala",
+    "breakthroughChanceBps": "+{value}% tyansa ng pag-abante",
+    "startMoney": "Simula: +${value}",
+    "startMaxHealth": "Simula: +{value} Max Health",
+    "startSpiritualRoot": "Simula: +{value} Espirituwal na Ugat",
+    "startBodyTempering": "Simula: +{value} Pagpapanday"
+  },
+  "life": {
+    "survival_cost_line": "Halaga ng pamumuhay: -${amount}/taon",
+    "survival_cost_hint": {
+      "title": "Gastos sa pamumuhay",
+      "text": "Mga sapilitang taunang gastusin para sa pagkain, pabahay at kaligtasan. Sisingilin ang mga ito kahit walang piniling aktibidad. Kung kulang ka sa pera, maghihirap ang kalusugan mo."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Halaga ng pamumuhay: -${amount}.",
+    "lifestyle_money_delta": "Net na nakuha sa aktibidad: {amount}.",
+    "portal_blessing_gained": "Pagpapala ng portal: +{percent}% sa susunod na tyansa ng pag-abante."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Mga Teknik ng Dao",
+      "level": "Level",
+      "max": "Max",
+      "cost": "Halaga",
+      "upgrade": "I-upgrade",
+      "locked": "Naka-lock",
+      "not_enough_money": "Kulang ang pera",
+      "current_effects": "Kasalukuyan",
+      "next_effects": "Susunod",
+      "requirements": {
+        "spiritual_root": "Espirituwal na Ugat",
+        "intelligence": "Talinong",
+        "stage": "Yugto"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Hininga ng Nakatagong Dragon",
+          "desc": "Isang pangunahing teknik sa paghinga. Pinapataas ang nakukuhang Qi at tyansang magtagumpay sa pag-abante."
+        },
+        "technique_iron_meridian": {
+          "name": "Bakal na Meridian",
+          "desc": "Pinapanday ang katawan at mga meridian. Pinapabuti ang pagbawi ng kalusugan at binabawasan ang pinsala."
+        },
+        "technique_jade_ledger": {
+          "name": "Aklat ng Jade",
+          "desc": "Isang mortal na teknik para sa kayamanan. Pinapataas ang kita, kahusayan sa trabaho at tagumpay sa portal."
+        },
+        "technique_spirit_sense": {
+          "name": "Pakiramdam ng Espiritu",
+          "desc": "Isang advanced na teknik sa pang-unawa. Malaking tulong sa Qi, pag-abante at tagumpay sa portal."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Level",
+    "max_level": "Max na level",
+    "next_cost": "Halaga ng susunod na level",
+    "current_effects": "Kasalukuyan",
+    "next_effects": "Susunod",
+    "effects_note": "Ang mga panimulang epekto ay inilalapat pagkatapos ng muling pagsilang. Ang mga taunang epekto ay inilalapat bawat taon.",
+    "details_close": "Isara"
+  },
+  "activities": {
+    "title": "Mga Aktibidad",
+    "dead_text": "Ang mga patay ay hindi makakapili ng mga aktibidad.",
+    "select": "Pumili",
+    "selected": "Pinili",
+    "disable": "I-disable",
+    "locked": "Naka-lock",
+    "daily_cost": "Halaga/araw",
+    "daily_income": "Kita/araw",
+    "yearly_cost": "Halaga/taon",
+    "yearly_income": "Kita/taon",
+    "net_yearly": "Net/taon",
+    "effects_title": "Epekto/taon",
+    "requirements_label": "Mga Kinakailangan",
+    "none": "Wala",
+    "categories": {
+      "job": "Trabaho",
+      "sport": "Isport",
+      "food": "Pagkain",
+      "housing": "Pabahay",
+      "portal": "Mga Portal"
+    },
+    "requirements": {
+      "age": "Edad",
+      "intelligence": "Talinong",
+      "appearance": "Hitsura",
+      "spiritual_root": "Ugat Espirituwal",
+      "health": "Kalusugan",
+      "max_health": "Max Health",
+      "stage": "Yugto"
+    },
+    "portal_rewards": {
+      "title": "Mga Gantimpala ng Portal",
+      "attempt_cost": "Halaga ng pagsubok: ${cost}",
+      "reward_money": "Pera: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Bonus sa pag-abante: +{percent}%",
+      "fail_damage_bps": "Pagkabigo: {percent}% na pinsala sa Max Health",
+      "fail_damage_flat": "Pagkabigo: {damage} pinsala"
+    },
+    "options": {
+      "job_none": { "name": "Walang Trabaho", "desc": "Walang kita at walang obligasyon." },
+      "job_parttime": { "name": "Part-time", "desc": "Maliliit na utos at paghahatid." },
+      "job_office": { "name": "Klerk sa Opisina", "desc": "Nakakasawa ngunit matatag." },
+      "job_manager": { "name": "Medyer", "desc": "Mas maraming responsibilidad, mas maraming pera." },
+      "job_founder": { "name": "Tagapagtatag ng Tech", "desc": "Isang startup na pinagsasama ang IT at espirituwal na teknolohiya." },
+      "sport_none": { "name": "Walang Isport", "desc": "Walang pisikal na aktibidad." },
+      "sport_home": { "name": "Pag-ehersisyo sa Bahay", "desc": "Mga push-up sa bakuran." },
+      "sport_gym": { "name": "Gym", "desc": "Miyembro sa lokal na gym." },
+      "sport_premium": { "name": "Premium Club", "desc": "Mga tagapagsanay, pool at paggaling." },
+      "sport_spirit": { "name": "Espirituwal na Pagsasanay", "desc": "Pagsasanay ng katawan at mga meridian." },
+      "food_none": { "name": "Walang Plano sa Pagkain", "desc": "Mga meryenda habang naglalakad." },
+      "food_street": { "name": "Pagkain sa Kalye", "desc": "Noodles at energy bars." },
+      "food_home": { "name": "Lutong Bahay", "desc": "Regular at maayos na pagkain." },
+      "food_premium": { "name": "Premium na Pagkain", "desc": "Mga de-kalidad na produkto at diyeta." },
+      "food_spirit": { "name": "Lutuing Espirituwal", "desc": "Mga pagkaing gawa sa espirituwal na mga halamang-gamot." },
+      "housing_none": { "name": "Walang Bahay", "desc": "Natutulog kung saan man pwede." },
+      "housing_shelter": { "name": "Silungan", "desc": "Isang simpleng bubong sa itaas ng iyong ulo." },
+      "housing_room": { "name": "Kwarto", "desc": "Isang maliit na kwarto sa isang lumang bahay." },
+      "housing_apartment": { "name": "Apartment", "desc": "Isang malinis na apartment at maayos na pagtulog." },
+      "housing_condo": { "name": "Condo", "desc": "Modernong gusali na may seguridad." },
+      "portal_none": { "name": "Walang Portal", "desc": "Walang mapanganib na ekspedisyon." },
+      "portal_subway": { "name": "Inabandonang Subway", "desc": "Lumang lagusan na may mga kakaibang mata." },
+      "portal_market": { "name": "Gabi na Pamilihan ng Espiritu", "desc": "Pagpupuslit ng pildoras at malabong negosasyon." },
+      "portal_club": { "name": "Klub ng mga Demonyo", "desc": "Isang underground club kung saan nakikipagsugal ang mga demonyo sa tao." },
+      "portal_tower": { "name": "Espirituwal na Tore", "desc": "Isang pagsubok para sa matitibay na cultivator." }
+    }
+  }
+}

@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Nag-aral ka nang mabuti sa buong taon. Lumawak ang iyong kaalaman.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Nahawaan ka ng seryosong virus at nanatili sa ospital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Nakahanap ka ng magandang part-time na trabaho at nakaipon ng ilang dolyar.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Ang iyong boss ay isang mababang-antas na demonyo na nagbabalatkayo! Sinira mo ang kanyang printer, napatawan ng multa, ngunit napatigas ang iyong espiritu.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Aksidente kang nakabili ng 'kumikinang na bato' sa darknet. Ito pala ay radioactive ore. Bumaba ang iyong kalusugan, ngunit nakaramdam ka ng kakaibang enerhiya.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Natagpuan mo ang isang nakatagong espirituwal na ugat sa isang lumang parke. Napuno ka ng enerhiyang Qi.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Sa iyong pagninilay sa gabi, nangyari ang matinding Mana Burn. Nasira ang iyong mga meridian.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Tinulungan mo ang isang ligaw na aso na naging isang espiritung tagapag-alaga. Gumanda ang iyong karma.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Ang mga tambay na naging mga buhong na cultivator ay kinorner ka. Nilabanan mo sila ng 'Iron Wind Palm' at kinuha ang kanilang pera.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

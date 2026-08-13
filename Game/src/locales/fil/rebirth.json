@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Muling Pagsilang",
+  "accept": "Tanggapin ang tadhana",
+  "tiers": {
+    "blessed": {
+      "title": "Mapalad na Muling Pagsilang",
+      "desc": "Ang kalangitan ay maawain. Wala kang haharapin na bagong kawalan."
+    },
+    "uneasy": {
+      "title": "Hindi Mapakaling Muling Pagsilang",
+      "desc": "Ang iyong nakaraang buhay ay nag-iwan ng mahinang marka sa iyong bagong kapalaran."
+    },
+    "troubled": {
+      "title": "Magulong Muling Pagsilang",
+      "desc": "Ang karma ng iyong nakaraang buhay ay nagpapabigat sa iyong bagong katawan."
+    },
+    "severe": {
+      "title": "Malalang Muling Pagsilang",
+      "desc": "Pumasok ka sa bagong mundo na may matinding pagkalugi."
+    },
+    "doomed": {
+      "title": "Kapahamakang Muling Pagsilang",
+      "desc": "Tumalikod sa iyo ang kalangitan. Ang iyong bagong buhay ay nagsimula sa kadiliman."
+    }
+  },
+  "money": {
+    "money_loss_0": "Na-preserba ang pamana.",
+    "money_loss_25": "Nawala ang 25% ng pamana.",
+    "money_loss_50": "Nawala ang 50% ng pamana.",
+    "money_loss_75": "Nawala ang 75% ng pamana.",
+    "money_loss_100": "Nawala ang lahat ng iyong pamana."
+  },
+  "health": {
+    "health_start_100": "Ang iyong katawan ay malusog.",
+    "health_start_85": "Ang iyong katawan ay bahagyang nanghihina.",
+    "health_start_70": "Ang iyong katawan ay halatang nanghihina.",
+    "health_start_55": "Ipinanganak kang mahina.",
+    "health_start_40": "Nasa bingit ka na ng kamatayan."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Gutom na Anino",
+      "desc": "Nabawasan ang kita ng 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Marupok na Katawan",
+      "desc": "Nabawasan ang pagbawi ng kalusugan ng 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Maulap na Isip",
+      "desc": "Nabawasan ang talino ng 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Magaspang na Balat",
+      "desc": "Nabawasan ang hitsura ng 3."
+    },
+    "curse_major_debt": {
+      "name": "Utang sa Nakaraang Buhay",
+      "desc": "Nabawasan ang kita ng 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Bitak-bitak na Meridian",
+      "desc": "Nabawasan ang nakukuhang Qi ng 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Marka ng Langit",
+      "desc": "Nabawasan ang tyansa ng pag-abante at tagumpay sa portal ng 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Sakiting Katawan",
+      "desc": "Nabawasan ang pagbawi ng kalusugan ng 12%."
+    }
+  }
+}

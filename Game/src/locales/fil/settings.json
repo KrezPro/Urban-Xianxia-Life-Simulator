@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Mga Setting",
+  "title": "Mga Setting",
+  "sound": "Tunog ng Interface",
+  "sound_desc": "Maiikling tunog para sa mga pindutan at aksyon.",
+  "music": "Musika",
+  "music_desc": "Umuulit na himig sa background.",
+  "language": "Wika",
+  "language_desc": "Piliin ang wika ng interface.",
+  "language_button": "Palitan ang wika",
+  "language_current": "Kasalukuyang wika",
+  "language_close": "Isara",
+  "language_selection": {
+    "title": "Pumili ng wika",
+    "subtitle": "Piliin ang wika ng interface. Maaari mo itong baguhin sa ibang pagkakataon sa Mga Setting.",
+    "confirm": "Kumpirmahin",
+    "close": "Isara"
+  }
+}

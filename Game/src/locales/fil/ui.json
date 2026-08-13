@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Ginising ang kaluluwa..."
+  },
+  "tab_bar": {
+    "life": "Buhay",
+    "dao": "Dao",
+    "activities": "Mga Aktibidad",
+    "store": "Tindahan",
+    "settings": "Setting",
+    "log": "Log",
+    "sect": "Sekta"
+  },
+  "log_screen": {
+    "title": "Log ng Kapalaran",
+    "empty": "Nagsisimula pa lamang ang landas ng iyong buhay..."
+  },
+  "idle": {
+    "offline_secret": "Offline na progreso: Nagnilay ka ng {seconds}s. Nakuha na Qi: {amount}.",
+    "offline_mundane": "Offline na progreso: Nagtrabaho ka ng {seconds}s. Kinita: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profile",
+    "age": "Edad",
+    "stage": "Yugto",
+    "health": "Kalusugan",
+    "intelligence": "Talinong",
+    "appearance": "Hitsura",
+    "money": "Pera",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Tumanda (+1 taon)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Ipinanganak ka sa mundong ito. Nagsisimula na ang iyong kwento...",
+    "death_log": "Ikaw ay namatay. Ang iyong kaluluwa ay pumapasok sa walang katapusang siklo ng Samsara...",
+    "reincarnate_log": "Umiikot ang Gulong ng Samsara. Ikaw ay muling isinilang sa isang bagong katawan.",
+    "age": "Edad",
+    "health": "Kalusugan",
+    "intelligence": "Talinong",
+    "appearance": "Hitsura",
+    "money": "Pera",
+    "expenses_year": "Taunang gastusin",
+    "spiritual_root": "Espirituwal na Ugat",
+    "qi": "Enerhiya ng Qi",
+    "karma": "Karma",
+    "focus_title": "Pokus para sa taong ito:",
+    "focus_mundane": "Mortal na Buhay",
+    "focus_secret": "Lihim na Landas",
+    "btn_grow": "Tumanda (+1 taon)",
+    "btn_reincarnate": "Mag-reincarnate",
+    "btn_log": "Log",
+    "dead_title": "IKAW AY PATAY NA",
+    "dead_subtitle": "Naputol ang paglalakbay ng iyong buhay.",
+    "death_cause_label": "Dahilan ng kamatayan:",
+    "death_causes": {
+      "none": "Hindi alam",
+      "old_age": "Katandaan",
+      "health": "Pagbagsak ng kalusugan",
+      "breakthrough": "Pagkabigo sa pag-abante",
+      "portal": "Aksidente sa portal",
+      "event": "Nakatakdang kaganapan"
+    },
+    "karma_accumulated": "Kabuuang Karma:",
+    "karma_earned_last_life": "Namanang nakuha (Karma):",
+    "meditation_log": "Isang taon ang lumipas sa lihim na pagninilay. Nakalikom ng {amount} enerhiya ng Qi.",
+    "age_log": "Ikaw ay naging {age} taong gulang.",
+    "interstitial_log": "[AD] Ipinakita ang interstitial na ad pagkatapos ng muling pagsilang sa edad na 1.",
+    "avatar": {
+      "aria_child": "Isang sanggol na gumagapang sa landas ng buhay",
+      "aria_teen": "Isang kabataan na humahakbang ng kanyang unang hakbang",
+      "aria_adult": "Isang nasa hustong gulang na malalim na nagninilay",
+      "aria_mature": "Isang master sa malalim na pagninilay",
+      "aria_elder": "Isang nakatatanda sa pagtatapos ng kanyang landas"
+    },
+    "hints": {
+      "close": "Nakuha ko",
+      "intelligence": {
+        "title": "Talinong",
+        "text": "Pinapataas ang pagkakataong magtagumpay sa pag-abante at nakakatulong sa pag-aaral, trabaho at pang-araw-araw na kaganapan."
+      },
+      "health": {
+        "title": "Kalusugan",
+        "text": "Kung umabot sa 0 ang kalusugan, ikaw ay mamatay at muling isisilang. Protektahan ito."
+      },
+      "appearance": {
+        "title": "Hitsura",
+        "text": "Naaapektuhan ang mga kaganapang panlipunan, relasyon at ilang mga pagkakataong mortal."
+      },
+      "money": {
+        "title": "Pera",
+        "text": "Kailangan para sa pamumuhay, mga kontribusyon sa sekta at mga pagkakataon sa hinaharap."
+      },
+      "expenses": {
+        "title": "Taunang gastusin",
+        "text": "Gastos sa pamumuhay: {survival} bawat taon. Pamumuhay (trabaho, isport, pagkain, pabahay, mga portal): {lifestyle} bawat taon. Kung hindi mo kayang bayaran ang gastos sa pamumuhay, maghihirap ang iyong kalusugan."
+      },
+      "spiritual_root": {
+        "title": "Espirituwal na Ugat",
+        "text": "Tinutukoy ang bilis ng pag-ipon ng Qi at potensyal sa kultibasyon."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Naipon sa iba't ibang buhay at ginagamit para sa mga permanenteng upgrade sa Tindahan ng Karma."
+      },
+      "focus_mundane": {
+        "title": "Mortal na Buhay",
+        "text": "Tumutok sa pera, pag-aaral at karera. Mas mababang pagkakataon na makatagpo ng mga lihim na kaganapan."
+      },
+      "focus_secret": {
+        "title": "Lihim na Landas",
+        "text": "Tumutok sa kultibasyon: makakakuha ka ng Qi at mas madalas na makakatagpo ng mga lihim na kaganapan."
+      },
+      "age": {
+        "title": "Edad",
+        "text": "Pinakamataas na habang-buhay ng iyong kasalukuyang yugto: {maxAge} taon. Ang katandaan ay maaaring dumating nang mas maaga, lalo na pagkatapos ng {softAge} taon."
+      },
+      "age_immortal": {
+        "title": "Edad",
+        "text": "Ang yugtong ito ay imortal: ang katandaan ay hindi na makakapatay sa iyo."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Tindahan ng Karma",
+    "karma_balance": "Iyong Karma",
+    "btn_buy": "Bumili",
+    "btn_bought": "Pagmamay-ari",
+    "btn_no_karma": "Kulang",
+    "cost": "Halaga",
+    "iap_section": "Premium at Monetization",
+    "iap_pass": "Cultivator Pass",
+    "iap_pass_desc": "Panghabambuhay na idi-disable ang lahat ng interstitial ad at susuportahan ang developer.",
+    "iap_ad": "Lifesaver Ad",
+    "iap_ad_desc": "Available sa tab ng Dao bago ang isang pag-abante (proteksyon sa kamatayan).",
+    "btn_iap_buy": "Bumili ng Pass",
+    "btn_iap_active": "Aktibo",
+    "btn_info": "Impormasyon",
+    "items": {
+      "buff_rich_family": {
+        "name": "Mayaman na Pamilya",
+        "desc": "Ang bawat muling pagsilang ay nagsisimula sa dagdag na pera at maliit na bonus sa taunang kita."
+      },
+      "buff_strong_meridians": {
+        "name": "Malakas na Meridian",
+        "desc": "Pinapalakas ang katawan: higit na Max na Kalusugan, pagbawi at pagbawas sa pinsala."
+      },
+      "buff_pure_root": {
+        "name": "Dalisay na Ugat",
+        "desc": "Pinapabuti ang Espirituwal na Ugat at nagbibigay ng nakapirming Qi bawat taon."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Landas ng Dao",
+    "stage": "Yugto",
+    "unknown": "Hindi alam",
+    "qi_energy": "Enerhiya ng Qi",
+    "next_stage": "Susunod na Hakbang",
+    "req_qi": "Kinakailangang Qi",
+    "success_chance": "Pagkakataong Magtagumpay",
+    "btn_breakthrough": "Subukang Mag-abante",
+    "btn_no_qi": "Kulang sa Qi",
+    "max_stage": "Naabot mo na ang rurok ng kultibasyon. Ang Kalangitan ay hindi na kayang igapos ka.",
+    "dead_text": "Ang mga patay ay hindi kayang mag-kultiba.",
+    "btn_ad_buff": "Manood ng Ad (+10% & Proteksyon)",
+    "btn_ad_watched": "Aktibo ang Buff",
+    "alert_ad_title": "Advertisement",
+    "alert_ad_msg": "Napanood na ang video! Nakatanggap ka ng buff para sa susunod na pag-abante.",
+    "body_title": "Pagpapanday ng Katawan",
+    "body_level": "Level",
+    "body_cost": "Halaga",
+    "body_button": "Pandayang Katawan",
+    "body_locked_age": "Masyado pang mahina ang iyong katawan",
+    "body_locked_year": "Ang pagpapanday ay magiging available sa susunod na taon",
+    "body_locked_qi": "Hindi sapat na Qi",
+    "body_effect_line": "+{maxHealth} Max Health, +{regen} Regen/taon, resistensya sa sakit {resistance}%",
+    "body_desc": "Ang katawan ay pinapanday sa pamamagitan ng sakit, pawis, at determinasyon, upang maging lalagyan para sa tunay na kapangyarihan.",
+    "details_close": "Isara",
+    "body_details_title": "Epekto ng Pagpapanday",
+    "body_details_max_health": "Max na Kalusugan",
+    "body_details_regen": "Regen/taon",
+    "body_details_illness": "Resistensya sa sakit",
+    "body_details_mortality": "Pagbawas sa mortalidad",
+    "body_details_survival": "Diskwento sa halaga ng pamumuhay",
+    "body_details_breakthrough": "Pagbawas ng pinsala sa pag-abante",
+    "body_details_portal": "Pagbawas ng pinsala sa portal",
+    "stage_info_max_age": "Pinakamataas na habang-buhay",
+    "stage_info_soft_age": "Magsisimula ang katandaan sa",
+    "stage_info_meditation": "Pagninilay ng Qi",
+    "stage_info_mortality": "Mortalidad",
+    "stage_info_survival": "Halaga ng pamumuhay",
+    "stage_info_breakthrough_damage": "Panganib sa pag-abante",
+    "stage_info_required_qi": "Kinakailangang Qi",
+    "stage_info_immortal": "Imortal: ang katandaan ay hindi na nakakamatay",
+    "portal_blessing_active": "Aktibong pagpapala ng portal: +{percent}",
+    "log_no_qi": "Hindi sapat na enerhiya ng Qi para sa pag-abante.",
+    "log_success": "[TAGUMPAY] Matagumpay ang pag-abante! Naabot mo ang yugtong: {name}. Lumawak ang mga meridian.",
+    "log_fail_death": "[KRITIKAL NA PAGKABIGO] Napakalakas ng Makalangit na Pagsubok. Ikaw ay namatay.",
+    "log_fail_damage": "[BIGO] Nabigo ang pag-abante. Nagkaroon ng Mana Burn, nakatanggap ka ng {damage} pinsala.",
+    "log_ad_saved": "[NALIGTAS] Nabigo ang pag-abante, ngunit pinrotektahan ng Ad Buff ang iyong mga meridian mula sa pinsala!"
+  },
+  "settings_screen": {
+    "title": "Mga Setting",
+    "sound": "Tunog ng Interface",
+    "sound_desc": "Maiikling tunog para sa mga pindutan at aksyon.",
+    "music": "Musika",
+    "music_desc": "Umuulit na himig sa background."
+  }
+}
