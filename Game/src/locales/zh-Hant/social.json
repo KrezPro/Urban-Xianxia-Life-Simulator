@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "宗門",
+    "loading": "正在載入社交網路...",
+    "tab_my_sect": "我的宗門",
+    "tab_leaderboard": "排行榜",
+    "empty_title": "財閥宗門",
+    "empty_text": "創立一個隱秘的財閥宗門，或是輸入邀請碼加入他人的勢力，參與資源與影響力的爭奪。",
+    "invite_placeholder": "輸入邀請碼",
+    "btn_create": "開宗立派",
+    "btn_join": "憑邀請碼加入",
+    "join_error": "邀請碼無效。請輸入8位由大寫字母(A-Z)或數字(0-9)組成的邀請碼。",
+    "invite_code": "邀請碼",
+    "share_invite": "分享邀請碼",
+    "funds": "宗門資金",
+    "influence": "影響力",
+    "season": "賽季",
+    "members": "門徒",
+    "player_name": "您",
+    "contribution": "貢獻度",
+    "btn_leave": "叛出宗門",
+    "leave_confirm_title": "確認離開宗門？",
+    "leave_confirm_message": "您將失去當前所有的宗門貢獻度，但您隨後可以加入其他勢力。",
+    "yes": "是",
+    "no": "取消",
+    "leaderboard_empty": "排行榜暫無數據。",
+    "default_name": "新蓮花財團",
+    "default_tag": "NLS"
+  }
+}

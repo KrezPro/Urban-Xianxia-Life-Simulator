@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "凡塵",
+      "dao": "修道",
+      "activities": "歷練",
+      "store": "商店",
+      "sect": "宗門"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "最大健康/年：+{value}",
+    "healthRegenPerYear": "恢復力/年：+{value}",
+    "appearancePerYear": "魅力/年：+{value}",
+    "qiPerYear": "靈氣/年：+{value}",
+    "portalSuccessBps": "秘境成功率：+{value}%",
+    "qiFlatPerYear": "靈氣/年：+{value}",
+    "moneyFlatPerYear": "收入/年：+${value}",
+    "healthRegenFlat": "恢復力/年：+{value}",
+    "damageReductionBps": "傷害減免：+{value}%",
+    "breakthroughChanceBps": "突破成功率：+{value}%",
+    "startMoney": "初始資金：+${value}",
+    "startMaxHealth": "初始最大健康：+{value}",
+    "startSpiritualRoot": "初始靈根：+{value}",
+    "startBodyTempering": "初始煉體：+{value} 階"
+  },
+  "life": {
+    "survival_cost_line": "生活費：-${amount}/年",
+    "survival_cost_hint": {
+      "title": "生活費",
+      "text": "每年用於食物、住房和安全的強制開銷。即使不選擇任何活動也會扣除。如果缺錢，您的健康將受到損害。"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "支付生活費：-${amount}。",
+    "lifestyle_money_delta": "年度歷練淨收益：{amount}。",
+    "portal_blessing_gained": "秘境賜福：下次突破成功率 +{percent}%。"
+  },
+  "dao": {
+    "techniques": {
+      "title": "修仙功法",
+      "level": "層數",
+      "max": "圓滿",
+      "cost": "消耗",
+      "upgrade": "參悟",
+      "locked": "未解鎖",
+      "not_enough_money": "資金不足",
+      "current_effects": "當前效果",
+      "next_effects": "下層效果",
+      "requirements": {
+        "spiritual_root": "靈根要求",
+        "intelligence": "悟性要求",
+        "stage": "境界要求"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "潛龍吐納訣",
+          "desc": "基礎吐納心法。每層可提高靈氣獲取量與突破成功率。"
+        },
+        "technique_iron_meridian": {
+          "name": "鐵脈功",
+          "desc": "淬煉肉身與經脈。提高氣血恢復速度，並降低受到的傷害。"
+        },
+        "technique_jade_ledger": {
+          "name": "玉算通神經",
+          "desc": "世俗斂財之法。增加收入、工作效率，並提高秘境探索成功率。"
+        },
+        "technique_spirit_sense": {
+          "name": "神識訣",
+          "desc": "後期感知功法。大幅增加靈氣收益、突破機率以及秘境探索成功率。"
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "等級",
+    "max_level": "最高級",
+    "next_cost": "下級消耗",
+    "current_effects": "當前效果",
+    "next_effects": "下級效果",
+    "effects_note": "初始效果在每次轉生後生效。年度效果每年疊加一次。",
+    "details_close": "關閉"
+  },
+  "activities": {
+    "title": "紅塵歷練",
+    "dead_text": "死者無法進行歷練。",
+    "select": "選擇",
+    "selected": "已選",
+    "disable": "取消",
+    "locked": "未解鎖",
+    "daily_cost": "花費/天",
+    "daily_income": "收入/天",
+    "yearly_cost": "花費/年",
+    "yearly_income": "收入/年",
+    "net_yearly": "淨收益/年",
+    "effects_title": "附帶效果/年",
+    "requirements_label": "前置條件",
+    "none": "無",
+    "categories": {
+      "job": "營生",
+      "sport": "強身",
+      "food": "飲食",
+      "housing": "居所",
+      "portal": "秘境"
+    },
+    "requirements": {
+      "age": "年齡",
+      "intelligence": "智力",
+      "appearance": "魅力",
+      "spiritual_root": "靈根",
+      "health": "健康",
+      "max_health": "最大健康",
+      "stage": "境界"
+    },
+    "portal_rewards": {
+      "title": "秘境收益",
+      "attempt_cost": "探索門票：${cost}",
+      "reward_money": "獲取金錢：${min}–${max}",
+      "reward_qi": "獲取靈氣：{min}–{max}",
+      "breakthrough_bonus": "突破賜福：+{percent}%",
+      "fail_damage_bps": "失敗反噬：扣除 {percent}% 最大健康",
+      "fail_damage_flat": "失敗反噬：受到 {damage} 點傷害"
+    },
+    "options": {
+      "job_none": { "name": "無業遊民", "desc": "沒有任何收入，也無需承擔任何義務。" },
+      "job_parttime": { "name": "零工散活", "desc": "跑腿、送外賣，賺點辛苦錢。" },
+      "job_office": { "name": "普通職員", "desc": "枯燥乏味，但勝在穩定。" },
+      "job_manager": { "name": "部門經理", "desc": "承擔更多責任，換取更豐厚的回報。" },
+      "job_founder": { "name": "科技創始人", "desc": "創立一家結合資訊技術與修真法門的初創公司。" },
+      "sport_none": { "name": "從不鍛鍊", "desc": "缺乏任何體力活動。" },
+      "sport_home": { "name": "居家鍛鍊", "desc": "在院子裡做做伏地挺身。" },
+      "sport_gym": { "name": "健身房", "desc": "辦理當地健身房的會員。" },
+      "sport_premium": { "name": "高級會所", "desc": "私教指導、游泳池和專業恢復理療。" },
+      "sport_spirit": { "name": "修仙鍛體", "desc": "運用靈氣淬煉肉身與經脈。" },
+      "food_none": { "name": "粗茶淡飯", "desc": "匆忙中隨便對付一口。" },
+      "food_street": { "name": "街邊小吃", "desc": "麵條、烤串和能量棒。" },
+      "food_home": { "name": "家常便飯", "desc": "規律而體面的日常飲食。" },
+      "food_premium": { "name": "高級膳食", "desc": "優質食材與嚴格的營養配比。" },
+      "food_spirit": { "name": "靈草仙膳", "desc": "以珍稀靈草烹製而成的靈膳。" },
+      "housing_none": { "name": "露宿街頭", "desc": "天為被，地為床。" },
+      "housing_shelter": { "name": "收容所", "desc": "僅僅提供一個勉強遮風擋雨的地方。" },
+      "housing_room": { "name": "簡陋單間", "desc": "老舊房屋裡的一間小隔斷。" },
+      "housing_apartment": { "name": "整潔公寓", "desc": "乾淨的公寓，保證良好的睡眠。" },
+      "housing_condo": { "name": "高檔住宅", "desc": "安保嚴密的現代化豪華公寓。" },
+      "portal_none": { "name": "不探秘境", "desc": "不參與任何危險的探險活動。" },
+      "portal_subway": { "name": "廢棄地鐵站", "desc": "老舊的隧道裡，似乎有怪異的眼睛在窺視。" },
+      "portal_market": { "name": "午夜鬼市", "desc": "倒賣丹藥和各種見不得光交易的黑市。" },
+      "portal_club": { "name": "妖魔俱樂部", "desc": "一個妖魔與人類賭命的地下會所。" },
+      "portal_tower": { "name": "試煉靈塔", "desc": "專為心性堅韌的修仙者準備的殘酷試煉。" }
+    }
+  }
+}

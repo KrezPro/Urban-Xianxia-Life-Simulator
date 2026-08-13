@@ -1,1 +1,74 @@
-{}
+{
+  "title": "轉世重修",
+  "accept": "接受宿命",
+  "tiers": {
+    "blessed": {
+      "title": "天賜重修",
+      "desc": "天道仁慈。您在新的這一世中沒有遭受額外的折損。"
+    },
+    "uneasy": {
+      "title": "坎坷重修",
+      "desc": "前世的因果在您的新命運上留下了淡淡的印記。"
+    },
+    "troubled": {
+      "title": "厄運重修",
+      "desc": "前世的業力沉甸甸地壓在您新生的肉體上。"
+    },
+    "severe": {
+      "title": "絕境重修",
+      "desc": "您帶著慘痛的損失降臨到了這個新世界。"
+    },
+    "doomed": {
+      "title": "天譴重修",
+      "desc": "天道棄您而去。您的新生活在無盡的黑暗中拉開帷幕。"
+    }
+  },
+  "money": {
+    "money_loss_0": "前世財富得以保全。",
+    "money_loss_25": "散失了 25% 的前世財富。",
+    "money_loss_50": "散失了 50% 的前世財富。",
+    "money_loss_75": "散失了 75% 的前世財富。",
+    "money_loss_100": "您失去了所有的前世財富。"
+  },
+  "health": {
+    "health_start_100": "您的肉身非常健康。",
+    "health_start_85": "您的肉身略顯虛弱。",
+    "health_start_70": "您的肉身明顯虛弱。",
+    "health_start_55": "您先天不足，體弱多病。",
+    "health_start_40": "您天生夭折之相，隨時可能喪命。"
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "餓鬼纏身",
+      "desc": "收入降低 3%。"
+    },
+    "curse_minor_frail": {
+      "name": "根骨孱弱",
+      "desc": "健康恢復速度降低 5%。"
+    },
+    "curse_minor_fog": {
+      "name": "靈智蒙塵",
+      "desc": "智力降低 3 點。"
+    },
+    "curse_minor_rough_skin": {
+      "name": "容貌損毁",
+      "desc": "魅力降低 3 點。"
+    },
+    "curse_major_debt": {
+      "name": "前世業債",
+      "desc": "收入降低 10%。"
+    },
+    "curse_major_cracked_meridians": {
+      "name": "經脈寸斷",
+      "desc": "靈氣獲取量降低 12%。"
+    },
+    "curse_major_heaven_mark": {
+      "name": "天道詛咒",
+      "desc": "突破成功率與秘境探索成功率降低 7%。"
+    },
+    "curse_major_sickly": {
+      "name": "病入膏肓",
+      "desc": "健康恢復速度降低 12%。"
+    }
+  }
+}

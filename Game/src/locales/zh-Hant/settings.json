@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "設定",
+  "title": "設定",
+  "sound": "介面音效",
+  "sound_desc": "按鈕和操作的簡短音效。",
+  "music": "音樂",
+  "music_desc": "循環播放的背景音樂。",
+  "language": "語言",
+  "language_desc": "選擇介面語言。",
+  "language_button": "更改語言",
+  "language_current": "目前語言",
+  "language_close": "關閉",
+  "language_selection": {
+    "title": "選擇語言",
+    "subtitle": "選擇介面語言。您稍後可以在設定中進行更改。",
+    "confirm": "確認",
+    "close": "關閉"
+  }
+}
