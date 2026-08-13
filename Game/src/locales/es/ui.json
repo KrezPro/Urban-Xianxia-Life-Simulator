@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Despertando el alma..."
+  },
+  "tab_bar": {
+    "life": "Vida",
+    "dao": "Dao",
+    "activities": "Actividades",
+    "store": "Tienda",
+    "settings": "Ajustes",
+    "log": "Registro",
+    "sect": "Secta"
+  },
+  "log_screen": {
+    "title": "Registro del Destino",
+    "empty": "El camino de tu vida apenas comienza..."
+  },
+  "idle": {
+    "offline_secret": "Progreso sin conexión: Meditaste por {seconds}s. Qi ganado: {amount}.",
+    "offline_mundane": "Progreso sin conexión: Trabajaste por {seconds}s. Ganado: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Perfil",
+    "age": "Edad",
+    "stage": "Etapa",
+    "health": "Salud",
+    "intelligence": "Inteligencia",
+    "appearance": "Apariencia",
+    "money": "Dinero",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Envejecer (+1 año)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Has nacido en este mundo. Tu historia comienza...",
+    "death_log": "Has muerto. Tu alma entra en el ciclo interminable del Samsara...",
+    "reincarnate_log": "La Rueda del Samsara ha girado. Has renacido en un nuevo cuerpo.",
+    "age": "Edad",
+    "health": "Salud",
+    "intelligence": "Inteligencia",
+    "appearance": "Apariencia",
+    "money": "Dinero",
+    "expenses_year": "Gastos anuales",
+    "spiritual_root": "Raíz Espiritual",
+    "qi": "Energía Qi",
+    "karma": "Karma",
+    "focus_title": "Enfoque para este año:",
+    "focus_mundane": "Vida Mortal",
+    "focus_secret": "Camino Secreto",
+    "btn_grow": "Envejecer (+1 año)",
+    "btn_reincarnate": "Reencarnar",
+    "btn_log": "Registro",
+    "dead_title": "ESTÁS MUERTO",
+    "dead_subtitle": "El viaje de tu vida ha sido interrumpido.",
+    "death_cause_label": "Causa de la muerte:",
+    "death_causes": {
+      "none": "Desconocida",
+      "old_age": "Vejez",
+      "health": "Fallo de salud",
+      "breakthrough": "Fallo en el avance",
+      "portal": "Accidente en portal",
+      "event": "Evento fatídico"
+    },
+    "karma_accumulated": "Karma Total:",
+    "karma_earned_last_life": "Legado ganado (Karma):",
+    "meditation_log": "Pasó un año en meditación secreta. Acumulaste {amount} de energía Qi.",
+    "age_log": "Cumpliste {age} años.",
+    "interstitial_log": "[ANUNCIO] Anuncio intersticial mostrado tras reencarnar a la edad de 1.",
+    "avatar": {
+      "aria_child": "Un bebé gatea por el camino de la vida",
+      "aria_teen": "Un joven dando sus primeros pasos",
+      "aria_adult": "Un adulto inmerso en profunda meditación",
+      "aria_mature": "Un maestro en profunda meditación",
+      "aria_elder": "Un anciano en el ocaso de su camino"
+    },
+    "hints": {
+      "close": "Entendido",
+      "intelligence": {
+        "title": "Inteligencia",
+        "text": "Aumenta la posibilidad de éxito en los avances y ayuda en el estudio, trabajo y eventos cotidianos."
+      },
+      "health": {
+        "title": "Salud",
+        "text": "Si la salud llega a 0, mueres y reencarnas. Protégela."
+      },
+      "appearance": {
+        "title": "Apariencia",
+        "text": "Afecta eventos sociales, relaciones y algunas oportunidades en el mundo mortal."
+      },
+      "money": {
+        "title": "Dinero",
+        "text": "Necesario para vivir, aportaciones a la secta y oportunidades futuras."
+      },
+      "expenses": {
+        "title": "Gastos anuales",
+        "text": "Costo de vida: {survival} por año. Estilo de vida (trabajo, deporte, comida, casa, portales): {lifestyle} por año. Si no puedes pagar el costo de vida, tu salud sufrirá."
+      },
+      "spiritual_root": {
+        "title": "Raíz Espiritual",
+        "text": "Determina la velocidad de acumulación de Qi y el potencial de cultivo."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Se acumula a través de las vidas y se gasta en mejoras permanentes en la Tienda de Karma."
+      },
+      "focus_mundane": {
+        "title": "Vida Mortal",
+        "text": "Concéntrate en dinero, estudio y carrera. Menor probabilidad de encontrar eventos secretos."
+      },
+      "focus_secret": {
+        "title": "Camino Secreto",
+        "text": "Enfócate en el cultivo: ganas Qi y encuentras eventos secretos más a menudo."
+      },
+      "age": {
+        "title": "Edad",
+        "text": "Esperanza de vida máxima de tu etapa actual: {maxAge} años. La vejez puede llegar antes, especialmente después de {softAge} años."
+      },
+      "age_immortal": {
+        "title": "Edad",
+        "text": "Esta etapa es inmortal: la vejez ya no te mata."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Tienda de Karma",
+    "karma_balance": "Tu Karma",
+    "btn_buy": "Comprar",
+    "btn_bought": "Adquirido",
+    "btn_no_karma": "Insuficiente",
+    "cost": "Costo",
+    "iap_section": "Premium y Monetización",
+    "iap_pass": "Pase de Cultivador",
+    "iap_pass_desc": "Desactiva permanentemente todos los anuncios intersticiales y apoya al desarrollador.",
+    "iap_ad": "Anuncio Salvavidas",
+    "iap_ad_desc": "Disponible en la pestaña de Dao antes de un avance (protección contra la muerte).",
+    "btn_iap_buy": "Comprar Pase",
+    "btn_iap_active": "Activo",
+    "btn_info": "Info",
+    "items": {
+      "buff_rich_family": {
+        "name": "Familia Rica",
+        "desc": "Cada reencarnación comienza con más dinero y un pequeño bono de ingresos anuales."
+      },
+      "buff_strong_meridians": {
+        "name": "Meridianos Fuertes",
+        "desc": "Fortalece el cuerpo: más Salud Máx., regeneración y reducción de daño."
+      },
+      "buff_pure_root": {
+        "name": "Raíz Pura",
+        "desc": "Mejora la Raíz Espiritual y otorga un aumento fijo de Qi por año."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "El Camino del Dao",
+    "stage": "Etapa",
+    "unknown": "Desconocido",
+    "qi_energy": "Energía Qi",
+    "next_stage": "Siguiente Paso",
+    "req_qi": "Qi Requerido",
+    "success_chance": "Probabilidad de Éxito",
+    "btn_breakthrough": "Intentar Avance",
+    "btn_no_qi": "Qi Insuficiente",
+    "max_stage": "Has alcanzado la cima del cultivo. Los Cielos ya no te atan.",
+    "dead_text": "Los muertos no pueden cultivar.",
+    "btn_ad_buff": "Ver Anuncio (+10% y Protección)",
+    "btn_ad_watched": "Mejora Activa",
+    "alert_ad_title": "Anuncio",
+    "alert_ad_msg": "¡Video visto! Recibiste una mejora para tu próximo avance.",
+    "body_title": "Templado Corporal",
+    "body_level": "Nivel",
+    "body_cost": "Costo",
+    "body_button": "Templar Cuerpo",
+    "body_locked_age": "Tu cuerpo es demasiado débil",
+    "body_locked_year": "El templado estará disponible el próximo año",
+    "body_locked_qi": "No hay suficiente Qi",
+    "body_effect_line": "+{maxHealth} Salud Máx., +{regen} Regen/año, resist. a enfermedades {resistance}%",
+    "body_desc": "El cuerpo se templa mediante dolor, sudor y voluntad, convirtiéndose en el recipiente del verdadero poder.",
+    "details_close": "Cerrar",
+    "body_details_title": "Efectos del Templado Corporal",
+    "body_details_max_health": "Salud Máx.",
+    "body_details_regen": "Regen/año",
+    "body_details_illness": "Resist. a enfermedades",
+    "body_details_mortality": "Reducción de mortalidad",
+    "body_details_survival": "Reducción costo de vida",
+    "body_details_breakthrough": "Reducción daño por avance",
+    "body_details_portal": "Reducción de daño en portales",
+    "stage_info_max_age": "Esperanza de vida",
+    "stage_info_soft_age": "La vejez empieza a los",
+    "stage_info_meditation": "Meditación de Qi",
+    "stage_info_mortality": "Mortalidad",
+    "stage_info_survival": "Costo de vida",
+    "stage_info_breakthrough_damage": "Peligro al avanzar",
+    "stage_info_required_qi": "Qi Requerido",
+    "stage_info_immortal": "Inmortal: la vejez ya no mata",
+    "portal_blessing_active": "Bendición de portal activa: +{percent}",
+    "log_no_qi": "No hay suficiente energía Qi para avanzar.",
+    "log_success": "[ÉXITO] ¡Avance exitoso! Alcanzaste la etapa: {name}. Tus meridianos se expandieron.",
+    "log_fail_death": "[FALLO CRÍTICO] La Tribulación Celestial fue demasiado fuerte. Has muerto.",
+    "log_fail_damage": "[FRACASO] El avance falló. Ocurrió una Quemadura de Maná, recibiste {damage} de daño.",
+    "log_ad_saved": "[SALVADO] El avance falló, ¡pero la mejora del anuncio protegió tus meridianos del daño!"
+  },
+  "settings_screen": {
+    "title": "Ajustes",
+    "sound": "Sonido de la interfaz",
+    "sound_desc": "Sonidos cortos para botones y acciones.",
+    "music": "Música",
+    "music_desc": "Melodía de fondo en bucle."
+  }
+}

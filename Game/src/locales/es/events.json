@@ -2,17 +2,17 @@
   "mundane": [
     {
       "id": "m1",
-      "text": "Estudiaste duro todo el año. Tu conocimiento se amplió.",
+      "text": "Estudiaste duro todo el año. Tu conocimiento se expandió.",
       "effects": { "intelligence": 2 }
     },
     {
       "id": "m2",
-      "text": "Contraíste un virus grave y estuviste en el hospital.",
+      "text": "Atrapaste un virus grave y te quedaste en el hospital.",
       "effects": { "health": -15 }
     },
     {
       "id": "m3",
-      "text": "Encontraste un buen trabajo de medio tiempo y ahorraste algo de dinero.",
+      "text": "Encontraste un buen trabajo de medio tiempo y ahorraste algunos dólares.",
       "effects": { "money": 150 }
     },
     {
@@ -22,19 +22,19 @@
     },
     {
       "id": "m_darknet",
-      "text": "Compraste por accidente una 'roca brillante' en la darknet. Era mineral radiactivo. La salud bajó, pero sientes una energía extraña.",
+      "text": "Compraste accidentalmente una 'roca brillante' en la darknet. Era mineral radiactivo. Tu salud bajó, pero sientes una energía extraña.",
       "effects": { "health": -20, "qi": "10" }
     }
   ],
   "secret": [
     {
       "id": "s1",
-      "text": "Encontraste una vena espiritual oculta en un parque viejo. La energía Qi te llena.",
+      "text": "Tropezaste con una vena espiritual oculta en un viejo parque. La energía Qi te llena.",
       "effects": { "qi": "50" }
     },
     {
       "id": "s2",
-      "text": "Durante la meditación nocturna, ocurrió un Mana Burn grave. Tus meridianos quedaron dañados.",
+      "text": "Durante la meditación nocturna, sufriste una grave Quemadura de Maná. Tus meridianos están dañados.",
       "effects": { "health": -20, "qi": "-15" }
     },
     {
@@ -44,7 +44,7 @@
     },
     {
       "id": "s_gopnik",
-      "text": "Unos matones callejeros que resultaron ser cultivadores renegados te acorralaron. Los ahuyentaste con la 'Palma del Viento de Hierro' y tomaste su dinero.",
+      "text": "Unos matones callejeros que resultaron ser cultivadores rebeldes te arrinconaron. Los ahuyentaste con la 'Palma de Viento de Hierro' y les quitaste su dinero.",
       "effects": { "money": 200, "karma": -2 }
     }
   ]
