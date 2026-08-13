@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Anda belajar bersungguh-sungguh sepanjang tahun. Pengetahuan anda berkembang.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Anda dijangkiti virus serius dan tinggal di hospital.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "Anda menjumpai kerja sambilan yang baik dan menyimpan beberapa dolar.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Bos anda rupanya syaitan peringkat rendah yang menyamar! Anda memecahkan pencetaknya, didenda, tetapi meneguhkan roh anda.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Anda secara tidak sengaja membeli 'batu bercahaya' di web gelap. Ia adalah bijih radioaktif. Kesihatan menurun, tetapi anda merasakan tenaga pelik.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Anda terserempak dengan urat spiritual yang tersembunyi di taman lama. Tenaga Qi memenuhi tubuh anda.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Semasa meditasi malam, Pembakaran Mana yang teruk berlaku. Meridian anda rosak.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Anda membantu anjing jalanan yang rupanya adalah roh penjaga. Karma anda bertambah baik.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Samseng jalanan yang rupanya pengkultivasi sesat mengepung anda. Anda mengalahkan mereka dengan 'Tapak Angin Besi' dan merampas wang tunai mereka.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Sekte",
+    "loading": "Memuatkan lapisan sosial...",
+    "tab_my_sect": "Sekte Saya",
+    "tab_leaderboard": "Papan Pendahulu",
+    "empty_title": "Sekte Korporat",
+    "empty_text": "Cipta sekte korporat rahsia atau masukkan kod jemputan untuk menyertai perjuangan pengaruh.",
+    "invite_placeholder": "Kod jemputan",
+    "btn_create": "Cipta Sekte",
+    "btn_join": "Sertai melalui Kod",
+    "join_error": "Kod jemputan tidak sah. Dijangkakan 8 aksara A-Z atau 0-9.",
+    "invite_code": "Kod Jemputan",
+    "share_invite": "Kongsi Jemputan",
+    "funds": "Dana",
+    "influence": "Pengaruh",
+    "season": "Musim",
+    "members": "Ahli",
+    "player_name": "Anda",
+    "contribution": "Sumbangan",
+    "btn_leave": "Tinggalkan Sekte",
+    "leave_confirm_title": "Tinggalkan sekte?",
+    "leave_confirm_message": "Anda akan kehilangan sumbangan sekte semasa anda, tetapi anda boleh menyertai sekte lain.",
+    "yes": "Ya",
+    "no": "Batal",
+    "leaderboard_empty": "Papan pendahulu kosong buat masa ini.",
+    "default_name": "Sindiket Neo Lotus",
+    "default_tag": "NLS"
+  }
+}

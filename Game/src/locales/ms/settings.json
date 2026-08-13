@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Tetapan",
+  "title": "Tetapan",
+  "sound": "Bunyi Antara Muka",
+  "sound_desc": "Bunyi pendek untuk butang dan tindakan.",
+  "music": "Muzik",
+  "music_desc": "Melodi latar belakang bergelung.",
+  "language": "Bahasa",
+  "language_desc": "Pilih bahasa antara muka.",
+  "language_button": "Tukar bahasa",
+  "language_current": "Bahasa semasa",
+  "language_close": "Tutup",
+  "language_selection": {
+    "title": "Pilih bahasa",
+    "subtitle": "Pilih bahasa antara muka. Anda boleh menukarnya kemudian dalam Tetapan.",
+    "confirm": "Sahkan",
+    "close": "Tutup"
+  }
+}

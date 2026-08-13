@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Kehidupan",
+      "dao": "Dao",
+      "activities": "Aktiviti",
+      "store": "Kedai",
+      "sect": "Sekte"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Kesihatan Maks/tahun",
+    "healthRegenPerYear": "+{value} Regen/tahun",
+    "appearancePerYear": "+{value} Penampilan/tahun",
+    "qiPerYear": "+{value} Qi/tahun",
+    "portalSuccessBps": "+{value}% kejayaan portal",
+    "qiFlatPerYear": "+{value} Qi/tahun",
+    "moneyFlatPerYear": "+${value}/tahun",
+    "healthRegenFlat": "+{value} Regen/tahun",
+    "damageReductionBps": "+{value}% pengurangan kerosakan",
+    "breakthroughChanceBps": "+{value}% peluang penembusan",
+    "startMoney": "Mula: +${value}",
+    "startMaxHealth": "Mula: +{value} Kesihatan Maks",
+    "startSpiritualRoot": "Mula: +{value} Akar Spiritual",
+    "startBodyTempering": "Mula: +{value} Penempaan Tubuh"
+  },
+  "life": {
+    "survival_cost_line": "Kos sara hidup: -${amount}/tahun",
+    "survival_cost_hint": {
+      "title": "Kos sara hidup",
+      "text": "Perbelanjaan tahunan wajib untuk makanan, perumahan dan keselamatan. Ia dikenakan walaupun tiada aktiviti dipilih. Jika anda kekurangan wang, kesihatan anda terjejas."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Kos sara hidup: -${amount}.",
+    "lifestyle_money_delta": "Bersih tahunan aktiviti: {amount}.",
+    "portal_blessing_gained": "Berkat portal: +{percent}% peluang penembusan seterusnya."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Teknik Dao",
+      "level": "Tahap",
+      "max": "Maks",
+      "cost": "Kos",
+      "upgrade": "Tingkatkan",
+      "locked": "Terkunci",
+      "not_enough_money": "Wang tidak mencukupi",
+      "current_effects": "Semasa",
+      "next_effects": "Seterusnya",
+      "requirements": {
+        "spiritual_root": "Akar Spiritual",
+        "intelligence": "Kecerdasan",
+        "stage": "Tahap"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Nafas Naga Tersembunyi",
+          "desc": "Teknik pernafasan asas. Meningkatkan perolehan Qi dan peluang penembusan."
+        },
+        "technique_iron_meridian": {
+          "name": "Meridian Besi",
+          "desc": "Menenangkan tubuh dan meridian. Memperbaiki pemulihan kesihatan dan mengurangkan kerosakan."
+        },
+        "technique_jade_ledger": {
+          "name": "Lejar Jed",
+          "desc": "Teknik kekayaan duniawi. Meningkatkan pendapatan, kecekapan kerja dan kejayaan portal."
+        },
+        "technique_spirit_sense": {
+          "name": "Deria Roh",
+          "desc": "Teknik persepsi akhir permainan. Meningkatkan Qi, penembusan dan kejayaan portal."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Tahap",
+    "max_level": "Tahap maks",
+    "next_cost": "Kos tahap seterusnya",
+    "current_effects": "Semasa",
+    "next_effects": "Seterusnya",
+    "effects_note": "Kesan permulaan digunakan selepas kelahiran semula. Kesan tahunan digunakan setiap tahun.",
+    "details_close": "Tutup"
+  },
+  "activities": {
+    "title": "Aktiviti",
+    "dead_text": "Orang mati tidak boleh memilih aktiviti.",
+    "select": "Pilih",
+    "selected": "Dipilih",
+    "disable": "Lumpuhkan",
+    "locked": "Terkunci",
+    "daily_cost": "Kos/hari",
+    "daily_income": "Pendapatan/hari",
+    "yearly_cost": "Kos/tahun",
+    "yearly_income": "Pendapatan/tahun",
+    "net_yearly": "Bersih/tahun",
+    "effects_title": "Kesan/tahun",
+    "requirements_label": "Keperluan",
+    "none": "Tiada",
+    "categories": {
+      "job": "Pekerjaan",
+      "sport": "Sukan",
+      "food": "Makanan",
+      "housing": "Perumahan",
+      "portal": "Portal"
+    },
+    "requirements": {
+      "age": "Umur",
+      "intelligence": "Kecerdasan",
+      "appearance": "Penampilan",
+      "spiritual_root": "Akar Spi.",
+      "health": "Kesihatan",
+      "max_health": "Kesih. Maks",
+      "stage": "Tahap"
+    },
+    "portal_rewards": {
+      "title": "Ganjaran Portal",
+      "attempt_cost": "Kos percubaan: ${cost}",
+      "reward_money": "Wang: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Bonus penembusan: +{percent}%",
+      "fail_damage_bps": "Kegagalan: kerosakan {percent}% dari Kesihatan Maks",
+      "fail_damage_flat": "Kegagalan: {damage} kerosakan"
+    },
+    "options": {
+      "job_none": { "name": "Tiada Pekerjaan", "desc": "Tiada pendapatan dan tiada kewajipan." },
+      "job_parttime": { "name": "Kerja Sambilan", "desc": "Tugasan kecil dan penghantaran." },
+      "job_office": { "name": "Kerani Pejabat", "desc": "Membosankan tetapi stabil." },
+      "job_manager": { "name": "Pengurus", "desc": "Lebih tanggungjawab, lebih wang." },
+      "job_founder": { "name": "Pengasas Tech", "desc": "Sebuah syarikat pemula yang menggabungkan IT dan teknologi rohani." },
+      "sport_none": { "name": "Tiada Sukan", "desc": "Tiada aktiviti fizikal." },
+      "sport_home": { "name": "Senaman Rumah", "desc": "Latihan tekan tubi di halaman." },
+      "sport_gym": { "name": "Gim", "desc": "Keahlian gim tempatan." },
+      "sport_premium": { "name": "Kelab Premium", "desc": "Jurulatih, kolam renang dan pemulihan." },
+      "sport_spirit": { "name": "Latihan Roh", "desc": "Latihan tubuh dan meridian." },
+      "food_none": { "name": "Tiada Pelan Makanan", "desc": "Snek semasa dalam perjalanan." },
+      "food_street": { "name": "Makanan Jalanan", "desc": "Mi dan bar tenaga." },
+      "food_home": { "name": "Makanan Rumah", "desc": "Hidangan biasa yang baik." },
+      "food_premium": { "name": "Hidangan Premium", "desc": "Produk berkualiti dan diet." },
+      "food_spirit": { "name": "Masakan Roh", "desc": "Hidangan yang diperbuat daripada herba roh." },
+      "housing_none": { "name": "Tiada Perumahan", "desc": "Tidur di mana sahaja anda boleh." },
+      "housing_shelter": { "name": "Tempat Perlindungan", "desc": "Bumbung yang minimum." },
+      "housing_room": { "name": "Bilik", "desc": "Bilik kecil di rumah lama." },
+      "housing_apartment": { "name": "Pangsapuri", "desc": "Pangsapuri bersih dan tidur yang nyenyak." },
+      "housing_condo": { "name": "Kondominium", "desc": "Bangunan moden dengan keselamatan." },
+      "portal_none": { "name": "Tiada Portal", "desc": "Tiada ekspedisi berisiko." },
+      "portal_subway": { "name": "Kereta Api Bawah Tanah Terbiar", "desc": "Terowong lama dengan mata pelik." },
+      "portal_market": { "name": "Pasar Roh Malam", "desc": "Penyeludupan pil dan tawaran gelap." },
+      "portal_club": { "name": "Kelab Syaitan", "desc": "Kelab bawah tanah di mana syaitan berjudi dengan manusia." },
+      "portal_tower": { "name": "Menara Roh", "desc": "Ujian untuk pengkultivasi yang kukuh." }
+    }
+  }
+}

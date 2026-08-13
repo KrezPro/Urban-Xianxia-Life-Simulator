@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Kelahiran Semula",
+  "accept": "Terima takdir",
+  "tiers": {
+    "blessed": {
+      "title": "Kelahiran Semula Diberkati",
+      "desc": "Syurga amat bermurah hati. Anda tidak mengalami kerugian baharu."
+    },
+    "uneasy": {
+      "title": "Kelahiran Semula Resah",
+      "desc": "Kehidupan anda sebelum ini meninggalkan kesan ringan pada takdir baharu anda."
+    },
+    "troubled": {
+      "title": "Kelahiran Semula Bermasalah",
+      "desc": "Karma dari kehidupan masa lalu membebankan tubuh baharu anda."
+    },
+    "severe": {
+      "title": "Kelahiran Semula Teruk",
+      "desc": "Anda memasuki dunia baharu dengan kerugian besar."
+    },
+    "doomed": {
+      "title": "Kelahiran Semula Terkutuk",
+      "desc": "Syurga berpaling daripada anda. Kehidupan baharu anda bermula dalam kegelapan."
+    }
+  },
+  "money": {
+    "money_loss_0": "Warisan terpelihara.",
+    "money_loss_25": "Kehilangan 25% warisan.",
+    "money_loss_50": "Kehilangan 50% warisan.",
+    "money_loss_75": "Kehilangan 75% warisan.",
+    "money_loss_100": "Anda kehilangan seluruh warisan."
+  },
+  "health": {
+    "health_start_100": "Badan anda sihat.",
+    "health_start_85": "Badan anda sedikit lemah.",
+    "health_start_70": "Badan anda ketara lemah.",
+    "health_start_55": "Anda dilahirkan lemah.",
+    "health_start_40": "Anda berada di ambang kematian."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Bayang-bayang Lapar",
+      "desc": "Pendapatan dikurangkan sebanyak 3%."
+    },
+    "curse_minor_frail": {
+      "name": "Tubuh Rapuh",
+      "desc": "Pemulihan kesihatan dikurangkan sebanyak 5%."
+    },
+    "curse_minor_fog": {
+      "name": "Minda Kabur",
+      "desc": "Kecerdasan dikurangkan sebanyak 3."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Kulit Kasar",
+      "desc": "Penampilan dikurangkan sebanyak 3."
+    },
+    "curse_major_debt": {
+      "name": "Hutang Kehidupan Lalu",
+      "desc": "Pendapatan dikurangkan sebanyak 10%."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Meridian Retak",
+      "desc": "Perolehan Qi dikurangkan sebanyak 12%."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Tanda Syurga",
+      "desc": "Peluang penembusan dan kejayaan portal dikurangkan sebanyak 7%."
+    },
+    "curse_major_sickly": {
+      "name": "Tubuh Berpenyakit",
+      "desc": "Pemulihan kesihatan dikurangkan sebanyak 12%."
+    }
+  }
+}
