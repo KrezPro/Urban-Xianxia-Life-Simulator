@@ -12,22 +12,23 @@
   ],
   "context_focus": [
 
-    "Game/src/screens/LifeScreen.tsx",
-    "Game/src/screens/SettingsScreen.tsx",
-    "Game/src/navigation/TabNavigator.tsx",
-    "Game/src/store/useLocaleStore.ts",
-    "Game/src/store/useSettingsStore.ts",
-    "Game/src/store/usePlayerStore.ts",
-    "Game/src/store/useEventStore.ts",
-    "Game/src/store/useInventoryStore.ts",
-    "Game/src/store/useTechniquesStore.ts",
-    "Game/src/store/useLifestyleStore.ts",
-    "Game/src/store/useSocialStore.ts",
-    "Game/src/hooks/useIdleProgress.ts",
-    "Game/src/locales/ru/settings.json",
-    "Game/src/locales/en/settings.json",
     "Game/PlanOfDevelopment.txt",
-    "Game/Library.txt"
+    "Game/Library.txt",
+    "Game/src/utils/eventGenerator.ts",
+    "Game/src/data/eventRules.json",
+    "Game/src/constants/GameConstants.ts",
+    "Game/src/types/index.ts",
+    "Game/src/hooks/useYearlyCycle.ts",
+    "Game/src/utils/notificationUtils.ts",
+    "Game/src/utils/effectFormatter.ts",
+    "Game/src/store/useEventStore.ts",
+    "Game/src/store/useNotificationStore.ts",
+    "Game/src/locales/ru/eventGenerator.json",
+    "Game/src/locales/en/eventGenerator.json",
+    "Game/src/locales/ru/notifications.json",
+    "Game/src/locales/en/notifications.json",
+    "Game/src/data/stages.json",
+    "Game/src/data/lifestyle.json"
   ],
   "max_file_size_kb": 100
 }

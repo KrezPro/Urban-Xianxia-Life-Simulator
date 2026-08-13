@@ -1,253 +1,417 @@
 {
+  "version": 2,
+  "slotPools": {
+    "fallback_intro": ["slots.intros.fallback"],
+    "fallback_scene": ["slots.scenes.fallback"],
+    "fallback_incident": ["slots.incidents.fallback"],
+    "fallback_twist": ["slots.twists.fallback"],
+    "fallback_outcome": ["slots.outcomes.fallback"],
+    "fallback_actor": ["slots.actors.fallback"],
+    "fallback_action": ["slots.actions.fallback"],
+    "fallback_place": ["slots.places.fallback"],
+    "intro_mundane_child": ["slots.intros.mundane.child_morning", "slots.intros.mundane.child_evening", "slots.intros.mundane.child_school_day", "slots.intros.mundane.child_holiday", "slots.intros.mundane.child_rainy"],
+    "intro_mundane_teen": ["slots.intros.mundane.teen_after_school", "slots.intros.mundane.teen_weekend", "slots.intros.mundane.teen_night", "slots.intros.mundane.teen_exam_week"],
+    "intro_mundane_adult": ["slots.intros.mundane.adult_commute", "slots.intros.mundane.adult_lunch", "slots.intros.mundane.adult_evening", "slots.intros.mundane.adult_deadline"],
+    "intro_mundane_elder": ["slots.intros.mundane.elder_morning", "slots.intros.mundane.elder_memory", "slots.intros.mundane.elder_family"],
+    "intro_secret_night": ["slots.intros.secret.midnight", "slots.intros.secret.rain", "slots.intros.secret.dream", "slots.intros.secret.full_moon"],
+    "intro_secret_cultivation": ["slots.intros.secret.meditation", "slots.intros.secret.incense", "slots.intros.secret.breathing", "slots.intros.secret.before_dawn"],
+    "scene_mundane_home": ["slots.scenes.mundane.home_kitchen", "slots.scenes.mundane.home_yard", "slots.scenes.mundane.home_stairwell", "slots.scenes.mundane.home_balcony"],
+    "scene_mundane_school": ["slots.scenes.mundane.school_classroom", "slots.scenes.mundane.school_yard", "slots.scenes.mundane.school_gym", "slots.scenes.mundane.school_library"],
+    "scene_mundane_city": ["slots.scenes.mundane.city_subway", "slots.scenes.mundane.city_market", "slots.scenes.mundane.city_park", "slots.scenes.mundane.city_street", "slots.scenes.mundane.city_cafe"],
+    "scene_mundane_work": ["slots.scenes.mundane.work_office", "slots.scenes.mundane.work_parttime", "slots.scenes.mundane.work_site"],
+    "scene_secret_hidden": ["slots.scenes.secret.hidden_alley", "slots.scenes.secret.abandoned_shrine", "slots.scenes.secret.rooftop", "slots.scenes.secret.old_park"],
+    "scene_secret_portal": ["slots.scenes.secret.subway_rift", "slots.scenes.secret.dream", "slots.scenes.secret.portal_rift", "slots.scenes.secret.underpass"],
+    "incident_mundane_child_positive": ["slots.incidents.mundane.child_found_candy", "slots.incidents.mundane.child_helped_friend", "slots.incidents.mundane.child_won_game", "slots.incidents.mundane.child_stray_dog_smile", "slots.incidents.mundane.child_kind_teacher"],
+    "incident_mundane_child_negative": ["slots.incidents.mundane.child_fell_knee", "slots.incidents.mundane.child_lost_pencil", "slots.incidents.mundane.child_teased", "slots.incidents.mundane.child_bad_grade", "slots.incidents.mundane.child_scary_rumor"],
+    "incident_mundane_school_neutral": ["slots.incidents.mundane.school_sudden_test", "slots.incidents.mundane.school_library_book", "slots.incidents.mundane.school_new_classmate", "slots.incidents.mundane.school_strange_noise", "slots.incidents.mundane.school_lost_item"],
+    "incident_mundane_money_positive": ["slots.incidents.mundane.money_found_coins", "slots.incidents.mundane.money_small_job", "slots.incidents.mundane.money_bonus_envelope", "slots.incidents.mundane.money_sold_old_stuff", "slots.incidents.mundane.money_lucky_discount"],
+    "incident_mundane_money_negative": ["slots.incidents.mundane.money_pickpocket", "slots.incidents.mundane.money_fine", "slots.incidents.mundane.money_broken_item", "slots.incidents.mundane.money_scam_call", "slots.incidents.mundane.money_overpaid"],
+    "incident_mundane_health_positive": ["slots.incidents.mundane.health_good_sleep", "slots.incidents.mundane.health_fresh_air", "slots.incidents.mundane.health_light_workout", "slots.incidents.mundane.health_doctor_advice", "slots.incidents.mundane.health_healthy_meal"],
+    "incident_mundane_health_negative": ["slots.incidents.mundane.health_cold", "slots.incidents.mundane.health_headache", "slots.incidents.mundane.health_sprain", "slots.incidents.mundane.health_food_poison", "slots.incidents.mundane.health_insomnia"],
+    "incident_mundane_social_positive": ["slots.incidents.mundane.social_neighbor_help", "slots.incidents.mundane.social_compliment", "slots.incidents.mundane.social_unexpected_ally", "slots.incidents.mundane.social_shared_food", "slots.incidents.mundane.social_reunion"],
+    "incident_mundane_social_negative": ["slots.incidents.mundane.social_gossip", "slots.incidents.mundane.social_argument", "slots.incidents.mundane.social_false_accusation", "slots.incidents.mundane.social_awkward_meeting", "slots.incidents.mundane.social_betrayal"],
+    "incident_secret_qi_positive": ["slots.incidents.secret.qi_breath", "slots.incidents.secret.meridian_warmth", "slots.incidents.secret.insight_fragment", "slots.incidents.secret.spirit_blessing", "slots.incidents.secret.calm_mind"],
+    "incident_secret_danger_negative": ["slots.incidents.secret.demon_shadow", "slots.incidents.secret.ghost_whisper", "slots.incidents.secret.mana_burn", "slots.incidents.secret.cursed_item", "slots.incidents.secret.dark_hunger"],
+    "incident_secret_karma_positive": ["slots.incidents.secret.saved_stranger", "slots.incidents.secret.donated_secret", "slots.incidents.secret.protected_weak", "slots.incidents.secret.honest_choice", "slots.incidents.secret.karmic_light"],
+    "incident_secret_city_negative": ["slots.incidents.secret.hidden_tax", "slots.incidents.secret.spirit_thief", "slots.incidents.secret.portal_noise", "slots.incidents.secret.night_attack", "slots.incidents.secret.secret_debt"],
+    "incident_secret_rare_positive": ["slots.incidents.secret.artifact_gleam", "slots.incidents.secret.hidden_manual", "slots.incidents.secret.patron_gaze", "slots.incidents.secret.vein_bloom", "slots.incidents.secret.lucky_break"],
+    "twist_mundane_small": ["slots.twists.mundane.deja_vu", "slots.twists.mundane.strange_sign", "slots.twists.mundane.sudden_wind", "slots.twists.mundane.distant_song", "slots.twists.mundane.lost_memory"],
+    "twist_secret_low": ["slots.twists.secret.qi_resonance", "slots.twists.secret.faint_aura", "slots.twists.secret.shadow_move", "slots.twists.secret.cold_spot", "slots.twists.secret.whisper"],
+    "twist_secret_high": ["slots.twists.secret.spirit_presence", "slots.twists.secret.rune_flash", "slots.twists.secret.heavenly_pressure", "slots.twists.secret.demon_mark", "slots.twists.secret.portal_echo"],
+    "twist_absurd": ["slots.twists.absurd.talking_cat", "slots.twists.absurd.vending_machine_prophecy", "slots.twists.absurd.dancing_leaf", "slots.twists.absurd.cosmic_coin", "slots.twists.absurd.glitch_dream"],
+    "outcome_positive_small": ["slots.outcomes.positive.warm_feeling", "slots.outcomes.positive.small_gain", "slots.outcomes.positive.day_better", "slots.outcomes.positive.useful_lesson", "slots.outcomes.positive.quiet_pride"],
+    "outcome_negative_small": ["slots.outcomes.negative.annoying_loss", "slots.outcomes.negative.mild_worry", "slots.outcomes.negative.bitter_lesson", "slots.outcomes.negative.small_setback", "slots.outcomes.negative.uneasy_feeling"],
+    "outcome_neutral": ["slots.outcomes.neutral.life_moves_on", "slots.outcomes.neutral.nothing_decided", "slots.outcomes.neutral.memory_lingers", "slots.outcomes.neutral.quiet_change", "slots.outcomes.neutral.path_shifts"],
+    "outcome_secret_positive": ["slots.outcomes.secret_positive.qi_grows", "slots.outcomes.secret_positive.dao_clearer", "slots.outcomes.secret_positive.spirit_lucky", "slots.outcomes.secret_positive.secret_progress", "slots.outcomes.secret_positive.inner_light"],
+    "outcome_secret_negative": ["slots.outcomes.secret_negative.qi_leaks", "slots.outcomes.secret_negative.dark_touch", "slots.outcomes.secret_negative.danger_passed", "slots.outcomes.secret_negative.body_aches", "slots.outcomes.secret_negative.fate_heavy"],
+    "outcome_money": ["slots.outcomes.money.money_changes", "slots.outcomes.money.wallet_shifts", "slots.outcomes.money.coins_decide", "slots.outcomes.money.profit_sign"],
+    "outcome_health": ["slots.outcomes.health.body_remembers", "slots.outcomes.health.health_shifts", "slots.outcomes.health.breath_changes"]
+  },
   "rules": [
     {
       "id": "generic_common",
       "pool": ["mundane", "secret"],
       "category": "generic",
       "tone": "neutral",
-      "weight": 20,
+      "weight": 5,
       "rarity": ["common"],
       "textTemplate": "templates.tmpl_simple",
       "params": {
         "outcome": ["outcomes_generic.ok", "outcomes_generic.change", "outcomes_generic.lesson"]
       },
       "effects": [
-        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1200 },
-        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 1200 }
-      ]
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 1000 }
+      ],
+      "balanceNote": "Safe fallback event with very small optional gains."
     },
     {
-      "id": "child_illness",
+      "id": "child_positive",
       "pool": ["mundane"],
-      "category": "health",
-      "tone": "negative",
-      "weight": 220,
+      "category": "child",
+      "tone": "positive",
+      "weight": 140,
       "age": ["child"],
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_child_negative.fever", "outcomes_child_negative.fall", "outcomes_child_negative.hunger"]
-      },
-      "effects": [
-        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
-        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2000 }
-      ]
-    },
-    {
-      "id": "child_bullying",
-      "pool": ["mundane"],
-      "category": "social",
-      "tone": "negative",
-      "weight": 140,
-      "age": ["child", "teen"],
-      "rarity": ["common"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_child.classmate", "actors_child.courtyard_boy"],
-        "action": ["actions_child.teases", "actions_child.scares"],
-        "place": ["places_child.schoolyard", "places_child.stairwell"],
-        "outcome": ["outcomes_child_negative.bullying", "outcomes_child_negative.fear"]
-      },
-      "effects": [
-        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
-        { "stat": "appearance", "sign": "negative", "scale": "stat", "chanceBps": 2000 },
-        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1500 }
-      ]
-    },
-    {
-      "id": "child_play",
-      "pool": ["mundane"],
-      "category": "health",
-      "tone": "positive",
-      "weight": 80,
-      "age": ["child"],
-      "rarity": ["common"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_child.classmate", "actors_child.stray_dog"],
-        "action": ["actions_child.invites", "actions_child.helps"],
-        "place": ["places_child.park", "places_child.schoolyard"],
-        "outcome": ["outcomes_child_positive.friendship", "outcomes_child_positive.small_joy"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_child"],
+        "scene": ["scene_mundane_home", "scene_mundane_school"],
+        "incident": ["incident_mundane_child_positive"],
+        "outcome": ["outcome_positive_small"]
       },
       "effects": [
         { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
-        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 2000 }
-      ]
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 1500 }
+      ],
+      "balanceNote": "Common positive childhood event: small heal and rare appearance gain."
     },
     {
-      "id": "child_study",
+      "id": "child_negative",
       "pool": ["mundane"],
-      "category": "study",
-      "tone": "positive",
-      "weight": 100,
+      "category": "child",
+      "tone": "negative",
+      "weight": 130,
+      "age": ["child"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_child"],
+        "scene": ["scene_mundane_home", "scene_mundane_school"],
+        "incident": ["incident_mundane_child_negative"],
+        "outcome": ["outcome_negative_small"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 1800 }
+      ],
+      "balanceNote": "Common negative childhood event: health loss, occasional money loss."
+    },
+    {
+      "id": "school_neutral",
+      "pool": ["mundane"],
+      "category": "school",
+      "tone": "neutral",
+      "weight": 120,
       "age": ["child", "teen"],
-      "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_child.teacher", "actors_child.parent"],
-        "action": ["actions_child.helps", "actions_child.shares"],
-        "place": ["places_child.classroom", "places_child.library"],
-        "outcome": ["outcomes_child_positive.lesson", "outcomes_child_positive.small_joy"]
+      "rarity": ["common"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_child", "intro_mundane_teen"],
+        "scene": ["scene_mundane_school"],
+        "incident": ["incident_mundane_school_neutral"],
+        "outcome": ["outcome_neutral"]
       },
       "effects": [
-        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 10000 },
-        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 1000 }
-      ]
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 3000 }
+      ],
+      "balanceNote": "School slice-of-life event with small intelligence chance."
     },
     {
-      "id": "teen_work",
+      "id": "teen_money_positive",
       "pool": ["mundane"],
-      "category": "work",
+      "category": "money",
       "tone": "positive",
-      "weight": 90,
-      "age": ["teen", "adult"],
+      "weight": 110,
+      "age": ["teen", "adult", "mature"],
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_mundane.boss", "actors_mundane.stranger"],
-        "action": ["actions_mundane.offers", "actions_mundane.helps"],
-        "place": ["places_mundane.market", "places_mundane.subway"],
-        "outcome": ["outcomes_positive.reward", "outcomes_positive.luck"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult"],
+        "scene": ["scene_mundane_city", "scene_mundane_work"],
+        "incident": ["incident_mundane_money_positive"],
+        "outcome": ["outcome_money"]
       },
       "effects": [
-        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
-        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 1500 }
-      ]
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Common money gain event scaled by tier and rarity."
     },
     {
-      "id": "mundane_money_loss",
+      "id": "money_negative",
       "pool": ["mundane"],
       "category": "money",
       "tone": "negative",
-      "weight": 100,
+      "weight": 110,
       "age": ["teen", "adult", "mature", "elder"],
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_mundane.stranger", "actors_mundane.official"],
-        "action": ["actions_mundane.accuses", "actions_mundane.stops"],
-        "place": ["places_mundane.market", "places_mundane.subway"],
-        "outcome": ["outcomes_negative.loss", "outcomes_negative.fine"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_city"],
+        "incident": ["incident_mundane_money_negative"],
+        "outcome": ["outcome_money"]
       },
       "effects": [
         { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
-        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1500 }
-      ]
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1200 }
+      ],
+      "balanceNote": "Common money loss event capped by current money."
     },
     {
-      "id": "mundane_illness",
+      "id": "health_positive",
+      "pool": ["mundane"],
+      "category": "health",
+      "tone": "positive",
+      "weight": 100,
+      "age": ["teen", "adult", "mature", "elder"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_home", "scene_mundane_city"],
+        "incident": ["incident_mundane_health_positive"],
+        "outcome": ["outcome_health"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Common recovery event, only heals missing health."
+    },
+    {
+      "id": "health_negative",
       "pool": ["mundane"],
       "category": "health",
       "tone": "negative",
       "weight": 120,
       "age": ["adult", "mature", "elder"],
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_negative.illness", "outcomes_negative.fatigue"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_home", "scene_mundane_city"],
+        "incident": ["incident_mundane_health_negative"],
+        "outcome": ["outcome_health"]
       },
       "effects": [
         { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
-        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2500 }
-      ]
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2200 }
+      ],
+      "balanceNote": "Illness or injury event, reduced by Body Tempering."
     },
     {
-      "id": "elder_illness",
+      "id": "social_positive",
       "pool": ["mundane"],
-      "category": "health",
+      "category": "social",
+      "tone": "positive",
+      "weight": 100,
+      "age": ["teen", "adult", "mature", "elder"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_city", "scene_mundane_home"],
+        "incident": ["incident_mundane_social_positive"],
+        "outcome": ["outcome_positive_small"]
+      },
+      "effects": [
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 2200 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1600 }
+      ],
+      "balanceNote": "Positive social event with small social stat chances."
+    },
+    {
+      "id": "social_negative",
+      "pool": ["mundane"],
+      "category": "social",
       "tone": "negative",
-      "weight": 150,
+      "weight": 100,
+      "age": ["teen", "adult", "mature", "elder"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_city", "scene_mundane_home"],
+        "incident": ["incident_mundane_social_negative"],
+        "outcome": ["outcome_negative_small"]
+      },
+      "effects": [
+        { "stat": "appearance", "sign": "negative", "scale": "stat", "chanceBps": 1800 },
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 1200 }
+      ],
+      "balanceNote": "Social conflict event with small appearance loss chance."
+    },
+    {
+      "id": "elder_reflection",
+      "pool": ["mundane"],
+      "category": "elder",
+      "tone": "neutral",
+      "weight": 80,
       "age": ["elder"],
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_negative.illness", "outcomes_negative.fatigue"]
+      "templates": ["templates.v2_intro_scene_incident_outcome"],
+      "slots": {
+        "intro": ["intro_mundane_elder"],
+        "scene": ["scene_mundane_home", "scene_mundane_city"],
+        "incident": ["incident_mundane_social_positive", "incident_mundane_school_neutral"],
+        "outcome": ["outcome_neutral"]
       },
       "effects": [
-        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
-        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2000 }
-      ]
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 3500 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 1500 }
+      ],
+      "balanceNote": "Elder reflection event: wisdom chance, frailty chance."
     },
     {
-      "id": "job_event",
+      "id": "job_positive",
       "pool": ["mundane"],
       "category": "job",
       "tone": "positive",
-      "weight": 70,
+      "weight": 90,
       "age": ["adult", "mature"],
       "rarity": ["common", "uncommon", "rare"],
       "requiresActivities": {
         "job": ["job_parttime", "job_office", "job_manager", "job_founder"]
       },
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_mundane.boss", "actors_mundane.client"],
-        "action": ["actions_mundane.offers", "actions_mundane.praises"],
-        "place": ["places_mundane.office"],
-        "outcome": ["outcomes_positive.reward", "outcomes_positive.support"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_adult"],
+        "scene": ["scene_mundane_work"],
+        "incident": ["incident_mundane_money_positive", "incident_mundane_social_positive"],
+        "outcome": ["outcome_money", "outcome_positive_small"]
       },
       "effects": [
         { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
         { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2500 }
-      ]
+      ],
+      "balanceNote": "Job event for employed players: money gain and small INT chance."
     },
     {
-      "id": "sport_event",
+      "id": "job_negative",
+      "pool": ["mundane"],
+      "category": "job",
+      "tone": "negative",
+      "weight": 70,
+      "age": ["adult", "mature"],
+      "rarity": ["common", "uncommon"],
+      "requiresActivities": {
+        "job": ["job_parttime", "job_office", "job_manager", "job_founder"]
+      },
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_adult"],
+        "scene": ["scene_mundane_work"],
+        "incident": ["incident_mundane_money_negative", "incident_mundane_social_negative"],
+        "outcome": ["outcome_money", "outcome_negative_small"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 2000 }
+      ],
+      "balanceNote": "Negative job event for employed players: money loss and stress damage chance."
+    },
+    {
+      "id": "sport_positive",
       "pool": ["mundane"],
       "category": "sport",
       "tone": "positive",
-      "weight": 60,
+      "weight": 80,
       "age": ["teen", "adult", "mature"],
       "rarity": ["common", "uncommon"],
       "requiresActivities": {
         "sport": ["sport_home", "sport_gym", "sport_premium", "sport_spirit"]
       },
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_positive.gain", "outcomes_positive.support"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult"],
+        "scene": ["scene_mundane_city", "scene_mundane_home"],
+        "incident": ["incident_mundane_health_positive"],
+        "outcome": ["outcome_health"]
       },
       "effects": [
         { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
         { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 3000 }
-      ]
+      ],
+      "balanceNote": "Sport event for active players: heal and appearance chance."
     },
     {
-      "id": "food_event",
+      "id": "food_positive",
       "pool": ["mundane"],
       "category": "food",
       "tone": "positive",
-      "weight": 60,
+      "weight": 80,
       "rarity": ["common", "uncommon"],
       "requiresActivities": {
         "food": ["food_street", "food_home", "food_premium", "food_spirit"]
       },
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_positive.gain", "outcomes_positive.reward"]
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_child", "intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_home", "scene_mundane_city"],
+        "incident": ["incident_mundane_health_positive"],
+        "outcome": ["outcome_health"]
       },
       "effects": [
         { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
-        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2000 }
-      ]
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 1600 }
+      ],
+      "balanceNote": "Meal plan event: heal, small money cost chance."
     },
     {
-      "id": "housing_event",
+      "id": "housing_positive",
       "pool": ["mundane"],
       "category": "housing",
       "tone": "positive",
-      "weight": 60,
+      "weight": 80,
       "rarity": ["common", "uncommon"],
       "requiresActivities": {
         "housing": ["housing_shelter", "housing_room", "housing_apartment", "housing_condo"]
       },
-      "textTemplate": "templates.tmpl_simple",
-      "params": {
-        "outcome": ["outcomes_positive.support", "outcomes_positive.luck"]
+      "templates": ["templates.v2_intro_scene_incident_outcome"],
+      "slots": {
+        "intro": ["intro_mundane_child", "intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_home"],
+        "incident": ["incident_mundane_health_positive", "incident_mundane_social_positive"],
+        "outcome": ["outcome_health", "outcome_positive_small"]
       },
       "effects": [
-        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 },
-        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 1500 }
-      ]
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Housing event: small recovery from stable living."
+    },
+    {
+      "id": "portal_event",
+      "pool": ["mundane", "secret"],
+      "category": "portal",
+      "tone": "positive",
+      "weight": 45,
+      "rarity": ["uncommon", "rare", "epic"],
+      "requiresActivities": {
+        "portal": ["portal_subway", "portal_market", "portal_club", "portal_tower"]
+      },
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_portal"],
+        "incident": ["incident_secret_rare_positive"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_positive"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 2500 }
+      ],
+      "balanceNote": "Portal lifestyle event: Qi gain with injury risk."
     },
     {
       "id": "secret_meditation",
@@ -256,17 +420,18 @@
       "tone": "positive",
       "weight": 120,
       "rarity": ["common", "uncommon"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.sage", "actors_secret.guardian"],
-        "action": ["actions_secret.guides", "actions_secret.protects"],
-        "place": ["places_secret.rooftop", "places_secret.shrine"],
-        "outcome": ["outcomes_secret_positive.qi_flow", "outcomes_secret_positive.insight"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden"],
+        "incident": ["incident_secret_qi_positive"],
+        "twist": ["twist_secret_low"],
+        "outcome": ["outcome_secret_positive"]
       },
       "effects": [
-        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
-        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 2000 }
-      ]
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Core secret cultivation event: Qi gain."
     },
     {
       "id": "secret_qi_vein",
@@ -275,75 +440,104 @@
       "tone": "positive",
       "weight": 60,
       "rarity": ["uncommon", "rare"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.spirit", "actors_secret.guardian"],
-        "action": ["actions_secret.blesses", "actions_secret.awakens"],
-        "place": ["places_secret.hidden_vein", "places_secret.old_park"],
-        "outcome": ["outcomes_secret_positive.qi_flow", "outcomes_secret_positive.treasure"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_night", "intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden"],
+        "incident": ["incident_secret_qi_positive", "incident_secret_rare_positive"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_positive"]
       },
       "effects": [
         { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
         { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 2000 }
-      ]
+      ],
+      "balanceNote": "Rare spiritual vein event: stronger Qi gain, small karma chance."
     },
     {
       "id": "secret_mana_burn",
       "pool": ["secret"],
       "category": "cultivation",
       "tone": "negative",
-      "weight": 120,
+      "weight": 110,
       "rarity": ["common", "uncommon", "rare"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.ghost", "actors_secret.demon"],
-        "action": ["actions_secret.attacks", "actions_secret.tempts"],
-        "place": ["places_secret.alley", "places_secret.dream"],
-        "outcome": ["outcomes_secret_negative.mana_burn", "outcomes_secret_negative.qi_leak"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_cultivation", "intro_secret_night"],
+        "scene": ["scene_secret_hidden"],
+        "incident": ["incident_secret_danger_negative"],
+        "twist": ["twist_secret_low"],
+        "outcome": ["outcome_secret_negative"]
       },
       "effects": [
         { "stat": "qi", "sign": "negative", "scale": "qi", "chanceBps": 10000 },
         { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 }
-      ]
+      ],
+      "balanceNote": "Mana Burn / Qi deviation event: Qi loss and health damage."
     },
     {
       "id": "secret_demon_fight",
       "pool": ["secret"],
       "category": "danger",
       "tone": "negative",
-      "weight": 90,
+      "weight": 80,
       "rarity": ["uncommon", "rare"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.demon", "actors_secret.beast"],
-        "action": ["actions_secret.attacks", "actions_secret.robs"],
-        "place": ["places_secret.abandoned_station", "places_secret.alley"],
-        "outcome": ["outcomes_secret_negative.blood_price", "outcomes_secret_negative.fear"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_hidden", "scene_secret_portal"],
+        "incident": ["incident_secret_danger_negative"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_negative"]
       },
       "effects": [
         { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
         { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 3500 },
-        { "stat": "karma", "sign": "negative", "scale": "karma", "chanceBps": 2000 }
-      ]
+        { "stat": "karma", "sign": "negative", "scale": "karma", "chanceBps": 1800 }
+      ],
+      "balanceNote": "Urban demon fight: health risk, loot chance, karma risk."
     },
     {
       "id": "secret_karma_deed",
       "pool": ["secret"],
       "category": "karma",
       "tone": "positive",
-      "weight": 50,
+      "weight": 55,
       "rarity": ["uncommon", "rare"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.guardian", "actors_secret.spirit"],
-        "action": ["actions_secret.blesses", "actions_secret.guides"],
-        "place": ["places_secret.shrine", "places_secret.old_park"],
-        "outcome": ["outcomes_secret_positive.karma_light", "outcomes_secret_positive.protection"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_secret_night", "intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden", "scene_mundane_city"],
+        "incident": ["incident_secret_karma_positive"],
+        "twist": ["twist_secret_low"],
+        "outcome": ["outcome_secret_positive"]
       },
       "effects": [
         { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 10000 },
-        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2500 }
-      ]
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 2200 }
+      ],
+      "balanceNote": "Hidden good deed: karma gain, possible money cost."
+    },
+    {
+      "id": "secret_city_negative",
+      "pool": ["secret"],
+      "category": "city",
+      "tone": "negative",
+      "weight": 70,
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_hidden", "scene_secret_portal"],
+        "incident": ["incident_secret_city_negative"],
+        "twist": ["twist_secret_low"],
+        "outcome": ["outcome_secret_negative"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "qi", "sign": "negative", "scale": "qi", "chanceBps": 3500 }
+      ],
+      "balanceNote": "Hidden city pressure event: money loss and Qi drain chance."
     },
     {
       "id": "stage_qi_event",
@@ -353,37 +547,232 @@
       "weight": 70,
       "stageMin": "qi_condensation_1",
       "rarity": ["uncommon", "rare"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.cultivator", "actors_secret.sage"],
-        "action": ["actions_secret.guides", "actions_secret.awakens"],
-        "place": ["places_secret.hidden_vein", "places_secret.rooftop"],
-        "outcome": ["outcomes_secret_positive.insight", "outcomes_secret_positive.qi_flow"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden"],
+        "incident": ["incident_secret_qi_positive"],
+        "twist": ["twist_secret_low", "twist_secret_high"],
+        "outcome": ["outcome_secret_positive"]
       },
       "effects": [
         { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
         { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 2000 }
-      ]
+      ],
+      "balanceNote": "Qi Condensation cultivation event: Qi and insight chance."
     },
     {
       "id": "stage_foundation_event",
       "pool": ["secret"],
       "category": "cultivation",
       "tone": "positive",
-      "weight": 50,
+      "weight": 45,
       "stageMin": "foundation_1",
       "rarity": ["rare", "epic"],
-      "textTemplate": "templates.tmpl_scene",
-      "params": {
-        "actor": ["actors_secret.sage", "actors_secret.guardian"],
-        "action": ["actions_secret.blesses", "actions_secret.protects"],
-        "place": ["places_secret.shrine", "places_secret.portal_rift"],
-        "outcome": ["outcomes_secret_positive.treasure", "outcomes_secret_positive.protection"]
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden", "scene_secret_portal"],
+        "incident": ["incident_secret_rare_positive"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_positive"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 7000 },
+        { "stat": "maxHealth", "sign": "positive", "scale": "stat", "chanceBps": 2800 }
+      ],
+      "balanceNote": "Foundation event: Qi, money, rare Max Health gain."
+    },
+    {
+      "id": "rare_jackpot",
+      "pool": ["mundane"],
+      "category": "money",
+      "tone": "positive",
+      "weight": 25,
+      "rarity": ["rare", "epic", "legendary"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_city"],
+        "incident": ["incident_mundane_money_positive"],
+        "twist": ["twist_absurd", "twist_mundane_small"],
+        "outcome": ["outcome_money"]
       },
       "effects": [
         { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 10000 },
+        { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 2000 }
+      ],
+      "balanceNote": "Rare jackpot event: strong money gain by rarity."
+    },
+    {
+      "id": "boss_demon",
+      "pool": ["secret"],
+      "category": "danger",
+      "tone": "negative",
+      "weight": 18,
+      "rarity": ["rare", "epic", "legendary"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_portal", "scene_secret_hidden"],
+        "incident": ["incident_secret_danger_negative"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_negative"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 10000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 5000 },
+        { "stat": "karma", "sign": "negative", "scale": "karma", "chanceBps": 2500 }
+      ],
+      "balanceNote": "Boss demon encounter: heavy health risk, rare loot."
+    },
+    {
+      "id": "darknet_deal",
+      "pool": ["secret"],
+      "category": "city",
+      "tone": "neutral",
+      "weight": 20,
+      "rarity": ["rare", "epic"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_portal", "scene_secret_hidden"],
+        "incident": ["incident_secret_city_negative", "incident_secret_rare_positive"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_positive", "outcome_secret_negative"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 6500 },
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 5000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 3500 }
+      ],
+      "balanceNote": "Darknet deal: risky mixed rewards."
+    },
+    {
+      "id": "absurd_city",
+      "pool": ["mundane"],
+      "category": "absurd",
+      "tone": "neutral",
+      "weight": 8,
+      "rarity": ["legendary"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome"],
+      "slots": {
+        "intro": ["intro_mundane_child", "intro_mundane_teen", "intro_mundane_adult", "intro_mundane_elder"],
+        "scene": ["scene_mundane_city", "scene_mundane_home"],
+        "incident": ["incident_mundane_social_positive", "incident_mundane_school_neutral"],
+        "twist": ["twist_absurd"],
+        "outcome": ["outcome_neutral"]
+      },
+      "effects": [
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 4000 },
+        { "stat": "appearance", "sign": "positive", "scale": "stat", "chanceBps": 4000 }
+      ],
+      "balanceNote": "Legendary absurd viral event with tiny stat bonuses."
+    },
+    {
+      "id": "secret_lucky_break",
+      "pool": ["secret"],
+      "category": "luck",
+      "tone": "positive",
+      "weight": 12,
+      "rarity": ["epic", "legendary"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_intro_scene_twist"],
+      "slots": {
+        "intro": ["intro_secret_night", "intro_secret_cultivation"],
+        "scene": ["scene_secret_hidden", "scene_secret_portal"],
+        "incident": ["incident_secret_rare_positive"],
+        "twist": ["twist_secret_high"],
+        "outcome": ["outcome_secret_positive"]
+      },
+      "effects": [
+        { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 },
+        { "stat": "money", "sign": "positive", "scale": "money", "chanceBps": 8000 },
+        { "stat": "karma", "sign": "positive", "scale": "karma", "chanceBps": 6000 }
+      ],
+      "balanceNote": "Epic secret lucky break: multiple gains."
+    },
+    {
+      "id": "teen_study_positive",
+      "pool": ["mundane"],
+      "category": "study",
+      "tone": "positive",
+      "weight": 90,
+      "age": ["child", "teen"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_child", "intro_mundane_teen"],
+        "scene": ["scene_mundane_school", "scene_mundane_home"],
+        "incident": ["incident_mundane_school_neutral"],
+        "outcome": ["outcome_positive_small"]
+      },
+      "effects": [
+        { "stat": "intelligence", "sign": "positive", "scale": "stat", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Study event: reliable small INT gain."
+    },
+    {
+      "id": "adult_work_negative",
+      "pool": ["mundane"],
+      "category": "work",
+      "tone": "negative",
+      "weight": 80,
+      "age": ["adult", "mature"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_mundane_adult"],
+        "scene": ["scene_mundane_work"],
+        "incident": ["incident_mundane_money_negative", "incident_mundane_social_negative"],
+        "outcome": ["outcome_negative_small"]
+      },
+      "effects": [
+        { "stat": "money", "sign": "negative", "scale": "money", "chanceBps": 10000 },
+        { "stat": "health", "sign": "negative", "scale": "healthDamage", "chanceBps": 2500 }
+      ],
+      "balanceNote": "Adult work stress event: money loss and health risk."
+    },
+    {
+      "id": "elder_health_positive",
+      "pool": ["mundane"],
+      "category": "health",
+      "tone": "positive",
+      "weight": 70,
+      "age": ["elder"],
+      "rarity": ["common", "uncommon"],
+      "templates": ["templates.v2_intro_scene_incident_outcome"],
+      "slots": {
+        "intro": ["intro_mundane_elder"],
+        "scene": ["scene_mundane_home", "scene_mundane_city"],
+        "incident": ["incident_mundane_health_positive"],
+        "outcome": ["outcome_health"]
+      },
+      "effects": [
+        { "stat": "health", "sign": "positive", "scale": "healthHeal", "chanceBps": 10000 }
+      ],
+      "balanceNote": "Elder recovery event: small heal."
+    },
+    {
+      "id": "child_secret_hint",
+      "pool": ["secret"],
+      "category": "cultivation",
+      "tone": "positive",
+      "weight": 40,
+      "age": ["child", "teen"],
+      "rarity": ["uncommon", "rare"],
+      "templates": ["templates.v2_intro_scene_incident_twist_outcome", "templates.v2_short"],
+      "slots": {
+        "intro": ["intro_secret_night"],
+        "scene": ["scene_secret_hidden", "scene_mundane_school"],
+        "incident": ["incident_secret_qi_positive"],
+        "twist": ["twist_secret_low"],
+        "outcome": ["outcome_secret_positive"]
+      },
+      "effects": [
         { "stat": "qi", "sign": "positive", "scale": "qi", "chanceBps": 10000 }
-      ]
+      ],
+      "balanceNote": "Early secret talent event for young characters."
     }
   ]
 }

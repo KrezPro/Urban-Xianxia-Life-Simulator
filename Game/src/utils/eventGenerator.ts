@@ -33,9 +33,31 @@ interface GeneratorContext {
   modifiers?: ModifierSet;
 }
 
-const rules: any[] = Array.isArray((eventRulesData as any).rules)
+const rawRules: any[] = Array.isArray((eventRulesData as any).rules)
   ? (eventRulesData as any).rules
   : [];
+
+const slotPools: Record<string, string[]> = {};
+const rawSlotPools = (eventRulesData as any).slotPools;
+if (rawSlotPools && typeof rawSlotPools === 'object') {
+  Object.keys(rawSlotPools).forEach((poolName) => {
+    const poolValues = rawSlotPools[poolName];
+    if (Array.isArray(poolValues)) {
+      slotPools[poolName] = poolValues.filter((value) => typeof value === 'string');
+    }
+  });
+}
+
+const STANDARD_SLOTS = [
+  'intro',
+  'scene',
+  'incident',
+  'twist',
+  'outcome',
+  'actor',
+  'action',
+  'place',
+];
 
 const tableNumber = (table: any, key: string | number, fallback: number): number => {
   if (!table) {
@@ -44,6 +66,31 @@ const tableNumber = (table: any, key: string | number, fallback: number): number
   const value = table[key as any];
   return typeof value === 'number' ? value : fallback;
 };
+
+function pickRandom<T>(arr: T[]): T | null {
+  if (!Array.isArray(arr) || arr.length === 0) {
+    return null;
+  }
+  return arr[getRandomInt(0, arr.length - 1)];
+}
+
+function chooseWeighted<T>(items: Array<{ weight: number; value: T }>): T | null {
+  if (!items || items.length === 0) {
+    return null;
+  }
+  const total = items.reduce((sum, item) => sum + (item.weight || 0), 0);
+  if (total <= 0) {
+    return items[0].value;
+  }
+  let roll = getRandomInt(1, total);
+  for (const item of items) {
+    roll -= item.weight || 0;
+    if (roll <= 0) {
+      return item.value;
+    }
+  }
+  return items[items.length - 1].value;
+}
 
 const getAgeGroup = (age: number): AgeGroup => {
   if (age < 12) {
@@ -77,33 +124,46 @@ const getEventTier = (age: number, stageId: string): number => {
   return Math.max(ageTier, stageTier);
 };
 
-const chooseWeighted = <T,>(items: Array<{ weight: number; value: T }>): T | null => {
-  if (!items || !items.length) {
-    return null;
+const getSlotCandidates = (slotConfig: any): string[] => {
+  if (typeof slotConfig === 'string') {
+    return [slotConfig];
   }
-  const total = items.reduce((sum, item) => sum + (item.weight || 0), 0);
-  if (total <= 0) {
-    return items[0].value;
+  if (Array.isArray(slotConfig)) {
+    return slotConfig.filter((value) => typeof value === 'string');
   }
-  let roll = getRandomInt(1, total);
-  for (const item of items) {
-    roll -= item.weight || 0;
-    if (roll <= 0) {
-      return item.value;
-    }
+  return [];
+};
+
+const chooseValueFromCandidates = (candidates: string[]): string => {
+  const available = candidates.filter(
+    (poolName) => Array.isArray(slotPools[poolName]) && slotPools[poolName].length > 0
+  );
+  if (available.length === 0) {
+    return '';
   }
-  return items[items.length - 1].value;
+  const poolName = pickRandom(available) || '';
+  const values = slotPools[poolName] || [];
+  return pickRandom(values) || '';
+};
+
+const chooseSlotValue = (slotName: string, rule: any): string => {
+  const directCandidates = getSlotCandidates(rule?.slots?.[slotName]);
+  const directValue = chooseValueFromCandidates(directCandidates);
+  if (directValue !== '') {
+    return directValue;
+  }
+  return chooseValueFromCandidates([`fallback_${slotName}`]);
 };
 
 const meetsActivities = (rule: any, lifestyle: LifestyleSelection | undefined): boolean => {
-  const requirements = rule.requiresActivities;
+  const requirements = rule?.requiresActivities;
   if (!requirements) {
     return true;
   }
   const safeLifestyle: any = lifestyle || {};
   return Object.keys(requirements).every((category) => {
     const allowed = requirements[category] || [];
-    return allowed.includes(safeLifestyle[category]);
+    return Array.isArray(allowed) && allowed.includes(safeLifestyle[category]);
   });
 };
 
@@ -225,9 +285,8 @@ const calculateEffectValue = (
     let amount = getRandomInt(1, base);
     if (!positive) {
       const currentKarma = safeBigInt(player.karma);
-      if (currentKarma < BigInt(amount)) {
-        amount = Number(currentKarma);
-      }
+      const cap = currentKarma > BigInt(1000000) ? 1000000 : Number(currentKarma);
+      amount = Math.min(amount, cap);
     }
     if (amount <= 0) {
       return null;
@@ -249,6 +308,20 @@ const calculateEffectValue = (
   }
   return { stat: effectDef.stat, amount, positive };
 };
+
+const buildGeneratedFallback = (pool: 'mundane' | 'secret'): GeneratedEvent => ({
+  id: 'fallback_year',
+  pool,
+  category: 'generic',
+  rarity: 'common',
+  tone: 'neutral',
+  titleKey: 'titles.neutral_common',
+  textKey: 'templates.tmpl_simple',
+  params: { outcome: 'outcomes_generic.ok' },
+  effects: {},
+  displayEffects: [],
+  logType: pool,
+});
 
 export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
   const safeCtx: GeneratorContext = {
@@ -282,16 +355,21 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
     safeCtx.focus === 'secret'
       ? GameConstants.EVENT_SECRET_FOCUS_CHANCE_BPS
       : GameConstants.EVENT_MUNDANE_SECRET_CHANCE_BPS;
+
   const chosenPool: 'mundane' | 'secret' =
     getRandomInt(0, 9999) < secretChanceBps ? 'secret' : 'mundane';
+
   const ageGroup = getAgeGroup(safeCtx.age);
   const stageIndex = getStageIndex(safeCtx.cultivationStage);
 
-  let eligible = rules.filter((rule) => {
+  let eligible = rawRules.filter((rule) => {
     if (!rule || !Array.isArray(rule.pool) || !rule.pool.includes(chosenPool)) {
       return false;
     }
-    if (rule.age && !rule.age.includes(ageGroup)) {
+    if (Array.isArray(rule.focus) && !rule.focus.includes(safeCtx.focus)) {
+      return false;
+    }
+    if (Array.isArray(rule.age) && !rule.age.includes(ageGroup)) {
       return false;
     }
     if (rule.stageMin) {
@@ -309,47 +387,88 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
     return meetsActivities(rule, safeCtx.lifestyle);
   });
 
-  if (!eligible.length) {
-    eligible = rules.filter((rule) => rule && rule.id === 'generic_common');
-  }
-  if (!eligible.length) {
-    eligible = rules.slice();
-  }
-  if (!eligible.length) {
-    return {
-      id: 'fallback_year',
-      pool: chosenPool,
-      category: 'generic',
-      rarity: 'common',
-      tone: 'neutral',
-      titleKey: 'titles.neutral_common',
-      textKey: 'templates.tmpl_simple',
-      params: { outcome: 'outcomes_generic.ok' },
-      effects: {},
-      displayEffects: [],
-      logType: chosenPool,
-    };
+  if (eligible.length === 0) {
+    eligible = rawRules.filter((rule) => rule && rule.id === 'generic_common');
   }
 
-  const rule =
-    chooseWeighted(eligible.map((r) => ({ weight: r.weight || 10, value: r }))) || eligible[0];
+  if (eligible.length === 0) {
+    eligible = rawRules.slice();
+  }
+
+  if (eligible.length === 0) {
+    return buildGeneratedFallback(chosenPool);
+  }
+
+  const chosenRule =
+    chooseWeighted(eligible.map((rule) => ({ weight: rule.weight || 10, value: rule }))) ||
+    eligible[0];
+
   const rarityOptions: EventRarity[] =
-    Array.isArray(rule.rarity) && rule.rarity.length ? rule.rarity : ['common'];
+    Array.isArray(chosenRule.rarity) && chosenRule.rarity.length > 0
+      ? chosenRule.rarity
+      : ['common'];
+
   const rarity =
-    chooseWeighted(
-      rarityOptions.map((r) => ({
-        weight: tableNumber((GameConstants as any).EVENT_RARITY_WEIGHTS, r, 1),
-        value: r,
+    chooseWeighted<EventRarity>(
+      rarityOptions.map((rarityOption) => ({
+        weight: tableNumber((GameConstants as any).EVENT_RARITY_WEIGHTS, rarityOption, 1),
+        value: rarityOption,
       }))
     ) || 'common';
 
+  const tone: EventTone =
+    Array.isArray(chosenRule.tones) && chosenRule.tones.length > 0
+      ? (chooseWeighted<EventTone>(
+          chosenRule.tones.map((toneOption: EventTone) => ({
+            weight: 10,
+            value: toneOption,
+          }))
+        ) || 'neutral')
+      : ((chosenRule.tone || 'neutral') as EventTone);
+
   const params: Record<string, string> = {};
-  Object.keys(rule.params || {}).forEach((key) => {
-    const list = rule.params[key] || [];
-    if (Array.isArray(list) && list.length) {
-      params[key] = list[getRandomInt(0, list.length - 1)];
+
+  if (chosenRule.params && typeof chosenRule.params === 'object') {
+    Object.keys(chosenRule.params).forEach((key) => {
+      const list = chosenRule.params[key];
+      if (Array.isArray(list) && list.length > 0) {
+        const value = pickRandom(list);
+        if (typeof value === 'string' || typeof value === 'number') {
+          params[key] = String(value);
+        }
+      } else if (typeof list === 'string') {
+        params[key] = list;
+      }
+    });
+  }
+
+  if (chosenRule.slots && typeof chosenRule.slots === 'object') {
+    Object.keys(chosenRule.slots).forEach((slotName) => {
+      params[slotName] = chooseSlotValue(slotName, chosenRule);
+    });
+  }
+
+  STANDARD_SLOTS.forEach((slotName) => {
+    if (params[slotName] === undefined || params[slotName] === '') {
+      params[slotName] = chooseSlotValue(slotName, chosenRule);
     }
   });
+
+  STANDARD_SLOTS.forEach((slotName) => {
+    if (params[slotName] === undefined) {
+      params[slotName] = '';
+    }
+  });
+
+  const templateKey =
+    Array.isArray(chosenRule.templates) && chosenRule.templates.length > 0
+      ? pickRandom(chosenRule.templates) || 'templates.tmpl_simple'
+      : chosenRule.textTemplate || 'templates.tmpl_simple';
+
+  const titleKey =
+    Array.isArray(chosenRule.titleKeys) && chosenRule.titleKeys.length > 0
+      ? pickRandom(chosenRule.titleKeys) || `titles.${tone}_${rarity}`
+      : `titles.${tone}_${rarity}`;
 
   const tier = getEventTier(safeCtx.age, safeCtx.cultivationStage);
   const effects: any = {};
@@ -359,7 +478,7 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
     bodyLevel * GameConstants.BODY_TEMPERING.ILLNESS_RESISTANCE_PER_LEVEL_BPS
   );
 
-  (Array.isArray(rule.effects) ? rule.effects : []).forEach((effectDef: any) => {
+  (Array.isArray(chosenRule.effects) ? chosenRule.effects : []).forEach((effectDef: any) => {
     let chanceBps = typeof effectDef?.chanceBps === 'number' ? effectDef.chanceBps : 10000;
     if (effectDef?.stat === 'health' && effectDef?.sign === 'negative') {
       chanceBps = Math.max(1000, chanceBps - illnessResistanceBps);
@@ -390,6 +509,7 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
       effects.money = (-currentMoney).toString();
     }
   }
+
   if (effects.qi && safeBigInt(effects.qi) < 0n) {
     const currentQi = safeBigInt(safeCtx.player.qi);
     const loss = safeBigInt(effects.qi);
@@ -425,13 +545,13 @@ export const generateYearEvent = (ctx: GeneratorContext): GeneratedEvent => {
   });
 
   return {
-    id: rule.id || 'generic_common',
+    id: chosenRule.id || 'generic_common',
     pool: chosenPool,
-    category: rule.category || 'generic',
+    category: chosenRule.category || 'generic',
     rarity,
-    tone: (rule.tone || 'neutral') as EventTone,
-    titleKey: `titles.${rule.tone || 'neutral'}_${rarity}`,
-    textKey: rule.textTemplate || 'templates.tmpl_simple',
+    tone,
+    titleKey,
+    textKey: templateKey,
     params,
     effects,
     displayEffects,

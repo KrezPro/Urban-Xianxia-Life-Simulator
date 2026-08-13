@@ -40,7 +40,12 @@
   },
   "templates": {
     "tmpl_scene": "{actor} {action} {place}. {outcome}",
-    "tmpl_simple": "{outcome}"
+    "tmpl_simple": "{outcome}",
+    "v2_intro_scene_incident_outcome": "{intro} {scene}. {incident}. {outcome}",
+    "v2_intro_scene_incident_twist_outcome": "{intro} {scene}. {incident}. {twist} {outcome}",
+    "v2_intro_incident_outcome": "{intro}. {incident}. {outcome}",
+    "v2_intro_scene_twist": "{intro} {scene}. {incident}. {twist}",
+    "v2_short": "{incident}. {outcome}"
   },
   "actors_child": {
     "classmate": "Одноклассник",
@@ -166,5 +171,233 @@
     "curse_touch": "Вас касается чужая тёмная воля.",
     "blood_price": "Приходится платить кровью.",
     "fear": "Сердце сковывает страх."
+  },
+  "slots": {
+    "intros": {
+      "fallback": "Однажды",
+      "mundane": {
+        "child_morning": "Утром",
+        "child_evening": "Вечером",
+        "child_school_day": "В школьный день",
+        "child_holiday": "На каникулах",
+        "child_rainy": "В дождливый день",
+        "teen_after_school": "После школы",
+        "teen_weekend": "В выходной",
+        "teen_night": "Поздно вечером",
+        "teen_exam_week": "Во время экзаменов",
+        "adult_commute": "По дороге на работу",
+        "adult_lunch": "В обеденный перерыв",
+        "adult_evening": "После работы",
+        "adult_deadline": "В день дедлайна",
+        "elder_morning": "Ранним утром",
+        "elder_memory": "В день воспоминаний",
+        "elder_family": "В кругу семьи"
+      },
+      "secret": {
+        "midnight": "В полночь",
+        "rain": "Под дождём",
+        "dream": "В странном сне",
+        "full_moon": "В полнолуние",
+        "meditation": "Во время медитации",
+        "incense": "В дыму благовоний",
+        "breathing": "В дыхательной практике",
+        "before_dawn": "Перед рассветом"
+      }
+    },
+    "scenes": {
+      "fallback": "в городе",
+      "mundane": {
+        "home_kitchen": "дома на кухне",
+        "home_yard": "во дворе дома",
+        "home_stairwell": "в подъезде",
+        "home_balcony": "на балконе",
+        "school_classroom": "в классе",
+        "school_yard": "в школьном дворе",
+        "school_gym": "в спортзале",
+        "school_library": "в библиотеке",
+        "city_subway": "в метро",
+        "city_market": "на рынке",
+        "city_park": "в парке",
+        "city_street": "на улице",
+        "city_cafe": "в дешёвом кафе",
+        "work_office": "в офисе",
+        "work_parttime": "на подработке",
+        "work_site": "на объекте"
+      },
+      "secret": {
+        "hidden_alley": "в тёмной подворотне",
+        "abandoned_shrine": "в заброшенном святилище",
+        "rooftop": "на крыше",
+        "old_park": "в старом парке",
+        "subway_rift": "у разлома в метро",
+        "dream": "в глубине сна",
+        "portal_rift": "у мерцающего разлома",
+        "underpass": "в подземном переходе"
+      }
+    },
+    "incidents": {
+      "fallback": "Происходит что-то странное.",
+      "mundane": {
+        "child_found_candy": "Вы находите забытую конфету.",
+        "child_helped_friend": "Вы помогаете другу поднять упавшие книги.",
+        "child_won_game": "Вы выигрываете в дворовой игре.",
+        "child_stray_dog_smile": "Бродячий пёс доверчиво жмётся к вам.",
+        "child_kind_teacher": "Учитель неожиданно хвалит вас.",
+        "child_fell_knee": "Вы падаете и обдираете колено.",
+        "child_lost_pencil": "У вас пропадает карандаш.",
+        "child_teased": "Вас дразнят во дворе.",
+        "child_bad_grade": "Вы получаете плохую оценку.",
+        "child_scary_rumor": "Вы слышите страшную байку.",
+        "school_sudden_test": "Учитель устраивает внезапную проверку.",
+        "school_library_book": "Вы находите старую книгу в библиотеке.",
+        "school_new_classmate": "В классе появляется новенький.",
+        "school_strange_noise": "За стеной слышится странный шум.",
+        "school_lost_item": "Кто-то теряет вещь прямо у вас на глазах.",
+        "money_found_coins": "Вы находите несколько монет.",
+        "money_small_job": "Вы делаете маленькую подработку.",
+        "money_bonus_envelope": "Вам дают небольшой бонус.",
+        "money_sold_old_stuff": "Вы продаёте старую вещь.",
+        "money_lucky_discount": "Вам удаётся сэкономить на покупке.",
+        "money_pickpocket": "У вас крадут немного денег.",
+        "money_fine": "Вам выписывают небольшой штраф.",
+        "money_broken_item": "Вы случайно ломаете вещь.",
+        "money_scam_call": "Вас пытаются обмануть по телефону.",
+        "money_overpaid": "Вы переплачиваете по ошибке.",
+        "health_good_sleep": "Вы наконец-то высыпаетесь.",
+        "health_fresh_air": "Вы проводите день на свежем воздухе.",
+        "health_light_workout": "Вы делаете лёгкую зарядку.",
+        "health_doctor_advice": "Врач даёт полезный совет.",
+        "health_healthy_meal": "Вы едите простую здоровую пищу.",
+        "health_cold": "Вы простужаетесь.",
+        "health_headache": "У вас болит голова.",
+        "health_sprain": "Вы слегка растягиваете ногу.",
+        "health_food_poison": "Вы съедаете что-то несвежее.",
+        "health_insomnia": "Вы плохо спите.",
+        "social_neighbor_help": "Сосед помогает вам с делом.",
+        "social_compliment": "Вам делают неожиданный комплимент.",
+        "social_unexpected_ally": "У вас появляется неожиданный союзник.",
+        "social_shared_food": "С вами делятся едой.",
+        "social_reunion": "Вы встречаете давнего знакомого.",
+        "social_gossip": "О вас сплетничают.",
+        "social_argument": "Вы ввязываетесь в спор.",
+        "social_false_accusation": "Вас несправедливо обвиняют.",
+        "social_awkward_meeting": "Вы попадаете в неловкую ситуацию.",
+        "social_betrayal": "Кто-то подводит вас."
+      },
+      "secret": {
+        "qi_breath": "Вы чувствуете, как Ци проходит через тело.",
+        "meridian_warmth": "Ваши меридианы наполняются теплом.",
+        "insight_fragment": "Вы ловите обрывок озарения.",
+        "spirit_blessing": "Незримый дух слегка благословляет вас.",
+        "calm_mind": "Ваш разум становится спокойнее.",
+        "demon_shadow": "Тень демона мелькает рядом.",
+        "ghost_whisper": "Вы слышите шёпот призрака.",
+        "mana_burn": "Происходит откат энергии (Mana Burn).",
+        "cursed_item": "Вы касаетесь проклятой вещи.",
+        "dark_hunger": "Что-то тёмное тянется к вашей Ци.",
+        "saved_stranger": "Вы тайно помогаете незнакомцу.",
+        "donated_secret": "Вы незаметно жертвуете деньги.",
+        "protected_weak": "Вы защищаете слабого.",
+        "honest_choice": "Вы выбираете честность, хотя это трудно.",
+        "karmic_light": "Ваша карма слегка светлеет.",
+        "hidden_tax": "Тайный мир требует плату за проход.",
+        "spirit_thief": "Духовный вор крадёт часть вашей энергии.",
+        "portal_noise": "Разлом издаёт тревожный гул.",
+        "night_attack": "Ночью на вас нападает городская нечисть.",
+        "secret_debt": "Всплывает долг из тайного мира.",
+        "artifact_gleam": "Вы замечаете тусклый блеск артефакта.",
+        "hidden_manual": "Вы находите обрывок тайного трактата.",
+        "patron_gaze": "На вас обращает внимание таинственный покровитель.",
+        "vein_bloom": "Духовная жила расцветает рядом с вами.",
+        "lucky_break": "Вы чудом избегаете беды."
+      }
+    },
+    "twists": {
+      "fallback": "Что-то едва заметно меняется.",
+      "mundane": {
+        "deja_vu": "Вас накрывает дежавю.",
+        "strange_sign": "Вы замечаете странный знак.",
+        "sudden_wind": "Внезапный ветер треплет волосы.",
+        "distant_song": "Откуда-то доносится тихая песня.",
+        "lost_memory": "Вы вспоминаете что-то забытое."
+      },
+      "secret": {
+        "qi_resonance": "Ци вокруг слегка резонирует.",
+        "faint_aura": "Появляется слабая аура.",
+        "shadow_move": "Тень двигается не по свету.",
+        "cold_spot": "Воздух резко холодеет.",
+        "whisper": "Шёпот касается вашего сознания.",
+        "spirit_presence": "Рядом ощущается присутствие духа.",
+        "rune_flash": "В воздухе вспыхивает руна.",
+        "heavenly_pressure": "Небесное давление обрушивается на вас.",
+        "demon_mark": "Вы видите демоническую метку.",
+        "portal_echo": "Разлом отвечает странным эхом."
+      },
+      "absurd": {
+        "talking_cat": "Кот смотрит на вас слишком осмысленно.",
+        "vending_machine_prophecy": "Автомат издаёт пророческий звон.",
+        "dancing_leaf": "Лист танцует против ветра.",
+        "cosmic_coin": "Вы находите монету со странным узором.",
+        "glitch_dream": "На миг реальность будто даёт сбой."
+      }
+    },
+    "outcomes": {
+      "fallback": "Всё идёт своим чередом.",
+      "positive": {
+        "warm_feeling": "Внутри остаётся тёплое чувство.",
+        "small_gain": "Вы получаете небольшую пользу.",
+        "day_better": "День становится чуть лучше.",
+        "useful_lesson": "Вы усваиваете полезный урок.",
+        "quiet_pride": "Вы чувствуете тихую гордость."
+      },
+      "negative": {
+        "annoying_loss": "Вы теряете немного денег.",
+        "mild_worry": "Появляется лёгкая тревога.",
+        "bitter_lesson": "Урок оказывается неприятным.",
+        "small_setback": "Происходит маленький откат.",
+        "uneasy_feeling": "Остаётся нехорошее предчувствие."
+      },
+      "neutral": {
+        "life_moves_on": "Жизнь продолжается.",
+        "nothing_decided": "Пока ничего не решено.",
+        "memory_lingers": "Воспоминание остаётся с вами.",
+        "quiet_change": "Что-то тихо меняется.",
+        "path_shifts": "Ваш путь едва заметно смещается."
+      },
+      "secret_positive": {
+        "qi_grows": "Ваша Ци становится чуть плотнее.",
+        "dao_clearer": "Дао кажется немного яснее.",
+        "spirit_lucky": "Духовная удача улыбается вам.",
+        "secret_progress": "Вы делаете шаг в тайном пути.",
+        "inner_light": "Внутри зажигается слабый свет."
+      },
+      "secret_negative": {
+        "qi_leaks": "Часть Ци бесследно утекает.",
+        "dark_touch": "Тьма оставляет след.",
+        "danger_passed": "Опасность проходит рядом.",
+        "body_aches": "Тело ноет от последствий.",
+        "fate_heavy": "Судьба становится тяжелее."
+      },
+      "money": {
+        "money_changes": "Ваши деньги меняются.",
+        "wallet_shifts": "Кошелёк тяжелеет или пустеет.",
+        "coins_decide": "Монеты решают исход дня.",
+        "profit_sign": "Вы видите знак прибыли."
+      },
+      "health": {
+        "body_remembers": "Тело запоминает этот день.",
+        "health_shifts": "Здоровье слегка меняется.",
+        "breath_changes": "Ваше дыхание становится иным."
+      }
+    },
+    "actors": {
+      "fallback": "Случайный знакомый"
+    },
+    "actions": {
+      "fallback": "влияет на вашу жизнь"
+    },
+    "places": {
+      "fallback": "в городе"
+    }
   }
 }

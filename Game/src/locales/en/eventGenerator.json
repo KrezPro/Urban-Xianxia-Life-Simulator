@@ -40,7 +40,12 @@
   },
   "templates": {
     "tmpl_scene": "{actor} {action} {place}. {outcome}",
-    "tmpl_simple": "{outcome}"
+    "tmpl_simple": "{outcome}",
+    "v2_intro_scene_incident_outcome": "{intro} {scene}. {incident}. {outcome}",
+    "v2_intro_scene_incident_twist_outcome": "{intro} {scene}. {incident}. {twist} {outcome}",
+    "v2_intro_incident_outcome": "{intro}. {incident}. {outcome}",
+    "v2_intro_scene_twist": "{intro} {scene}. {incident}. {twist}",
+    "v2_short": "{incident}. {outcome}"
   },
   "actors_child": {
     "classmate": "A classmate",
@@ -166,5 +171,233 @@
     "curse_touch": "A dark foreign will touches you.",
     "blood_price": "You must pay in blood.",
     "fear": "Fear grips your heart."
+  },
+  "slots": {
+    "intros": {
+      "fallback": "One day",
+      "mundane": {
+        "child_morning": "In the morning",
+        "child_evening": "In the evening",
+        "child_school_day": "On a school day",
+        "child_holiday": "During holidays",
+        "child_rainy": "On a rainy day",
+        "teen_after_school": "After school",
+        "teen_weekend": "On a weekend",
+        "teen_night": "Late at night",
+        "teen_exam_week": "During exam week",
+        "adult_commute": "On the commute",
+        "adult_lunch": "During lunch break",
+        "adult_evening": "After work",
+        "adult_deadline": "On deadline day",
+        "elder_morning": "Early morning",
+        "elder_memory": "On a day of memories",
+        "elder_family": "With family"
+      },
+      "secret": {
+        "midnight": "At midnight",
+        "rain": "In the rain",
+        "dream": "In a strange dream",
+        "full_moon": "Under the full moon",
+        "meditation": "During meditation",
+        "incense": "Amid incense",
+        "breathing": "During breathing practice",
+        "before_dawn": "Before dawn"
+      }
+    },
+    "scenes": {
+      "fallback": "in the city",
+      "mundane": {
+        "home_kitchen": "at home in the kitchen",
+        "home_yard": "in the home yard",
+        "home_stairwell": "in the stairwell",
+        "home_balcony": "on the balcony",
+        "school_classroom": "in the classroom",
+        "school_yard": "in the schoolyard",
+        "school_gym": "in the gym",
+        "school_library": "in the library",
+        "city_subway": "in the subway",
+        "city_market": "at the market",
+        "city_park": "in the park",
+        "city_street": "on the street",
+        "city_cafe": "in a cheap cafe",
+        "work_office": "in the office",
+        "work_parttime": "at a part-time job",
+        "work_site": "at a work site"
+      },
+      "secret": {
+        "hidden_alley": "in a dark alley",
+        "abandoned_shrine": "in an abandoned shrine",
+        "rooftop": "on the rooftop",
+        "old_park": "in the old park",
+        "subway_rift": "at a subway rift",
+        "dream": "deep in a dream",
+        "portal_rift": "near a shimmering rift",
+        "underpass": "in an underpass"
+      }
+    },
+    "incidents": {
+      "fallback": "Something strange happens.",
+      "mundane": {
+        "child_found_candy": "You find forgotten candy.",
+        "child_helped_friend": "You help a friend pick up fallen books.",
+        "child_won_game": "You win a courtyard game.",
+        "child_stray_dog_smile": "A stray dog presses close to you.",
+        "child_kind_teacher": "A teacher unexpectedly praises you.",
+        "child_fell_knee": "You fall and scrape your knee.",
+        "child_lost_pencil": "Your pencil disappears.",
+        "child_teased": "You are teased in the yard.",
+        "child_bad_grade": "You get a bad grade.",
+        "child_scary_rumor": "You hear a scary rumor.",
+        "school_sudden_test": "The teacher gives a sudden test.",
+        "school_library_book": "You find an old library book.",
+        "school_new_classmate": "A new student appears in class.",
+        "school_strange_noise": "A strange noise comes from behind the wall.",
+        "school_lost_item": "Someone loses an item right before your eyes.",
+        "money_found_coins": "You find a few coins.",
+        "money_small_job": "You do a small part-time job.",
+        "money_bonus_envelope": "You receive a small bonus.",
+        "money_sold_old_stuff": "You sell an old item.",
+        "money_lucky_discount": "You save money on a purchase.",
+        "money_pickpocket": "Someone steals a little money from you.",
+        "money_fine": "You receive a small fine.",
+        "money_broken_item": "You accidentally break something.",
+        "money_scam_call": "Someone tries to scam you by phone.",
+        "money_overpaid": "You overpay by mistake.",
+        "health_good_sleep": "You finally sleep well.",
+        "health_fresh_air": "You spend the day in fresh air.",
+        "health_light_workout": "You do a light workout.",
+        "health_doctor_advice": "A doctor gives useful advice.",
+        "health_healthy_meal": "You eat simple healthy food.",
+        "health_cold": "You catch a cold.",
+        "health_headache": "You have a headache.",
+        "health_sprain": "You slightly sprain your leg.",
+        "health_food_poison": "You eat something stale.",
+        "health_insomnia": "You sleep poorly.",
+        "social_neighbor_help": "A neighbor helps you with a task.",
+        "social_compliment": "You receive an unexpected compliment.",
+        "social_unexpected_ally": "You gain an unexpected ally.",
+        "social_shared_food": "Someone shares food with you.",
+        "social_reunion": "You meet an old acquaintance.",
+        "social_gossip": "People gossip about you.",
+        "social_argument": "You get drawn into an argument.",
+        "social_false_accusation": "You are unfairly accused.",
+        "social_awkward_meeting": "You stumble into an awkward situation.",
+        "social_betrayal": "Someone lets you down."
+      },
+      "secret": {
+        "qi_breath": "You feel Qi move through your body.",
+        "meridian_warmth": "Your meridians fill with warmth.",
+        "insight_fragment": "You catch a fragment of insight.",
+        "spirit_blessing": "An unseen spirit slightly blesses you.",
+        "calm_mind": "Your mind becomes calmer.",
+        "demon_shadow": "A demon's shadow flickers nearby.",
+        "ghost_whisper": "You hear a ghost's whisper.",
+        "mana_burn": "A Mana Burn occurs.",
+        "cursed_item": "You touch a cursed item.",
+        "dark_hunger": "Something dark reaches for your Qi.",
+        "saved_stranger": "You secretly help a stranger.",
+        "donated_secret": "You quietly donate money.",
+        "protected_weak": "You protect someone weak.",
+        "honest_choice": "You choose honesty even when it is hard.",
+        "karmic_light": "Your karma becomes slightly brighter.",
+        "hidden_tax": "The hidden world demands a toll.",
+        "spirit_thief": "A spirit thief steals part of your energy.",
+        "portal_noise": "A rift makes an alarming hum.",
+        "night_attack": "City night creatures attack you.",
+        "secret_debt": "A debt from the hidden world surfaces.",
+        "artifact_gleam": "You notice the dull gleam of an artifact.",
+        "hidden_manual": "You find a fragment of a secret manual.",
+        "patron_gaze": "A mysterious patron notices you.",
+        "vein_bloom": "A spiritual vein blooms near you.",
+        "lucky_break": "You narrowly escape trouble."
+      }
+    },
+    "twists": {
+      "fallback": "Something almost imperceptibly changes.",
+      "mundane": {
+        "deja_vu": "Deja vu washes over you.",
+        "strange_sign": "You notice a strange sign.",
+        "sudden_wind": "A sudden wind tugs at your hair.",
+        "distant_song": "A quiet song drifts from somewhere.",
+        "lost_memory": "You remember something forgotten."
+      },
+      "secret": {
+        "qi_resonance": "The Qi around you resonates.",
+        "faint_aura": "A faint aura appears.",
+        "shadow_move": "A shadow moves against the light.",
+        "cold_spot": "The air turns sharply cold.",
+        "whisper": "A whisper touches your mind.",
+        "spirit_presence": "A spirit's presence lingers nearby.",
+        "rune_flash": "A rune flashes in the air.",
+        "heavenly_pressure": "Heavenly pressure bears down on you.",
+        "demon_mark": "You see a demonic mark.",
+        "portal_echo": "The rift answers with a strange echo."
+      },
+      "absurd": {
+        "talking_cat": "A cat stares at you too knowingly.",
+        "vending_machine_prophecy": "A vending machine rings like a prophecy.",
+        "dancing_leaf": "A leaf dances against the wind.",
+        "cosmic_coin": "You find a coin with a strange pattern.",
+        "glitch_dream": "Reality seems to glitch for a moment."
+      }
+    },
+    "outcomes": {
+      "fallback": "Everything goes on as usual.",
+      "positive": {
+        "warm_feeling": "A warm feeling remains inside.",
+        "small_gain": "You gain a small benefit.",
+        "day_better": "The day becomes a little better.",
+        "useful_lesson": "You learn a useful lesson.",
+        "quiet_pride": "You feel quiet pride."
+      },
+      "negative": {
+        "annoying_loss": "You lose a little money.",
+        "mild_worry": "A mild worry appears.",
+        "bitter_lesson": "The lesson is unpleasant.",
+        "small_setback": "A small setback occurs.",
+        "uneasy_feeling": "An uneasy feeling remains."
+      },
+      "neutral": {
+        "life_moves_on": "Life moves on.",
+        "nothing_decided": "Nothing is decided yet.",
+        "memory_lingers": "The memory lingers.",
+        "quiet_change": "Something quietly changes.",
+        "path_shifts": "Your path shifts almost imperceptibly."
+      },
+      "secret_positive": {
+        "qi_grows": "Your Qi becomes slightly denser.",
+        "dao_clearer": "The Dao seems a little clearer.",
+        "spirit_lucky": "Spiritual luck smiles on you.",
+        "secret_progress": "You take a step on the hidden path.",
+        "inner_light": "A faint light kindles inside you."
+      },
+      "secret_negative": {
+        "qi_leaks": "Some Qi leaks away.",
+        "dark_touch": "Darkness leaves a mark.",
+        "danger_passed": "Danger passes close by.",
+        "body_aches": "Your body aches from the aftermath.",
+        "fate_heavy": "Fate feels heavier."
+      },
+      "money": {
+        "money_changes": "Your money changes.",
+        "wallet_shifts": "Your wallet grows heavier or lighter.",
+        "coins_decide": "Coins decide the day.",
+        "profit_sign": "You see a sign of profit."
+      },
+      "health": {
+        "body_remembers": "Your body remembers this day.",
+        "health_shifts": "Your health shifts slightly.",
+        "breath_changes": "Your breathing becomes different."
+      }
+    },
+    "actors": {
+      "fallback": "A random acquaintance"
+    },
+    "actions": {
+      "fallback": "affects your life"
+    },
+    "places": {
+      "fallback": "in the city"
+    }
   }
 }
