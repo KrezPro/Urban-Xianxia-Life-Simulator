@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "唤醒灵魂中..."
+  },
+  "tab_bar": {
+    "life": "凡尘",
+    "dao": "修道",
+    "activities": "历练",
+    "store": "商店",
+    "settings": "设置",
+    "log": "日志",
+    "sect": "宗门"
+  },
+  "log_screen": {
+    "title": "命运日志",
+    "empty": "您的人生之路才刚刚开始..."
+  },
+  "idle": {
+    "offline_secret": "离线进度：您潜心修炼了 {seconds}秒。获得灵气：{amount}。",
+    "offline_mundane": "离线进度：您辛勤工作了 {seconds}秒。获得：${amount}。"
+  },
+  "profile_screen": {
+    "title": "人物属性",
+    "age": "年龄",
+    "stage": "境界",
+    "health": "健康",
+    "intelligence": "智力",
+    "appearance": "魅力",
+    "money": "金钱",
+    "qi": "灵气",
+    "karma": "业力",
+    "btn_grow": "成长（+1岁）"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "您降生到了这个世界。您的故事开始了...",
+    "death_log": "您已死亡。您的灵魂进入了无尽的轮回...",
+    "reincarnate_log": "轮回之轮转动。您在新的肉身中重生了。",
+    "age": "年龄",
+    "health": "健康",
+    "intelligence": "智力",
+    "appearance": "魅力",
+    "money": "金钱",
+    "expenses_year": "年度开销",
+    "spiritual_root": "灵根",
+    "qi": "灵气",
+    "karma": "业力",
+    "focus_title": "本年专注点：",
+    "focus_mundane": "凡尘俗世",
+    "focus_secret": "修仙之路",
+    "btn_grow": "成长（+1岁）",
+    "btn_reincarnate": "转世重修",
+    "btn_log": "日志",
+    "dead_title": "您已陨落",
+    "dead_subtitle": "您的人生旅途已中断。",
+    "death_cause_label": "死因：",
+    "death_causes": {
+      "none": "未知",
+      "old_age": "寿终正寝",
+      "health": "积劳成疾",
+      "breakthrough": "突破失败",
+      "portal": "秘境意外",
+      "event": "宿命劫难"
+    },
+    "karma_accumulated": "累计业力：",
+    "karma_earned_last_life": "前世遗泽（业力）：",
+    "meditation_log": "潜心修炼了一年。吸收了 {amount} 点灵气。",
+    "age_log": "您 {age} 岁了。",
+    "interstitial_log": "[广告] 1岁转生后播放了插屏广告。",
+    "avatar": {
+      "aria_child": "一个在人生道路上爬行的婴儿",
+      "aria_teen": "一个迈出人生第一步的少年",
+      "aria_adult": "一个正在深度冥想的成年人",
+      "aria_mature": "一位正在闭关的修仙大师",
+      "aria_elder": "一位处于暮年的长者"
+    },
+    "hints": {
+      "close": "明白了",
+      "intelligence": {
+        "title": "智力",
+        "text": "提高突破成功的概率，并在学习、工作和凡尘事件中发挥作用。"
+      },
+      "health": {
+        "title": "健康",
+        "text": "如果健康降至0，您将死亡并转世重修。请务必保护好它。"
+      },
+      "appearance": {
+        "title": "魅力",
+        "text": "影响社交事件、人际关系和某些世俗机遇。"
+      },
+      "money": {
+        "title": "金钱",
+        "text": "生活、宗门贡献以及未来机遇都离不开它。"
+      },
+      "expenses": {
+        "title": "年度开销",
+        "text": "生活费：每年 {survival}。生活方式（工作、运动、饮食、住宿、秘境）：每年 {lifestyle}。如果无法支付生活费，健康将会受损。"
+      },
+      "spiritual_root": {
+        "title": "灵根",
+        "text": "决定灵气积聚的速度和修炼的潜力。"
+      },
+      "karma": {
+        "title": "业力",
+        "text": "累积于生生世世，可在业力商店中购买永久增益。"
+      },
+      "focus_mundane": {
+        "title": "凡尘俗世",
+        "text": "专注于金钱、学习和事业。遇到修仙事件的概率较低。"
+      },
+      "focus_secret": {
+        "title": "修仙之路",
+        "text": "专注于修炼：您将获得灵气，并更频繁地遇到机缘。"
+      },
+      "age": {
+        "title": "年龄",
+        "text": "当前境界的最大寿元：{maxAge} 岁。衰老可能提前到来，尤其是 {softAge} 岁之后。"
+      },
+      "age_immortal": {
+        "title": "年龄",
+        "text": "此境界已是不死之身：凡人寿命的尽头不再是您的死期。"
+      }
+    }
+  },
+  "store_screen": {
+    "title": "业力商店",
+    "karma_balance": "您的业力",
+    "btn_buy": "购买",
+    "btn_bought": "已拥有",
+    "btn_no_karma": "业力不足",
+    "cost": "价格",
+    "iap_section": "赞助与支持",
+    "iap_pass": "修仙者通行证",
+    "iap_pass_desc": "永久关闭所有插屏广告，支持开发者。",
+    "iap_ad": "保命广告",
+    "iap_ad_desc": "在“修道”界面突破前可用（死亡保护）。",
+    "btn_iap_buy": "购买通行证",
+    "btn_iap_active": "已生效",
+    "btn_info": "说明",
+    "items": {
+      "buff_rich_family": {
+        "name": "富甲一方",
+        "desc": "每次转世出生带有额外初始资金，并获得小额年度收入加成。"
+      },
+      "buff_strong_meridians": {
+        "name": "经脉强健",
+        "desc": "强化肉身：提升最大健康、恢复力，并降低受到的伤害。"
+      },
+      "buff_pure_root": {
+        "name": "天灵根",
+        "desc": "改善灵根资质，每年获得额外的固定灵气收益。"
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "修道之路",
+    "stage": "当前境界",
+    "unknown": "未知",
+    "qi_energy": "灵气底蕴",
+    "next_stage": "冲击境界",
+    "req_qi": "突破所需",
+    "success_chance": "成功率",
+    "btn_breakthrough": "尝试突破",
+    "btn_no_qi": "灵气不足",
+    "max_stage": "您已达到修炼的巅峰。天道已无法束缚您。",
+    "dead_text": "死者无法修炼。",
+    "btn_ad_buff": "观看广告 (+10% 且免死)",
+    "btn_ad_watched": "加成已激活",
+    "alert_ad_title": "天道庇护",
+    "alert_ad_msg": "观看完毕！您获得了下次突破的加成与保护。",
+    "body_title": "肉身炼体",
+    "body_level": "阶层",
+    "body_cost": "消耗",
+    "body_button": "淬炼肉身",
+    "body_locked_age": "您的肉身还太脆弱",
+    "body_locked_year": "明年方可进行淬炼",
+    "body_locked_qi": "灵气匮乏",
+    "body_effect_line": "最大健康 +{maxHealth}，恢复力/年 +{regen}，抗病率 {resistance}%",
+    "body_desc": "以痛苦、汗水和意志淬炼血肉之躯，使其成为承载真力的容器。",
+    "details_close": "关闭",
+    "body_details_title": "炼体功效",
+    "body_details_max_health": "最大健康",
+    "body_details_regen": "恢复力/年",
+    "body_details_illness": "疾病抵抗率",
+    "body_details_mortality": "夭折率降低",
+    "body_details_survival": "生活开销减免",
+    "body_details_breakthrough": "突破反噬减免",
+    "body_details_portal": "秘境伤害减免",
+    "stage_info_max_age": "最大寿元",
+    "stage_info_soft_age": "气血衰退始于",
+    "stage_info_meditation": "打坐灵气收益",
+    "stage_info_mortality": "凡躯夭折率",
+    "stage_info_survival": "基础生活费",
+    "stage_info_breakthrough_damage": "突破凶险度",
+    "stage_info_required_qi": "突破所需灵气",
+    "stage_info_immortal": "长生：不再老死",
+    "portal_blessing_active": "秘境赐福生效中：+{percent}",
+    "log_no_qi": "灵气不足，强行突破有性命之忧。",
+    "log_success": "[突破成功] 您已踏入新境界：{name}。经脉进一步拓宽。",
+    "log_fail_death": "[致命反噬] 天劫之威非凡人可挡，您已灰飞烟灭。",
+    "log_fail_damage": "[突破失败] 气息岔乱走火入魔，您受了 {damage} 点内伤。",
+    "log_ad_saved": "[天道庇护] 突破失败！但冥冥之中的力量保护了您的经脉免受损伤！"
+  },
+  "settings_screen": {
+    "title": "设置",
+    "sound": "界面音效",
+    "sound_desc": "按钮和操作的简短音效。",
+    "music": "音乐",
+    "music_desc": "循环播放的背景音乐。"
+  }
+}

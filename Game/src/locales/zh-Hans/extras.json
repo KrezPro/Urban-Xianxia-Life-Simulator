@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "凡尘",
+      "dao": "修道",
+      "activities": "历练",
+      "store": "商店",
+      "sect": "宗门"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "最大健康/年：+{value}",
+    "healthRegenPerYear": "恢复力/年：+{value}",
+    "appearancePerYear": "魅力/年：+{value}",
+    "qiPerYear": "灵气/年：+{value}",
+    "portalSuccessBps": "秘境成功率：+{value}%",
+    "qiFlatPerYear": "灵气/年：+{value}",
+    "moneyFlatPerYear": "收入/年：+${value}",
+    "healthRegenFlat": "恢复力/年：+{value}",
+    "damageReductionBps": "伤害减免：+{value}%",
+    "breakthroughChanceBps": "突破成功率：+{value}%",
+    "startMoney": "初始资金：+${value}",
+    "startMaxHealth": "初始最大健康：+{value}",
+    "startSpiritualRoot": "初始灵根：+{value}",
+    "startBodyTempering": "初始炼体：+{value} 阶"
+  },
+  "life": {
+    "survival_cost_line": "生活费：-${amount}/年",
+    "survival_cost_hint": {
+      "title": "生活费",
+      "text": "每年用于食物、住房和安全的强制开销。即使不选择任何活动也会扣除。如果缺钱，您的健康将受到损害。"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "支付生活费：-${amount}。",
+    "lifestyle_money_delta": "年度历练净收益：{amount}。",
+    "portal_blessing_gained": "秘境赐福：下次突破成功率 +{percent}%。"
+  },
+  "dao": {
+    "techniques": {
+      "title": "修仙功法",
+      "level": "层数",
+      "max": "圆满",
+      "cost": "消耗",
+      "upgrade": "参悟",
+      "locked": "未解锁",
+      "not_enough_money": "资金不足",
+      "current_effects": "当前效果",
+      "next_effects": "下层效果",
+      "requirements": {
+        "spiritual_root": "灵根要求",
+        "intelligence": "悟性要求",
+        "stage": "境界要求"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "潜龙吐纳诀",
+          "desc": "基础吐纳心法。每层可提高灵气获取量与突破成功率。"
+        },
+        "technique_iron_meridian": {
+          "name": "铁脉功",
+          "desc": "淬炼肉身与经脉。提高气血恢复速度，并降低受到的伤害。"
+        },
+        "technique_jade_ledger": {
+          "name": "玉算通神经",
+          "desc": "世俗敛财之法。增加收入、工作效率，并提高秘境探索成功率。"
+        },
+        "technique_spirit_sense": {
+          "name": "神识诀",
+          "desc": "后期感知功法。大幅增加灵气收益、突破概率以及秘境探索成功率。"
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "等级",
+    "max_level": "最高级",
+    "next_cost": "下级消耗",
+    "current_effects": "当前效果",
+    "next_effects": "下级效果",
+    "effects_note": "初始效果在每次转生后生效。年度效果每年叠加一次。",
+    "details_close": "关闭"
+  },
+  "activities": {
+    "title": "红尘历练",
+    "dead_text": "死者无法进行历练。",
+    "select": "选择",
+    "selected": "已选",
+    "disable": "取消",
+    "locked": "未解锁",
+    "daily_cost": "花费/天",
+    "daily_income": "收入/天",
+    "yearly_cost": "花费/年",
+    "yearly_income": "收入/年",
+    "net_yearly": "净收益/年",
+    "effects_title": "附带效果/年",
+    "requirements_label": "前置条件",
+    "none": "无",
+    "categories": {
+      "job": "营生",
+      "sport": "强身",
+      "food": "饮食",
+      "housing": "居所",
+      "portal": "秘境"
+    },
+    "requirements": {
+      "age": "年龄",
+      "intelligence": "智力",
+      "appearance": "魅力",
+      "spiritual_root": "灵根",
+      "health": "健康",
+      "max_health": "最大健康",
+      "stage": "境界"
+    },
+    "portal_rewards": {
+      "title": "秘境收益",
+      "attempt_cost": "探索门票：${cost}",
+      "reward_money": "获取金钱：${min}–${max}",
+      "reward_qi": "获取灵气：{min}–{max}",
+      "breakthrough_bonus": "突破赐福：+{percent}%",
+      "fail_damage_bps": "失败反噬：扣除 {percent}% 最大健康",
+      "fail_damage_flat": "失败反噬：受到 {damage} 点伤害"
+    },
+    "options": {
+      "job_none": { "name": "无业游民", "desc": "没有任何收入，也无需承担任何义务。" },
+      "job_parttime": { "name": "零工散活", "desc": "跑腿、送外卖，赚点辛苦钱。" },
+      "job_office": { "name": "普通职员", "desc": "枯燥乏味，但胜在稳定。" },
+      "job_manager": { "name": "部门经理", "desc": "承担更多责任，换取更丰厚的回报。" },
+      "job_founder": { "name": "科技创始人", "desc": "创立一家结合信息技术与修真法门的初创公司。" },
+      "sport_none": { "name": "从不锻炼", "desc": "缺乏任何体力活动。" },
+      "sport_home": { "name": "居家锻炼", "desc": "在院子里做做俯卧撑。" },
+      "sport_gym": { "name": "健身房", "desc": "办理当地健身房的会员。" },
+      "sport_premium": { "name": "高级会所", "desc": "私教指导、游泳池和专业恢复理疗。" },
+      "sport_spirit": { "name": "修仙锻体", "desc": "运用灵气淬炼肉身与经脉。" },
+      "food_none": { "name": "粗茶淡饭", "desc": "匆忙中随便对付一口。" },
+      "food_street": { "name": "街边小吃", "desc": "面条、烤串和能量棒。" },
+      "food_home": { "name": "家常便饭", "desc": "规律而体面的日常饮食。" },
+      "food_premium": { "name": "高级膳食", "desc": "优质食材与严格的营养配比。" },
+      "food_spirit": { "name": "灵草仙膳", "desc": "以珍稀灵草烹制而成的灵膳。" },
+      "housing_none": { "name": "露宿街头", "desc": "天为被，地为床。" },
+      "housing_shelter": { "name": "收容所", "desc": "仅仅提供一个勉强遮风挡雨的地方。" },
+      "housing_room": { "name": "简陋单间", "desc": "老旧房屋里的一间小隔断。" },
+      "housing_apartment": { "name": "整洁公寓", "desc": "干净的公寓，保证良好的睡眠。" },
+      "housing_condo": { "name": "高档住宅", "desc": "安保严密的现代化豪华公寓。" },
+      "portal_none": { "name": "不探秘境", "desc": "不参与任何危险的探险活动。" },
+      "portal_subway": { "name": "废弃地铁站", "desc": "老旧的隧道里，似乎有怪异的眼睛在窥视。" },
+      "portal_market": { "name": "午夜鬼市", "desc": "倒卖丹药和各种见不得光交易的黑市。" },
+      "portal_club": { "name": "妖魔俱乐部", "desc": "一个妖魔与人类赌命的地下会所。" },
+      "portal_tower": { "name": "试炼灵塔", "desc": "专为心性坚韧的修仙者准备的残酷试炼。" }
+    }
+  }
+}

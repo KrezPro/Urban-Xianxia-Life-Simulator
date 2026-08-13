@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "宗门",
+    "loading": "正在加载社交网络...",
+    "tab_my_sect": "我的宗门",
+    "tab_leaderboard": "排行榜",
+    "empty_title": "财阀宗门",
+    "empty_text": "创立一个隐秘的财阀宗门，或是输入邀请码加入他人的势力，参与资源与影响力的争夺。",
+    "invite_placeholder": "输入邀请码",
+    "btn_create": "开宗立派",
+    "btn_join": "凭邀请码加入",
+    "join_error": "邀请码无效。请输入8位由大写字母(A-Z)或数字(0-9)组成的邀请码。",
+    "invite_code": "邀请码",
+    "share_invite": "分享邀请码",
+    "funds": "宗门资金",
+    "influence": "影响力",
+    "season": "赛季",
+    "members": "门徒",
+    "player_name": "您",
+    "contribution": "贡献度",
+    "btn_leave": "叛出宗门",
+    "leave_confirm_title": "确认离开宗门？",
+    "leave_confirm_message": "您将失去当前所有的宗门贡献度，但您随后可以加入其他势力。",
+    "yes": "是",
+    "no": "取消",
+    "leaderboard_empty": "排行榜暂无数据。",
+    "default_name": "新莲花财团",
+    "default_tag": "NLS"
+  }
+}
