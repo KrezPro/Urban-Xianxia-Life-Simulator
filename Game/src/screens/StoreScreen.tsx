@@ -10,11 +10,8 @@ import { Theme } from '../constants/Theme';
 import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
 import { getKarmaLevelEffects } from '../utils/gameplayUtils';
 import { buildEffectLines } from '../utils/effectFormatter';
+import { resolveLocalizedKey } from '../utils/i18n';
 import itemsData from '../data/items.json';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
 
 interface DetailsData {
   title: string;
@@ -26,13 +23,30 @@ export default function StoreScreen() {
   const inventory = useInventoryStore();
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
-
   const [details, setDetails] = useState<DetailsData | null>(null);
 
-  const ui: any = locale === 'ru' ? ruUI.store_screen : enUI.store_screen;
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const storeExtra = extras.store || {};
-  const effectLabels = extras.effect_labels || {};
+  const tUi = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'ui', `store_screen.${key}`, params);
+
+  const tExtras = (key: string, params?: Record<string, string | number>): string =>
+    resolveLocalizedKey(locale, 'extras', key, params);
+
+  const effectLabels = {
+    maxHealthPerYear: tExtras('effect_labels.maxHealthPerYear'),
+    healthRegenPerYear: tExtras('effect_labels.healthRegenPerYear'),
+    appearancePerYear: tExtras('effect_labels.appearancePerYear'),
+    qiPerYear: tExtras('effect_labels.qiPerYear'),
+    portalSuccessBps: tExtras('effect_labels.portalSuccessBps'),
+    qiFlatPerYear: tExtras('effect_labels.qiFlatPerYear'),
+    moneyFlatPerYear: tExtras('effect_labels.moneyFlatPerYear'),
+    healthRegenFlat: tExtras('effect_labels.healthRegenFlat'),
+    damageReductionBps: tExtras('effect_labels.damageReductionBps'),
+    breakthroughChanceBps: tExtras('effect_labels.breakthroughChanceBps'),
+    startMoney: tExtras('effect_labels.startMoney'),
+    startMaxHealth: tExtras('effect_labels.startMaxHealth'),
+    startSpiritualRoot: tExtras('effect_labels.startSpiritualRoot'),
+    startBodyTempering: tExtras('effect_labels.startBodyTempering'),
+  };
 
   const getSafeMaxLevel = (item: any): number => {
     const maxLevel = Number(item?.maxLevel || 0);
@@ -48,14 +62,23 @@ export default function StoreScreen() {
     return Math.min(safeRawLevel, getSafeMaxLevel(item));
   };
 
-  const buildItemDetails = (item: any, itemUI: any, currentLevel: number, safeMaxLevel: number): string[] => {
+  const getItemName = (item: any): string => {
+    const resolved = tUi(`items.${item.id}.name`);
+    return resolved || item.id;
+  };
+
+  const getItemDesc = (item: any): string => {
+    return tUi(`items.${item.id}.desc`);
+  };
+
+  const buildItemDetails = (item: any, currentLevel: number, safeMaxLevel: number): string[] => {
     const lines: string[] = [];
 
     const currentEffects = getKarmaLevelEffects(item.id, currentLevel);
     const currentLines = buildEffectLines(currentEffects, effectLabels, 1);
 
     if (currentLevel > 0 && currentLines.length > 0) {
-      lines.push(storeExtra.current_effects);
+      lines.push(tExtras('store.current_effects'));
       currentLines.forEach((line) => lines.push(line));
     }
 
@@ -65,20 +88,21 @@ export default function StoreScreen() {
       const nextLines = buildEffectLines(nextEffects, effectLabels, 1);
 
       if (nextLines.length > 0) {
-        lines.push(storeExtra.next_effects);
+        lines.push(tExtras('store.next_effects'));
         nextLines.forEach((line) => lines.push(line));
       }
     }
 
-    if (storeExtra.effects_note) {
-      lines.push(storeExtra.effects_note);
+    const effectsNote = tExtras('store.effects_note');
+    if (effectsNote) {
+      lines.push(effectsNote);
     }
 
     return lines;
   };
 
   const handleBuyLevel = (item: any) => {
-    const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
+    const itemName = getItemName(item);
     const safeMaxLevel = getSafeMaxLevel(item);
     const currentLevel = getSafeCurrentLevel(item);
     const isMax = currentLevel >= safeMaxLevel;
@@ -89,7 +113,6 @@ export default function StoreScreen() {
     }
 
     const nextLevelData = Array.isArray(item.levels) ? item.levels[currentLevel] : undefined;
-
     if (!nextLevelData) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
@@ -107,7 +130,7 @@ export default function StoreScreen() {
     inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
 
     pushUiNotification('store_upgrade_success', 'reward', {
-      name: itemUI.name,
+      name: itemName,
       level: (currentLevel + 1).toString(),
     });
   };
@@ -122,10 +145,10 @@ export default function StoreScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{ui.title}</Text>
+        <Text style={styles.title}>{tUi('title')}</Text>
 
         <Card variant="gold" style={styles.balanceCard}>
-          <Text style={styles.balanceLabel}>{ui.karma_balance}</Text>
+          <Text style={styles.balanceLabel}>{tUi('karma_balance')}</Text>
           <Text style={styles.balanceValue}>{formatLargeNumber(player.karma)}</Text>
         </Card>
 
@@ -140,35 +163,40 @@ export default function StoreScreen() {
               : undefined;
             const nextCost = nextLevelData?.cost || '0';
             const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
-            const itemUI = (ui.items as any)[item.id] || { name: item.id, desc: '' };
+            const itemName = getItemName(item);
+            const itemDesc = getItemDesc(item);
 
             return (
               <Card key={item.id} style={styles.itemCard}>
                 <View style={styles.itemTopRow}>
-                  <Text style={styles.itemName}>{itemUI.name}</Text>
+                  <Text style={styles.itemName}>{itemName}</Text>
                   <Text style={styles.itemLevel}>
-                    {storeExtra.level}: {currentLevel}/{safeMaxLevel}
+                    {tExtras('store.level')}: {currentLevel}/{safeMaxLevel}
                   </Text>
                 </View>
 
-                <Text style={styles.itemDesc}>{itemUI.desc}</Text>
+                <Text style={styles.itemDesc}>{itemDesc}</Text>
 
                 {!isMax ? (
                   <View style={styles.costRow}>
-                    <Text style={styles.costLabel}>{storeExtra.next_cost}</Text>
+                    <Text style={styles.costLabel}>{tExtras('store.next_cost')}</Text>
                     <Text style={styles.costValue}>{formatLargeNumber(nextCost)}</Text>
                   </View>
                 ) : null}
 
                 <Button
                   title={
-                    isMax ? storeExtra.max_level : canAfford ? ui.btn_buy : ui.btn_no_karma
+                    isMax
+                      ? tExtras('store.max_level')
+                      : canAfford
+                        ? tUi('btn_buy')
+                        : tUi('btn_no_karma')
                   }
                   onPress={() => handleBuyLevel(item)}
                   onLongPress={() =>
                     setDetails({
-                      title: itemUI.name,
-                      lines: buildItemDetails(item, itemUI, currentLevel, safeMaxLevel),
+                      title: itemName,
+                      lines: buildItemDetails(item, currentLevel, safeMaxLevel),
                     })
                   }
                   disabled={isMax || !canAfford}
@@ -180,13 +208,13 @@ export default function StoreScreen() {
             );
           })}
 
-        <Text style={styles.sectionTitle}>{ui.iap_section}</Text>
+        <Text style={styles.sectionTitle}>{tUi('iap_section')}</Text>
 
         <Card variant="primary" style={styles.iapCard}>
-          <Text style={styles.iapName}>{ui.iap_pass}</Text>
-          <Text style={styles.iapDesc}>{ui.iap_pass_desc}</Text>
+          <Text style={styles.iapName}>{tUi('iap_pass')}</Text>
+          <Text style={styles.iapDesc}>{tUi('iap_pass_desc')}</Text>
           <Button
-            title={player.hasCultivatorPass ? ui.btn_iap_active : ui.btn_iap_buy}
+            title={player.hasCultivatorPass ? tUi('btn_iap_active') : tUi('btn_iap_buy')}
             onPress={handleBuyPass}
             disabled={player.hasCultivatorPass}
             variant={player.hasCultivatorPass ? 'secondary' : 'primary'}
@@ -196,10 +224,10 @@ export default function StoreScreen() {
         </Card>
 
         <Card style={styles.iapCard}>
-          <Text style={styles.iapName}>{ui.iap_ad}</Text>
-          <Text style={styles.iapDesc}>{ui.iap_ad_desc}</Text>
+          <Text style={styles.iapName}>{tUi('iap_ad')}</Text>
+          <Text style={styles.iapDesc}>{tUi('iap_ad_desc')}</Text>
           <Button
-            title={ui.btn_info}
+            title={tUi('btn_info')}
             onPress={() => undefined}
             disabled
             variant="ghost"
@@ -213,7 +241,7 @@ export default function StoreScreen() {
         visible={details !== null}
         title={details?.title || ''}
         lines={details?.lines || []}
-        closeLabel={storeExtra.details_close}
+        closeLabel={tExtras('store.details_close')}
         onClose={() => setDetails(null)}
       />
     </SafeAreaView>

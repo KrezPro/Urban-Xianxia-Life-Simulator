@@ -42,7 +42,9 @@
     "Game/src/locales/en/eventGenerator.json",
     "Game/src/locales/ru/eventGenerator.json",
     "Game/src/locales/en/social.json",
-    "Game/src/locales/ru/social.json"
+    "Game/src/locales/ru/social.json",
+        "Game/src/screens/StoreScreen.tsx",
+    "Game/src/utils/gameplayUtils.ts"
   ],
   "max_file_size_kb": 100
 }

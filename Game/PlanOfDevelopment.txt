@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 38 (Центральная i18n-инфраструктура для 22 языков, пустые языковые заготовки и генератор locale-файлов)
+[СТАТУС]: ШАГ 39 (StoreScreen переведён на центральный i18n; legacy-словари locales/activities/dao/navigation/store/items больше не используются и готовы к удалению)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -16,6 +16,8 @@
 171. [ ] Добавить перевод VI для настроек, базового UI и уведомлений.
 172. [ ] Запустить npm run locales:stubs внутри Game/, чтобы создать все пустые JSON-заготовки и полный static registry.
 173. [ ] Переводить языки только через Game/src/locales/{lang}/*.json, без правок экранов.
+174. [X] Переписать StoreScreen на центральный i18n и убрать прямые импорты ru/en JSON.
+175. [ ] Удалить legacy locale-файлы: activities.json, dao.json, navigation.json, store.json, items.json (только в locales, не в data).
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
 Game/src/
@@ -53,6 +55,8 @@ Game/src/
 │       ├── rebirth.json
 │       ├── eventGenerator.json
 │       └── settings.json
+├── screens/
+│   └── StoreScreen.tsx                         // Магазин кармы: использует центральный i18n через resolveLocalizedKey, без прямых imports ru/en JSON
 └── utils/
     └── i18n.ts                                 // Центральный fallback-резолвер: locale -> EN -> пустая строка; специальный merge для events.json
 
