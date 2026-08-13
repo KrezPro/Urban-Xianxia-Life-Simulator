@@ -2,49 +2,49 @@
   "mundane": [
     {
       "id": "m1",
-      "text": "Bạn học hành chăm chỉ cả năm. Kiến thức của bạn mở rộng.",
+      "text": "Bạn đã học hành chăm chỉ cả năm. Kiến thức của bạn được mở rộng.",
       "effects": { "intelligence": 2 }
     },
     {
       "id": "m2",
-      "text": "Bạn nhiễm virus nặng và phải nằm viện.",
+      "text": "Bạn mắc phải một loại virus nguy hiểm và phải nằm viện.",
       "effects": { "health": -15 }
     },
     {
       "id": "m3",
-      "text": "Bạn tìm được việc bán thời gian tốt và dành dụm được ít tiền.",
+      "text": "Bạn tìm được một công việc bán thời gian tốt và tiết kiệm được một ít tiền.",
       "effects": { "money": 150 }
     },
     {
       "id": "m_boss",
-      "text": "Hóa ra sếp của bạn là ác quỷ cấp thấp trá hình! Bạn làm hỏng máy in của hắn, bị phạt tiền, nhưng tôi luyện tinh thần.",
+      "text": "Sếp của bạn hóa ra là một con quỷ cấp thấp cải trang! Bạn làm hỏng máy in của hắn, bị phạt tiền, nhưng tinh thần của bạn lại được rèn giũa.",
       "effects": { "money": -50, "intelligence": 3 }
     },
     {
       "id": "m_darknet",
-      "text": "Bạn vô tình mua 'đá phát sáng' trên darknet. Đó là quặng phóng xạ. Sức khỏe giảm, nhưng bạn cảm nhận năng lượng kỳ lạ.",
+      "text": "Bạn vô tình mua phải một 'viên đá phát sáng' trên darknet. Đó là quặng phóng xạ. Sức khỏe giảm sút, nhưng bạn cảm nhận được một luồng năng lượng kỳ lạ.",
       "effects": { "health": -20, "qi": "10" }
     }
   ],
   "secret": [
     {
       "id": "s1",
-      "text": "Bạn tình cờ phát hiện linh mạch ẩn trong công viên cũ. Năng lượng Khí tràn đầy cơ thể.",
+      "text": "Bạn tình cờ tìm thấy một linh mạch ẩn sâu trong công viên cũ. Năng lượng Khí tràn ngập cơ thể bạn.",
       "effects": { "qi": "50" }
     },
     {
       "id": "s2",
-      "text": "Trong lúc thiền định ban đêm, Mana Burn nghiêm trọng xảy ra. Kinh mạch của bạn bị tổn thương.",
+      "text": "Trong lúc thiền định ban đêm, một đợt tẩu hỏa nhập ma nghiêm trọng đã xảy ra. Kinh mạch của bạn bị tổn thương.",
       "effects": { "health": -20, "qi": "-15" }
     },
     {
       "id": "s3",
-      "text": "Bạn giúp một chú chó hoang, hóa ra là linh hồn hộ vệ. Nghiệp của bạn cải thiện.",
+      "text": "Bạn đã giúp đỡ một con chó hoang, hóa ra nó là một hộ vệ linh thú. Nghiệp lực của bạn đã tốt lên.",
       "effects": { "karma": 10 }
     },
     {
       "id": "s_gopnik",
-      "text": "Bạn bị đám côn đồ đường phố, hóa ra là tán tu, vây quanh. Bạn đánh đuổi chúng bằng 'Thiết Phong Chưởng' và lấy tiền của chúng.",
+      "text": "Những tên côn đồ đường phố dồn bạn vào chân tường, hóa ra chúng là những tu tiên giả sa ngã. Bạn dùng 'Thiết Phong Chưởng' đánh lui chúng và đoạt lấy tiền.",
       "effects": { "money": 200, "karma": -2 }
     }
   ]

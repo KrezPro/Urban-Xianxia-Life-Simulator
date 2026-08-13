@@ -8,9 +8,145 @@
       "sect": "Tông môn"
     }
   },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} S.Khỏe Tối đa/năm",
+    "healthRegenPerYear": "+{value} Hồi phục/năm",
+    "appearancePerYear": "+{value} Ngoại hình/năm",
+    "qiPerYear": "+{value} Khí/năm",
+    "portalSuccessBps": "+{value}% tỷ lệ vượt cổng",
+    "qiFlatPerYear": "+{value} Khí/năm",
+    "moneyFlatPerYear": "+${value}/năm",
+    "healthRegenFlat": "+{value} Hồi phục/năm",
+    "damageReductionBps": "+{value}% giảm sát thương",
+    "breakthroughChanceBps": "+{value}% tỷ lệ đột phá",
+    "startMoney": "Bắt đầu: +${value}",
+    "startMaxHealth": "Bắt đầu: +{value} S.Khỏe",
+    "startSpiritualRoot": "Bắt đầu: +{value} Linh Căn",
+    "startBodyTempering": "Bắt đầu: +{value} Luyện Thể"
+  },
+  "life": {
+    "survival_cost_line": "Chi phí sinh hoạt: -${amount}/năm",
+    "survival_cost_hint": {
+      "title": "Chi phí sinh hoạt",
+      "text": "Chi phí bắt buộc hàng năm cho thức ăn, nhà ở và an toàn. Vẫn bị trừ dù không chọn hoạt động nào. Nếu thiếu tiền, sức khỏe sẽ suy giảm."
+    }
+  },
   "logs": {
     "survival_cost_paid": "Chi phí sinh hoạt: -${amount}.",
-    "lifestyle_money_delta": "Hoạt động hằng năm: {amount}.",
-    "portal_blessing_gained": "Phước lành cổng: +{percent}% cơ hội đột phá tiếp theo."
+    "lifestyle_money_delta": "Tổng kết hoạt động hằng năm: {amount}.",
+    "portal_blessing_gained": "Phước lành không gian: +{percent}% cơ hội đột phá tiếp theo."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Đạo Pháp",
+      "level": "Cấp",
+      "max": "Tối đa",
+      "cost": "Giá",
+      "upgrade": "Nâng cấp",
+      "locked": "Đã khóa",
+      "not_enough_money": "Không đủ tiền",
+      "current_effects": "Hiện tại",
+      "next_effects": "Tiếp theo",
+      "requirements": {
+        "spiritual_root": "Linh Căn",
+        "intelligence": "Trí tuệ",
+        "stage": "Cảnh giới"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Ẩn Long Tức",
+          "desc": "Kỹ thuật hô hấp cơ bản. Mỗi cấp tăng lượng Khí thu được và cơ hội đột phá."
+        },
+        "technique_iron_meridian": {
+          "name": "Thiết Kinh Mạch",
+          "desc": "Rèn luyện thân thể và kinh mạch. Cải thiện khả năng phục hồi sức khỏe và giảm sát thương."
+        },
+        "technique_jade_ledger": {
+          "name": "Ngọc Sổ Khế",
+          "desc": "Kỹ năng quản lý tài lộc phàm trần. Tăng thu nhập, hiệu quả công việc và tỷ lệ thành công khi đi cổng không gian."
+        },
+        "technique_spirit_sense": {
+          "name": "Linh Thức",
+          "desc": "Kỹ pháp cảm nhận ở giai đoạn cuối. Tăng Khí, tỷ lệ đột phá và vượt cổng thành công."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Cấp",
+    "max_level": "Cấp tối đa",
+    "next_cost": "Giá cấp tiếp theo",
+    "current_effects": "Hiện tại",
+    "next_effects": "Tiếp theo",
+    "effects_note": "Hiệu ứng khởi đầu áp dụng sau khi đầu thai. Hiệu ứng hàng năm áp dụng mỗi năm.",
+    "details_close": "Đóng"
+  },
+  "activities": {
+    "title": "Hoạt động",
+    "dead_text": "Người chết không thể chọn hoạt động.",
+    "select": "Chọn",
+    "selected": "Đã chọn",
+    "disable": "Tắt",
+    "locked": "Khóa",
+    "daily_cost": "Giá/ngày",
+    "daily_income": "Thu nhập/ngày",
+    "yearly_cost": "Giá/năm",
+    "yearly_income": "Thu nhập/năm",
+    "net_yearly": "Thực nhận/năm",
+    "effects_title": "Hiệu ứng/năm",
+    "requirements_label": "Yêu cầu",
+    "none": "Không",
+    "categories": {
+      "job": "Công việc",
+      "sport": "Thể thao",
+      "food": "Ăn uống",
+      "housing": "Nhà ở",
+      "portal": "Cổng không gian"
+    },
+    "requirements": {
+      "age": "Tuổi",
+      "intelligence": "Trí tuệ",
+      "appearance": "Ngoại hình",
+      "spiritual_root": "Linh căn",
+      "health": "Sức khỏe",
+      "max_health": "S.Khỏe tối đa",
+      "stage": "Cảnh giới"
+    },
+    "portal_rewards": {
+      "title": "Phần thưởng cổng",
+      "attempt_cost": "Giá mỗi lần thử: ${cost}",
+      "reward_money": "Tiền: ${min}–${max}",
+      "reward_qi": "Khí: {min}–{max}",
+      "breakthrough_bonus": "Thưởng đột phá: +{percent}%",
+      "fail_damage_bps": "Thất bại: Mất {percent}% Sức Khỏe Tối Đa",
+      "fail_damage_flat": "Thất bại: Nhận {damage} sát thương"
+    },
+    "options": {
+      "job_none": { "name": "Thất nghiệp", "desc": "Không có thu nhập và không có nghĩa vụ." },
+      "job_parttime": { "name": "Bán thời gian", "desc": "Làm việc vặt và giao hàng." },
+      "job_office": { "name": "Nhân viên văn phòng", "desc": "Nhàm chán nhưng ổn định." },
+      "job_manager": { "name": "Quản lý", "desc": "Nhiều trách nhiệm hơn, nhiều tiền hơn." },
+      "job_founder": { "name": "Sáng lập viên", "desc": "Một công ty startup kết hợp công nghệ IT và tâm linh." },
+      "sport_none": { "name": "Không Thể Thao", "desc": "Không hoạt động thể chất." },
+      "sport_home": { "name": "Tập tại nhà", "desc": "Chống đẩy ngoài sân." },
+      "sport_gym": { "name": "Phòng Gym", "desc": "Thẻ thành viên phòng gym địa phương." },
+      "sport_premium": { "name": "Câu lạc bộ cao cấp", "desc": "Huấn luyện viên, hồ bơi và phục hồi." },
+      "sport_spirit": { "name": "Linh Khí Luyện Thể", "desc": "Rèn luyện cơ thể và kinh mạch." },
+      "food_none": { "name": "Không kế hoạch", "desc": "Ăn nhẹ qua loa." },
+      "food_street": { "name": "Thức ăn đường phố", "desc": "Mì và thanh năng lượng." },
+      "food_home": { "name": "Cơm nhà", "desc": "Bữa ăn tươm tất thường ngày." },
+      "food_premium": { "name": "Bữa ăn cao cấp", "desc": "Thực phẩm chất lượng và ăn kiêng." },
+      "food_spirit": { "name": "Linh Thực", "desc": "Các món ăn làm từ linh thảo." },
+      "housing_none": { "name": "Không nhà", "desc": "Ngủ bất cứ nơi nào có thể." },
+      "housing_shelter": { "name": "Nơi trú ẩn", "desc": "Một mái che tồi tàn qua đầu." },
+      "housing_room": { "name": "Phòng trọ", "desc": "Một căn phòng nhỏ trong căn nhà cũ." },
+      "housing_apartment": { "name": "Căn hộ", "desc": "Căn hộ sạch sẽ và giấc ngủ trọn vẹn." },
+      "housing_condo": { "name": "Chung cư cao cấp", "desc": "Tòa nhà hiện đại có an ninh." },
+      "portal_none": { "name": "Không đi cổng", "desc": "Không thám hiểm rủi ro." },
+      "portal_subway": { "name": "Tàu điện ngầm bỏ hoang", "desc": "Những đường hầm cũ kỹ với những con mắt kỳ lạ." },
+      "portal_market": { "name": "Chợ đêm tâm linh", "desc": "Buôn lậu đan dược và những giao dịch mờ ám." },
+      "portal_club": { "name": "Câu lạc bộ Yêu Ma", "desc": "Một câu lạc bộ ngầm nơi yêu ma đánh bạc với con người." },
+      "portal_tower": { "name": "Linh Tháp", "desc": "Thử thách dành cho những tu sĩ kiên cường." }
+    }
   }
 }

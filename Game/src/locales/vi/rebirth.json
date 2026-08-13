@@ -1,41 +1,41 @@
 {
-  "title": "Tái sinh",
-  "accept": "Chấp nhận số mệnh",
+  "title": "Đầu Thai",
+  "accept": "Chấp nhận số phận",
   "tiers": {
     "blessed": {
-      "title": "Tái Sinh Phước Lành",
-      "desc": "Trời cao thương xót. Bạn không chịu tổn thất mới."
+      "title": "Phước lành đầu thai",
+      "desc": "Thiên đạo xót thương. Bạn không phải chịu thêm mất mát nào."
     },
     "uneasy": {
-      "title": "Tái Sinh Bất An",
-      "desc": "Kiếp trước để lại dấu ấn nhẹ trên vận mệnh mới."
+      "title": "Đầu thai bất an",
+      "desc": "Kiếp trước đã để lại một dấu ấn nhẹ trên vận mệnh mới của bạn."
     },
     "troubled": {
-      "title": "Tái Sinh Phiền Muộn",
-      "desc": "Nghiệp kiếp trước đè nặng thân mới."
+      "title": "Đầu thai khốn khó",
+      "desc": "Nghiệp chướng kiếp trước đè nặng lên cơ thể mới của bạn."
     },
     "severe": {
-      "title": "Tái Sinh Nặng Nề",
-      "desc": "Bạn bước vào thế giới mới với tổn thất nặng nề."
+      "title": "Đầu thai khắc nghiệt",
+      "desc": "Bạn bước vào thế giới mới với những mất mát nặng nề."
     },
     "doomed": {
-      "title": "Tái Sinh Tuyệt Mệnh",
-      "desc": "Trời cao quay lưng. Cuộc đời mới bắt đầu trong bóng tối."
+      "title": "Đầu thai tận diệt",
+      "desc": "Thiên đạo đã ngoảnh mặt với bạn. Cuộc đời mới của bạn bắt đầu trong tăm tối."
     }
   },
   "money": {
-    "money_loss_0": "Thừa kế được giữ nguyên.",
-    "money_loss_25": "Mất 25% thừa kế.",
-    "money_loss_50": "Mất 50% thừa kế.",
-    "money_loss_75": "Mất 75% thừa kế.",
-    "money_loss_100": "Bạn mất toàn bộ thừa kế."
+    "money_loss_0": "Di sản được bảo toàn.",
+    "money_loss_25": "Mất 25% di sản.",
+    "money_loss_50": "Mất 50% di sản.",
+    "money_loss_75": "Mất 75% di sản.",
+    "money_loss_100": "Bạn đã mất toàn bộ di sản."
   },
   "health": {
-    "health_start_100": "Thân thể khỏe mạnh.",
-    "health_start_85": "Thân thể hơi suy yếu.",
-    "health_start_70": "Thân thể suy yếu rõ rệt.",
-    "health_start_55": "Bạn sinh ra yếu ớt.",
-    "health_start_40": "Bạn cận kề cái chết."
+    "health_start_100": "Cơ thể bạn hoàn toàn khỏe mạnh.",
+    "health_start_85": "Cơ thể bạn hơi suy yếu.",
+    "health_start_70": "Cơ thể bạn suy yếu rõ rệt.",
+    "health_start_55": "Bạn sinh ra đã ốm yếu.",
+    "health_start_40": "Bạn đang ở bên bờ vực của cái chết."
   },
   "curses": {
     "curse_minor_hunger": {
@@ -43,32 +43,32 @@
       "desc": "Thu nhập giảm 3%."
     },
     "curse_minor_frail": {
-      "name": "Thể Chất Yếu Ớt",
-      "desc": "Hồi phục sức khỏe giảm 5%."
+      "name": "Thể Trạng Yếu Đuối",
+      "desc": "Khả năng hồi phục sức khỏe giảm 5%."
     },
     "curse_minor_fog": {
-      "name": "Tâm Trí Sương Mù",
+      "name": "Tâm Trí Mù Mịt",
       "desc": "Trí tuệ giảm 3."
     },
     "curse_minor_rough_skin": {
-      "name": "Da Thô Ráp",
+      "name": "Da Sần Sùi",
       "desc": "Ngoại hình giảm 3."
     },
     "curse_major_debt": {
-      "name": "Nợ Kiếp Trước",
+      "name": "Món Nợ Kiếp Trước",
       "desc": "Thu nhập giảm 10%."
     },
     "curse_major_cracked_meridians": {
-      "name": "Kinh Mạch Nứt Vỡ",
-      "desc": "Thu nhận Khí giảm 12%."
+      "name": "Kinh Mạch Nứt Nẻ",
+      "desc": "Lượng Khí thu được giảm 12%."
     },
     "curse_major_heaven_mark": {
-      "name": "Dấu Ấn Trời",
-      "desc": "Cơ hội đột phá và thành công cổng giảm 7%."
+      "name": "Ấn Ký Thiên Đạo",
+      "desc": "Tỷ lệ đột phá và thành công khi vượt cổng giảm 7%."
     },
     "curse_major_sickly": {
-      "name": "Thân Thể Bệnh Tật",
-      "desc": "Hồi phục sức khỏe giảm 12%."
+      "name": "Bệnh Tật Liên Miên",
+      "desc": "Khả năng hồi phục sức khỏe giảm 12%."
     }
   }
 }

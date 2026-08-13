@@ -1,9 +1,212 @@
 {
   "app": {
-    "loading": "Đang đánh thức linh hồn..."
+    "loading": "Đang thức tỉnh linh hồn..."
+  },
+  "tab_bar": {
+    "life": "Đời",
+    "dao": "Đạo",
+    "activities": "Hoạt động",
+    "store": "Cửa hàng",
+    "settings": "Cài đặt",
+    "log": "Nhật ký",
+    "sect": "Tông môn"
+  },
+  "log_screen": {
+    "title": "Nhật ký Thiên Mệnh",
+    "empty": "Đường đời của bạn chỉ mới bắt đầu..."
+  },
+  "idle": {
+    "offline_secret": "Tiến trình ngoại tuyến: Bạn đã thiền {seconds} giây. Nhận được Khí: {amount}.",
+    "offline_mundane": "Tiến trình ngoại tuyến: Bạn đã làm việc {seconds} giây. Kiếm được: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Hồ sơ",
+    "age": "Tuổi",
+    "stage": "Cảnh giới",
+    "health": "Sức khỏe",
+    "intelligence": "Trí tuệ",
+    "appearance": "Ngoại hình",
+    "money": "Tiền",
+    "qi": "Khí",
+    "karma": "Nghiệp lực",
+    "btn_grow": "Thêm 1 tuổi"
   },
   "life_screen": {
-    "interstitial_log": "[QUẢNG CÁO] Quảng cáo xen kẽ đã hiển thị sau khi trùng sinh ở tuổi 1.",
-    "meditation_log": "Một năm trôi qua trong thiền định bí mật. Thu thập được {amount} Khí."
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Bạn được sinh ra trong thế giới này. Câu chuyện của bạn bắt đầu...",
+    "death_log": "Bạn đã chết. Linh hồn bạn bước vào vòng luân hồi vô tận của Samsara...",
+    "reincarnate_log": "Bánh xe luân hồi đã chuyển. Bạn được tái sinh trong một cơ thể mới.",
+    "age": "Tuổi",
+    "health": "Sức khỏe",
+    "intelligence": "Trí tuệ",
+    "appearance": "Ngoại hình",
+    "money": "Tiền",
+    "expenses_year": "Chi phí hàng năm",
+    "spiritual_root": "Linh Căn",
+    "qi": "Khí",
+    "karma": "Nghiệp lực",
+    "focus_title": "Mục tiêu năm nay:",
+    "focus_mundane": "Cuộc sống phàm nhân",
+    "focus_secret": "Con đường tu tiên",
+    "btn_grow": "Thêm 1 tuổi",
+    "btn_reincarnate": "Đầu thai",
+    "btn_log": "Nhật ký",
+    "dead_title": "BẠN ĐÃ CHẾT",
+    "dead_subtitle": "Hành trình cuộc đời của bạn đã bị gián đoạn.",
+    "death_cause_label": "Nguyên nhân cái chết:",
+    "death_causes": {
+      "none": "Không rõ",
+      "old_age": "Tuổi già",
+      "health": "Sức khỏe suy kiệt",
+      "breakthrough": "Đột phá thất bại",
+      "portal": "Tai nạn tại cổng",
+      "event": "Sự kiện định mệnh"
+    },
+    "karma_accumulated": "Tổng Nghiệp lực:",
+    "karma_earned_last_life": "Di sản nhận được (Nghiệp lực):",
+    "meditation_log": "Một năm trôi qua trong thiền định bí mật. Thu thập được {amount} Khí.",
+    "age_log": "Bạn đã {age} tuổi.",
+    "interstitial_log": "[QUẢNG CÁO] Quảng cáo xen kẽ đã hiển thị sau khi đầu thai ở tuổi 1.",
+    "avatar": {
+      "aria_child": "Một đứa trẻ đang bò trên đường đời",
+      "aria_teen": "Một thiếu niên bước những bước đi đầu tiên",
+      "aria_adult": "Một người trưởng thành đang thiền định sâu",
+      "aria_mature": "Một bậc thầy chìm trong thiền định",
+      "aria_elder": "Một trưởng lão ở hoàng hôn của cuộc đời"
+    },
+    "hints": {
+      "close": "Đã hiểu",
+      "intelligence": {
+        "title": "Trí tuệ",
+        "text": "Tăng cơ hội đột phá thành công và giúp ích trong học tập, công việc cùng các sự kiện phàm nhân."
+      },
+      "health": {
+        "title": "Sức khỏe",
+        "text": "Nếu sức khỏe giảm xuống 0, bạn sẽ chết và phải đầu thai. Hãy bảo vệ nó."
+      },
+      "appearance": {
+        "title": "Ngoại hình",
+        "text": "Ảnh hưởng đến các sự kiện xã hội, các mối quan hệ và một số cơ hội phàm trần."
+      },
+      "money": {
+        "title": "Tiền",
+        "text": "Cần thiết để sinh sống, đóng góp cho Tông môn và nắm bắt cơ hội trong tương lai."
+      },
+      "expenses": {
+        "title": "Chi phí hàng năm",
+        "text": "Chi phí sinh hoạt: {survival} mỗi năm. Lối sống (công việc, thể thao, ăn uống, nhà ở, cổng không gian): {lifestyle} mỗi năm. Nếu không đủ tiền trả chi phí sinh hoạt, sức khỏe của bạn sẽ bị ảnh hưởng."
+      },
+      "spiritual_root": {
+        "title": "Linh Căn",
+        "text": "Xác định tốc độ tích lũy Khí và tiềm năng tu luyện."
+      },
+      "karma": {
+        "title": "Nghiệp lực",
+        "text": "Tích lũy qua các kiếp sống và được dùng để mua các nâng cấp vĩnh viễn trong Cửa hàng Nghiệp lực."
+      },
+      "focus_mundane": {
+        "title": "Cuộc sống phàm nhân",
+        "text": "Tập trung vào tiền bạc, học tập và sự nghiệp. Giảm cơ hội gặp sự kiện bí mật."
+      },
+      "focus_secret": {
+        "title": "Con đường tu tiên",
+        "text": "Tập trung vào tu luyện: bạn nhận được Khí và thường xuyên gặp các sự kiện bí mật hơn."
+      },
+      "age": {
+        "title": "Tuổi tác",
+        "text": "Tuổi thọ tối đa của cảnh giới hiện tại: {maxAge} năm. Tuổi già có thể ập đến sớm hơn, đặc biệt là sau {softAge} năm."
+      },
+      "age_immortal": {
+        "title": "Tuổi tác",
+        "text": "Cảnh giới này là bất tử: tuổi già sẽ không còn có thể giết chết bạn nữa."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Cửa hàng Nghiệp lực",
+    "karma_balance": "Nghiệp lực của bạn",
+    "btn_buy": "Mua",
+    "btn_bought": "Đã sở hữu",
+    "btn_no_karma": "Không đủ",
+    "cost": "Giá",
+    "iap_section": "Premium & Nạp thẻ",
+    "iap_pass": "Cultivator Pass",
+    "iap_pass_desc": "Vô hiệu hóa vĩnh viễn mọi quảng cáo xen kẽ và ủng hộ nhà phát triển.",
+    "iap_ad": "Quảng cáo Cứu Mạng",
+    "iap_ad_desc": "Có sẵn ở tab Đạo trước khi đột phá (bảo vệ khỏi cái chết).",
+    "btn_iap_buy": "Mua Pass",
+    "btn_iap_active": "Đang hoạt động",
+    "btn_info": "Thông tin",
+    "items": {
+      "buff_rich_family": {
+        "name": "Gia Đình Giàu Có",
+        "desc": "Mỗi lần đầu thai bắt đầu với nhiều tiền hơn và được thưởng thêm thu nhập hàng năm."
+      },
+      "buff_strong_meridians": {
+        "name": "Kinh Mạch Khỏe Mạnh",
+        "desc": "Cường hóa cơ thể: tăng Sức Khỏe Tối Đa, khả năng hồi phục và giảm sát thương nhận vào."
+      },
+      "buff_pure_root": {
+        "name": "Linh Căn Thuần Khiết",
+        "desc": "Cải thiện Linh Căn và cung cấp lượng Khí tăng cố định mỗi năm."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Đạo Lộ",
+    "stage": "Cảnh giới",
+    "unknown": "Chưa rõ",
+    "qi_energy": "Khí",
+    "next_stage": "Cảnh giới tiếp theo",
+    "req_qi": "Khí yêu cầu",
+    "success_chance": "Tỷ lệ thành công",
+    "btn_breakthrough": "Thử Đột Phá",
+    "btn_no_qi": "Không đủ Khí",
+    "max_stage": "Bạn đã đạt đến đỉnh cao tu luyện. Thiên đạo không còn trói buộc bạn.",
+    "dead_text": "Người chết thì không thể tu luyện.",
+    "btn_ad_buff": "Xem Quảng cáo (+10% & Bảo vệ)",
+    "btn_ad_watched": "Buff đang hoạt động",
+    "alert_ad_title": "Quảng cáo",
+    "alert_ad_msg": "Đã xem video! Bạn nhận được buff cho lần đột phá tiếp theo.",
+    "body_title": "Luyện Thể",
+    "body_level": "Cấp độ",
+    "body_cost": "Giá",
+    "body_button": "Luyện Thể",
+    "body_locked_age": "Cơ thể bạn vẫn còn quá yếu",
+    "body_locked_year": "Luyện thể sẽ mở vào năm sau",
+    "body_locked_qi": "Không đủ Khí",
+    "body_effect_line": "+{maxHealth} Sức Khỏe, +{regen} Hồi phục/năm, kháng bệnh tật {resistance}%",
+    "body_desc": "Cơ thể được rèn giũa qua những đau đớn, mồ hôi và ý chí, trở thành vật chứa cho sức mạnh thực sự.",
+    "details_close": "Đóng",
+    "body_details_title": "Hiệu Quả Luyện Thể",
+    "body_details_max_health": "Sức Khỏe Tối Đa",
+    "body_details_regen": "Hồi phục/năm",
+    "body_details_illness": "Kháng bệnh tật",
+    "body_details_mortality": "Giảm nguy cơ tử vong",
+    "body_details_survival": "Giảm chi phí sinh hoạt",
+    "body_details_breakthrough": "Giảm sát thương đột phá",
+    "body_details_portal": "Giảm sát thương khi đi cổng không gian",
+    "stage_info_max_age": "Tuổi thọ tối đa",
+    "stage_info_soft_age": "Bắt đầu già yếu từ",
+    "stage_info_meditation": "Thiền định Khí",
+    "stage_info_mortality": "Nguy cơ tử vong",
+    "stage_info_survival": "Chi phí sinh hoạt",
+    "stage_info_breakthrough_damage": "Nguy hiểm khi đột phá",
+    "stage_info_required_qi": "Khí yêu cầu",
+    "stage_info_immortal": "Bất tử: tuổi già không còn là mối đe dọa",
+    "portal_blessing_active": "Phước lành không gian đang hoạt động: +{percent}",
+    "log_no_qi": "Không đủ năng lượng Khí để đột phá.",
+    "log_success": "[THÀNH CÔNG] Đột phá thành công! Bạn đạt cảnh giới: {name}. Kinh mạch được mở rộng.",
+    "log_fail_death": "[THẤT BẠI CHÍ MẠNG] Thiên kiếp quá mạnh. Bạn đã chết.",
+    "log_fail_damage": "[THẤT BẠI] Đột phá thất bại. Tẩu hỏa nhập ma xảy ra, bạn nhận {damage} sát thương.",
+    "log_ad_saved": "[ĐƯỢC CỨU] Đột phá thất bại, nhưng Buff Quảng Cáo đã bảo vệ kinh mạch của bạn khỏi tổn thương!"
+  },
+  "settings_screen": {
+    "title": "Cài đặt",
+    "sound": "Âm thanh giao diện",
+    "sound_desc": "Âm thanh ngắn cho các nút và hành động.",
+    "music": "Âm nhạc",
+    "music_desc": "Nhạc nền lặp lại."
   }
 }
