@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "Ruh uyanıyor..."
+  },
+  "tab_bar": {
+    "life": "Hayat",
+    "dao": "Dao",
+    "activities": "Aktiviteler",
+    "store": "Mağaza",
+    "settings": "Ayarlar",
+    "log": "Günlük",
+    "sect": "Tarikat"
+  },
+  "log_screen": {
+    "title": "Kader Günlüğü",
+    "empty": "Hayat yolun henüz yeni başlıyor..."
+  },
+  "idle": {
+    "offline_secret": "Çevrimdışı ilerleme: {seconds}sn boyunca meditasyon yaptın. Kazanılan Qi: {amount}.",
+    "offline_mundane": "Çevrimdışı ilerleme: {seconds}sn boyunca çalıştın. Kazanılan: ${amount}."
+  },
+  "profile_screen": {
+    "title": "Profil",
+    "age": "Yaş",
+    "stage": "Aşama",
+    "health": "Sağlık",
+    "intelligence": "Zeka",
+    "appearance": "Görünüm",
+    "money": "Para",
+    "qi": "Qi",
+    "karma": "Karma",
+    "btn_grow": "Büyü (+1 yıl)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "Bu dünyaya doğdun. Hikayen başlıyor...",
+    "death_log": "Öldün. Ruhun sonsuz Samsara döngüsüne giriyor...",
+    "reincarnate_log": "Samsara'nın Çarkı döndü. Yeni bir bedende yeniden doğdun.",
+    "age": "Yaş",
+    "health": "Sağlık",
+    "intelligence": "Zeka",
+    "appearance": "Görünüm",
+    "money": "Para",
+    "expenses_year": "Yıllık Giderler",
+    "spiritual_root": "Ruhsal Kök",
+    "qi": "Qi Enerjisi",
+    "karma": "Karma",
+    "focus_title": "Bu yılın odak noktası:",
+    "focus_mundane": "Ölümlü Hayat",
+    "focus_secret": "Gizli Yol",
+    "btn_grow": "Büyü (+1 yıl)",
+    "btn_reincarnate": "Yeniden Doğ",
+    "btn_log": "Günlük",
+    "dead_title": "ÖLDÜN",
+    "dead_subtitle": "Hayat yolculuğun yarıda kesildi.",
+    "death_cause_label": "Ölüm nedeni:",
+    "death_causes": {
+      "none": "Bilinmiyor",
+      "old_age": "Yaşlılık",
+      "health": "Sağlık sorunları",
+      "breakthrough": "Atılım başarısızlığı",
+      "portal": "Portal kazası",
+      "event": "Kader olayı"
+    },
+    "karma_accumulated": "Toplam Karma:",
+    "karma_earned_last_life": "Kazanılan Miras (Karma):",
+    "meditation_log": "Bir yıl gizli meditasyonla geçti. {amount} Qi enerjisi topladın.",
+    "age_log": "{age} yaşına girdin.",
+    "interstitial_log": "[REKLAM] 1 yaşında yeniden doğduktan sonra geçiş reklamı gösterildi.",
+    "avatar": {
+      "aria_child": "Hayat yolunda emekleyen bir bebek",
+      "aria_teen": "İlk adımlarını atan bir genç",
+      "aria_adult": "Derin meditasyonda bir yetişkin",
+      "aria_mature": "Derin bir trans halinde bir usta",
+      "aria_elder": "Yolunun alacakaranlığında bir ihtiyar"
+    },
+    "hints": {
+      "close": "Anladım",
+      "intelligence": {
+        "title": "Zeka",
+        "text": "Atılım başarı şansını artırır ve çalışma, iş ile dünyevi olaylarda yardımcı olur."
+      },
+      "health": {
+        "title": "Sağlık",
+        "text": "Sağlığın 0'a düşerse ölür ve yeniden doğarsın. Onu koru."
+      },
+      "appearance": {
+        "title": "Görünüm",
+        "text": "Sosyal olayları, ilişkileri ve bazı dünyevi fırsatları etkiler."
+      },
+      "money": {
+        "title": "Para",
+        "text": "Yaşamak, tarikat bağışları ve gelecekteki fırsatlar için gereklidir."
+      },
+      "expenses": {
+        "title": "Yıllık giderler",
+        "text": "Yaşam maliyeti: Yılda {survival}. Yaşam tarzı (iş, spor, yemek, barınma, portallar): Yılda {lifestyle}. Yaşam maliyetini ödeyemezsen sağlığın bozulur."
+      },
+      "spiritual_root": {
+        "title": "Ruhsal Kök",
+        "text": "Qi birikim hızını ve gelişim potansiyelini belirler."
+      },
+      "karma": {
+        "title": "Karma",
+        "text": "Hayatlar boyunca birikir ve Karma Mağazası'nda kalıcı yükseltmeler için harcanır."
+      },
+      "focus_mundane": {
+        "title": "Ölümlü Hayat",
+        "text": "Para, eğitim ve kariyere odaklan. Gizli olaylarla karşılaşma şansı daha düşüktür."
+      },
+      "focus_secret": {
+        "title": "Gizli Yol",
+        "text": "Gelişime odaklan: Qi kazanırsın ve gizli olaylarla daha sık karşılaşırsın."
+      },
+      "age": {
+        "title": "Yaş",
+        "text": "Mevcut aşamanın maksimum ömrü: {maxAge} yıl. Yaşlılık, özellikle {softAge} yaşından sonra daha erken gelebilir."
+      },
+      "age_immortal": {
+        "title": "Yaş",
+        "text": "Bu aşama ölümsüzdür: Yaşlılık artık seni öldürmez."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "Karma Mağazası",
+    "karma_balance": "Karman",
+    "btn_buy": "Satın Al",
+    "btn_bought": "Kazanıldı",
+    "btn_no_karma": "Yetersiz",
+    "cost": "Bedel",
+    "iap_section": "Premium & Destek",
+    "iap_pass": "Gelişimci Bileti",
+    "iap_pass_desc": "Tüm geçiş reklamlarını sonsuza dek devre dışı bırakır ve geliştiriciyi destekler.",
+    "iap_ad": "Kurtarıcı Reklam",
+    "iap_ad_desc": "Dao sekmesinde bir atılımdan önce kullanılabilir (Ölüm Koruması).",
+    "btn_iap_buy": "Bilet Al",
+    "btn_iap_active": "Aktif",
+    "btn_info": "Bilgi",
+    "items": {
+      "buff_rich_family": {
+        "name": "Zengin Aile",
+        "desc": "Her yeniden doğuş ekstra para ve küçük bir yıllık gelir bonusu ile başlar."
+      },
+      "buff_strong_meridians": {
+        "name": "Güçlü Meridyenler",
+        "desc": "Bedeni güçlendirir: Daha fazla Maks. Sağlık, yenilenme ve hasar azaltma."
+      },
+      "buff_pure_root": {
+        "name": "Saf Kök",
+        "desc": "Ruhsal Kökü iyileştirir ve yılda sabit Qi kazanımı sağlar."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "Dao Yolu",
+    "stage": "Aşama",
+    "unknown": "Bilinmiyor",
+    "qi_energy": "Qi Enerjisi",
+    "next_stage": "Sonraki Adım",
+    "req_qi": "Gereken Qi",
+    "success_chance": "Başarı Şansı",
+    "btn_breakthrough": "Atılım Yap",
+    "btn_no_qi": "Yetersiz Qi",
+    "max_stage": "Gelişimin zirvesine ulaştın. Gökler artık seni bağlamıyor.",
+    "dead_text": "Ölüler gelişim yapamaz.",
+    "btn_ad_buff": "Reklam İzle (+%10 & Koruma)",
+    "btn_ad_watched": "Takviye Aktif",
+    "alert_ad_title": "Reklam",
+    "alert_ad_msg": "Video izlendi! Bir sonraki atılım için takviye aldın.",
+    "body_title": "Beden Dövme",
+    "body_level": "Seviye",
+    "body_cost": "Bedel",
+    "body_button": "Beden Döv",
+    "body_locked_age": "Bedenin hala çok zayıf",
+    "body_locked_year": "Dövme gelecek yıl açılacak",
+    "body_locked_qi": "Yetersiz Qi",
+    "body_effect_line": "+{maxHealth} Maks. Sağlık, +{regen} Yenileme/yıl, hastalık direnci %{resistance}",
+    "body_desc": "Beden acı, ter ve iradeyle dövülerek gerçek güç için bir kap haline gelir.",
+    "details_close": "Kapat",
+    "body_details_title": "Beden Dövme Etkileri",
+    "body_details_max_health": "Maksimum Sağlık",
+    "body_details_regen": "Yenileme/yıl",
+    "body_details_illness": "Hastalık direnci",
+    "body_details_mortality": "Ölüm oranı azaltımı",
+    "body_details_survival": "Yaşam maliyeti indirimi",
+    "body_details_breakthrough": "Atılım hasar azaltımı",
+    "body_details_portal": "Portal hasar azaltımı",
+    "stage_info_max_age": "Maks. ömür",
+    "stage_info_soft_age": "Yaşlılık başlangıcı",
+    "stage_info_meditation": "Qi meditasyonu",
+    "stage_info_mortality": "Ölüm oranı",
+    "stage_info_survival": "Yaşam maliyeti",
+    "stage_info_breakthrough_damage": "Atılım tehlikesi",
+    "stage_info_required_qi": "Gereken Qi",
+    "stage_info_immortal": "Ölümsüz: Yaşlılık artık öldürmez",
+    "portal_blessing_active": "Aktif portal kutsaması: +{percent}",
+    "log_no_qi": "Atılım için yetersiz Qi enerjisi.",
+    "log_success": "[BAŞARILI] Atılım başarılı! Yeni Aşama: {name}. Meridyenlerin genişledi.",
+    "log_fail_death": "[KRİTİK BAŞARISIZLIK] İlahi Sınav çok güçlüydü. Öldün.",
+    "log_fail_damage": "[BAŞARISIZ] Atılım başarısız oldu. Mana Yanığı gerçekleşti, {damage} hasar aldın.",
+    "log_ad_saved": "[KURTULDU] Atılım başarısız oldu, ancak Reklam Takviyesi meridyenlerini hasardan korudu!"
+  },
+  "settings_screen": {
+    "title": "Ayarlar",
+    "sound": "Arayüz Sesi",
+    "sound_desc": "Düğmeler ve eylemler için kısa sesler.",
+    "music": "Müzik",
+    "music_desc": "Döngüsel arka plan müziği."
+  }
+}

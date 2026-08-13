@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "Hayat",
+      "dao": "Dao",
+      "activities": "Aktiviteler",
+      "store": "Mağaza",
+      "sect": "Tarikat"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} Maks Sağlık/yıl",
+    "healthRegenPerYear": "+{value} Yenileme/yıl",
+    "appearancePerYear": "+{value} Görünüm/yıl",
+    "qiPerYear": "+{value} Qi/yıl",
+    "portalSuccessBps": "+%{value} portal başarısı",
+    "qiFlatPerYear": "+{value} Qi/yıl",
+    "moneyFlatPerYear": "+${value}/yıl",
+    "healthRegenFlat": "+{value} Yenileme/yıl",
+    "damageReductionBps": "+%{value} hasar azaltma",
+    "breakthroughChanceBps": "+%{value} atılım şansı",
+    "startMoney": "Başlangıç: +${value}",
+    "startMaxHealth": "Başlangıç: +{value} Maks Sağlık",
+    "startSpiritualRoot": "Başlangıç: +{value} Ruhsal Kök",
+    "startBodyTempering": "Başlangıç: +{value} Beden Dövme"
+  },
+  "life": {
+    "survival_cost_line": "Yaşam maliyeti: -${amount}/yıl",
+    "survival_cost_hint": {
+      "title": "Yaşam maliyetleri",
+      "text": "Yemek, barınma ve güvenlik için zorunlu yıllık harcamalar. Herhangi bir aktivite seçilmese bile tahsil edilir. Paran yetmezse sağlığın bozulur."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "Yaşam maliyeti: -${amount}.",
+    "lifestyle_money_delta": "Aktivitelerin yıllık net getirisi: {amount}.",
+    "portal_blessing_gained": "Portal kutsaması: Sonraki atılım şansına +%{percent}."
+  },
+  "dao": {
+    "techniques": {
+      "title": "Dao Teknikleri",
+      "level": "Seviye",
+      "max": "Maks",
+      "cost": "Bedel",
+      "upgrade": "Geliştir",
+      "locked": "Kilitli",
+      "not_enough_money": "Yetersiz para",
+      "current_effects": "Mevcut",
+      "next_effects": "Sonraki",
+      "requirements": {
+        "spiritual_root": "Ruhsal Kök",
+        "intelligence": "Zeka",
+        "stage": "Aşama"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "Gizli Ejderha Nefesi",
+          "desc": "Temel bir nefes alma tekniği. Qi kazanımını ve atılım şansını artırır."
+        },
+        "technique_iron_meridian": {
+          "name": "Demir Meridyenler",
+          "desc": "Bedeni ve meridyenleri döver. Sağlık iyileşmesini artırır ve hasarı azaltır."
+        },
+        "technique_jade_ledger": {
+          "name": "Yeşim Defter",
+          "desc": "Dünyevi bir zenginlik tekniği. Geliri, iş verimliliğini ve portal başarısını artırır."
+        },
+        "technique_spirit_sense": {
+          "name": "Ruhsal His",
+          "desc": "İleri düzey bir algı tekniği. Qi, atılım ve portal başarısını destekler."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "Seviye",
+    "max_level": "Maks seviye",
+    "next_cost": "Sonraki seviye bedeli",
+    "current_effects": "Mevcut",
+    "next_effects": "Sonraki",
+    "effects_note": "Başlangıç etkileri reenkarnasyondan sonra uygulanır. Yıllık etkiler her yıl uygulanır.",
+    "details_close": "Kapat"
+  },
+  "activities": {
+    "title": "Aktiviteler",
+    "dead_text": "Ölüler aktivite seçemez.",
+    "select": "Seç",
+    "selected": "Seçildi",
+    "disable": "İptal Et",
+    "locked": "Kilitli",
+    "daily_cost": "Maliyet/gün",
+    "daily_income": "Gelir/gün",
+    "yearly_cost": "Maliyet/yıl",
+    "yearly_income": "Gelir/yıl",
+    "net_yearly": "Net/yıl",
+    "effects_title": "Etkiler/yıl",
+    "requirements_label": "Gereksinimler",
+    "none": "Yok",
+    "categories": {
+      "job": "İş",
+      "sport": "Spor",
+      "food": "Yemek",
+      "housing": "Barınma",
+      "portal": "Portallar"
+    },
+    "requirements": {
+      "age": "Yaş",
+      "intelligence": "Zeka",
+      "appearance": "Görünüm",
+      "spiritual_root": "Ruhsal Kök",
+      "health": "Sağlık",
+      "max_health": "Maks Sağlık",
+      "stage": "Aşama"
+    },
+    "portal_rewards": {
+      "title": "Portal Ödülleri",
+      "attempt_cost": "Giriş bedeli: ${cost}",
+      "reward_money": "Para: ${min}–${max}",
+      "reward_qi": "Qi: {min}–{max}",
+      "breakthrough_bonus": "Atılım bonusu: +%{percent}",
+      "fail_damage_bps": "Başarısızlık: Maks Sağlığın %{percent}'i kadar hasar",
+      "fail_damage_flat": "Başarısızlık: {damage} hasar"
+    },
+    "options": {
+      "job_none": { "name": "İş Yok", "desc": "Gelir yok ve yükümlülük yok." },
+      "job_parttime": { "name": "Yarı Zamanlı", "desc": "Küçük getir-götür işleri ve teslimat." },
+      "job_office": { "name": "Ofis Çalışanı", "desc": "Sıkıcı ama istikrarlı." },
+      "job_manager": { "name": "Yönetici", "desc": "Daha fazla sorumluluk, daha fazla para." },
+      "job_founder": { "name": "Teknoloji Kurucusu", "desc": "Bilişim ve ruhsal teknolojiyi harmanlayan bir girişim." },
+      "sport_none": { "name": "Spor Yok", "desc": "Fiziksel aktivite yok." },
+      "sport_home": { "name": "Ev Egzersizi", "desc": "Bahçede şınav." },
+      "sport_gym": { "name": "Spor Salonu", "desc": "Yerel spor salonu üyeliği." },
+      "sport_premium": { "name": "Premium Kulüp", "desc": "Antrenörler, havuz ve iyileşme." },
+      "sport_spirit": { "name": "Ruhsal Antrenman", "desc": "Beden ve meridyen eğitimi." },
+      "food_none": { "name": "Yemek Planı Yok", "desc": "Ayaküstü atıştırmalıklar." },
+      "food_street": { "name": "Sokak Yemeği", "desc": "Erişte ve enerji barları." },
+      "food_home": { "name": "Ev Yemeği", "desc": "Düzenli, makul öğünler." },
+      "food_premium": { "name": "Premium Yemekler", "desc": "Kaliteli ürünler ve diyet." },
+      "food_spirit": { "name": "Ruhsal Mutfak", "desc": "Ruhsal otlardan yapılan yemekler." },
+      "housing_none": { "name": "Barınma Yok", "desc": "Nerede bulursan orada uyu." },
+      "housing_shelter": { "name": "Sığınak", "desc": "Başının üstünde asgari bir çatı." },
+      "housing_room": { "name": "Oda", "desc": "Eski bir evde küçük bir oda." },
+      "housing_apartment": { "name": "Daire", "desc": "Temiz bir daire ve düzgün bir uyku." },
+      "housing_condo": { "name": "Rezidans", "desc": "Güvenlikli modern bina." },
+      "portal_none": { "name": "Portal Yok", "desc": "Riskli keşif seferleri yok." },
+      "portal_subway": { "name": "Terkedilmiş Metro", "desc": "Garip gözlerin olduğu eski tüneller." },
+      "portal_market": { "name": "Gece Ruh Pazarı", "desc": "Hap kaçakçılığı ve karanlık işler." },
+      "portal_club": { "name": "İblis Kulübü", "desc": "İblislerin insanlarla kumar oynadığı bir yeraltı kulübü." },
+      "portal_tower": { "name": "Ruh Kulesi", "desc": "Dayanıklı gelişimciler için bir sınav." }
+    }
+  }
+}

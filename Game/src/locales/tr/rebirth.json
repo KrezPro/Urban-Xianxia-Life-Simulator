@@ -1,1 +1,74 @@
-{}
+{
+  "title": "Yeniden Doğuş",
+  "accept": "Kaderi kabul et",
+  "tiers": {
+    "blessed": {
+      "title": "Kutsanmış Yeniden Doğuş",
+      "desc": "Gökler merhametli. Yeni bir kayıp yaşamıyorsun."
+    },
+    "uneasy": {
+      "title": "Huzursuz Yeniden Doğuş",
+      "desc": "Önceki hayatın yeni kaderinde hafif bir iz bıraktı."
+    },
+    "troubled": {
+      "title": "Sıkıntılı Yeniden Doğuş",
+      "desc": "Geçmiş hayatının karması yeni bedenine ağır geliyor."
+    },
+    "severe": {
+      "title": "Şiddetli Yeniden Doğuş",
+      "desc": "Yeni dünyaya ağır kayıplarla girdin."
+    },
+    "doomed": {
+      "title": "Lanetli Yeniden Doğuş",
+      "desc": "Gökler sana sırtını döndü. Yeni hayatın karanlıkta başladı."
+    }
+  },
+  "money": {
+    "money_loss_0": "Miras korundu.",
+    "money_loss_25": "Mirasın %25'i kaybedildi.",
+    "money_loss_50": "Mirasın %50'si kaybedildi.",
+    "money_loss_75": "Mirasın %75'i kaybedildi.",
+    "money_loss_100": "Tüm mirasını kaybettin."
+  },
+  "health": {
+    "health_start_100": "Bedenin sağlıklı.",
+    "health_start_85": "Bedenin hafifçe zayıflamış.",
+    "health_start_70": "Bedenin gözle görülür şekilde zayıflamış.",
+    "health_start_55": "Zayıf doğdun.",
+    "health_start_40": "Ölümün eşiğindesin."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "Aç Gölge",
+      "desc": "Gelir %3 azalır."
+    },
+    "curse_minor_frail": {
+      "name": "Kırılgan Beden",
+      "desc": "Sağlık yenilenmesi %5 azalır."
+    },
+    "curse_minor_fog": {
+      "name": "Sisli Zihin",
+      "desc": "Zeka 3 azalır."
+    },
+    "curse_minor_rough_skin": {
+      "name": "Pürüzlü Cilt",
+      "desc": "Görünüm 3 azalır."
+    },
+    "curse_major_debt": {
+      "name": "Geçmiş Yaşam Borcu",
+      "desc": "Gelir %10 azalır."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "Çatlamış Meridyenler",
+      "desc": "Qi kazanımı %12 azalır."
+    },
+    "curse_major_heaven_mark": {
+      "name": "Cennetin İşareti",
+      "desc": "Atılım şansı ve portal başarısı %7 azalır."
+    },
+    "curse_major_sickly": {
+      "name": "Hastalıklı Beden",
+      "desc": "Sağlık yenilenmesi %12 azalır."
+    }
+  }
+}

@@ -1,4 +1,51 @@
 {
-  "mundane": [],
-  "secret": []
+  "mundane": [
+    {
+      "id": "m1",
+      "text": "Tüm yıl sıkı çalıştın. Bilgin genişledi.",
+      "effects": { "intelligence": 2 }
+    },
+    {
+      "id": "m2",
+      "text": "Ciddi bir virüs kaptın ve hastanede yattın.",
+      "effects": { "health": -15 }
+    },
+    {
+      "id": "m3",
+      "text": "İyi bir yarı zamanlı iş buldun ve biraz dolar biriktirdin.",
+      "effects": { "money": 150 }
+    },
+    {
+      "id": "m_boss",
+      "text": "Patronun kılık değiştirmiş düşük seviyeli bir iblis çıktı! Yazıcısını kırdın, ceza yedin ama ruhunu güçlendirdin.",
+      "effects": { "money": -50, "intelligence": 3 }
+    },
+    {
+      "id": "m_darknet",
+      "text": "Darknet'ten yanlışlıkla 'parlayan bir taş' aldın. Radyoaktif bir cevherdi. Sağlığın düştü ama garip bir enerji hissediyorsun.",
+      "effects": { "health": -20, "qi": "10" }
+    }
+  ],
+  "secret": [
+    {
+      "id": "s1",
+      "text": "Eski bir parkta gizli bir ruhsal damara denk geldin. Qi enerjisi seni dolduruyor.",
+      "effects": { "qi": "50" }
+    },
+    {
+      "id": "s2",
+      "text": "Gece meditasyonu sırasında şiddetli bir Mana Yanığı oluştu. Meridyenlerin hasar gördü.",
+      "effects": { "health": -20, "qi": "-15" }
+    },
+    {
+      "id": "s3",
+      "text": "Koruyucu ruh olduğu ortaya çıkan sokak köpeğine yardım ettin. Karman düzeldi.",
+      "effects": { "karma": 10 }
+    },
+    {
+      "id": "s_gopnik",
+      "text": "Yoldan çıkmış gelişimciler olduğu anlaşılan sokak serserileri seni köşeye sıkıştırdı. 'Demir Rüzgar Palmiyesi' ile onları püskürttün ve paralarını aldın.",
+      "effects": { "money": 200, "karma": -2 }
+    }
+  ]
 }

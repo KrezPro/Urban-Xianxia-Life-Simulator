@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "Ayarlar",
+  "title": "Ayarlar",
+  "sound": "Arayüz Sesi",
+  "sound_desc": "Düğmeler ve eylemler için kısa sesler.",
+  "music": "Müzik",
+  "music_desc": "Döngüsel arka plan müziği.",
+  "language": "Dil",
+  "language_desc": "Arayüz dilini seçin.",
+  "language_button": "Dili değiştir",
+  "language_current": "Mevcut dil",
+  "language_close": "Kapat",
+  "language_selection": {
+    "title": "Dil Seçimi",
+    "subtitle": "Arayüz dilini seçin. Daha sonra Ayarlar'dan değiştirebilirsiniz.",
+    "confirm": "Onayla",
+    "close": "Kapat"
+  }
+}

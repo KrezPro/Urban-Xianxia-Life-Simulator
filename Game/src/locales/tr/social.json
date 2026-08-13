@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "Tarikat",
+    "loading": "Sosyal katman yükleniyor...",
+    "tab_my_sect": "Benim Tarikatım",
+    "tab_leaderboard": "Liderlik Tablosu",
+    "empty_title": "Şirket Tarikatı",
+    "empty_text": "Gizli bir şirket tarikatı kur veya etki mücadelesine katılmak için bir davet kodu gir.",
+    "invite_placeholder": "Davet kodu",
+    "btn_create": "Tarikat Kur",
+    "btn_join": "Kodla Katıl",
+    "join_error": "Geçersiz davet kodu. A-Z veya 0-9 arası 8 karakter bekleniyor.",
+    "invite_code": "Davet Kodu",
+    "share_invite": "Daveti Paylaş",
+    "funds": "Fonlar",
+    "influence": "Etki",
+    "season": "Sezon",
+    "members": "Üyeler",
+    "player_name": "Sen",
+    "contribution": "Katkı",
+    "btn_leave": "Tarikattan Ayrıl",
+    "leave_confirm_title": "Tarikattan ayrıl?",
+    "leave_confirm_message": "Mevcut tarikat katkını kaybedeceksin, ancak başka bir tarikata katılabilirsin.",
+    "yes": "Evet",
+    "no": "İptal",
+    "leaderboard_empty": "Liderlik tablosu şu an boş.",
+    "default_name": "Neo Lotus Sendikası",
+    "default_tag": "NLS"
+  }
+}
