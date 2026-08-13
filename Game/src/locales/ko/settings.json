@@ -1,1 +1,19 @@
-{}
+{
+  "tab_label": "설정",
+  "title": "설정",
+  "sound": "인터페이스 사운드",
+  "sound_desc": "버튼 및 상호작용에 대한 짧은 효과음입니다.",
+  "music": "음악",
+  "music_desc": "반복되는 배경 음악입니다.",
+  "language": "언어",
+  "language_desc": "인터페이스 언어를 선택합니다.",
+  "language_button": "언어 변경",
+  "language_current": "현재 언어",
+  "language_close": "닫기",
+  "language_selection": {
+    "title": "언어 선택",
+    "subtitle": "인터페이스 언어를 선택하세요. 나중에 설정에서 다시 변경할 수 있습니다.",
+    "confirm": "확인",
+    "close": "닫기"
+  }
+}

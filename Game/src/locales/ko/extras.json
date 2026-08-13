@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "인생",
+      "dao": "도(道)",
+      "activities": "활동",
+      "store": "상점",
+      "sect": "문파"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "최대 체력/년: +{value}",
+    "healthRegenPerYear": "회복/년: +{value}",
+    "appearancePerYear": "매력/년: +{value}",
+    "qiPerYear": "기/년: +{value}",
+    "portalSuccessBps": "포탈 성공률: +{value}%",
+    "qiFlatPerYear": "기/년: +{value}",
+    "moneyFlatPerYear": "수입/년: +${value}",
+    "healthRegenFlat": "회복/년: +{value}",
+    "damageReductionBps": "피해 감소: +{value}%",
+    "breakthroughChanceBps": "돌파 확률: +{value}%",
+    "startMoney": "시작 자금: +${value}",
+    "startMaxHealth": "시작 최대 체력: +{value}",
+    "startSpiritualRoot": "시작 영근: +{value}",
+    "startBodyTempering": "시작 육체 단련: +{value} 단계"
+  },
+  "life": {
+    "survival_cost_line": "생활비: -${amount}/년",
+    "survival_cost_hint": {
+      "title": "생활비",
+      "text": "식비, 주거 및 안전을 위한 필수 연간 지출입니다. 활동을 선택하지 않아도 차감됩니다. 돈이 부족하면 체력이 악화됩니다."
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "생활비 지불: -${amount}.",
+    "lifestyle_money_delta": "활동 연간 순수익: {amount}.",
+    "portal_blessing_gained": "포탈의 축복: 다음 돌파 확률이 +{percent}% 증가했습니다."
+  },
+  "dao": {
+    "techniques": {
+      "title": "수련 공법",
+      "level": "레벨",
+      "max": "최대",
+      "cost": "비용",
+      "upgrade": "강화",
+      "locked": "잠김",
+      "not_enough_money": "자금 부족",
+      "current_effects": "현재 효과",
+      "next_effects": "다음 효과",
+      "requirements": {
+        "spiritual_root": "영근",
+        "intelligence": "지능",
+        "stage": "경지"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "잠룡호흡법",
+          "desc": "기본적인 호흡법입니다. 기의 획득량과 돌파 성공률을 증가시킵니다."
+        },
+        "technique_iron_meridian": {
+          "name": "철맥공",
+          "desc": "육체와 경맥을 단련합니다. 체력 회복 속도를 높이고 받는 피해를 줄입니다."
+        },
+        "technique_jade_ledger": {
+          "name": "옥장부",
+          "desc": "세속의 재물 축적 공법입니다. 소득, 업무 효율성 및 포탈 성공률을 증가시킵니다."
+        },
+        "technique_spirit_sense": {
+          "name": "영식",
+          "desc": "후반부 감각 공법입니다. 기 획득, 돌파 확률 및 포탈 탐색 능력을 크게 향상시킵니다."
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "레벨",
+    "max_level": "최대 레벨",
+    "next_cost": "다음 레벨 비용",
+    "current_effects": "현재 효과",
+    "next_effects": "다음 효과",
+    "effects_note": "시작 효과는 환생 시에 적용됩니다. 연간 효과는 매년 적용됩니다.",
+    "details_close": "닫기"
+  },
+  "activities": {
+    "title": "활동",
+    "dead_text": "망자는 활동을 선택할 수 없습니다.",
+    "select": "선택",
+    "selected": "선택됨",
+    "disable": "해제",
+    "locked": "잠김",
+    "daily_cost": "비용/일",
+    "daily_income": "수입/일",
+    "yearly_cost": "비용/년",
+    "yearly_income": "수입/년",
+    "net_yearly": "순수익/년",
+    "effects_title": "효과/년",
+    "requirements_label": "조건",
+    "none": "없음",
+    "categories": {
+      "job": "직업",
+      "sport": "운동",
+      "food": "식사",
+      "housing": "주거",
+      "portal": "포탈"
+    },
+    "requirements": {
+      "age": "나이",
+      "intelligence": "지능",
+      "appearance": "매력",
+      "spiritual_root": "영근",
+      "health": "체력",
+      "max_health": "최대 체력",
+      "stage": "경지"
+    },
+    "portal_rewards": {
+      "title": "포탈 보상",
+      "attempt_cost": "입장 비용: ${cost}",
+      "reward_money": "돈: ${min}–${max}",
+      "reward_qi": "기: {min}–{max}",
+      "breakthrough_bonus": "돌파 보너스: +{percent}%",
+      "fail_damage_bps": "실패 시: 최대 체력의 {percent}% 피해",
+      "fail_damage_flat": "실패 시: {damage} 피해"
+    },
+    "options": {
+      "job_none": { "name": "무직", "desc": "소득도 없고 의무도 없습니다." },
+      "job_parttime": { "name": "아르바이트", "desc": "가벼운 심부름과 배달업무." },
+      "job_office": { "name": "회사원", "desc": "지루하지만 안정적입니다." },
+      "job_manager": { "name": "매니저", "desc": "더 많은 책임감, 더 많은 보수." },
+      "job_founder": { "name": "IT 창업자", "desc": "IT와 영적 기술을 융합한 스타트업." },
+      "sport_none": { "name": "운동 안함", "desc": "신체 활동을 전혀 하지 않습니다." },
+      "sport_home": { "name": "홈 트레이닝", "desc": "마당에서 팔굽혀펴기." },
+      "sport_gym": { "name": "피트니스 클럽", "desc": "동네 체육관 회원권." },
+      "sport_premium": { "name": "프리미엄 클럽", "desc": "개인 트레이너, 수영장 및 회복 시설." },
+      "sport_spirit": { "name": "영적 수련", "desc": "육체와 경맥을 위한 심오한 훈련." },
+      "food_none": { "name": "식단 없음", "desc": "길거리에서 대충 때우는 간식." },
+      "food_street": { "name": "길거리 음식", "desc": "국수와 에너지 바." },
+      "food_home": { "name": "집밥", "desc": "평범하고 제대로 된 식사." },
+      "food_premium": { "name": "프리미엄 식사", "desc": "고품질 식자재와 체계적인 식단." },
+      "food_spirit": { "name": "영약식", "desc": "영초를 사용하여 만든 약선 요리." },
+      "housing_none": { "name": "노숙", "desc": "어디서든 잠을 청합니다." },
+      "housing_shelter": { "name": "보호소", "desc": "머리 위를 가려주는 최소한의 지붕." },
+      "housing_room": { "name": "하숙방", "desc": "오래된 집의 작은 방." },
+      "housing_apartment": { "name": "아파트", "desc": "깨끗한 아파트와 편안한 수면." },
+      "housing_condo": { "name": "고급 아파트", "desc": "보안이 철저한 현대적인 건물." },
+      "portal_none": { "name": "포탈 진입 안함", "desc": "위험한 원정을 피합니다." },
+      "portal_subway": { "name": "폐역 지하철", "desc": "기이한 시선이 느껴지는 낡은 터널." },
+      "portal_market": { "name": "심야의 영시장", "desc": "단약 밀수와 수상한 거래의 온상." },
+      "portal_club": { "name": "악마의 클럽", "desc": "악마들이 인간과 도박을 하는 지하 클럽." },
+      "portal_tower": { "name": "정령의 탑", "desc": "강인한 수련자들을 위한 가혹한 시련." }
+    }
+  }
+}

@@ -1,1 +1,74 @@
-{}
+{
+  "title": "환생",
+  "accept": "운명을 받아들인다",
+  "tiers": {
+    "blessed": {
+      "title": "축복받은 환생",
+      "desc": "하늘이 자비를 베풀었습니다. 당신은 새로운 삶에서 어떤 손실도 겪지 않습니다."
+    },
+    "uneasy": {
+      "title": "불안한 환생",
+      "desc": "당신의 전생이 새로운 운명에 희미한 흔적을 남겼습니다."
+    },
+    "troubled": {
+      "title": "고통받는 환생",
+      "desc": "전생의 카르마가 새로운 육체에 무겁게 짓누릅니다."
+    },
+    "severe": {
+      "title": "가혹한 환생",
+      "desc": "당신은 엄청난 상실을 껴안고 새로운 세계에 발을 들였습니다."
+    },
+    "doomed": {
+      "title": "파멸의 환생",
+      "desc": "하늘이 당신을 외면했습니다. 당신의 새로운 삶은 어둠 속에서 시작되었습니다."
+    }
+  },
+  "money": {
+    "money_loss_0": "유산이 온전히 보존되었습니다.",
+    "money_loss_25": "전생 재산의 25%를 잃었습니다.",
+    "money_loss_50": "전생 재산의 50%를 잃었습니다.",
+    "money_loss_75": "전생 재산의 75%를 잃었습니다.",
+    "money_loss_100": "모든 유산을 잃었습니다."
+  },
+  "health": {
+    "health_start_100": "당신의 육체는 매우 건강합니다.",
+    "health_start_85": "당신의 육체가 약간 허약합니다.",
+    "health_start_70": "당신의 육체가 눈에 띄게 허약합니다.",
+    "health_start_55": "당신은 선천적으로 허약하게 태어났습니다.",
+    "health_start_40": "당신은 죽음의 벼랑 끝에 서 있습니다."
+  },
+  "curses": {
+    "curse_minor_hunger": {
+      "name": "굶주린 그림자",
+      "desc": "수입이 3% 감소합니다."
+    },
+    "curse_minor_frail": {
+      "name": "허약한 신체",
+      "desc": "체력 회복력이 5% 감소합니다."
+    },
+    "curse_minor_fog": {
+      "name": "안개 낀 정신",
+      "desc": "지능이 3 감소합니다."
+    },
+    "curse_minor_rough_skin": {
+      "name": "거친 피부",
+      "desc": "매력이 3 감소합니다."
+    },
+    "curse_major_debt": {
+      "name": "전생의 빚",
+      "desc": "수입이 10% 감소합니다."
+    },
+    "curse_major_cracked_meridians": {
+      "name": "갈라진 경맥",
+      "desc": "기 획득량이 12% 감소합니다."
+    },
+    "curse_major_heaven_mark": {
+      "name": "천벌의 낙인",
+      "desc": "돌파 성공률 및 포탈 성공률이 7% 감소합니다."
+    },
+    "curse_major_sickly": {
+      "name": "병약한 몸",
+      "desc": "체력 회복력이 12% 감소합니다."
+    }
+  }
+}

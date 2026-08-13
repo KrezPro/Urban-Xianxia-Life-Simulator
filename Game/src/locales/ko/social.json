@@ -1,1 +1,30 @@
-{}
+{
+  "sect_screen": {
+    "title": "문파",
+    "loading": "소셜 데이터를 불러오는 중...",
+    "tab_my_sect": "내 문파",
+    "tab_leaderboard": "순위표",
+    "empty_title": "기업 문파",
+    "empty_text": "비밀스러운 기업 문파를 창설하거나 초대 코드를 입력하여 영향력을 위한 투쟁에 동참하세요.",
+    "invite_placeholder": "초대 코드 입력",
+    "btn_create": "문파 창설",
+    "btn_join": "코드로 가입",
+    "join_error": "유효하지 않은 초대 코드입니다. 영문 대문자(A-Z)와 숫자(0-9)로 이루어진 8자리 코드를 입력하세요.",
+    "invite_code": "초대 코드",
+    "share_invite": "초대 코드 공유",
+    "funds": "자금",
+    "influence": "영향력",
+    "season": "시즌",
+    "members": "문도",
+    "player_name": "당신",
+    "contribution": "공헌도",
+    "btn_leave": "문파 탈퇴",
+    "leave_confirm_title": "문파를 탈퇴하시겠습니까?",
+    "leave_confirm_message": "현재 쌓은 문파 공헌도를 모두 잃게 되지만, 언제든 다른 문파에 가입할 수 있습니다.",
+    "yes": "예",
+    "no": "취소",
+    "leaderboard_empty": "현재 순위표가 비어 있습니다.",
+    "default_name": "네오 로터스 신디케이트",
+    "default_tag": "NLS"
+  }
+}

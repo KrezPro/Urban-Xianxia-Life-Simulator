@@ -1,1 +1,212 @@
-{}
+{
+  "app": {
+    "loading": "영혼을 깨우는 중..."
+  },
+  "tab_bar": {
+    "life": "인생",
+    "dao": "도(道)",
+    "activities": "활동",
+    "store": "상점",
+    "settings": "설정",
+    "log": "일지",
+    "sect": "문파"
+  },
+  "log_screen": {
+    "title": "운명의 일지",
+    "empty": "당신의 인생 경로는 이제 막 시작되었습니다..."
+  },
+  "idle": {
+    "offline_secret": "오프라인 진행: {seconds}초 동안 수련했습니다. 획득한 기: {amount}.",
+    "offline_mundane": "오프라인 진행: {seconds}초 동안 일했습니다. 획득: ${amount}."
+  },
+  "profile_screen": {
+    "title": "프로필",
+    "age": "나이",
+    "stage": "경지",
+    "health": "체력",
+    "intelligence": "지능",
+    "appearance": "매력",
+    "money": "돈",
+    "qi": "기(氣)",
+    "karma": "카르마",
+    "btn_grow": "나이 먹기 (+1년)"
+  },
+  "life_screen": {
+    "title": "GoodLife",
+    "title_version": "v.2",
+    "born_log": "이 세상에 태어났습니다. 당신의 이야기가 시작됩니다...",
+    "death_log": "사망했습니다. 영혼이 윤회의 끝없는 굴레 속으로 들어갑니다...",
+    "reincarnate_log": "윤회의 수레바퀴가 돌았습니다. 새로운 육체로 환생했습니다.",
+    "age": "나이",
+    "health": "체력",
+    "intelligence": "지능",
+    "appearance": "매력",
+    "money": "돈",
+    "expenses_year": "연간 지출",
+    "spiritual_root": "영근",
+    "qi": "기 에너지",
+    "karma": "카르마",
+    "focus_title": "올해의 목표:",
+    "focus_mundane": "세속의 삶",
+    "focus_secret": "비밀의 길",
+    "btn_grow": "나이 먹기 (+1년)",
+    "btn_reincarnate": "환생",
+    "btn_log": "일지",
+    "dead_title": "사망했습니다",
+    "dead_subtitle": "인생의 여정이 중단되었습니다.",
+    "death_cause_label": "사망 원인:",
+    "death_causes": {
+      "none": "알 수 없음",
+      "old_age": "노환",
+      "health": "건강 악화",
+      "breakthrough": "돌파 실패",
+      "portal": "포탈 사고",
+      "event": "운명적 사건"
+    },
+    "karma_accumulated": "누적 카르마:",
+    "karma_earned_last_life": "전생의 유산 (카르마):",
+    "meditation_log": "비밀 좌선을 하며 일 년이 지났습니다. {amount}의 기를 모았습니다.",
+    "age_log": "당신은 {age}살이 되었습니다.",
+    "interstitial_log": "[광고] 1살 때 환생 후 전면 광고가 표시되었습니다.",
+    "avatar": {
+      "aria_child": "인생의 길을 기어가는 아기",
+      "aria_teen": "첫 걸음을 내딛는 젊은이",
+      "aria_adult": "깊은 명상에 빠진 어른",
+      "aria_mature": "깊은 명상에 잠긴 고수",
+      "aria_elder": "길의 황혼에 있는 노인"
+    },
+    "hints": {
+      "close": "알겠습니다",
+      "intelligence": {
+        "title": "지능",
+        "text": "돌파 성공 확률을 높이고 공부, 업무 및 세속적 사건에서 도움을 줍니다."
+      },
+      "health": {
+        "title": "체력",
+        "text": "체력이 0이 되면 사망하고 환생하게 됩니다. 반드시 체력을 유지하세요."
+      },
+      "appearance": {
+        "title": "매력",
+        "text": "사교적인 사건, 대인 관계 및 일부 세속적인 기회에 영향을 줍니다."
+      },
+      "money": {
+        "title": "돈",
+        "text": "생활비, 문파 공헌 및 미래의 기회에 필요합니다."
+      },
+      "expenses": {
+        "title": "연간 지출",
+        "text": "생활비: 연간 {survival}. 라이프스타일(직업, 운동, 식사, 주거, 포탈): 연간 {lifestyle}. 생활비를 지불하지 못하면 체력이 감소합니다."
+      },
+      "spiritual_root": {
+        "title": "영근",
+        "text": "기가 모이는 속도와 수련의 잠재력을 결정합니다."
+      },
+      "karma": {
+        "title": "카르마",
+        "text": "여러 삶에 걸쳐 누적되며 카르마 상점에서 영구적인 업그레이드를 구매하는 데 사용됩니다."
+      },
+      "focus_mundane": {
+        "title": "세속의 삶",
+        "text": "돈, 공부, 직업에 집중합니다. 수련과 관련된 비밀 사건이 발생할 확률이 줄어듭니다."
+      },
+      "focus_secret": {
+        "title": "비밀의 길",
+        "text": "수련에 집중합니다: 기를 얻고 비밀 사건과 더 자주 마주치게 됩니다."
+      },
+      "age": {
+        "title": "나이",
+        "text": "현재 경지의 최대 수명: {maxAge}살. 노환은 특히 {softAge}살 이후로 더 빨리 올 수 있습니다."
+      },
+      "age_immortal": {
+        "title": "나이",
+        "text": "이 경지는 불멸의 상태입니다: 더 이상 노환으로 죽지 않습니다."
+      }
+    }
+  },
+  "store_screen": {
+    "title": "카르마 상점",
+    "karma_balance": "보유 카르마",
+    "btn_buy": "구매",
+    "btn_bought": "소유함",
+    "btn_no_karma": "부족함",
+    "cost": "비용",
+    "iap_section": "프리미엄 및 후원",
+    "iap_pass": "수련자 패스",
+    "iap_pass_desc": "모든 전면 광고를 영구적으로 제거하고 개발자를 후원합니다.",
+    "iap_ad": "생명 연장 광고",
+    "iap_ad_desc": "도(道) 탭에서 돌파를 시도하기 전에 사용할 수 있습니다(사망 방지).",
+    "btn_iap_buy": "패스 구매",
+    "btn_iap_active": "활성화됨",
+    "btn_info": "정보",
+    "items": {
+      "buff_rich_family": {
+        "name": "부유한 가문",
+        "desc": "각 환생 시 추가 시작 자금과 소액의 연간 소득 보너스를 받습니다."
+      },
+      "buff_strong_meridians": {
+        "name": "강인한 경맥",
+        "desc": "육체를 강화합니다: 최대 체력, 회복력이 증가하고 입는 피해가 감소합니다."
+      },
+      "buff_pure_root": {
+        "name": "순수한 영근",
+        "desc": "영근을 개선하고 매년 고정적인 기를 추가로 얻습니다."
+      }
+    }
+  },
+  "dao_screen": {
+    "title": "도(道)의 길",
+    "stage": "경지",
+    "unknown": "알 수 없음",
+    "qi_energy": "기(氣)",
+    "next_stage": "다음 단계",
+    "req_qi": "필요한 기",
+    "success_chance": "성공 확률",
+    "btn_breakthrough": "돌파 시도",
+    "btn_no_qi": "기 부족",
+    "max_stage": "당신은 수련의 정점에 도달했습니다. 하늘의 섭리도 더 이상 당신을 얽매지 못합니다.",
+    "dead_text": "망자는 수련할 수 없습니다.",
+    "btn_ad_buff": "광고 시청 (+10% & 보호)",
+    "btn_ad_watched": "버프 활성화됨",
+    "alert_ad_title": "광고",
+    "alert_ad_msg": "비디오 시청 완료! 다음 돌파를 위한 버프를 받았습니다.",
+    "body_title": "육체 단련",
+    "body_level": "레벨",
+    "body_cost": "비용",
+    "body_button": "단련하기",
+    "body_locked_age": "당신의 육체는 아직 너무 약합니다",
+    "body_locked_year": "육체 단련은 내년부터 가능합니다",
+    "body_locked_qi": "기가 부족합니다",
+    "body_effect_line": "최대 체력 +{maxHealth}, 회복/년 +{regen}, 질병 저항력 {resistance}%",
+    "body_desc": "육체는 고통, 땀, 의지를 통해 단련되며 진정한 힘을 담는 그릇이 됩니다.",
+    "details_close": "닫기",
+    "body_details_title": "육체 단련 효과",
+    "body_details_max_health": "최대 체력",
+    "body_details_regen": "회복력/년",
+    "body_details_illness": "질병 저항력",
+    "body_details_mortality": "사망률 감소",
+    "body_details_survival": "생활비 할인",
+    "body_details_breakthrough": "돌파 피해 감소",
+    "body_details_portal": "포탈 피해 감소",
+    "stage_info_max_age": "최대 수명",
+    "stage_info_soft_age": "노환이 시작되는 나이",
+    "stage_info_meditation": "기의 명상",
+    "stage_info_mortality": "사망률",
+    "stage_info_survival": "생활비",
+    "stage_info_breakthrough_damage": "돌파 시의 위험",
+    "stage_info_required_qi": "필요한 기",
+    "stage_info_immortal": "불멸: 더 이상 노환으로 죽지 않음",
+    "portal_blessing_active": "활성화된 포탈의 축복: +{percent}",
+    "log_no_qi": "돌파를 시도하기에는 기가 부족합니다.",
+    "log_success": "[성공] 돌파 성공! 도달한 경지: {name}. 경맥이 확장되었습니다.",
+    "log_fail_death": "[치명적 실패] 천겁이 너무나 강력했습니다. 당신은 사망했습니다.",
+    "log_fail_damage": "[실패] 돌파에 실패했습니다. 주화입마에 빠져 {damage}의 피해를 입었습니다.",
+    "log_ad_saved": "[보호됨] 돌파에 실패했지만, 광고 버프가 당신의 경맥을 피해로부터 지켜냈습니다!"
+  },
+  "settings_screen": {
+    "title": "설정",
+    "sound": "인터페이스 사운드",
+    "sound_desc": "버튼 및 상호작용에 대한 짧은 효과음입니다.",
+    "music": "음악",
+    "music_desc": "반복되는 배경 음악입니다."
+  }
+}
