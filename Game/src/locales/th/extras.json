@@ -1,1 +1,152 @@
-{}
+{
+  "navigation": {
+    "tab_bar": {
+      "life": "ชีวิต",
+      "dao": "เต๋า",
+      "activities": "กิจกรรม",
+      "store": "ร้านค้า",
+      "sect": "สำนัก"
+    }
+  },
+  "effect_labels": {
+    "maxHealthPerYear": "+{value} สุขภาพสูงสุด/ปี",
+    "healthRegenPerYear": "+{value} ฟื้นฟู/ปี",
+    "appearancePerYear": "+{value} หน้าตา/ปี",
+    "qiPerYear": "+{value} ลมปราณ/ปี",
+    "portalSuccessBps": "+{value}% ความสำเร็จในประตูมิติ",
+    "qiFlatPerYear": "+{value} ลมปราณ/ปี",
+    "moneyFlatPerYear": "+${value}/ปี",
+    "healthRegenFlat": "+{value} ฟื้นฟู/ปี",
+    "damageReductionBps": "+{value}% ลดความเสียหาย",
+    "breakthroughChanceBps": "+{value}% โอกาสทะลวงระดับ",
+    "startMoney": "เริ่มต้น: +${value}",
+    "startMaxHealth": "เริ่มต้น: +{value} สุขภาพสูงสุด",
+    "startSpiritualRoot": "เริ่มต้น: +{value} รากวิญญาณ",
+    "startBodyTempering": "เริ่มต้น: +{value} หล่อหลอมร่างกาย"
+  },
+  "life": {
+    "survival_cost_line": "ค่าครองชีพ: -${amount}/ปี",
+    "survival_cost_hint": {
+      "title": "ค่าครองชีพ",
+      "text": "ค่าใช้จ่ายรายปีที่จำเป็นสำหรับอาหาร ที่อยู่อาศัย และความปลอดภัย จะถูกเรียกเก็บแม้ไม่ได้เลือกกิจกรรมใดๆ หากเงินไม่พอ สุขภาพจะแย่ลง"
+    }
+  },
+  "logs": {
+    "survival_cost_paid": "จ่ายค่าครองชีพ: -${amount}.",
+    "lifestyle_money_delta": "ยอดสุทธิจากกิจกรรมประจำปี: {amount}.",
+    "portal_blessing_gained": "พรจากประตูมิติ: +{percent}% สำหรับโอกาสทะลวงระดับครั้งต่อไป."
+  },
+  "dao": {
+    "techniques": {
+      "title": "วิชาเต๋า",
+      "level": "ระดับ",
+      "max": "สูงสุด",
+      "cost": "ราคา",
+      "upgrade": "อัปเกรด",
+      "locked": "ล็อกอยู่",
+      "not_enough_money": "เงินไม่พอ",
+      "current_effects": "ปัจจุบัน",
+      "next_effects": "ถัดไป",
+      "requirements": {
+        "spiritual_root": "รากวิญญาณ",
+        "intelligence": "สติปัญญา",
+        "stage": "ขั้น"
+      },
+      "items": {
+        "technique_hidden_dragon_breath": {
+          "name": "ลมหายใจมังกรซ่อน",
+          "desc": "เทคนิคการหายใจพื้นฐาน เพิ่มการได้รับลมปราณและโอกาสในการทะลวงระดับ"
+        },
+        "technique_iron_meridian": {
+          "name": "เส้นลมปราณเหล็ก",
+          "desc": "หล่อหลอมร่างกายและเส้นลมปราณ ปรับปรุงการฟื้นฟูสุขภาพและลดความเสียหายที่ได้รับ"
+        },
+        "technique_jade_ledger": {
+          "name": "คัมภีร์หยก",
+          "desc": "วิชาทางโลกแห่งความมั่งคั่ง เพิ่มรายได้ ประสิทธิภาพการทำงาน และความสำเร็จในประตูมิติ"
+        },
+        "technique_spirit_sense": {
+          "name": "สัมผัสวิญญาณ",
+          "desc": "วิชาการรับรู้ช่วงท้ายเกม เพิ่มลมปราณ โอกาสทะลวงระดับ และการสำรวจประตูมิติอย่างมาก"
+        }
+      }
+    }
+  },
+  "store": {
+    "level": "ระดับ",
+    "max_level": "ระดับสูงสุด",
+    "next_cost": "ราคาอัปเกรดต่อไป",
+    "current_effects": "ปัจจุบัน",
+    "next_effects": "ถัดไป",
+    "effects_note": "เอฟเฟกต์เริ่มต้นจะส่งผลหลังจากกลับชาติมาเกิด เอฟเฟกต์รายปีจะเพิ่มขึ้นทุกปี",
+    "details_close": "ปิด"
+  },
+  "activities": {
+    "title": "กิจกรรม",
+    "dead_text": "คนตายไม่สามารถเลือกกิจกรรมได้",
+    "select": "เลือก",
+    "selected": "เลือกแล้ว",
+    "disable": "ยกเลิก",
+    "locked": "ล็อกอยู่",
+    "daily_cost": "รายจ่าย/วัน",
+    "daily_income": "รายได้/วัน",
+    "yearly_cost": "รายจ่าย/ปี",
+    "yearly_income": "รายได้/ปี",
+    "net_yearly": "สุทธิ/ปี",
+    "effects_title": "ผลลัพธ์/ปี",
+    "requirements_label": "ข้อกำหนด",
+    "none": "ไม่มี",
+    "categories": {
+      "job": "งาน",
+      "sport": "กีฬา",
+      "food": "อาหาร",
+      "housing": "ที่พัก",
+      "portal": "ประตูมิติ"
+    },
+    "requirements": {
+      "age": "อายุ",
+      "intelligence": "สติปัญญา",
+      "appearance": "หน้าตา",
+      "spiritual_root": "รากวิญญาณ",
+      "health": "สุขภาพ",
+      "max_health": "สุขภาพสูงสุด",
+      "stage": "ขั้น"
+    },
+    "portal_rewards": {
+      "title": "รางวัลประตูมิติ",
+      "attempt_cost": "ค่าเข้า: ${cost}",
+      "reward_money": "เงิน: ${min}–${max}",
+      "reward_qi": "ลมปราณ: {min}–{max}",
+      "breakthrough_bonus": "โบนัสทะลวงระดับ: +{percent}%",
+      "fail_damage_bps": "ล้มเหลว: เสียพลังชีวิตสูงสุด {percent}%",
+      "fail_damage_flat": "ล้มเหลว: ได้รับความเสียหาย {damage}"
+    },
+    "options": {
+      "job_none": { "name": "คนว่างงาน", "desc": "ไม่มีรายได้และไม่มีภาระผูกพัน" },
+      "job_parttime": { "name": "พาร์ทไทม์", "desc": "ทำงานเล็กๆ น้อยๆ และรับส่งของ" },
+      "job_office": { "name": "พนักงานออฟฟิศ", "desc": "น่าเบื่อแต่มั่นคง" },
+      "job_manager": { "name": "ผู้จัดการ", "desc": "ความรับผิดชอบมากขึ้น เงินมากขึ้น" },
+      "job_founder": { "name": "ผู้ก่อตั้งเทค", "desc": "สตาร์ทอัพที่ผสมผสานไอทีและเทคโนโลยีวิญญาณ" },
+      "sport_none": { "name": "ไม่มีกีฬา", "desc": "ไม่มีกิจกรรมทางกาย" },
+      "sport_home": { "name": "ออกกำลังกายที่บ้าน", "desc": "วิดพื้นที่สนามหญ้า" },
+      "sport_gym": { "name": "ยิม", "desc": "สมาชิกยิมในพื้นที่" },
+      "sport_premium": { "name": "คลับพรีเมียม", "desc": "เทรนเนอร์ สระว่ายน้ำ และการฟื้นฟู" },
+      "sport_spirit": { "name": "ฝึกฝนจิตวิญญาณ", "desc": "การฝึกฝนร่างกายและเส้นลมปราณ" },
+      "food_none": { "name": "ไม่มีแผนอาหาร", "desc": "ของกินเล่นระหว่างทาง" },
+      "food_street": { "name": "อาหารริมทาง", "desc": "บะหมี่และเอนเนอร์จีบาร์" },
+      "food_home": { "name": "อาหารทำเอง", "desc": "มื้ออาหารปกติที่เหมาะสม" },
+      "food_premium": { "name": "อาหารพรีเมียม", "desc": "ผลิตภัณฑ์คุณภาพและการควบคุมอาหาร" },
+      "food_spirit": { "name": "อาหารทิพย์", "desc": "อาหารปรุงจากสมุนไพรวิญญาณ" },
+      "housing_none": { "name": "ไม่มีที่อยู่อาศัย", "desc": "นอนที่ไหนก็ได้ที่นอนได้" },
+      "housing_shelter": { "name": "ศูนย์พักพิง", "desc": "หลังคาเล็กๆ คุ้มหัว" },
+      "housing_room": { "name": "ห้องเช่า", "desc": "ห้องเล็กๆ ในบ้านหลังเก่า" },
+      "housing_apartment": { "name": "อพาร์ตเมนต์", "desc": "อพาร์ตเมนต์สะอาดและการนอนหลับที่เหมาะสม" },
+      "housing_condo": { "name": "คอนโดหรู", "desc": "อาคารทันสมัยพร้อมระบบรักษาความปลอดภัย" },
+      "portal_none": { "name": "ไม่มีประตูมิติ", "desc": "ไม่มีการเดินทางที่เสี่ยงอันตราย" },
+      "portal_subway": { "name": "สถานีรถไฟใต้ดินร้าง", "desc": "อุโมงค์เก่าๆ พร้อมดวงตาแปลกประหลาด" },
+      "portal_market": { "name": "ตลาดวิญญาณยามค่ำคืน", "desc": "ลักลอบขายโอสถและการทำธุรกรรมลับ" },
+      "portal_club": { "name": "คลับปีศาจ", "desc": "คลับใต้ดินที่ปีศาจเล่นการพนันกับมนุษย์" },
+      "portal_tower": { "name": "หอคอยวิญญาณ", "desc": "การทดสอบสำหรับผู้บำเพ็ญเพียรที่แข็งแกร่ง" }
+    }
+  }
+}
