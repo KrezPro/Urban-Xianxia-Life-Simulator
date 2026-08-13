@@ -45,7 +45,8 @@
     "v2_intro_scene_incident_twist_outcome": "{intro} {scene}. {incident}. {twist} {outcome}",
     "v2_intro_incident_outcome": "{intro}. {incident}. {outcome}",
     "v2_intro_scene_twist": "{intro} {scene}. {incident}. {twist}",
-    "v2_short": "{incident}. {outcome}"
+    "v2_short": "{incident}. {outcome}",
+    "v2_incident_twist_outcome": "{incident}. {twist} {outcome}"
   },
   "actors_child": {
     "classmate": "A classmate",
@@ -191,7 +192,15 @@
         "adult_deadline": "On deadline day",
         "elder_morning": "Early morning",
         "elder_memory": "On a day of memories",
-        "elder_family": "With family"
+        "elder_family": "With family",
+        "payday": "On payday",
+        "hot_noon": "At hot noon",
+        "cold_morning": "On a cold morning",
+        "festival_day": "On a festival day",
+        "late_night": "Late at night",
+        "early_shift": "Before an early shift",
+        "rainy_evening": "On a rainy evening",
+        "weekend_errand": "During weekend errands"
       },
       "secret": {
         "midnight": "At midnight",
@@ -201,7 +210,12 @@
         "meditation": "During meditation",
         "incense": "Amid incense",
         "breathing": "During breathing practice",
-        "before_dawn": "Before dawn"
+        "before_dawn": "Before dawn",
+        "blood_moon": "Under the blood moon",
+        "spirit_hour": "At the spirit hour",
+        "qi_tide": "During the Qi tide",
+        "dream_edge": "On the edge of a dream",
+        "incense_midnight": "At midnight amid incense"
       }
     },
     "scenes": {
@@ -222,7 +236,17 @@
         "city_cafe": "in a cheap cafe",
         "work_office": "in the office",
         "work_parttime": "at a part-time job",
-        "work_site": "at a work site"
+        "work_site": "at a work site",
+        "bus_stop": "at the bus stop",
+        "convenience_store": "in a convenience store",
+        "laundromat": "at the laundromat",
+        "clinic": "at the clinic",
+        "bank": "at the bank",
+        "parking_lot": "in the parking lot",
+        "bridge": "on the bridge",
+        "night_market": "at the night market",
+        "playground": "at the playground",
+        "rooftop_garden": "in a rooftop garden"
       },
       "secret": {
         "hidden_alley": "in a dark alley",
@@ -232,7 +256,15 @@
         "subway_rift": "at a subway rift",
         "dream": "deep in a dream",
         "portal_rift": "near a shimmering rift",
-        "underpass": "in an underpass"
+        "underpass": "in an underpass",
+        "canal_tunnel": "in a canal tunnel",
+        "forgotten_station": "at a forgotten station",
+        "shrine_basement": "in a shrine basement",
+        "neon_alley": "in a neon alley",
+        "spirit_market": "at a spirit market",
+        "ruined_temple": "in a ruined temple",
+        "mirror_lake": "at mirror lake",
+        "rooftop_antenna": "by a rooftop antenna"
       }
     },
     "incidents": {
@@ -282,7 +314,39 @@
         "social_argument": "You get drawn into an argument.",
         "social_false_accusation": "You are unfairly accused.",
         "social_awkward_meeting": "You stumble into an awkward situation.",
-        "social_betrayal": "Someone lets you down."
+        "social_betrayal": "Someone lets you down.",
+        "work_promotion_chance": "You get a hint about a promotion.",
+        "work_mistake": "You make a mistake at work.",
+        "work_team_lunch": "Your team invites you to lunch.",
+        "client_refund": "You receive a refund for a purchase.",
+        "overtime_paid": "You are paid for overtime.",
+        "office_rumor": "A rumor spreads through the office.",
+        "commute_delay": "Public transport is delayed.",
+        "found_wallet": "You find someone's wallet.",
+        "taxi_overcharge": "A taxi driver overcharges you.",
+        "street_performance": "You watch a street performance.",
+        "garage_sale": "You sell things at a garage sale.",
+        "coupon_win": "Your coupon unexpectedly wins.",
+        "power_outage": "The power goes out at home.",
+        "water_leak": "A pipe leaks in your home.",
+        "neighbor_noise": "Neighbors make noise all night.",
+        "stray_cat_feed": "You feed a stray cat.",
+        "community_help": "You help neighbors with a shared task.",
+        "public_speech": "You speak in front of people.",
+        "lost_phone": "You lose your phone.",
+        "returned_item": "Someone returns a lost item.",
+        "stretch_break": "You take a stretching break.",
+        "vaccination": "You get a vaccination.",
+        "dental_ache": "You have a toothache.",
+        "eye_strain": "Your eyes tire from the screen.",
+        "good_checkup": "A medical checkup goes well.",
+        "allergy_flare": "Your allergy flares up.",
+        "back_pain": "Your back hurts.",
+        "old_friend_call": "An old friend calls you.",
+        "friendly_stranger": "A stranger turns out to be friendly.",
+        "online_argument": "You get into an online argument.",
+        "help_elder": "You help an elderly person.",
+        "teamwork": "Teamwork brings results."
       },
       "secret": {
         "qi_breath": "You feel Qi move through your body.",
@@ -309,7 +373,26 @@
         "hidden_manual": "You find a fragment of a secret manual.",
         "patron_gaze": "A mysterious patron notices you.",
         "vein_bloom": "A spiritual vein blooms near you.",
-        "lucky_break": "You narrowly escape trouble."
+        "lucky_break": "You narrowly escape trouble.",
+        "qi_stone": "You find a warm Qi stone.",
+        "herb_scent": "You smell a spirit herb.",
+        "talisman_paper": "You find a torn talisman paper.",
+        "spirit_coin": "You find a spirit coin.",
+        "dream_voice": "A voice from a dream calls you.",
+        "fortune_sticks": "You draw a lucky fortune stick.",
+        "shrine_offering": "You leave an offering at a shrine.",
+        "demon_contract": "You are offered a demonic contract.",
+        "ghost_bargain": "A ghost offers a bargain.",
+        "hidden_door": "You notice a hidden door.",
+        "cultivator_duel": "A cultivator challenges you to a duel.",
+        "artifact_auction": "You enter a secret artifact auction.",
+        "darknet_package": "You receive a strange darknet package.",
+        "karmic_thread": "You see a karmic thread.",
+        "urban_ward": "The city ward weakens.",
+        "secret_map": "You find a map to a hidden place.",
+        "forbidden_ritual": "You interrupt a forbidden ritual.",
+        "heavenly_law": "You sense a glimpse of Heavenly Law.",
+        "spirit_bell": "A spirit bell rings near you."
       }
     },
     "twists": {
@@ -319,7 +402,12 @@
         "strange_sign": "You notice a strange sign.",
         "sudden_wind": "A sudden wind tugs at your hair.",
         "distant_song": "A quiet song drifts from somewhere.",
-        "lost_memory": "You remember something forgotten."
+        "lost_memory": "You remember something forgotten.",
+        "news_alert": "Your phone bursts with news.",
+        "stray_cat_crosses": "A black cat crosses your path.",
+        "broken_clock": "A clock stops for a moment.",
+        "sudden_rain": "Sudden rain changes your plans.",
+        "coin_heads": "A coin lands heads."
       },
       "secret": {
         "qi_resonance": "The Qi around you resonates.",
@@ -331,14 +419,24 @@
         "rune_flash": "A rune flashes in the air.",
         "heavenly_pressure": "Heavenly pressure bears down on you.",
         "demon_mark": "You see a demonic mark.",
-        "portal_echo": "The rift answers with a strange echo."
+        "portal_echo": "The rift answers with a strange echo.",
+        "incense_smoke": "Incense smoke forms a pattern.",
+        "rune_itch": "A rune surfaces on your skin.",
+        "spirit_bell": "A spirit bell rings in the distance.",
+        "qi_knot": "Qi knots into a strange pattern.",
+        "dark_contract": "A dark contract appears in the air."
       },
       "absurd": {
         "talking_cat": "A cat stares at you too knowingly.",
         "vending_machine_prophecy": "A vending machine rings like a prophecy.",
         "dancing_leaf": "A leaf dances against the wind.",
         "cosmic_coin": "You find a coin with a strange pattern.",
-        "glitch_dream": "Reality seems to glitch for a moment."
+        "glitch_dream": "Reality seems to glitch for a moment.",
+        "pigeon_winks": "A pigeon winks at you.",
+        "traffic_light_sings": "A traffic light sings a tune.",
+        "sock_oracle": "A sock looks like an omen.",
+        "microwave_beeps_morse": "A microwave beeps in Morse code.",
+        "cloud_smiles": "A cloud looks like a smile."
       }
     },
     "outcomes": {
@@ -348,46 +446,65 @@
         "small_gain": "You gain a small benefit.",
         "day_better": "The day becomes a little better.",
         "useful_lesson": "You learn a useful lesson.",
-        "quiet_pride": "You feel quiet pride."
+        "quiet_pride": "You feel quiet pride.",
+        "small_win": "You gain a small victory.",
+        "calm_heart": "Your heart feels calmer.",
+        "useful_contact": "You make a useful contact.",
+        "new_habit": "You form a useful habit."
       },
       "negative": {
         "annoying_loss": "You lose a little money.",
         "mild_worry": "A mild worry appears.",
         "bitter_lesson": "The lesson is unpleasant.",
         "small_setback": "A small setback occurs.",
-        "uneasy_feeling": "An uneasy feeling remains."
+        "uneasy_feeling": "An uneasy feeling remains.",
+        "wasted_time": "Time is wasted.",
+        "missed_chance": "A chance slips away.",
+        "social_stress": "Socializing brings stress.",
+        "small_debt": "A small debt appears."
       },
       "neutral": {
         "life_moves_on": "Life moves on.",
         "nothing_decided": "Nothing is decided yet.",
         "memory_lingers": "The memory lingers.",
         "quiet_change": "Something quietly changes.",
-        "path_shifts": "Your path shifts almost imperceptibly."
+        "path_shifts": "Your path shifts almost imperceptibly.",
+        "story_later": "This story will return later.",
+        "quiet_day": "The day passes quietly.",
+        "small_question": "A new question appears."
       },
       "secret_positive": {
         "qi_grows": "Your Qi becomes slightly denser.",
         "dao_clearer": "The Dao seems a little clearer.",
         "spirit_lucky": "Spiritual luck smiles on you.",
         "secret_progress": "You take a step on the hidden path.",
-        "inner_light": "A faint light kindles inside you."
+        "inner_light": "A faint light kindles inside you.",
+        "meridian_open": "One meridian opens slightly.",
+        "fate_thread": "A thread of fate tightens.",
+        "dao_spark": "A spark of Dao flashes in your mind."
       },
       "secret_negative": {
         "qi_leaks": "Some Qi leaks away.",
         "dark_touch": "Darkness leaves a mark.",
         "danger_passed": "Danger passes close by.",
         "body_aches": "Your body aches from the aftermath.",
-        "fate_heavy": "Fate feels heavier."
+        "fate_heavy": "Fate feels heavier.",
+        "qi_stain": "Qi leaves a dark stain.",
+        "spirit_grudge": "A spirit holds a grudge.",
+        "shadow_price": "Darkness demands its price."
       },
       "money": {
         "money_changes": "Your money changes.",
         "wallet_shifts": "Your wallet grows heavier or lighter.",
         "coins_decide": "Coins decide the day.",
-        "profit_sign": "You see a sign of profit."
+        "profit_sign": "You see a sign of profit.",
+        "budget_shift": "Your budget shifts noticeably."
       },
       "health": {
         "body_remembers": "Your body remembers this day.",
         "health_shifts": "Your health shifts slightly.",
-        "breath_changes": "Your breathing becomes different."
+        "breath_changes": "Your breathing becomes different.",
+        "body_lighter": "Your body feels lighter."
       }
     },
     "actors": {
