@@ -1,0 +1,8 @@
+{
+  "tab_label": "Settings",
+  "title": "Settings",
+  "sound": "Interface Sound",
+  "sound_desc": "Short sounds for buttons and actions.",
+  "music": "Music",
+  "music_desc": "Looping background melody."
+}

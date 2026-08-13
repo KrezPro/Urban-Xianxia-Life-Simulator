@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
-import { AudioManager } from '../../audio/AudioManager';
+import { playUiPress } from '../../audio/AudioManager';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'gold' | 'ghost';
 
@@ -32,12 +32,12 @@ export const Button = ({
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
 
   const handlePress = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     onPress();
   };
 
   const handleLongPress = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     onLongPress?.();
   };
 
@@ -103,7 +103,7 @@ export const IconButton = ({
   const iconColor = variant === 'gold' ? '#221A02' : Theme.colors.text;
 
   const handlePress = () => {
-    AudioManager.playUiPress();
+    playUiPress?.();
     onPress();
   };
 
@@ -197,6 +197,9 @@ interface StatRowProps {
   scale?: number;
 }
 
+// StatRow поддерживает адаптивное масштабирование: проп scale (дефолт 1)
+// умножает бейдж, иконку, шрифты и отступы; dense (дефолт false) дополнительно
+// сжимает строку для совместимости со старыми вызовами.
 export const StatRow = ({
   icon,
   label,
@@ -212,14 +215,14 @@ export const StatRow = ({
 
   const handlePress = onPress
     ? () => {
-        AudioManager.playUiPress();
+        playUiPress?.();
         onPress();
       }
     : undefined;
 
   const handleLongPress = onLongPress
     ? () => {
-        AudioManager.playUiPress();
+        playUiPress?.();
         onLongPress();
       }
     : undefined;

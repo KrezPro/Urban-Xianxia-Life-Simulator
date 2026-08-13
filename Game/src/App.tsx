@@ -11,7 +11,7 @@ import { useInventoryStore } from './store/useInventoryStore';
 import { useTechniquesStore } from './store/useTechniquesStore';
 import { useLifestyleStore } from './store/useLifestyleStore';
 import { useSettingsStore } from './store/useSettingsStore';
-import { AudioManager } from './audio/AudioManager';
+import { initAudio, disposeAudio } from './audio/AudioManager';
 import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
 import ruUI from './locales/ru/ui.json';
@@ -44,10 +44,10 @@ export default function App() {
       return;
     }
 
-    void AudioManager.init();
+    initAudio?.();
 
     return () => {
-      AudioManager.dispose();
+      disposeAudio?.();
     };
   }, [isReady]);
 

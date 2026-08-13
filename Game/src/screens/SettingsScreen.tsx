@@ -3,11 +3,11 @@ import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { AudioManager } from '../audio/AudioManager';
+import { playToggle } from '../audio/AudioManager';
 import { Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
+import ruSettings from '../locales/ru/settings.json';
+import enSettings from '../locales/en/settings.json';
 
 export default function SettingsScreen() {
   const locale = useLocaleStore((state) => state.locale);
@@ -16,16 +16,16 @@ export default function SettingsScreen() {
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setMusicEnabled = useSettingsStore((state) => state.setMusicEnabled);
 
-  const ui: any = locale === 'ru' ? (ruUI as any).settings_screen : (enUI as any).settings_screen;
+  const ui: any = locale === 'ru' ? ruSettings : enSettings;
 
   const handleSoundChange = (value: boolean) => {
     setSoundEnabled(value);
-    AudioManager.playToggle(value, true);
+    playToggle?.(value, true);
   };
 
   const handleMusicChange = (value: boolean) => {
     setMusicEnabled(value);
-    AudioManager.playToggle(value);
+    playToggle?.(value);
   };
 
   return (

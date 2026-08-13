@@ -9,16 +9,19 @@ import ActivitiesScreen from '../screens/ActivitiesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
-import { AudioManager } from '../audio/AudioManager';
-import ruUI from '../locales/ru/ui.json';
-import enUI from '../locales/en/ui.json';
+import { playTab } from '../audio/AudioManager';
+import ruExtras from '../locales/ru/extras.json';
+import enExtras from '../locales/en/extras.json';
+import ruSettings from '../locales/ru/settings.json';
+import enSettings from '../locales/en/settings.json';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const locale = useLocaleStore((state) => state.locale);
-  const ui: any = locale === 'ru' ? ruUI : enUI;
-  const tabBar = ui.tab_bar || {};
+  const extras: any = locale === 'ru' ? ruExtras : enExtras;
+  const settings: any = locale === 'ru' ? ruSettings : enSettings;
+  const tabBar = extras.navigation?.tab_bar || {};
 
   return (
     <Tab.Navigator
@@ -44,13 +47,12 @@ export default function TabNavigator() {
           if (route.name === 'Store') {
             key = 'store';
           }
-          if (route.name === 'Settings') {
-            key = 'settings';
-          }
+
+          const label = route.name === 'Settings' ? settings.tab_label : tabBar[key] || route.name;
 
           return (
             <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
-              {tabBar[key] || route.name}
+              {label}
             </Text>
           );
         },
@@ -78,7 +80,7 @@ export default function TabNavigator() {
         component={LifeScreen}
         listeners={() => ({
           tabPress: () => {
-            AudioManager.playTab();
+            playTab?.();
           },
         })}
       />
@@ -87,7 +89,7 @@ export default function TabNavigator() {
         component={DaoScreen}
         listeners={() => ({
           tabPress: () => {
-            AudioManager.playTab();
+            playTab?.();
           },
         })}
       />
@@ -96,7 +98,7 @@ export default function TabNavigator() {
         component={ActivitiesScreen}
         listeners={() => ({
           tabPress: () => {
-            AudioManager.playTab();
+            playTab?.();
           },
         })}
       />
@@ -105,7 +107,7 @@ export default function TabNavigator() {
         component={StoreScreen}
         listeners={() => ({
           tabPress: () => {
-            AudioManager.playTab();
+            playTab?.();
           },
         })}
       />
@@ -114,7 +116,7 @@ export default function TabNavigator() {
         component={SettingsScreen}
         listeners={() => ({
           tabPress: () => {
-            AudioManager.playTab();
+            playTab?.();
           },
         })}
       />

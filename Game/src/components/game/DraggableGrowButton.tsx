@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Theme } from '../../constants/Theme';
 import { GameConstants } from '../../constants/GameConstants';
-import { AudioManager } from '../../audio/AudioManager';
+import { playUiPress } from '../../audio/AudioManager';
 
 interface DraggableGrowButtonProps {
   age: number;
@@ -114,7 +114,7 @@ export const DraggableGrowButton = ({
         }
 
         if (!movedRef.current) {
-          AudioManager.playUiPress();
+          playUiPress?.();
           onPressRef.current();
         }
       },
