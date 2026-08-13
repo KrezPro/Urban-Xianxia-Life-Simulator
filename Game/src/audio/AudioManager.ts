@@ -1,22 +1,8 @@
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
 
-// Нативные модули (expo-av, expo-file-system) подключаются ТОЛЬКО через
-// guarded require: если бинарь собран без них, игра не крашится, а просто
-// остаётся без звука. Статические импорты запрещены (урок ExponentAV).
-declare const require: (moduleId: string) => any;
-
-const tryRequire = (moduleId: string): any => {
-  try {
-    return require(moduleId);
-  } catch {
-    return null;
-  }
-};
-
-// В тесте (expo start / dev-клиент, __DEV__ === true) звук и музыка НЕ
-// инициализируются вовсе. В release-сборках APK/AAB (__DEV__ === false)
-// аудио работает полностью.
 const getIsDev = (): boolean => {
   try {
     return typeof __DEV__ !== 'undefined' && (globalThis as any).__DEV__ === true;
@@ -29,10 +15,10 @@ interface InternalAudioState {
   initialized: boolean;
   initializing: boolean;
   available: boolean;
-  clickPool: any[];
+  clickPool: Audio.Sound[];
   clickIndex: number;
-  simpleSounds: Partial<Record<GeneratedAudioName, any>>;
-  musicSound: any;
+  simpleSounds: Partial<Record<GeneratedAudioName, Audio.Sound>>;
+  musicSound: Audio.Sound | null;
   unsubscribeSettings: (() => void) | null;
 }
 
@@ -55,7 +41,7 @@ const canPlayUi = (): boolean => {
   }
 };
 
-const playSound = async (sound: any): Promise<void> => {
+const playSound = async (sound: Audio.Sound | undefined): Promise<void> => {
   if (!sound) {
     return;
   }
@@ -96,8 +82,6 @@ const safePlay = (name: GeneratedAudioName): void => {
   }
 };
 
-// Standalone-функции: вызовы в UI пишутся как playUiPress?.() —
-// TypeError "property of undefined" исключён конструктивно.
 export const playUiPress = (): void => {
   safePlay('click');
 };
@@ -175,112 +159,118 @@ export const syncMusic = (): void => {
 };
 
 const loadSound = async (
-  AudioClass: any,
   uri: string,
   isLooping: boolean,
   volume: number
-): Promise<any> => {
-  const sound = new AudioClass();
-  await sound.loadAsync({ uri }, { shouldPlay: false, isLooping });
-  await sound.setVolumeAsync(volume);
-  return sound;
+): Promise<Audio.Sound | null> => {
+  try {
+    const sound = new Audio.Sound();
+    await sound.loadAsync({ uri }, { shouldPlay: false, isLooping });
+    await sound.setVolumeAsync(volume);
+    return sound;
+  } catch {
+    return null;
+  }
 };
 
 const initAsync = async (): Promise<void> => {
-  const av = tryRequire('expo-av');
-  const fs = tryRequire('expo-file-system');
-
-  if (!av || !av.Audio || !av.Audio.Sound || !fs) {
-    state.initializing = false;
-    return;
-  }
-
-  await av.Audio.setAudioModeAsync({
-    allowsRecordingIOS: false,
-    playsInSilentModeIOS: true,
-    staysActiveInBackground: false,
-    shouldDuckAndroid: true,
-  });
-
-  const baseDir = fs.cacheDirectory || fs.documentDirectory;
-  if (!baseDir) {
-    state.initializing = false;
-    return;
-  }
-
-  const audioDir = `${baseDir}audio/`;
   try {
-    await fs.makeDirectoryAsync(audioDir, { intermediates: true });
-  } catch {
-    // Папка может уже существовать.
-  }
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: true,
+    });
 
-  const names: GeneratedAudioName[] = [
-    'click',
-    'toggleOn',
-    'toggleOff',
-    'tab',
-    'success',
-    'error',
-    'music',
-  ];
+    const baseDir = FileSystem.cacheDirectory || FileSystem.documentDirectory;
+    if (!baseDir) {
+      state.initializing = false;
+      return;
+    }
 
-  const fileUris: Record<GeneratedAudioName, string> = {
-    click: `${audioDir}click.wav`,
-    toggleOn: `${audioDir}toggle_on.wav`,
-    toggleOff: `${audioDir}toggle_off.wav`,
-    tab: `${audioDir}tab.wav`,
-    success: `${audioDir}success.wav`,
-    error: `${audioDir}error.wav`,
-    music: `${audioDir}music_loop.wav`,
-  };
-
-  const missing: GeneratedAudioName[] = [];
-  for (const name of names) {
+    const audioDir = `${baseDir}audio/`;
     try {
-      const info = await fs.getInfoAsync(fileUris[name]);
-      if (!info.exists) {
+      await FileSystem.makeDirectoryAsync(audioDir, { intermediates: true });
+    } catch {
+      // Папка может уже существовать.
+    }
+
+    const names: GeneratedAudioName[] = [
+      'click',
+      'toggleOn',
+      'toggleOff',
+      'tab',
+      'success',
+      'error',
+      'music',
+    ];
+
+    const fileUris: Record<GeneratedAudioName, string> = {
+      click: `${audioDir}click.wav`,
+      toggleOn: `${audioDir}toggle_on.wav`,
+      toggleOff: `${audioDir}toggle_off.wav`,
+      tab: `${audioDir}tab.wav`,
+      success: `${audioDir}success.wav`,
+      error: `${audioDir}error.wav`,
+      music: `${audioDir}music_loop.wav`,
+    };
+
+    const missing: GeneratedAudioName[] = [];
+    for (const name of names) {
+      try {
+        const info = await FileSystem.getInfoAsync(fileUris[name]);
+        if (!info.exists) {
+          missing.push(name);
+        }
+      } catch {
         missing.push(name);
       }
-    } catch {
-      missing.push(name);
     }
-  }
 
-  if (missing.length > 0) {
-    const assets = generateAudioAssets();
-    for (const name of missing) {
-      await fs.writeAsStringAsync(fileUris[name], assets[name], {
-        encoding: fs.EncodingType.Base64,
-      });
-    }
-  }
-
-  for (let i = 0; i < 3; i += 1) {
-    state.clickPool.push(await loadSound(av.Audio.Sound, fileUris.click, false, 0.5));
-  }
-
-  const simpleNames: GeneratedAudioName[] = ['toggleOn', 'toggleOff', 'tab', 'success', 'error'];
-  for (const name of simpleNames) {
-    state.simpleSounds[name] = await loadSound(av.Audio.Sound, fileUris[name], false, 0.5);
-  }
-
-  state.musicSound = await loadSound(av.Audio.Sound, fileUris.music, true, 0.16);
-
-  state.unsubscribeSettings = useSettingsStore.subscribe((current, prev) => {
-    if (current.musicEnabled !== prev.musicEnabled) {
-      if (current.musicEnabled) {
-        void startMusic();
-      } else {
-        void stopMusic();
+    if (missing.length > 0) {
+      const assets = generateAudioAssets();
+      for (const name of missing) {
+        await FileSystem.writeAsStringAsync(fileUris[name], assets[name], {
+          encoding: FileSystem.EncodingType.Base64,
+        });
       }
     }
-  });
 
-  state.initialized = true;
-  state.available = true;
-  state.initializing = false;
-  syncMusic();
+    for (let i = 0; i < 3; i += 1) {
+      const sound = await loadSound(fileUris.click, false, 0.5);
+      if (sound) {
+        state.clickPool.push(sound);
+      }
+    }
+
+    const simpleNames: GeneratedAudioName[] = ['toggleOn', 'toggleOff', 'tab', 'success', 'error'];
+    for (const name of simpleNames) {
+      const sound = await loadSound(fileUris[name], false, 0.5);
+      if (sound) {
+        state.simpleSounds[name] = sound;
+      }
+    }
+
+    state.musicSound = await loadSound(fileUris.music, true, 0.16);
+
+    state.unsubscribeSettings = useSettingsStore.subscribe((current, prev) => {
+      if (current.musicEnabled !== prev.musicEnabled) {
+        if (current.musicEnabled) {
+          void startMusic();
+        } else {
+          void stopMusic();
+        }
+      }
+    });
+
+    state.initialized = true;
+    state.available = true;
+    state.initializing = false;
+    syncMusic();
+  } catch {
+    // Нативный модуль недоступен, деградируем в тишину.
+    state.initializing = false;
+  }
 };
 
 export const initAudio = (): void => {
@@ -310,7 +300,7 @@ export const disposeAudio = (): void => {
       state.unsubscribeSettings = null;
     }
 
-    const unload = async (sound: any) => {
+    const unload = async (sound: Audio.Sound | undefined) => {
       if (!sound) {
         return;
       }
@@ -349,8 +339,6 @@ export const disposeAudio = (): void => {
   }
 };
 
-// Dual export: объект для совместимости форм импорта, но основной контракт —
-// standalone-функции выше.
 const AudioManager = {
   playUiPress,
   playTab,
