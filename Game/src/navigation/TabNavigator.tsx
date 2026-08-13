@@ -10,18 +10,39 @@ import SettingsScreen from '../screens/SettingsScreen';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { Theme } from '../constants/Theme';
 import { playTab } from '../audio/AudioManager';
-import ruExtras from '../locales/ru/extras.json';
-import enExtras from '../locales/en/extras.json';
-import ruSettings from '../locales/ru/settings.json';
-import enSettings from '../locales/en/settings.json';
+import { resolveLocalizedKey } from '../utils/i18n';
+import type { Locale } from '../types';
 
 const Tab = createBottomTabNavigator();
 
+const getTabKey = (routeName: string): string => {
+  if (routeName === 'Dao') {
+    return 'dao';
+  }
+  if (routeName === 'Activities') {
+    return 'activities';
+  }
+  if (routeName === 'Store') {
+    return 'store';
+  }
+  if (routeName === 'Settings') {
+    return 'settings';
+  }
+  return 'life';
+};
+
+const getTabLabel = (routeName: string, locale: Locale): string => {
+  const key = getTabKey(routeName);
+  const uiLabel = resolveLocalizedKey(locale, 'ui', `tab_bar.${key}`);
+  if (uiLabel) {
+    return uiLabel;
+  }
+  const extrasLabel = resolveLocalizedKey(locale, 'extras', `navigation.tab_bar.${key}`);
+  return extrasLabel || routeName;
+};
+
 export default function TabNavigator() {
   const locale = useLocaleStore((state) => state.locale);
-  const extras: any = locale === 'ru' ? ruExtras : enExtras;
-  const settings: any = locale === 'ru' ? ruSettings : enSettings;
-  const tabBar = extras.navigation?.tab_bar || {};
 
   return (
     <Tab.Navigator
@@ -37,19 +58,7 @@ export default function TabNavigator() {
         tabBarActiveTintColor: Theme.colors.text,
         tabBarInactiveTintColor: Theme.colors.textDim,
         tabBarLabel: ({ color }) => {
-          let key = 'life';
-          if (route.name === 'Dao') {
-            key = 'dao';
-          }
-          if (route.name === 'Activities') {
-            key = 'activities';
-          }
-          if (route.name === 'Store') {
-            key = 'store';
-          }
-
-          const label = route.name === 'Settings' ? settings.tab_label : tabBar[key] || route.name;
-
+          const label = getTabLabel(route.name, locale);
           return (
             <Text style={{ color, fontSize: 12, fontWeight: '700' }}>
               {label}
@@ -58,7 +67,6 @@ export default function TabNavigator() {
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help';
-
           if (route.name === 'Life') {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === 'Dao') {
@@ -70,7 +78,6 @@ export default function TabNavigator() {
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}

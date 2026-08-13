@@ -7,9 +7,13 @@
   "music_desc": "Фоновая зацикленная мелодия.",
   "language": "Язык",
   "language_desc": "Выбор языка интерфейса.",
-  "language_en": "English",
-  "language_ru": "Русский",
   "language_button": "Выбрать язык",
   "language_current": "Текущий язык",
-  "language_close": "Закрыть"
+  "language_close": "Закрыть",
+  "language_selection": {
+    "title": "Выбор языка",
+    "subtitle": "Выберите язык интерфейса. Позже его можно изменить в настройках.",
+    "confirm": "Подтвердить",
+    "close": "Закрыть"
+  }
 }

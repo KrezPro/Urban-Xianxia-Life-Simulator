@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 37 (Все 22 поддерживаемых языка объявлены в общем типе Locale и реестре SUPPORTED_LOCALES)
+[СТАТУС]: ШАГ 38 (Центральная i18n-инфраструктура для 22 языков, пустые языковые заготовки и генератор locale-файлов)
 
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 
@@ -7,16 +7,59 @@
 164. [X] Создать Game/src/constants/Locales.ts с SUPPORTED_LOCALES, DEFAULT_LOCALE, isLocale, getSupportedLocale, normalizeLocale, getDeviceLocaleCandidate.
 165. [X] Обновить useLocaleStore: дефолт en и защита от невалидного сохранённого языка.
 166. [X] Обновить SettingsScreen: список всех языков берётся из SUPPORTED_LOCALES, звук и музыка находятся сверху, выбор языка через модальное окно.
-167. [ ] Добавить центральную i18n-утилиту с fallback на EN для всех словарей.
-168. [ ] Подготовить вьетнамский языковой пакет как первый новый язык.
-169. [ ] Подключить остальные языковые пакеты по мере перевода.
+167. [X] Добавить центральную i18n-утилиту с fallback на EN для всех словарей.
+168. [ ] Подготовить вьетнамский языковой пакет как первый новый язык (заготовка создана, нужен фактический перевод).
+169. [ ] Подключить остальные языковые пакеты по мере перевода (реестр уже подключает все 22 языка через генератор).
 
 === Следующий шаг ===
-170. [ ] Создать центральную локализацию, чтобы новые языки не требовали правок в каждом экране.
+170. [X] Создать центральную локализацию, чтобы новые языки не требовали правок в каждом экране.
 171. [ ] Добавить перевод VI для настроек, базового UI и уведомлений.
+172. [ ] Запустить npm run locales:stubs внутри Game/, чтобы создать все пустые JSON-заготовки и полный static registry.
+173. [ ] Переводить языки только через Game/src/locales/{lang}/*.json, без правок экранов.
 
 === ОПИСАНИЕ структуры проекта (обновлено) ===
-Game/src/constants/
-├── GameConstants.ts
-└── Theme.ts
-└── Locales.ts                          // Общий реестр всех поддерживаемых языков: коды, nativeName, englishName, normalizeLocale
+Game/src/
+├── hooks/
+│   └── useTranslator.ts                        // Хук перевода: берёт locale из useLocaleStore и возвращает t(key, params) для выбранного словаря
+├── locales/
+│   ├── index.ts                                // Центральный реестр словарей для 22 языков. Bootstrap-версия заменяется генератором scripts/generateLocaleStubs.mjs
+│   ├── en/
+│   │   ├── ui.json
+│   │   ├── events.json
+│   │   ├── social.json
+│   │   ├── notifications.json
+│   │   ├── extras.json
+│   │   ├── stages.json
+│   │   ├── rebirth.json
+│   │   ├── eventGenerator.json
+│   │   └── settings.json
+│   ├── ru/
+│   │   ├── ui.json
+│   │   ├── events.json
+│   │   ├── social.json
+│   │   ├── notifications.json
+│   │   ├── extras.json
+│   │   ├── stages.json
+│   │   ├── rebirth.json
+│   │   ├── eventGenerator.json
+│   │   └── settings.json
+│   └── {lang}/                                 // Создаются генератором: vi, id, es, it, kk, zh-Hans, zh-Hant, ko, ms, de, pl, pt, ro, sw, th, tr, fil, fr, hi, ja
+│       ├── ui.json
+│       ├── events.json
+│       ├── social.json
+│       ├── notifications.json
+│       ├── extras.json
+│       ├── stages.json
+│       ├── rebirth.json
+│       ├── eventGenerator.json
+│       └── settings.json
+└── utils/
+    └── i18n.ts                                 // Центральный fallback-резолвер: locale -> EN -> пустая строка; специальный merge для events.json
+
+Game/
+├── scripts/
+│   └── generateLocaleStubs.mjs                 // Создаёт недостающие языковые JSON-заготовки и перегенерирует Game/src/locales/index.ts
+├── PlanOfDevelopment.txt
+├── Library.txt
+├── DataForAI.txt
+└── prompt.md
