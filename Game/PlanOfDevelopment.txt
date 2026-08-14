@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 65 (Фикс production-сборки: исправлен конфликт Nitro Modules, добавлены иконки, StatusBar и диагностика MMKV/Audio)
+[СТАТУС]: ШАГ 67 (Диагностика EAS Prebuild: убран versionCode из app.json, добавлен nitro-modules в package.json, проверка assets)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -54,11 +54,9 @@
 === ШАГ 7: фиксы совместимости с RN 0.81 ===
 215. [X] Исправлена ошибка Gradle "Unresolved reference currentActivity" в react-native-iap и react-native-google-mobile-ads: обновлены версии пакетов до совместимых с RN 0.81.
 216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
-=== ШАГ 65: Фикс production-сборки (сохранения, статус-бар, иконка, диагностика) ===
-219. [X] Исправлен конфликт версий react-native-nitro-modules (зафиксирована 0.35.10 для совместимости с react-native-iap).
-220. [X] Добавлены иконки и splash screen в app.json, включен edgeToEdgeEnabled.
-221. [X] Добавлен StatusBar из expo-status-bar в App.tsx.
-222. [X] Заменен SafeAreaView из react-native на react-native-safe-area-context в ActivitiesScreen и DaoScreen.
-223. [X] Добавлена диагностика MMKV и Audio в SettingsScreen для отладки production-сборок.
-224. [ ] Локально: git add -A && git commit.
-225. [ ] EAS: eas build --platform android --profile production.
+=== ШАГ 67: Фикс EAS Prebuild (app.json, package.json, assets) ===
+219. [X] Добавлен react-native-nitro-modules "0.35.10" в package.json для корректной работы react-native-mmkv v4.
+220. [X] Исправлен app.json: добавлены icon, splash, adaptiveIcon foregroundImage, edgeToEdgeEnabled. Убран versionCode (управляется EAS удаленно).
+221. [ ] Локально: npx expo prebuild --no-install --platform android (для диагностики).
+222. [ ] Локально: git add -A && git commit && git push.
+223. [ ] EAS: eas build --platform android --profile production.

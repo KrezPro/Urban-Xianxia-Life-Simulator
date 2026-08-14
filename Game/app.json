@@ -2,7 +2,7 @@
   "expo": {
     "name": "BitCultivator",
     "slug": "bitcultivator",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -21,8 +21,7 @@
         "backgroundColor": "#121212"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.krezpro.bitcultivator",
-      "versionCode": 2
+      "package": "com.krezpro.bitcultivator"
     },
     "plugins": [
       [
