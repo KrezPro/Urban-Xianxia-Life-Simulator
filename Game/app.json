@@ -6,22 +6,31 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.krezpro.bitcultivator"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#121212"
       },
-      "package": "com.krezpro.bitcultivator"
+      "package": "com.krezpro.bitcultivator",
+      "versionCode": 1
     },
     "plugins": [
+      [
+        "expo-system-ui",
+        {
+          "backgroundColor": "#121212"
+        }
+      ],
       [
         "react-native-google-mobile-ads",
         {
           "androidAppId": "ca-app-pub-3940256099942544~3347511713",
           "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
-      ]
+      ],
+      "./plugins/withIapPlayFlavor.js"
     ],
     "extra": {
       "eas": {
