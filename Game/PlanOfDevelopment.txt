@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 63 (Исправлена ошибка сборки EAS: react-native-iap ambiguity через config plugin withIapPlayFlavor.js, добавлен expo-system-ui, обновлена версия babel-preset-expo)
+[СТАТУС]: ШАГ 64 (Исправлена ошибка сборки: обновлены react-native-iap и react-native-google-mobile-ads до версий, совместимых с RN 0.81)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -6,27 +6,53 @@
 165. [X] Обновить useLocaleStore: дефолт en и защита от невалидного сохранённого языка.
 166. [X] Обновить SettingsScreen: список всех языков берётся из SUPPORTED_LOCALES, звук и музыка находятся сверху, выбор языка через модальное окно.
 167. [X] Добавить центральную i18n-утилиту с fallback на EN для всех словарей.
+168. [X] Подготовить вьетнамский языковой пакет (VI) (перевод завершен).
+169. [X] Подключить остальные языковые пакеты по мере перевода (реестр уже подключает все 22 языка через генератор).
+=== Следующий шаг ===
+170. [X] Создать центральную локализацию, чтобы новые языки не требовали правок в каждом экране.
+171. [X] Подготовить испанский (ES) языковой пакет.
+172. [X] Подготовить индонезийский (ID) языковой пакет.
+173. [X] Подготовить португальский (PT) языковой пакет.
+174. [X] Подготовить французский (FR) языковой пакет.
+175. [X] Подготовить немецкий (DE) языковой пакет.
+176. [X] Подготовить итальянский (IT) языковой пакет.
+177. [X] Подготовить упрощенный китайский (zh-Hans) языковой пакет.
+178. [X] Подготовить японский (JA) языковой пакет.
+179. [X] Подготовить корейский (KO) языковой пакет.
+180. [X] Подготовить турецкий (TR) языковой пакет.
+181. [X] Подготовить польский (PL) языковой пакет.
+182. [X] Подготовить традиционный китайский (zh-Hant) языковой пакет.
+183. [X] Актуализировать русский (RU) языковой пакет.
+184. [X] Подготовить тайский (TH) языковой пакет.
+185. [X] Подготовить хинди (HI) языковой пакет.
+186. [X] Подготовить малайский (MS) языковой пакет.
+187. [X] Подготовить филиппинский (FIL) языковой пакет.
+188. [X] Подготовить румынский (RO) языковой пакет.
+189. [X] Подготовить казахский (KK) языковой пакет.
+190. [X] Подготовить суахили (SW) языковой пакет: полный перевод 9 JSON-файлов. Адаптация терминологии (Ukuzaji, Kuvuka Mipaka, Kuungua kwa Mana). Сохранение грамматики (SVO) для генерации событий ({actor} {action} {place}).
+191. [ ] Запустить npm run locales:stubs внутри Game/, чтобы создать все пустые JSON-заготовки и полный static registry (выполнено автоматически/через предыдущие шаги).
 192. [X] Переводить остальные языки только через Game/src/locales/{lang}/*.json, без правок экранов (ВЫПОЛНЕНО: ВСЕ 22 ЯЗЫКА ГОТОВЫ).
 193. [X] Переписать StoreScreen на центральный i18n и убрать прямые импорты ru/en JSON.
+194. [ ] Удалить legacy locale-файлы: activities.json, dao.json, navigation.json, store.json, items.json (только в locales, не в data).
 === Фаза 34: Монетизация и реклама (AdMob + Google Play IAP) ===
 195. [X] Создать Game/src/constants/AdsConstants.ts: тестовые AdMob App/Ad Unit ID, REMOVE_ADS_PRODUCT_ID = remove_ads, DEATH_AD_POLICY (5/8/далее), флаги ADS_ENABLED и AGE_ONE_INTERSTITIAL_ENABLED.
 196. [X] Создать Game/src/services/AdService.ts: guarded require react-native-google-mobile-ads, initialize, showDeathInterstitial, showDaoRewarded (EARNED_REWARD до CLOSED, timeout 120s), dev-симуляция.
 197. [X] Создать Game/src/services/IapService.ts: guarded require react-native-iap, fetchRemoveAdsProduct (localizedPrice), purchaseRemoveAds (finishTransaction), restoreRemoveAds, обработка cancelled/already_owned.
 198. [X] Создать Game/src/utils/adsUtils.ts: shouldShowDeathAd(totalDeaths, removeAds, shownForDeath) — 5, 8, далее каждая смерть, без двойного показа.
+199. [X] usePlayerStore: persisted totalDeaths и deathAdShownForDeath; инкремент при первой смерти в applyEffects; НЕ сбрасываются при reincarnate; setDeathAdShownForDeath.
 200. [X] LifeScreen: показ death-Interstitial при смерти по правилу 5/8/далее; метка до async-показа; лог death_ad_log; Reincarnate работает всегда.
 201. [X] DaoScreen: rewarded вместо Alert; бафф только после успеха; ad_reward_success/ad_reward_error; кнопка скрыта при hasCultivatorPass; состояние adLoading.
 202. [X] StoreScreen: реальная покупка remove_ads, кнопка Restore, цена из Google Play (btn_iap_buy_price), состояния загрузки, уведомления iap_*.
+203. [X] useYearlyCycle: возрастная interstitial на 1 году gated флагом AGE_ONE_INTERSTITIAL_ENABLED (по умолчанию false).
 204. [X] App.tsx: после гидратации AdService.initialize + IapService.initialize + restoreRemoveAds (восстановление hasCultivatorPass).
 205. [X] app.json: плагин react-native-google-mobile-ads с тестовыми App ID. package.json: зависимости react-native-google-mobile-ads и react-native-iap.
+206. [X] Локали en/ru: новые ключи (btn_restore, restore_loading, btn_iap_buy_price, btn_ad_loading, death_ad_log, ad_reward_success/error, iap_purchase_error, iap_restore_success/empty). Остальные 20 языков — fallback на EN.
 === Следующие шаги (монетизация) ===
 207. [ ] Заменить тестовые AdMob App ID (app.json) и Ad Unit ID (AdsConstants.ts) на реальные после настройки AdMob.
 208. [ ] Прогнать реальную покупку remove_ads на internal testing track с лицензионным тестером.
 209. [ ] При желании включить возрастную interstitial — перевести AGE_ONE_INTERSTITIAL_ENABLED в true.
-=== ШАГ 6: фиксы сборки EAS ===
-215. [X] Исправлена ошибка Gradle ambiguity react-native-iap (amazon/play): создан Game/plugins/withIapPlayFlavor.js (withAppBuildGradle инжектит missingDimensionStrategy 'store', 'play' в defaultConfig).
-216. [X] Добавлен expo-system-ui для userInterfaceStyle: "dark" (убирает prebuild warning).
-217. [X] Обновлена версия babel-preset-expo до ~14.0.1 (совместимо с Expo SDK 54).
-218. [ ] Закоммитить все изменения в git перед EAS Build: git add -A && git commit -m "fix: iap flavor plugin + system-ui + babel-preset".
-219. [ ] Запустить eas build --platform android --profile production для получения APK/AAB под Google Play.
-220. [ ] Загрузить AAB в Google Play Console (Production или Internal Testing track).
-221. [ ] Добавить себя в license testers для IAP remove_ads и проверить реальную покупку.
+=== ШАГ 7: фиксы совместимости с RN 0.81 ===
+215. [X] Исправлена ошибка Gradle "Unresolved reference currentActivity" в react-native-iap и react-native-google-mobile-ads: обновлены версии пакетов до совместимых с RN 0.81.
+216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
+217. [ ] Локально: npm install && git add -A && git commit.
+218. [ ] EAS: eas build --platform android --profile production (повторный запуск).
