@@ -16,6 +16,8 @@ import { initAudio, disposeAudio } from './audio/AudioManager';
 import { useIdleProgress } from './hooks/useIdleProgress';
 import { Theme } from './constants/Theme';
 import { resolveLocalizedKey } from './utils/i18n';
+import { AdService } from './services/AdService';
+import { IapService } from './services/IapService';
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
@@ -27,9 +29,7 @@ export default function App() {
   const settingsHydrated = useSettingsStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
   const hasChosenLanguage = useLocaleStore((state) => state.hasChosenLanguage);
-
   const loadingText = resolveLocalizedKey(locale, 'ui', 'app.loading');
-
   const isReady =
     playerHydrated &&
     localeHydrated &&
@@ -38,9 +38,7 @@ export default function App() {
     techniquesHydrated &&
     lifestyleHydrated &&
     settingsHydrated;
-
   useIdleProgress();
-
   useEffect(() => {
     if (!isReady) {
       return;
@@ -50,7 +48,23 @@ export default function App() {
       disposeAudio?.();
     };
   }, [isReady]);
-
+  // Инициализация монетизации после гидратации сторов:
+  // AdMob (interstitial после смерти + rewarded в Дао) и Google Play Billing
+  // (restore покупки remove_ads при старте, чтобы не терять entitlement).
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+    AdService.initialize();
+    IapService.initialize()
+      .then(() => IapService.restoreRemoveAds())
+      .then((result) => {
+        if (result.success) {
+          usePlayerStore.getState().setCultivatorPass(true);
+        }
+      })
+      .catch(() => undefined);
+  }, [isReady]);
   if (!isReady) {
     return (
       <SafeAreaProvider>
@@ -63,7 +77,6 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
-
   if (!hasChosenLanguage) {
     return (
       <SafeAreaProvider>
@@ -71,7 +84,6 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
-
   return (
     <SafeAreaProvider>
       <View style={styles.root}>

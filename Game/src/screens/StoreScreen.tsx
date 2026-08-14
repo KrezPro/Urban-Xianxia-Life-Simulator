@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePlayerStore } from '../store/usePlayerStore';
@@ -11,6 +11,7 @@ import { formatLargeNumber, isGreaterOrEqualBigInt } from '../utils/helpers';
 import { getKarmaLevelEffects } from '../utils/gameplayUtils';
 import { buildEffectLines } from '../utils/effectFormatter';
 import { resolveLocalizedKey } from '../utils/i18n';
+import { IapService } from '../services/IapService';
 import itemsData from '../data/items.json';
 
 interface DetailsData {
@@ -24,13 +25,26 @@ export default function StoreScreen() {
   const locale = useLocaleStore((state) => state.locale);
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const [details, setDetails] = useState<DetailsData | null>(null);
-
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [priceLabel, setPriceLabel] = useState('');
   const tUi = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'ui', `store_screen.${key}`, params);
-
   const tExtras = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'extras', key, params);
-
+  useEffect(() => {
+    let mounted = true;
+    IapService.fetchRemoveAdsProduct()
+      .then((product) => {
+        if (mounted && product && product.price) {
+          setPriceLabel(product.price);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      mounted = false;
+    };
+  }, []);
   const effectLabels = {
     maxHealthPerYear: tExtras('effect_labels.maxHealthPerYear'),
     healthRegenPerYear: tExtras('effect_labels.healthRegenPerYear'),
@@ -47,7 +61,6 @@ export default function StoreScreen() {
     startSpiritualRoot: tExtras('effect_labels.startSpiritualRoot'),
     startBodyTempering: tExtras('effect_labels.startBodyTempering'),
   };
-
   const getSafeMaxLevel = (item: any): number => {
     const maxLevel = Number(item?.maxLevel || 0);
     if (!Number.isFinite(maxLevel)) {
@@ -55,103 +68,114 @@ export default function StoreScreen() {
     }
     return Math.max(0, Math.floor(maxLevel));
   };
-
   const getSafeCurrentLevel = (item: any): number => {
     const rawLevel = Number(inventory.items[item.id]?.quantity || 0);
     const safeRawLevel = Number.isFinite(rawLevel) ? Math.max(0, Math.floor(rawLevel)) : 0;
     return Math.min(safeRawLevel, getSafeMaxLevel(item));
   };
-
   const getItemName = (item: any): string => {
     const resolved = tUi(`items.${item.id}.name`);
     return resolved || item.id;
   };
-
   const getItemDesc = (item: any): string => {
     return tUi(`items.${item.id}.desc`);
   };
-
   const buildItemDetails = (item: any, currentLevel: number, safeMaxLevel: number): string[] => {
     const lines: string[] = [];
-
     const currentEffects = getKarmaLevelEffects(item.id, currentLevel);
     const currentLines = buildEffectLines(currentEffects, effectLabels, 1);
-
     if (currentLevel > 0 && currentLines.length > 0) {
       lines.push(tExtras('store.current_effects'));
       currentLines.forEach((line) => lines.push(line));
     }
-
     if (currentLevel < safeMaxLevel) {
       const nextLevel = Math.min(currentLevel + 1, safeMaxLevel);
       const nextEffects = getKarmaLevelEffects(item.id, nextLevel);
       const nextLines = buildEffectLines(nextEffects, effectLabels, 1);
-
       if (nextLines.length > 0) {
         lines.push(tExtras('store.next_effects'));
         nextLines.forEach((line) => lines.push(line));
       }
     }
-
     const effectsNote = tExtras('store.effects_note');
     if (effectsNote) {
       lines.push(effectsNote);
     }
-
     return lines;
   };
-
   const handleBuyLevel = (item: any) => {
     const itemName = getItemName(item);
     const safeMaxLevel = getSafeMaxLevel(item);
     const currentLevel = getSafeCurrentLevel(item);
     const isMax = currentLevel >= safeMaxLevel;
-
     if (isMax) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
     }
-
     const nextLevelData = Array.isArray(item.levels) ? item.levels[currentLevel] : undefined;
     if (!nextLevelData) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
     }
-
     const nextCost = nextLevelData?.cost || '0';
     const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
-
     if (!canAfford) {
       pushUiNotification('store_upgrade_error', 'danger');
       return;
     }
-
     player.deductKarma(nextCost);
     inventory.addItem({ id: item.id, quantity: 1, type: item.type } as any);
-
     pushUiNotification('store_upgrade_success', 'reward', {
       name: itemName,
       level: (currentLevel + 1).toString(),
     });
   };
-
-  const handleBuyPass = () => {
-    player.setCultivatorPass(true);
-    pushUiNotification('store_pass_activated', 'reward');
+  // Реальная покупка Remove Ads (remove_ads) через Google Play Billing.
+  // Успех активирует hasCultivatorPass, который отключает ВСЮ рекламу.
+  const handleBuyPass = async () => {
+    if (purchaseLoading || player.hasCultivatorPass) {
+      return;
+    }
+    setPurchaseLoading(true);
+    const result = await IapService.purchaseRemoveAds();
+    setPurchaseLoading(false);
+    if (result.success) {
+      usePlayerStore.getState().setCultivatorPass(true);
+      pushUiNotification('store_pass_activated', 'reward');
+    } else if (result.error !== 'cancelled') {
+      pushUiNotification('iap_purchase_error', 'danger');
+    }
   };
-
+  const handleRestore = async () => {
+    if (restoreLoading) {
+      return;
+    }
+    setRestoreLoading(true);
+    const result = await IapService.restoreRemoveAds();
+    setRestoreLoading(false);
+    if (result.success) {
+      usePlayerStore.getState().setCultivatorPass(true);
+      pushUiNotification('iap_restore_success', 'reward');
+    } else {
+      pushUiNotification('iap_restore_empty', 'system');
+    }
+  };
+  const passButtonTitle = player.hasCultivatorPass
+    ? tUi('btn_iap_active')
+    : purchaseLoading
+    ? tUi('btn_iap_buy')
+    : priceLabel
+    ? tUi('btn_iap_buy_price', { price: priceLabel })
+    : tUi('btn_iap_buy');
   const safeItems = Array.isArray(itemsData) ? itemsData : [];
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{tUi('title')}</Text>
-
         <Card variant="gold" style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>{tUi('karma_balance')}</Text>
           <Text style={styles.balanceValue}>{formatLargeNumber(player.karma)}</Text>
         </Card>
-
         {safeItems
           .filter((item: any) => item.type === 'karma_buff')
           .map((item: any) => {
@@ -165,7 +189,6 @@ export default function StoreScreen() {
             const canAfford = isGreaterOrEqualBigInt(player.karma, nextCost);
             const itemName = getItemName(item);
             const itemDesc = getItemDesc(item);
-
             return (
               <Card key={item.id} style={styles.itemCard}>
                 <View style={styles.itemTopRow}>
@@ -174,23 +197,20 @@ export default function StoreScreen() {
                     {tExtras('store.level')}: {currentLevel}/{safeMaxLevel}
                   </Text>
                 </View>
-
                 <Text style={styles.itemDesc}>{itemDesc}</Text>
-
                 {!isMax ? (
                   <View style={styles.costRow}>
                     <Text style={styles.costLabel}>{tExtras('store.next_cost')}</Text>
                     <Text style={styles.costValue}>{formatLargeNumber(nextCost)}</Text>
                   </View>
                 ) : null}
-
                 <Button
                   title={
                     isMax
                       ? tExtras('store.max_level')
                       : canAfford
-                        ? tUi('btn_buy')
-                        : tUi('btn_no_karma')
+                      ? tUi('btn_buy')
+                      : tUi('btn_no_karma')
                   }
                   onPress={() => handleBuyLevel(item)}
                   onLongPress={() =>
@@ -207,22 +227,28 @@ export default function StoreScreen() {
               </Card>
             );
           })}
-
         <Text style={styles.sectionTitle}>{tUi('iap_section')}</Text>
-
         <Card variant="primary" style={styles.iapCard}>
           <Text style={styles.iapName}>{tUi('iap_pass')}</Text>
           <Text style={styles.iapDesc}>{tUi('iap_pass_desc')}</Text>
           <Button
-            title={player.hasCultivatorPass ? tUi('btn_iap_active') : tUi('btn_iap_buy')}
+            title={passButtonTitle}
             onPress={handleBuyPass}
-            disabled={player.hasCultivatorPass}
+            disabled={player.hasCultivatorPass || purchaseLoading}
             variant={player.hasCultivatorPass ? 'secondary' : 'primary'}
             icon="ribbon"
             style={styles.iapButton}
           />
+          <Button
+            title={restoreLoading ? tUi('restore_loading') : tUi('btn_restore')}
+            onPress={handleRestore}
+            disabled={restoreLoading || player.hasCultivatorPass}
+            variant="ghost"
+            small
+            icon="refresh"
+            style={styles.restoreButton}
+          />
         </Card>
-
         <Card style={styles.iapCard}>
           <Text style={styles.iapName}>{tUi('iap_ad')}</Text>
           <Text style={styles.iapDesc}>{tUi('iap_ad_desc')}</Text>
@@ -236,7 +262,6 @@ export default function StoreScreen() {
           />
         </Card>
       </ScrollView>
-
       <DetailsModal
         visible={details !== null}
         title={details?.title || ''}
@@ -338,5 +363,9 @@ const styles = StyleSheet.create({
   },
   iapButton: {
     alignSelf: 'stretch',
+  },
+  restoreButton: {
+    alignSelf: 'stretch',
+    marginTop: Theme.spacing.sm,
   },
 });

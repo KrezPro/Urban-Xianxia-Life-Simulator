@@ -1,7 +1,5 @@
-[СТАТУС]: ШАГ 58 (Суахили (sw) полностью внедрен и переведен. ЗАВЕРШЕНИЕ ЦИКЛА ПЕРЕВОДА НА 22 ЯЗЫКА!)
-
+[СТАТУС]: ШАГ 59 (Монетизация: реклама после смерти 5/8/далее, rewarded в Дао, IAP remove_ads с Restore. AdMob пока на тестовых ID.)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
-
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
 164. [X] Создать Game/src/constants/Locales.ts с SUPPORTED_LOCALES, DEFAULT_LOCALE, isLocale, getSupportedLocale, normalizeLocale, getDeviceLocaleCandidate.
@@ -10,7 +8,6 @@
 167. [X] Добавить центральную i18n-утилиту с fallback на EN для всех словарей.
 168. [X] Подготовить вьетнамский языковой пакет (VI) (перевод завершен).
 169. [X] Подключить остальные языковые пакеты по мере перевода (реестр уже подключает все 22 языка через генератор).
-
 === Следующий шаг ===
 170. [X] Создать центральную локализацию, чтобы новые языки не требовали правок в каждом экране.
 171. [X] Подготовить испанский (ES) языковой пакет.
@@ -37,3 +34,20 @@
 192. [X] Переводить остальные языки только через Game/src/locales/{lang}/*.json, без правок экранов (ВЫПОЛНЕНО: ВСЕ 22 ЯЗЫКА ГОТОВЫ).
 193. [X] Переписать StoreScreen на центральный i18n и убрать прямые импорты ru/en JSON.
 194. [ ] Удалить legacy locale-файлы: activities.json, dao.json, navigation.json, store.json, items.json (только в locales, не в data).
+=== Фаза 34: Монетизация и реклама (AdMob + Google Play IAP) ===
+195. [X] Создать Game/src/constants/AdsConstants.ts: тестовые AdMob App/Ad Unit ID, REMOVE_ADS_PRODUCT_ID = remove_ads, DEATH_AD_POLICY (5/8/далее), флаги ADS_ENABLED и AGE_ONE_INTERSTITIAL_ENABLED.
+196. [X] Создать Game/src/services/AdService.ts: guarded require react-native-google-mobile-ads, initialize, showDeathInterstitial, showDaoRewarded (EARNED_REWARD до CLOSED, timeout 120s), dev-симуляция.
+197. [X] Создать Game/src/services/IapService.ts: guarded require react-native-iap, fetchRemoveAdsProduct (localizedPrice), purchaseRemoveAds (finishTransaction), restoreRemoveAds, обработка cancelled/already_owned.
+198. [X] Создать Game/src/utils/adsUtils.ts: shouldShowDeathAd(totalDeaths, removeAds, shownForDeath) — 5, 8, далее каждая смерть, без двойного показа.
+199. [X] usePlayerStore: persisted totalDeaths и deathAdShownForDeath; инкремент при первой смерти в applyEffects; НЕ сбрасываются при reincarnate; setDeathAdShownForDeath.
+200. [X] LifeScreen: показ death-Interstitial при смерти по правилу 5/8/далее; метка до async-показа; лог death_ad_log; Reincarnate работает всегда.
+201. [X] DaoScreen: rewarded вместо Alert; бафф только после успеха; ad_reward_success/ad_reward_error; кнопка скрыта при hasCultivatorPass; состояние adLoading.
+202. [X] StoreScreen: реальная покупка remove_ads, кнопка Restore, цена из Google Play (btn_iap_buy_price), состояния загрузки, уведомления iap_*.
+203. [X] useYearlyCycle: возрастная interstitial на 1 году gated флагом AGE_ONE_INTERSTITIAL_ENABLED (по умолчанию false).
+204. [X] App.tsx: после гидратации AdService.initialize + IapService.initialize + restoreRemoveAds (восстановление hasCultivatorPass).
+205. [X] app.json: плагин react-native-google-mobile-ads с тестовыми App ID. package.json: зависимости react-native-google-mobile-ads и react-native-iap.
+206. [X] Локали en/ru: новые ключи (btn_restore, restore_loading, btn_iap_buy_price, btn_ad_loading, death_ad_log, ad_reward_success/error, iap_purchase_error, iap_restore_success/empty). Остальные 20 языков — fallback на EN.
+=== Следующие шаги (монетизация) ===
+207. [ ] Заменить тестовые AdMob App ID (app.json) и Ad Unit ID (AdsConstants.ts) на реальные после настройки AdMob.
+208. [ ] Прогнать реальную покупку remove_ads на internal testing track с лицензионным тестером.
+209. [ ] При желании включить возрастную interstitial — перевести AGE_ONE_INTERSTITIAL_ENABLED в true.

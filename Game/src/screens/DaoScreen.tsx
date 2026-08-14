@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useTechniquesStore } from '../store/useTechniquesStore';
 import { useBreakthrough } from '../hooks/useBreakthrough';
@@ -22,6 +22,7 @@ import { getStageName } from '../utils/stageUtils';
 import { buildEffectLines } from '../utils/effectFormatter';
 import { resolveLocalizedKey } from '../utils/i18n';
 import { playUiPress } from '../audio/AudioManager';
+import { AdService } from '../services/AdService';
 import techniquesData from '../data/techniques.json';
 
 interface DetailsData {
@@ -36,17 +37,14 @@ export default function DaoScreen() {
   const pushUiNotification = useNotificationStore((state) => state.pushUiNotification);
   const { attemptBreakthrough, nextStage, calculateChance, nextStageName } = useBreakthrough();
   const [hasAdBuff, setHasAdBuff] = useState(false);
+  const [adLoading, setAdLoading] = useState(false);
   const [details, setDetails] = useState<DetailsData | null>(null);
-
   const tDao = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'ui', `dao_screen.${key}`, params);
-
   const tTec = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'extras', `dao.techniques.${key}`, params);
-
   const tEffectLabel = (key: string): string =>
     resolveLocalizedKey(locale, 'extras', `effect_labels.${key}`);
-
   const effectLabels = {
     maxHealthPerYear: tEffectLabel('maxHealthPerYear'),
     healthRegenPerYear: tEffectLabel('healthRegenPerYear'),
@@ -63,14 +61,12 @@ export default function DaoScreen() {
     startSpiritualRoot: tEffectLabel('startSpiritualRoot'),
     startBodyTempering: tEffectLabel('startBodyTempering'),
   };
-
   const currentStageName = getStageName(player.cultivationStage, locale);
   const currentStageDef = getStageDefinition(player.cultivationStage);
   const chance = calculateChance(hasAdBuff);
   const chancePercent = Math.floor(chance * 100);
   const progress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const canBreakthrough = nextStage !== undefined && progress >= 1;
-
   const bodyLevel = player.bodyTempering || 0;
   const bodyCost = getBodyTemperCost(bodyLevel);
   const bodyMoneyCost = getBodyTemperMoneyCost(bodyLevel);
@@ -85,27 +81,23 @@ export default function DaoScreen() {
     !bodyAlreadyThisYear &&
     bodyEnoughQi &&
     bodyEnoughMoney;
-
   const bodyButtonTitle = !bodyOldEnough
     ? tDao('body_locked_age')
     : bodyAlreadyThisYear
-      ? tDao('body_locked_year')
-      : !bodyEnoughQi
-        ? tDao('body_locked_qi')
-        : !bodyEnoughMoney
-          ? tTec('not_enough_money')
-          : tDao('body_button');
-
+    ? tDao('body_locked_year')
+    : !bodyEnoughQi
+    ? tDao('body_locked_qi')
+    : !bodyEnoughMoney
+    ? tTec('not_enough_money')
+    : tDao('body_button');
   const bodyCostText = `${formatLargeNumber(bodyCost.toString())} ${tDao('qi_energy')} / $${formatLargeNumber(
     bodyMoneyCost.toString()
   )}`;
-
   const formatBps = (bps: number): string => {
     const safe = typeof bps === 'number' && isFinite(bps) ? bps : 0;
     const percent = (safe / 100).toFixed(1);
     return `${percent.replace(/\.0$/, '')}%`;
   };
-
   const openStageInfo = (stage: any, isNext: boolean) => {
     if (!stage) {
       return;
@@ -129,17 +121,14 @@ export default function DaoScreen() {
       lines,
     });
   };
-
   const handleCurrentStagePress = () => {
     playUiPress?.();
     openStageInfo(currentStageDef, false);
   };
-
   const handleNextStagePress = () => {
     playUiPress?.();
     openStageInfo(nextStage, true);
   };
-
   const openBodyDetails = () => {
     const lines = [
       `${tDao('body_details_max_health')}: +${bodyEffects.maxHealth}`,
@@ -155,15 +144,12 @@ export default function DaoScreen() {
       lines,
     });
   };
-
   const getTechniqueName = (techniqueId: string): string => {
     return tTec(`items.${techniqueId}.name`) || techniqueId;
   };
-
   const getTechniqueDesc = (techniqueId: string): string => {
     return tTec(`items.${techniqueId}.desc`);
   };
-
   const getRequirementText = (technique: any): string => {
     const parts: string[] = [];
     if (technique.requiredSpiritualRoot) {
@@ -177,7 +163,6 @@ export default function DaoScreen() {
     }
     return parts.join(', ');
   };
-
   const openTechniqueDetails = (
     technique: any,
     currentLevel: number,
@@ -205,16 +190,25 @@ export default function DaoScreen() {
       lines,
     });
   };
-
-  const handleWatchAd = () => {
-    setHasAdBuff(true);
-    Alert.alert(tDao('alert_ad_title'), tDao('alert_ad_msg'));
+  // Rewarded-реклама в Дао: бафф выдаётся ТОЛЬКО после реального просмотра.
+  // При hasCultivatorPass кнопка вообще не рендерится (Remove Ads).
+  const handleWatchAd = async () => {
+    if (adLoading || hasAdBuff || player.hasCultivatorPass) {
+      return;
+    }
+    setAdLoading(true);
+    const result = await AdService.showDaoRewarded();
+    setAdLoading(false);
+    if (result.success) {
+      setHasAdBuff(true);
+      pushUiNotification('ad_reward_success', 'reward');
+    } else {
+      pushUiNotification('ad_reward_error', 'danger');
+    }
   };
-
   const handleBreakthrough = () => {
     attemptBreakthrough(hasAdBuff, () => setHasAdBuff(false));
   };
-
   const handleTemperBody = () => {
     if (!canTemperBody) {
       return;
@@ -229,7 +223,6 @@ export default function DaoScreen() {
       pushUiNotification('technique_upgrade_error', 'danger');
     }
   };
-
   const handleUpgradeTechnique = (technique: any) => {
     const currentLevel = techniques.levels?.[technique.id] || 0;
     const cost = getTechniqueCost(technique.id, currentLevel);
@@ -247,9 +240,7 @@ export default function DaoScreen() {
       level: (currentLevel + 1).toString(),
     });
   };
-
   const safeTechniques = Array.isArray(techniquesData) ? techniquesData : [];
-
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
@@ -262,7 +253,6 @@ export default function DaoScreen() {
       </SafeAreaView>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <NotificationHost />
@@ -301,9 +291,15 @@ export default function DaoScreen() {
             ) : null}
             {!player.hasCultivatorPass ? (
               <Button
-                title={hasAdBuff ? tDao('btn_ad_watched') : tDao('btn_ad_buff')}
+                title={
+                  adLoading
+                    ? tDao('btn_ad_loading')
+                    : hasAdBuff
+                    ? tDao('btn_ad_watched')
+                    : tDao('btn_ad_buff')
+                }
                 onPress={handleWatchAd}
-                disabled={hasAdBuff}
+                disabled={hasAdBuff || adLoading}
                 variant="gold"
                 icon="play-circle"
                 style={styles.adButton}

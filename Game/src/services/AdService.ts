@@ -1,8 +1,8 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded require: Metro статически включает пакет в бандл,
-// рантайм-ошибка отсутствия нативки ловится в try/catch
+// Guarded literal require (урок DataForAI 18/19): Metro статически включает пакет
+// в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let InterstitialAd: any = null;
 let RewardedAd: any = null;
 let AdEventType: any = null;
@@ -17,15 +17,19 @@ try {
   RewardedAdEventType = admob.RewardedAdEventType;
   mobileAds = admob.default;
 } catch (e) {
-  // Нативный модуль недоступен (dev-клиент без prebuild)
   InterstitialAd = null;
   RewardedAd = null;
+  AdEventType = null;
+  RewardedAdEventType = null;
+  mobileAds = null;
 }
 
 export interface AdServiceResult {
   success: boolean;
   error?: string;
 }
+
+const REWARDED_TIMEOUT_MS = 120000;
 
 class AdServiceClass {
   private initialized = false;
@@ -36,22 +40,16 @@ class AdServiceClass {
     if (this.initialized) {
       return;
     }
-    if (!AdsConstants.ADS_ENABLED) {
-      this.initialized = true;
-      return;
-    }
-    if (!mobileAds) {
-      this.initialized = true;
+    this.initialized = true;
+    if (!AdsConstants.ADS_ENABLED || !mobileAds) {
       return;
     }
     try {
       await mobileAds().initialize();
-      this.initialized = true;
       this.loadInterstitial();
       this.loadRewarded();
     } catch (e) {
       console.warn('[AdService] init failed:', e);
-      this.initialized = true;
     }
   }
 
@@ -72,6 +70,7 @@ class AdServiceClass {
       this.interstitialInstance.load();
     } catch (e) {
       console.warn('[AdService] loadInterstitial failed:', e);
+      this.interstitialInstance = null;
     }
   }
 
@@ -87,60 +86,102 @@ class AdServiceClass {
       this.rewardedInstance.load();
     } catch (e) {
       console.warn('[AdService] loadRewarded failed:', e);
+      this.rewardedInstance = null;
     }
   }
 
+  /**
+   * Interstitial после смерти (правило 5/8/далее проверяется в adsUtils).
+   * Ошибка рекламы никогда не блокирует игру: возвращаем success=false.
+   */
   async showDeathInterstitial(): Promise<AdServiceResult> {
     if (!AdsConstants.ADS_ENABLED) {
-      return { success: false, error: 'Ads disabled' };
+      return { success: false, error: 'ads_disabled' };
     }
     if (!this.interstitialInstance) {
-      // В dev-режиме без нативки симулируем успех для тестирования логики
       if (__DEV__) {
         console.log('[AdService] DEV: simulating interstitial');
         return { success: true };
       }
-      return { success: false, error: 'Ad not loaded' };
+      return { success: false, error: 'ad_not_loaded' };
     }
     try {
       await this.interstitialInstance.show();
-      this.loadInterstitial(); // Предзагрузка следующей
+      this.loadInterstitial();
       return { success: true };
     } catch (e: any) {
       console.warn('[AdService] showDeathInterstitial failed:', e);
-      return { success: false, error: e?.message || 'Unknown error' };
+      this.loadInterstitial();
+      return { success: false, error: e?.message || 'unknown' };
     }
   }
 
-  async showDaoRewarded(): Promise<AdServiceResult> {
-    if (!AdsConstants.ADS_ENABLED) {
-      return { success: false, error: 'Ads disabled' };
-    }
-    if (!this.rewardedInstance) {
-      if (__DEV__) {
-        console.log('[AdService] DEV: simulating rewarded');
-        return { success: true };
+  /**
+   * Rewarded в Дао (+10% и Защита). Награда засчитывается ТОЛЬКО если
+   * пользователь досмотрел видео (EARNED_REWARD) до закрытия рекламы.
+   */
+  showDaoRewarded(): Promise<AdServiceResult> {
+    return new Promise((resolve) => {
+      if (!AdsConstants.ADS_ENABLED) {
+        resolve({ success: false, error: 'ads_disabled' });
+        return;
       }
-      return { success: false, error: 'Ad not loaded' };
-    }
-    try {
-      let rewarded = false;
-      const unsubscribe = this.rewardedInstance.addAdEventListener(
-        RewardedAdEventType.EARNED_REWARD,
-        () => {
-          rewarded = true;
+      if (!this.rewardedInstance || !AdEventType || !RewardedAdEventType) {
+        if (__DEV__) {
+          console.log('[AdService] DEV: simulating rewarded');
+          resolve({ success: true });
+        } else {
+          resolve({ success: false, error: 'ad_not_loaded' });
         }
-      );
-      await this.rewardedInstance.show();
-      // Даём время на callback
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      unsubscribe();
-      this.loadRewarded(); // Предзагрузка следующей
-      return { success: rewarded, error: rewarded ? undefined : 'No reward earned' };
-    } catch (e: any) {
-      console.warn('[AdService] showDaoRewarded failed:', e);
-      return { success: false, error: e?.message || 'Unknown error' };
-    }
+        return;
+      }
+      let earned = false;
+      let settled = false;
+      const unsubscribers: Array<() => void> = [];
+      const finish = (success: boolean, error?: string) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        unsubscribers.forEach((unsubscribe) => {
+          try {
+            unsubscribe();
+          } catch {
+            // ignore
+          }
+        });
+        this.loadRewarded();
+        resolve({ success, error });
+      };
+      try {
+        unsubscribers.push(
+          this.rewardedInstance.addAdEventListener(
+            RewardedAdEventType.EARNED_REWARD,
+            () => {
+              earned = true;
+            }
+          )
+        );
+        unsubscribers.push(
+          this.rewardedInstance.addAdEventListener(AdEventType.CLOSED, () => {
+            finish(earned, earned ? undefined : 'no_reward');
+          })
+        );
+        unsubscribers.push(
+          this.rewardedInstance.addAdEventListener(AdEventType.ERROR, () => {
+            finish(false, 'ad_error');
+          })
+        );
+        setTimeout(() => {
+          finish(earned, 'timeout');
+        }, REWARDED_TIMEOUT_MS);
+        this.rewardedInstance.show().catch((e: any) => {
+          finish(false, e?.message || 'show_failed');
+        });
+      } catch (e: any) {
+        finish(false, e?.message || 'unknown');
+      }
+    });
   }
 }
 

@@ -24,6 +24,8 @@ import { getSurvivalCost, getLifestyleAnnualCost, getOptionById } from '../utils
 import { getStageName } from '../utils/stageUtils';
 import { useYearlyCycle } from '../hooks/useYearlyCycle';
 import { resolveLocalizedKey } from '../utils/i18n';
+import { shouldShowDeathAd } from '../utils/adsUtils';
+import { AdService } from '../services/AdService';
 import { LifestyleCategory } from '../types';
 import LogScreen from './LogScreen';
 import stagesData from '../data/stages.json';
@@ -45,19 +47,15 @@ export default function LifeScreen() {
   const [hint, setHint] = useState<HintData | null>(null);
   const [logVisible, setLogVisible] = useState(false);
   const deathNotificationSentRef = useRef(false);
-
   const { height: windowHeight } = useWindowDimensions();
   const scale = Math.min(1.35, Math.max(0.75, windowHeight / 800));
   const sw = (v: number) => Math.round(v * scale);
   const avatarSize = Math.min(96, Math.max(54, sw(76)));
   const ageFontSize = Math.min(40, Math.max(24, sw(32)));
-
   const tLife = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'ui', `life_screen.${key}`, params);
-
   const tRebirth = (key: string, params?: Record<string, string | number>): string =>
     resolveLocalizedKey(locale, 'rebirth', key, params);
-
   const foundStageIndex = (stagesData as any[]).findIndex(
     (stage) => stage.id === player.cultivationStage
   );
@@ -66,11 +64,9 @@ export default function LifeScreen() {
   const qiProgress = nextStage ? getBigIntProgress(player.qi, nextStage.requiredQi) : 1;
   const healthProgress = player.maxHealth > 0 ? player.health / player.maxHealth : 0;
   const missedBadgeText = missedNotifications > 99 ? '99+' : missedNotifications.toString();
-
   const avatarGroup = getAvatarAgeGroup(player.age);
   const avatarAria = tLife(`avatar.aria_${avatarGroup}`);
   const stageLabel = getStageName(player.cultivationStage, locale);
-
   const survivalCost = getSurvivalCost(player.age, player.cultivationStage);
   let lifestyleCost = 0n;
   (Object.keys(lifestyle.selected) as LifestyleCategory[]).forEach((category) => {
@@ -82,17 +78,14 @@ export default function LifeScreen() {
   const totalExpensesBig = safeBigInt(survivalCost.toString()) + lifestyleCost;
   const expensesValue =
     totalExpensesBig > 0n ? `-$${formatLargeNumber(totalExpensesBig.toString())}` : '$0';
-
   const deathCauseText =
     tLife(`death_causes.${player.lastDeathCause || 'none'}`) || tLife('death_causes.none');
-
   const rebirthReport = player.lastRebirthReport;
   const hasRebirthPenalties =
     !!rebirthReport &&
     (rebirthReport.moneyPenaltyBps > 0 ||
       rebirthReport.healthStartBps < 10000 ||
       (rebirthReport.curses || []).length > 0);
-
   useEffect(() => {
     if (
       player.age === 0 &&
@@ -110,7 +103,6 @@ export default function LifeScreen() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   useEffect(() => {
     if (player.isDead) {
       if (!deathNotificationSentRef.current) {
@@ -122,13 +114,31 @@ export default function LifeScreen() {
         pushUiNotification('death_reason', 'danger', {
           reason: deathCauseText,
         });
+        // Реклама после смерти: 5-я смерть -> первая, 8-я -> вторая,
+        // 9+ -> каждую смерть. Remove Ads (hasCultivatorPass) отключает показ.
+        const freshState = usePlayerStore.getState();
+        if (
+          shouldShowDeathAd(
+            freshState.totalDeaths,
+            freshState.hasCultivatorPass,
+            freshState.deathAdShownForDeath
+          )
+        ) {
+          // Метка ставится ДО async-показа: защита от двойного показа
+          // при ре-рендерах и перезапуске приложения (урок DataForAI 21).
+          freshState.setDeathAdShownForDeath(freshState.totalDeaths);
+          const deathAdLog = tLife('death_ad_log', { death: freshState.totalDeaths });
+          if (deathAdLog) {
+            addLog(deathAdLog, 'system');
+          }
+          AdService.showDeathInterstitial();
+        }
       }
     } else {
       deathNotificationSentRef.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.isDead]);
-
   const openHint = (key: string) => {
     const title = tLife(`hints.${key}.title`);
     const text = tLife(`hints.${key}.text`);
@@ -140,7 +150,6 @@ export default function LifeScreen() {
       text,
     });
   };
-
   const openAgeHint = () => {
     const stage: any =
       (stagesData as any[]).find((item) => item.id === player.cultivationStage) ||
@@ -167,7 +176,6 @@ export default function LifeScreen() {
     }
     setHint({ title, text });
   };
-
   const openExpensesHint = () => {
     const title = tLife('hints.expenses.title');
     const text = tLife('hints.expenses.text', {
@@ -179,42 +187,34 @@ export default function LifeScreen() {
     }
     setHint({ title, text });
   };
-
   const openLog = () => {
     setLogVisible(true);
     clearMissedNotifications();
   };
-
   const handleOpenLog = () => {
     playUiPress?.();
     openLog();
   };
-
   const handleAgeHintPress = () => {
     playUiPress?.();
     openAgeHint();
   };
-
   const handleFocusMundane = () => {
     playUiPress?.();
     player.setActivityFocus('mundane');
   };
-
   const handleFocusSecret = () => {
     playUiPress?.();
     player.setActivityFocus('secret');
   };
-
   const handleFocusMundaneLong = () => {
     playUiPress?.();
     openHint('focus_mundane');
   };
-
   const handleFocusSecretLong = () => {
     playUiPress?.();
     openHint('focus_secret');
   };
-
   const handleReincarnate = () => {
     player.reincarnate();
     const reincarnateLog = tLife('reincarnate_log');
@@ -223,11 +223,9 @@ export default function LifeScreen() {
     }
     pushUiNotification('reincarnate', 'system');
   };
-
   const closeRebirthReport = () => {
     player.clearRebirthReport();
   };
-
   const titleBlock = (
     <View style={styles.titleRow}>
       <Text style={[styles.title, { fontSize: sw(24) }]}>{tLife('title')}</Text>
@@ -236,7 +234,6 @@ export default function LifeScreen() {
       </View>
     </View>
   );
-
   const logButton = (
     <TouchableOpacity
       style={styles.logButton}
@@ -253,7 +250,6 @@ export default function LifeScreen() {
       ) : null}
     </TouchableOpacity>
   );
-
   const renderRebirthReport = () => {
     if (!rebirthReport || !hasRebirthPenalties) {
       return null;
@@ -303,13 +299,11 @@ export default function LifeScreen() {
       </Modal>
     );
   };
-
   const logModal = (
     <Modal visible={logVisible} animationType="slide" onRequestClose={() => setLogVisible(false)}>
       <LogScreen onClose={() => setLogVisible(false)} />
     </Modal>
   );
-
   const hintModal = (
     <Modal visible={hint !== null} transparent animationType="fade" onRequestClose={() => setHint(null)}>
       <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setHint(null)}>
@@ -327,7 +321,6 @@ export default function LifeScreen() {
       </TouchableOpacity>
     </Modal>
   );
-
   if (player.isDead) {
     return (
       <SafeAreaView style={styles.container}>
@@ -367,7 +360,6 @@ export default function LifeScreen() {
       </SafeAreaView>
     );
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.content, { padding: sw(16) }]}>
