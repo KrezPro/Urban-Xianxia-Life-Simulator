@@ -26,6 +26,7 @@ interface InternalAudioState {
   simpleSounds: Partial<Record<GeneratedAudioName, any>>;
   musicSound: any;
   unsubscribeSettings: (() => void) | null;
+  lastError: string;
 }
 
 const state: InternalAudioState = {
@@ -37,6 +38,11 @@ const state: InternalAudioState = {
   simpleSounds: {},
   musicSound: null,
   unsubscribeSettings: null,
+  lastError: '',
+};
+
+const setLastError = (value: string): void => {
+  state.lastError = value;
 };
 
 export const getAudioDebugInfo = () => ({
@@ -44,6 +50,7 @@ export const getAudioDebugInfo = () => ({
   available: state.available,
   isDev: getIsDev(),
   musicSoundLoaded: state.musicSound !== null,
+  lastError: state.lastError,
 });
 
 const canPlayUi = (): boolean => {
@@ -184,17 +191,22 @@ const initAsync = async (): Promise<void> => {
 
   try {
     av = require('expo-av');
-  } catch {
+  } catch (error: any) {
     av = null;
+    setLastError(`expo-av require: ${String(error?.message || error)}`);
   }
   try {
     fs = require('expo-file-system');
-  } catch {
+  } catch (error: any) {
     fs = null;
+    setLastError(`expo-file-system require: ${String(error?.message || error)}`);
   }
 
   if (!av || !av.Audio || !av.Audio.Sound || !fs) {
     // Нативные модули отсутствуют в бинаре: деградируем в тишину без краша.
+    if (!state.lastError) {
+      setLastError('native audio modules missing');
+    }
     state.initializing = false;
     return;
   }
@@ -209,6 +221,7 @@ const initAsync = async (): Promise<void> => {
 
     const baseDir = fs.cacheDirectory || fs.documentDirectory;
     if (!baseDir) {
+      setLastError('no cache/document directory');
       state.initializing = false;
       return;
     }
@@ -277,6 +290,9 @@ const initAsync = async (): Promise<void> => {
     }
 
     state.musicSound = await loadSound(av.Audio.Sound, fileUris.music, true, 0.22);
+    if (!state.musicSound) {
+      setLastError('music loop failed to load');
+    }
 
     state.unsubscribeSettings = useSettingsStore.subscribe((current, prev) => {
       if (current.musicEnabled !== prev.musicEnabled) {
@@ -292,8 +308,10 @@ const initAsync = async (): Promise<void> => {
     state.available = true;
     state.initializing = false;
     syncMusic();
-  } catch {
-    // Любая ошибка аудио не должна ломать игру.
+  } catch (error: any) {
+    // Любая ошибка аудио не должна ломать игру, но текст ошибки сохраняем
+    // для диагностики в Settings -> Diagnostics.
+    setLastError(`init: ${String(error?.message || error)}`);
     state.initializing = false;
   }
 };
@@ -308,10 +326,12 @@ export const initAudio = (): void => {
       return;
     }
     state.initializing = true;
-    void initAsync().catch(() => {
+    void initAsync().catch((error: any) => {
+      setLastError(`initAsync: ${String(error?.message || error)}`);
       state.initializing = false;
     });
-  } catch {
+  } catch (error: any) {
+    setLastError(`initAudio: ${String(error?.message || error)}`);
     state.initializing = false;
   }
 };

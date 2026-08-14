@@ -11,7 +11,7 @@
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en, дефолт en; смена языка выполняется только в SettingsScreen.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV основной storage; memory-fallback только для аварийных сред и подтверждается self-test probe-ключом при старте модуля.
+13. MMKV: используем react-native-mmkv v2.12.3 (НЕ требует Nitro Modules; v4 на Nitro в production падал в memory-fallback). mmkvStorage.ts делает синхронный probe-self-test и сохраняет текст ошибки конструктора; getStorageDebugInfo() отдаёт backend+error в Settings -> Diagnostics.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
@@ -75,6 +75,5 @@
 74. Config plugins (Game/plugins/*.js): кастомные Expo config plugins для настройки Android-сборки. withIapPlayFlavor.js инжектит missingDimensionStrategy 'store', 'play' в app/build.gradle для решения ambiguity-ошибки react-native-iap (amazon vs play flavors). Подключаются в app.json как относительные пути в массиве plugins.
 75. EAS Build: использует ТОЛЬКО закоммиченные в git файлы. После правки app.json, package.json, plugins/ ОБЯЗАТЕЛЕН git add -A && git commit перед запуском eas build.
 76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap-flavor).
-77. react-native-mmkv v4 требует react-native-nitro-modules (зафиксирован 0.35.10 из-за peer-range ^0.35.0 у react-native-iap 14.7.20). mmkvStorage.ts при старте синхронно пишет/читает probe-ключ и уходит в memory-fallback ТОЛЬКО если нативка реально не работает; getStorageBackend() показывает backend в Settings -> Diagnostics.
-78. Fullscreen-политика Android: app.json android.edgeToEdgeEnabled true + StatusBar hidden (expo-status-bar) во всех ветках App.tsx; системные время/батарея не отображаются; контент защищён safe-area-context insets (вырез камеры учитывается).
-79. Settings -> Diagnostics: техническая карточка (Storage: mmkv/memory, Audio init/avail, Music loaded, Dev mode) для быстрой полевой диагностики production-сборок без logcat.
+77. Fullscreen-политика Android: StatusBar hidden (expo-status-bar) во всех ветках App.tsx + скрытие системной навигационной панели через expo-navigation-bar (setVisibilityAsync('hidden') + setBehaviorAsync('overlay-swipe') + прозрачный фон), повторное скрытие при AppState 'active'; guarded require по урокам 16/18.
+78. Settings -> Diagnostics: техническая карточка (Storage backend/error, Audio init/avail/music loaded/error, Dev mode) для полевой диагностики production-сборок без logcat. Тихие try/catch в production ЗАПРЕЩЕНЫ без сохранения текста ошибки в debug-поле.

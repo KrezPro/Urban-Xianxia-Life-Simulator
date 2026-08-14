@@ -1,10 +1,12 @@
 import { StateStorage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
 
-// Синхронный self-test нативного MMKV: если нативка отсутствует или сломана,
-// запись/чтение пробного ключа бросит исключение или вернёт undefined,
-// и мы детерминированно уходим в memory-fallback без тихой деградации.
+// Синхронный self-test нативного MMKV: пишем/читаем probe-ключ сразу после
+// конструктора. Если нативка отсутствует или сломана (например, нет Nitro
+// runtime для v4), ловим ошибку и детерминированно уходим в memory-fallback,
+// но ТЕКСТ ошибки сохраняем для диагностики в Settings -> Diagnostics.
 let nativeStorage: MMKV | null = null;
+let storageError = '';
 
 try {
   const candidate = new MMKV({
@@ -18,15 +20,24 @@ try {
     nativeStorage = candidate;
   } else {
     nativeStorage = null;
+    storageError = 'probe read/write failed';
   }
-} catch {
+} catch (error: any) {
   nativeStorage = null;
+  storageError = String(error?.message || error || 'unknown mmkv error');
 }
 
 const memoryMap = new Map<string, string>();
 
-export const getStorageBackend = (): 'mmkv' | 'memory' =>
-  nativeStorage !== null ? 'mmkv' : 'memory';
+export interface StorageDebugInfo {
+  backend: 'mmkv' | 'memory';
+  error: string;
+}
+
+export const getStorageDebugInfo = (): StorageDebugInfo => ({
+  backend: nativeStorage !== null ? 'mmkv' : 'memory',
+  error: storageError,
+});
 
 export const isNativeStorageAvailable = (): boolean => nativeStorage !== null;
 

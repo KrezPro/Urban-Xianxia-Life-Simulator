@@ -9,7 +9,7 @@ import { Theme } from '../constants/Theme';
 import { getSupportedLocale } from '../constants/Locales';
 import { LanguageSelectionModal } from '../components/game/LanguageSelection';
 import { useTranslator } from '../hooks/useTranslator';
-import { getStorageBackend } from '../store/mmkvStorage';
+import { getStorageDebugInfo } from '../store/mmkvStorage';
 
 export default function SettingsScreen() {
   const locale = useLocaleStore((state) => state.locale);
@@ -32,8 +32,8 @@ export default function SettingsScreen() {
     playToggle?.(value);
   };
 
-  const storageBackend = getStorageBackend();
-  const audioInfo = getAudioDebugInfo();
+  const storageDebug = getStorageDebugInfo();
+  const audioDebug = getAudioDebugInfo();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,11 +93,15 @@ export default function SettingsScreen() {
           <View style={styles.row}>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>Diagnostics</Text>
-              <Text style={styles.rowDesc}>Storage: {storageBackend}</Text>
-              <Text style={styles.rowDesc}>Audio init: {audioInfo.initialized ? 'yes' : 'no'}</Text>
-              <Text style={styles.rowDesc}>Audio avail: {audioInfo.available ? 'yes' : 'no'}</Text>
-              <Text style={styles.rowDesc}>Music loaded: {audioInfo.musicSoundLoaded ? 'yes' : 'no'}</Text>
-              <Text style={styles.rowDesc}>Dev mode: {audioInfo.isDev ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>Storage: {storageDebug.backend}</Text>
+              <Text style={styles.rowDesc}>Storage error: {storageDebug.error || 'none'}</Text>
+              <Text style={styles.rowDesc}>Audio init: {audioDebug.initialized ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>Audio avail: {audioDebug.available ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>
+                Music loaded: {audioDebug.musicSoundLoaded ? 'yes' : 'no'}
+              </Text>
+              <Text style={styles.rowDesc}>Audio error: {audioDebug.lastError || 'none'}</Text>
+              <Text style={styles.rowDesc}>Dev mode: {audioDebug.isDev ? 'yes' : 'no'}</Text>
             </View>
           </View>
         </Card>
