@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded literal require (уроки DataForAI 18/19): Metro статически включает пакет
+// Guarded literal require (уроки DataForAI 16/18): Metro статически включает пакет
 // в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let RNIap: any = null;
 
@@ -11,8 +11,8 @@ try {
   RNIap = null;
 }
 
-// Детект Expo Go: кастомных нативных модулей (react-native-iap, nitro) там нет.
-// Без этой проверки initConnection кидает "Nitro runtime not installed yet".
+// Детект Expo Go: кастомной нативки (react-native-iap + react-native-nitro-modules)
+// там нет вообще, вызовы Billing бессмысленны.
 let executionEnvironment = '';
 try {
   const ConstantsModule = require('expo-constants');
@@ -36,16 +36,43 @@ export interface IapServiceResult {
   product?: IapProduct;
 }
 
+// Маркеры ожидаемого шума от react-native-iap / nitro на клиентах без нативки.
+const NOISE_PATTERNS = [
+  'nitro runtime not installed',
+  '[rn-iap]',
+  'nitro-modules',
+  'turbomodule',
+  'native module',
+];
+
+const isNoise = (text: string): boolean => {
+  const lower = text.toLowerCase();
+  return NOISE_PATTERNS.some((pattern) => lower.includes(pattern));
+};
+
+// Временный фильтр console.error: библиотека react-native-iap сама логирует ERROR
+// ("[RN-IAP] Failed to ...") ДО throw. На старых dev-клиентах это ожидаемый шум,
+// поэтому гасим только строки с маркерами nitro/rn-iap, остальное пропускаем как обычно.
+const withSuppressedNativeNoise = async <T>(runner: () => Promise<T>): Promise<T> => {
+  const originalError = console.error;
+  console.error = (...args: any[]) => {
+    const text = args
+      .map((arg) => (typeof arg === 'string' ? arg : arg?.message || ''))
+      .join(' ');
+    if (isNoise(text)) {
+      return;
+    }
+    originalError(...args);
+  };
+  try {
+    return await runner();
+  } finally {
+    console.error = originalError;
+  }
+};
+
 const isNativeRuntimeError = (error: any): boolean => {
-  const message = `${error?.message || ''} ${error?.code || ''}`.toLowerCase();
-  return (
-    message.includes('nitro') ||
-    message.includes('native module') ||
-    message.includes('turbomodule') ||
-    message.includes('not installed') ||
-    message.includes('null is not an object') ||
-    message.includes('undefined is not an object')
-  );
+  return isNoise(`${error?.message || ''} ${error?.code || ''}`);
 };
 
 class IapServiceClass {
@@ -59,6 +86,7 @@ class IapServiceClass {
 
   private rememberNativeError(error: any): void {
     if (isNativeRuntimeError(error)) {
+      // Нативки нет (старый dev-клиент / Expo Go): дальше работаем в деградации.
       this.nativeBroken = true;
     }
   }
@@ -72,10 +100,14 @@ class IapServiceClass {
       return;
     }
     try {
-      await RNIap.initConnection();
+      await withSuppressedNativeNoise(() => RNIap.initConnection());
     } catch (e) {
-      console.warn('[IapService] init failed:', e);
-      this.rememberNativeError(e);
+      if (isNativeRuntimeError(e)) {
+        this.rememberNativeError(e);
+      } else {
+        console.warn('[IapService] init failed:', e);
+        this.rememberNativeError(e);
+      }
     }
   }
 
@@ -94,9 +126,9 @@ class IapServiceClass {
       };
     }
     try {
-      const products = await RNIap.getProducts({
-        skus: [AdsConstants.REMOVE_ADS_PRODUCT_ID],
-      });
+      const products = await withSuppressedNativeNoise(() =>
+        RNIap.getProducts({ skus: [AdsConstants.REMOVE_ADS_PRODUCT_ID] })
+      );
       if (products && products.length > 0) {
         const p = products[0];
         this.cachedProduct = {
@@ -110,8 +142,10 @@ class IapServiceClass {
       }
       return null;
     } catch (e) {
-      console.warn('[IapService] fetchProduct failed:', e);
       this.rememberNativeError(e);
+      if (!this.nativeBroken) {
+        console.warn('[IapService] fetchProduct failed:', e);
+      }
       return null;
     }
   }
@@ -125,14 +159,16 @@ class IapServiceClass {
       return { success: false, error: 'iap_unavailable' };
     }
     try {
-      const purchase = await RNIap.requestPurchase({
-        sku: AdsConstants.REMOVE_ADS_PRODUCT_ID,
-      });
+      const purchase = await withSuppressedNativeNoise(() =>
+        RNIap.requestPurchase({ sku: AdsConstants.REMOVE_ADS_PRODUCT_ID })
+      );
       // Acknowledge/finish transaction (обязательно для non-consumable)
       if (Platform.OS === 'android') {
-        await RNIap.finishTransaction({ purchase, isConsumable: false });
+        await withSuppressedNativeNoise(() =>
+          RNIap.finishTransaction({ purchase, isConsumable: false })
+        );
       } else {
-        await RNIap.finishTransaction({ purchase });
+        await withSuppressedNativeNoise(() => RNIap.finishTransaction({ purchase }));
       }
       return { success: true };
     } catch (e: any) {
@@ -150,6 +186,9 @@ class IapServiceClass {
       if (code === 'E_ALREADY_OWNED' || code === 'ITEM_ALREADY_OWNED') {
         return { success: true };
       }
+      if (!this.nativeBroken) {
+        console.warn('[IapService] purchase failed:', e);
+      }
       return { success: false, error: code };
     }
   }
@@ -159,14 +198,16 @@ class IapServiceClass {
       return { success: false, error: 'iap_unavailable' };
     }
     try {
-      const purchases = await RNIap.getAvailablePurchases();
+      const purchases = await withSuppressedNativeNoise(() => RNIap.getAvailablePurchases());
       const found = (purchases || []).some(
         (p: any) => p.productId === AdsConstants.REMOVE_ADS_PRODUCT_ID
       );
       return { success: found, error: found ? undefined : 'not_found' };
     } catch (e) {
-      console.warn('[IapService] restore failed:', e);
       this.rememberNativeError(e);
+      if (!this.nativeBroken) {
+        console.warn('[IapService] restore failed:', e);
+      }
       return { success: false, error: 'iap_unavailable' };
     }
   }

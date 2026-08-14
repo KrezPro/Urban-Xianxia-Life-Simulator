@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded literal require (уроки DataForAI 18/19): Metro статически включает пакет
+// Guarded literal require (уроки DataForAI 16/18): Metro статически включает пакет
 // в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let InterstitialAd: any = null;
 let RewardedAd: any = null;
@@ -41,6 +41,30 @@ export interface AdServiceResult {
 
 const REWARDED_TIMEOUT_MS = 120000;
 
+// Временный фильтр console.error для ожидаемого шума AdMob на клиентах без нативки.
+const NOISE_PATTERNS = ['google mobile ads', 'rngooglemobileads', 'native module', 'admob'];
+const isNoise = (text: string): boolean => {
+  const lower = text.toLowerCase();
+  return NOISE_PATTERNS.some((pattern) => lower.includes(pattern));
+};
+const withSuppressedNativeNoise = async <T>(runner: () => Promise<T>): Promise<T> => {
+  const originalError = console.error;
+  console.error = (...args: any[]) => {
+    const text = args
+      .map((arg) => (typeof arg === 'string' ? arg : arg?.message || ''))
+      .join(' ');
+    if (isNoise(text)) {
+      return;
+    }
+    originalError(...args);
+  };
+  try {
+    return await runner();
+  } finally {
+    console.error = originalError;
+  }
+};
+
 class AdServiceClass {
   private initialized = false;
   private interstitialInstance: any = null;
@@ -55,7 +79,7 @@ class AdServiceClass {
       return;
     }
     try {
-      await mobileAds().initialize();
+      await withSuppressedNativeNoise(() => mobileAds().initialize());
       this.loadInterstitial();
       this.loadRewarded();
     } catch (e) {
@@ -116,7 +140,7 @@ class AdServiceClass {
       return { success: false, error: 'ad_not_loaded' };
     }
     try {
-      await this.interstitialInstance.show();
+      await withSuppressedNativeNoise(() => this.interstitialInstance.show());
       this.loadInterstitial();
       return { success: true };
     } catch (e: any) {
@@ -185,7 +209,7 @@ class AdServiceClass {
         setTimeout(() => {
           finish(earned, 'timeout');
         }, REWARDED_TIMEOUT_MS);
-        this.rewardedInstance.show().catch((e: any) => {
+        withSuppressedNativeNoise(() => this.rewardedInstance.show()).catch((e: any) => {
           finish(false, e?.message || 'show_failed');
         });
       } catch (e: any) {

@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 60 (ШАГ 4 выполнен: деградация IAP/AdMob для Expo Go и старых dev-клиентов (Nitro runtime). Реальные IAP/AdMob требуют пересборки dev-клиента.)
+[СТАТУС]: ШАГ 61 (ШАГ 4: финальный харденинг IapService/AdService — Nitro-деградация без ERROR-логов. Реальные AdMob/IAP требуют пересборки dev-клиента.)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -52,5 +52,8 @@
 208. [ ] Прогнать реальную покупку remove_ads на internal testing track с лицензионным тестером.
 209. [ ] При желании включить возрастную interstitial — перевести AGE_ONE_INTERSTITIAL_ENABLED в true.
 === ШАГ 4: фиксы монетизации ===
-210. [X] IapService: детект Expo Go через expo-constants (executionEnvironment), флаг nativeBroken при "Nitro runtime not installed", dev-симуляция покупки/restore без ERROR-логов; AdService: не инициализировать AdMob нативку в Expo Go. Уроки в DataForAI 19-21 и Library 82.
-211. [ ] Пересобрать dev-клиент для реальных IAP/AdMob: npx expo prebuild --clean, затем npx expo run:android (или eas build --platform android --profile development).
+210. [X] IapService: детект Expo Go через expo-constants (executionEnvironment), флаг nativeBroken при "Nitro runtime not installed", dev-симуляция покупки/restore без крашей.
+211. [X] AdService: не инициализировать AdMob нативку в Expo Go; dev-симуляция interstitial/rewarded.
+212. [X] ШАГ 4: финальный харденинг — withSuppressedNativeNoise гасит библиотечные ERROR "[RN-IAP]/Nitro" на старых клиентах (паттерн-фильтр console.error с restore в finally); nativeBroken ставится без лишних WARN; уроки в DataForAI 19-23.
+213. [ ] Пересобрать dev-клиент: npx expo prebuild --clean, затем npx expo run:android (или eas build) — только после этого реальная реклама и IAP.
+214. [ ] Решить сценарий публикации: НОВОЕ приложение (com.krezpro.bitcultivator, ключ от EAS) или ЗАМЕНА старого GoodLife (com.krez.goodlife, импорт MyGoodLifeKey.keystore в EAS credentials).
