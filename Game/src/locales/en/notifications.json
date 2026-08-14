@@ -25,5 +25,10 @@
   "store_buy_success": "Purchased: {name}.",
   "store_buy_error": "Not enough karma to purchase.",
   "store_pass_activated": "Cultivator Pass activated. Ads disabled.",
-  "body_temper_success": "Body Tempering improved to level {level}."
+  "body_temper_success": "Body Tempering improved to level {level}.",
+  "ad_reward_success": "Ad watched! +10% breakthrough chance and death protection active.",
+  "ad_reward_error": "Failed to watch ad. No buff granted.",
+  "iap_purchase_error": "Purchase failed. Please try again.",
+  "iap_restore_success": "Purchase restored. Cultivator Pass is active.",
+  "iap_restore_empty": "No previous purchases found."
 }
