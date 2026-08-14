@@ -75,3 +75,6 @@
 74. Config plugins (Game/plugins/*.js): кастомные Expo config plugins для настройки Android-сборки. withIapPlayFlavor.js инжектит missingDimensionStrategy 'store', 'play' в app/build.gradle для решения ambiguity-ошибки react-native-iap (amazon vs play flavors). Подключаются в app.json как относительные пути в массиве plugins.
 75. EAS Build: использует ТОЛЬКО закоммиченные в git файлы. После правки app.json, package.json, plugins/ ОБЯЗАТЕЛЕН git add -A && git commit перед запуском eas build.
 76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap-flavor).
+77. Конфликт peer dependencies: react-native-mmkv v4+ и react-native-iap v14+ требуют разные версии react-native-nitro-modules. Решение: жестко зафиксировать совместимую версию (например, 0.35.10) в package.json и выполнить npm install.
+78. StatusBar: использовать expo-status-bar для корректного отображения статуса-бара поверх edge-to-edge контента.
+79. SafeAreaView: всегда импортировать из react-native-safe-area-context, а не из react-native, для корректной работы с Android edge-to-edge и вырезами.

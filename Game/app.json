@@ -4,15 +4,23 @@
     "slug": "bitcultivator",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#121212"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.krezpro.bitcultivator"
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#121212"
       },
+      "edgeToEdgeEnabled": true,
       "package": "com.krezpro.bitcultivator",
       "versionCode": 1
     },

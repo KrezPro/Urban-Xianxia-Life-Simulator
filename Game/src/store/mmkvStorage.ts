@@ -13,20 +13,20 @@ try {
 
 const memoryMap = new Map<string, string>();
 
+export const isNativeStorageAvailable = (): boolean => nativeStorage !== null;
+
 export const storage = {
   set: (key: string, value: string) => {
     if (nativeStorage) {
       nativeStorage.set(key, value);
       return;
     }
-
     memoryMap.set(key, value);
   },
   getString: (key: string): string | undefined => {
     if (nativeStorage) {
       return nativeStorage.getString(key);
     }
-
     return memoryMap.get(key);
   },
   delete: (key: string) => {
@@ -34,7 +34,6 @@ export const storage = {
       nativeStorage.delete(key);
       return;
     }
-
     memoryMap.delete(key);
   },
 };

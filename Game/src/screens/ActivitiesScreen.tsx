@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useLifestyleStore } from '../store/useLifestyleStore';
 import { useLocaleStore } from '../store/useLocaleStore';
@@ -125,14 +126,17 @@ export default function ActivitiesScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{tAct('title')}</Text>
+
         <Card variant="gold" style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>{`$${formatLargeNumber(player.money)}`}</Text>
         </Card>
+
         {(lifestyleData as any).categories.map((category: any) => {
           const categoryKey = category.id as LifestyleCategory;
           const selectedId = lifestyle.selected[categoryKey];
           const selectedOption = getOptionById(selectedId);
           const isOpen = expanded === category.id;
+
           return (
             <Card key={category.id} style={styles.categoryCard}>
               <Button
@@ -144,6 +148,7 @@ export default function ActivitiesScreen() {
                 icon={isOpen ? 'chevron-up' : 'chevron-down'}
                 style={styles.categoryButton}
               />
+
               {isOpen ? (
                 <View style={styles.optionsContainer}>
                   {category.options.map((option: any) => {
@@ -162,6 +167,7 @@ export default function ActivitiesScreen() {
                     const annualIncome = getLifestyleAnnualIncome(option, player, modifiers);
                     const net = annualIncome - annualCost;
                     const effectLines = buildEffectLines(option.effects, effectLabels, 1);
+
                     return (
                       <View key={option.id} style={styles.optionCard}>
                         <View style={styles.optionHeader}>
@@ -169,6 +175,7 @@ export default function ActivitiesScreen() {
                           <Text style={styles.optionTier}>T{option.tier}</Text>
                         </View>
                         <Text style={styles.optionDesc}>{getOptionDesc(option.id)}</Text>
+
                         {annualCost > 0n ? (
                           <View style={styles.optionMetaRow}>
                             <Text style={styles.optionMetaLabel}>{tAct('yearly_cost')}</Text>
@@ -177,6 +184,7 @@ export default function ActivitiesScreen() {
                             </Text>
                           </View>
                         ) : null}
+
                         {annualIncome > 0n ? (
                           <View style={styles.optionMetaRow}>
                             <Text style={styles.optionMetaLabel}>{tAct('yearly_income')}</Text>
@@ -185,6 +193,7 @@ export default function ActivitiesScreen() {
                             </Text>
                           </View>
                         ) : null}
+
                         {annualCost > 0n || annualIncome > 0n ? (
                           <View style={styles.optionMetaRow}>
                             <Text style={styles.optionMetaLabel}>{tAct('net_yearly')}</Text>
@@ -198,6 +207,7 @@ export default function ActivitiesScreen() {
                             </Text>
                           </View>
                         ) : null}
+
                         {effectLines.length > 0 ? (
                           <View style={styles.effectsContainer}>
                             <Text style={styles.effectsTitle}>{tAct('effects_title')}</Text>
@@ -208,6 +218,7 @@ export default function ActivitiesScreen() {
                             ))}
                           </View>
                         ) : null}
+
                         {option.category === 'portal' && option.portal ? (
                           <View style={styles.portalRewardsContainer}>
                             <Text style={styles.portalRewardsTitle}>
@@ -263,11 +274,13 @@ export default function ActivitiesScreen() {
                             ) : null}
                           </View>
                         ) : null}
+
                         {!!requirementText ? (
                           <Text style={styles.requirementText}>
                             {tAct('requirements_label')}: {requirementText}
                           </Text>
                         ) : null}
+
                         {isSelected ? (
                           <View style={styles.optionButtonRow}>
                             <Button

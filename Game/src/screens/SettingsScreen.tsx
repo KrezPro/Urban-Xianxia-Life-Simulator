@@ -9,6 +9,8 @@ import { Theme } from '../constants/Theme';
 import { getSupportedLocale } from '../constants/Locales';
 import { LanguageSelectionModal } from '../components/game/LanguageSelection';
 import { useTranslator } from '../hooks/useTranslator';
+import { isNativeStorageAvailable } from '../store/mmkvStorage';
+import { getAudioDebugInfo } from '../audio/AudioManager';
 
 export default function SettingsScreen() {
   const locale = useLocaleStore((state) => state.locale);
@@ -17,6 +19,7 @@ export default function SettingsScreen() {
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setMusicEnabled = useSettingsStore((state) => state.setMusicEnabled);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+
   const t = useTranslator('settings');
   const currentLanguage = getSupportedLocale(locale);
 
@@ -29,6 +32,9 @@ export default function SettingsScreen() {
     setMusicEnabled(value);
     playToggle?.(value);
   };
+
+  const storageStatus = isNativeStorageAvailable() ? 'MMKV (Native)' : 'Memory (Fallback)';
+  const audioInfo = getAudioDebugInfo();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,13 +82,24 @@ export default function SettingsScreen() {
               <Text style={styles.currentLanguage}>{currentLanguage.nativeName}</Text>
             </View>
           </View>
-
           <Button
             title={t('language_button')}
             onPress={() => setLanguageModalVisible(true)}
             variant="secondary"
             style={styles.languageButton}
           />
+        </Card>
+
+        <Card variant="primary" style={styles.card}>
+          <View style={styles.row}>
+            <View style={styles.rowText}>
+              <Text style={styles.rowTitle}>Diagnostics</Text>
+              <Text style={styles.rowDesc}>Storage: {storageStatus}</Text>
+              <Text style={styles.rowDesc}>Audio Init: {audioInfo.initialized ? 'Yes' : 'No'}</Text>
+              <Text style={styles.rowDesc}>Audio Avail: {audioInfo.available ? 'Yes' : 'No'}</Text>
+              <Text style={styles.rowDesc}>Dev Mode: {audioInfo.isDev ? 'Yes' : 'No'}</Text>
+            </View>
+          </View>
         </Card>
 
         <LanguageSelectionModal

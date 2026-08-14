@@ -39,6 +39,13 @@ const state: InternalAudioState = {
   unsubscribeSettings: null,
 };
 
+export const getAudioDebugInfo = () => ({
+  initialized: state.initialized,
+  available: state.available,
+  isDev: getIsDev(),
+  musicSoundLoaded: !!state.musicSound,
+});
+
 const canPlayUi = (): boolean => {
   try {
     return useSettingsStore.getState().soundEnabled === true;
@@ -51,7 +58,6 @@ const playSound = async (sound: any): Promise<void> => {
   if (!sound) {
     return;
   }
-
   try {
     await sound.setPositionAsync(0);
     await sound.playAsync();
@@ -69,11 +75,9 @@ const safePlay = (name: GeneratedAudioName): void => {
     if (!state.initialized || !state.available) {
       return;
     }
-
     if (!canPlayUi()) {
       return;
     }
-
     if (name === 'click') {
       const poolSize = Math.max(1, state.clickPool.length);
       const sound = state.clickPool[state.clickIndex];
@@ -81,7 +85,6 @@ const safePlay = (name: GeneratedAudioName): void => {
       void playSound(sound);
       return;
     }
-
     void playSound(state.simpleSounds[name]);
   } catch {
     // Звук никогда не должен ломать обработчики кнопок.
@@ -109,11 +112,9 @@ export const playToggle = (value: boolean, force: boolean = false): void => {
     if (!state.initialized || !state.available) {
       return;
     }
-
     if (!force && !canPlayUi()) {
       return;
     }
-
     void playSound(state.simpleSounds[value ? 'toggleOn' : 'toggleOff']);
   } catch {
     // Тишина вместо краша.
@@ -125,7 +126,6 @@ const startMusic = async (): Promise<void> => {
   if (!sound) {
     return;
   }
-
   try {
     await sound.setIsLoopingAsync(true);
     await sound.setPositionAsync(0);
@@ -139,7 +139,6 @@ const stopMusic = async (): Promise<void> => {
   if (!state.musicSound) {
     return;
   }
-
   try {
     await state.musicSound.stopAsync();
   } catch {
@@ -152,7 +151,6 @@ export const syncMusic = (): void => {
     if (!state.initialized || !state.available) {
       return;
     }
-
     const musicEnabled = useSettingsStore.getState().musicEnabled === true;
     if (musicEnabled) {
       void startMusic();
@@ -189,7 +187,6 @@ const initAsync = async (): Promise<void> => {
   } catch {
     av = null;
   }
-
   try {
     fs = require('expo-file-system');
   } catch {
@@ -306,12 +303,10 @@ export const initAudio = (): void => {
     if (state.initialized || state.initializing) {
       return;
     }
-
     if (getIsDev()) {
       // Тест на телефоне (expo start / dev-клиент): звук и музыка не запускаются.
       return;
     }
-
     state.initializing = true;
     void initAsync().catch(() => {
       state.initializing = false;
@@ -332,13 +327,11 @@ export const disposeAudio = (): void => {
       if (!sound) {
         return;
       }
-
       try {
         await sound.stopAsync();
       } catch {
         // Уже остановлен.
       }
-
       try {
         await sound.unloadAsync();
       } catch {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import TabNavigator from './navigation/TabNavigator';
 import { NotificationHost } from './components/game/NotificationHost';
 import { LanguageSelectionOverlay } from './components/game/LanguageSelection';
@@ -29,7 +30,9 @@ export default function App() {
   const settingsHydrated = useSettingsStore((state) => state.hasHydrated);
   const locale = useLocaleStore((state) => state.locale);
   const hasChosenLanguage = useLocaleStore((state) => state.hasChosenLanguage);
+
   const loadingText = resolveLocalizedKey(locale, 'ui', 'app.loading');
+
   const isReady =
     playerHydrated &&
     localeHydrated &&
@@ -38,7 +41,9 @@ export default function App() {
     techniquesHydrated &&
     lifestyleHydrated &&
     settingsHydrated;
+
   useIdleProgress();
+
   useEffect(() => {
     if (!isReady) {
       return;
@@ -48,6 +53,7 @@ export default function App() {
       disposeAudio?.();
     };
   }, [isReady]);
+
   // Инициализация монетизации после гидратации сторов:
   // AdMob (interstitial после смерти + rewarded в Дао) и Google Play Billing
   // (restore покупки remove_ads при старте, чтобы не терять entitlement).
@@ -65,9 +71,11 @@ export default function App() {
       })
       .catch(() => undefined);
   }, [isReady]);
+
   if (!isReady) {
     return (
       <SafeAreaProvider>
+        <StatusBar style="light" backgroundColor="transparent" />
         <SafeAreaView style={styles.container}>
           <View style={styles.loadingCard}>
             <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
@@ -77,15 +85,19 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
+
   if (!hasChosenLanguage) {
     return (
       <SafeAreaProvider>
+        <StatusBar style="light" backgroundColor="transparent" />
         <LanguageSelectionOverlay />
       </SafeAreaProvider>
     );
   }
+
   return (
     <SafeAreaProvider>
+      <StatusBar style="light" backgroundColor="transparent" />
       <View style={styles.root}>
         <NavigationContainer>
           <TabNavigator />
