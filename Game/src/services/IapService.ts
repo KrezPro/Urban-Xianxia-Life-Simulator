@@ -1,7 +1,8 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded require для react-native-iap
+// Guarded literal require (уроки DataForAI 18/19): Metro статически включает пакет
+// в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let RNIap: any = null;
 
 try {
@@ -9,6 +10,17 @@ try {
 } catch (e) {
   RNIap = null;
 }
+
+// Детект Expo Go: кастомных нативных модулей (react-native-iap, nitro) там нет.
+// Без этой проверки initConnection кидает "Nitro runtime not installed yet".
+let executionEnvironment = '';
+try {
+  const ConstantsModule = require('expo-constants');
+  executionEnvironment = ConstantsModule?.default?.executionEnvironment || '';
+} catch (e) {
+  executionEnvironment = '';
+}
+const IS_EXPO_GO = executionEnvironment === 'expo-go';
 
 export interface IapProduct {
   productId: string;
@@ -24,21 +36,46 @@ export interface IapServiceResult {
   product?: IapProduct;
 }
 
+const isNativeRuntimeError = (error: any): boolean => {
+  const message = `${error?.message || ''} ${error?.code || ''}`.toLowerCase();
+  return (
+    message.includes('nitro') ||
+    message.includes('native module') ||
+    message.includes('turbomodule') ||
+    message.includes('not installed') ||
+    message.includes('null is not an object') ||
+    message.includes('undefined is not an object')
+  );
+};
+
 class IapServiceClass {
   private initialized = false;
+  private nativeBroken = false;
   private cachedProduct: IapProduct | null = null;
 
+  private hasNative(): boolean {
+    return !!RNIap && !this.nativeBroken && !IS_EXPO_GO;
+  }
+
+  private rememberNativeError(error: any): void {
+    if (isNativeRuntimeError(error)) {
+      this.nativeBroken = true;
+    }
+  }
+
   async initialize(): Promise<void> {
-    if (this.initialized || !RNIap) {
-      this.initialized = true;
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
+    if (!this.hasNative()) {
       return;
     }
     try {
       await RNIap.initConnection();
-      this.initialized = true;
     } catch (e) {
       console.warn('[IapService] init failed:', e);
-      this.initialized = true;
+      this.rememberNativeError(e);
     }
   }
 
@@ -46,8 +83,8 @@ class IapServiceClass {
     if (this.cachedProduct) {
       return this.cachedProduct;
     }
-    if (!RNIap) {
-      // Fallback для dev-режима
+    if (!this.hasNative()) {
+      // Fallback-цена для dev/Expo Go; реальная цена приходит из Google Play.
       return {
         productId: AdsConstants.REMOVE_ADS_PRODUCT_ID,
         title: 'Remove Ads',
@@ -74,18 +111,18 @@ class IapServiceClass {
       return null;
     } catch (e) {
       console.warn('[IapService] fetchProduct failed:', e);
+      this.rememberNativeError(e);
       return null;
     }
   }
 
   async purchaseRemoveAds(): Promise<IapServiceResult> {
-    if (!RNIap) {
-      // Dev-симуляция
+    if (!this.hasNative()) {
       if (__DEV__) {
         console.log('[IapService] DEV: simulating purchase');
         return { success: true };
       }
-      return { success: false, error: 'IAP not available' };
+      return { success: false, error: 'iap_unavailable' };
     }
     try {
       const purchase = await RNIap.requestPurchase({
@@ -99,25 +136,27 @@ class IapServiceClass {
       }
       return { success: true };
     } catch (e: any) {
-      console.warn('[IapService] purchase failed:', e);
-      // Коды ошибок: E_USER_CANCELLED, E_ALREADY_OWNED и т.д.
+      this.rememberNativeError(e);
+      // Нативка сломалась на рантайме (старый dev-клиент): в dev симулируем,
+      // чтобы можно было тестировать логику покупки и отключения рекламы.
+      if (this.nativeBroken && __DEV__) {
+        console.log('[IapService] DEV: native broken, simulating purchase');
+        return { success: true };
+      }
       const code = e?.code || e?.message || 'Unknown';
       if (code === 'E_USER_CANCELLED' || code === 'PURCHASE_CANCELLED') {
         return { success: false, error: 'cancelled' };
       }
       if (code === 'E_ALREADY_OWNED' || code === 'ITEM_ALREADY_OWNED') {
-        return { success: true }; // Уже куплено
+        return { success: true };
       }
       return { success: false, error: code };
     }
   }
 
   async restoreRemoveAds(): Promise<IapServiceResult> {
-    if (!RNIap) {
-      if (__DEV__) {
-        return { success: false, error: 'IAP not available' };
-      }
-      return { success: false, error: 'IAP not available' };
+    if (!this.hasNative()) {
+      return { success: false, error: 'iap_unavailable' };
     }
     try {
       const purchases = await RNIap.getAvailablePurchases();
@@ -125,9 +164,10 @@ class IapServiceClass {
         (p: any) => p.productId === AdsConstants.REMOVE_ADS_PRODUCT_ID
       );
       return { success: found, error: found ? undefined : 'not_found' };
-    } catch (e: any) {
+    } catch (e) {
       console.warn('[IapService] restore failed:', e);
-      return { success: false, error: e?.message || 'Unknown' };
+      this.rememberNativeError(e);
+      return { success: false, error: 'iap_unavailable' };
     }
   }
 }

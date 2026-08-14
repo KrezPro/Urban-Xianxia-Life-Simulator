@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 59 (Монетизация: реклама после смерти 5/8/далее, rewarded в Дао, IAP remove_ads с Restore. AdMob пока на тестовых ID.)
+[СТАТУС]: ШАГ 60 (ШАГ 4 выполнен: деградация IAP/AdMob для Expo Go и старых dev-клиентов (Nitro runtime). Реальные IAP/AdMob требуют пересборки dev-клиента.)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -51,3 +51,6 @@
 207. [ ] Заменить тестовые AdMob App ID (app.json) и Ad Unit ID (AdsConstants.ts) на реальные после настройки AdMob.
 208. [ ] Прогнать реальную покупку remove_ads на internal testing track с лицензионным тестером.
 209. [ ] При желании включить возрастную interstitial — перевести AGE_ONE_INTERSTITIAL_ENABLED в true.
+=== ШАГ 4: фиксы монетизации ===
+210. [X] IapService: детект Expo Go через expo-constants (executionEnvironment), флаг nativeBroken при "Nitro runtime not installed", dev-симуляция покупки/restore без ERROR-логов; AdService: не инициализировать AdMob нативку в Expo Go. Уроки в DataForAI 19-21 и Library 82.
+211. [ ] Пересобрать dev-клиент для реальных IAP/AdMob: npx expo prebuild --clean, затем npx expo run:android (или eas build --platform android --profile development).

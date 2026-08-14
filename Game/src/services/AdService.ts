@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded literal require (урок DataForAI 18/19): Metro статически включает пакет
+// Guarded literal require (уроки DataForAI 18/19): Metro статически включает пакет
 // в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let InterstitialAd: any = null;
 let RewardedAd: any = null;
@@ -24,6 +24,16 @@ try {
   mobileAds = null;
 }
 
+// Детект Expo Go: нативного AdMob там нет, инициализировать его бессмысленно.
+let executionEnvironment = '';
+try {
+  const ConstantsModule = require('expo-constants');
+  executionEnvironment = ConstantsModule?.default?.executionEnvironment || '';
+} catch (e) {
+  executionEnvironment = '';
+}
+const IS_EXPO_GO = executionEnvironment === 'expo-go';
+
 export interface AdServiceResult {
   success: boolean;
   error?: string;
@@ -41,7 +51,7 @@ class AdServiceClass {
       return;
     }
     this.initialized = true;
-    if (!AdsConstants.ADS_ENABLED || !mobileAds) {
+    if (!AdsConstants.ADS_ENABLED || !mobileAds || IS_EXPO_GO) {
       return;
     }
     try {
