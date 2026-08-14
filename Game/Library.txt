@@ -11,7 +11,7 @@
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en, дефолт en; смена языка выполняется только в SettingsScreen.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV основной storage; memory-fallback только для аварийных сред.
+13. MMKV основной storage; memory-fallback только для аварийных сред и подтверждается self-test probe-ключом при старте модуля.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
@@ -21,7 +21,7 @@
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect отключена в пользовательской навигации. Код секты остаётся в проекте как deprecated.
 22. SectScreen больше не используется в TabNavigator, но файл сохранён для возможного будущего удаления.
-23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
+23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App. Встроенный SafeAreaView из react-native на Android insets НЕ даёт.
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
@@ -75,4 +75,6 @@
 74. Config plugins (Game/plugins/*.js): кастомные Expo config plugins для настройки Android-сборки. withIapPlayFlavor.js инжектит missingDimensionStrategy 'store', 'play' в app/build.gradle для решения ambiguity-ошибки react-native-iap (amazon vs play flavors). Подключаются в app.json как относительные пути в массиве plugins.
 75. EAS Build: использует ТОЛЬКО закоммиченные в git файлы. После правки app.json, package.json, plugins/ ОБЯЗАТЕЛЕН git add -A && git commit перед запуском eas build.
 76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap-flavor).
-77. EAS Build и версионирование: если в eas.json указано "appVersionSource": "remote", то android.versionCode в app.json игнорируется и его нужно убрать, чтобы избежать предупреждений. Версия управляется через EAS.
+77. react-native-mmkv v4 требует react-native-nitro-modules (зафиксирован 0.35.10 из-за peer-range ^0.35.0 у react-native-iap 14.7.20). mmkvStorage.ts при старте синхронно пишет/читает probe-ключ и уходит в memory-fallback ТОЛЬКО если нативка реально не работает; getStorageBackend() показывает backend в Settings -> Diagnostics.
+78. Fullscreen-политика Android: app.json android.edgeToEdgeEnabled true + StatusBar hidden (expo-status-bar) во всех ветках App.tsx; системные время/батарея не отображаются; контент защищён safe-area-context insets (вырез камеры учитывается).
+79. Settings -> Diagnostics: техническая карточка (Storage: mmkv/memory, Audio init/avail, Music loaded, Dev mode) для быстрой полевой диагностики production-сборок без logcat.

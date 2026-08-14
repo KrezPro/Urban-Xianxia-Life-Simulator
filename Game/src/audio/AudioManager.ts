@@ -43,7 +43,7 @@ export const getAudioDebugInfo = () => ({
   initialized: state.initialized,
   available: state.available,
   isDev: getIsDev(),
-  musicSoundLoaded: !!state.musicSound,
+  musicSoundLoaded: state.musicSound !== null,
 });
 
 const canPlayUi = (): boolean => {
@@ -276,7 +276,7 @@ const initAsync = async (): Promise<void> => {
       }
     }
 
-    state.musicSound = await loadSound(av.Audio.Sound, fileUris.music, true, 0.16);
+    state.musicSound = await loadSound(av.Audio.Sound, fileUris.music, true, 0.22);
 
     state.unsubscribeSettings = useSettingsStore.subscribe((current, prev) => {
       if (current.musicEnabled !== prev.musicEnabled) {

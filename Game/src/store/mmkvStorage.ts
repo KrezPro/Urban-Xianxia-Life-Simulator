@@ -1,17 +1,32 @@
 import { StateStorage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
 
+// Синхронный self-test нативного MMKV: если нативка отсутствует или сломана,
+// запись/чтение пробного ключа бросит исключение или вернёт undefined,
+// и мы детерминированно уходим в memory-fallback без тихой деградации.
 let nativeStorage: MMKV | null = null;
 
 try {
-  nativeStorage = new MMKV({
+  const candidate = new MMKV({
     id: 'bitcultivator-storage',
   });
+  const probeKey = '__mmkv_probe__';
+  candidate.set(probeKey, '1');
+  const probe = candidate.getString(probeKey);
+  candidate.delete(probeKey);
+  if (probe === '1') {
+    nativeStorage = candidate;
+  } else {
+    nativeStorage = null;
+  }
 } catch {
   nativeStorage = null;
 }
 
 const memoryMap = new Map<string, string>();
+
+export const getStorageBackend = (): 'mmkv' | 'memory' =>
+  nativeStorage !== null ? 'mmkv' : 'memory';
 
 export const isNativeStorageAvailable = (): boolean => nativeStorage !== null;
 

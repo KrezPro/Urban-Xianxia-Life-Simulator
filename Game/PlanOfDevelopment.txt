@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 67 (Диагностика EAS Prebuild: убран versionCode из app.json, добавлен nitro-modules в package.json, проверка assets)
+[СТАТУС]: ШАГ 68 (Финальный фикс production: nitro-modules в package.json, edge-to-edge + StatusBar hidden, self-test MMKV, диагностика в Settings)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -54,9 +54,16 @@
 === ШАГ 7: фиксы совместимости с RN 0.81 ===
 215. [X] Исправлена ошибка Gradle "Unresolved reference currentActivity" в react-native-iap и react-native-google-mobile-ads: обновлены версии пакетов до совместимых с RN 0.81.
 216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
-=== ШАГ 67: Фикс EAS Prebuild (app.json, package.json, assets) ===
-219. [X] Добавлен react-native-nitro-modules "0.35.10" в package.json для корректной работы react-native-mmkv v4.
-220. [X] Исправлен app.json: добавлены icon, splash, adaptiveIcon foregroundImage, edgeToEdgeEnabled. Убран versionCode (управляется EAS удаленно).
-221. [ ] Локально: npx expo prebuild --no-install --platform android (для диагностики).
-222. [ ] Локально: git add -A && git commit && git push.
-223. [ ] EAS: eas build --platform android --profile production.
+217. [ ] Локально: npm install && git add -A && git commit.
+218. [ ] EAS: eas build --platform android --profile production (повторный запуск).
+=== ШАГ 65-68: Фикс production-сборки (сохранения, звук, fullscreen, иконка) ===
+219. [X] Зафиксирован react-native-nitro-modules 0.35.10 в package.json (peer-конфликт с react-native-iap решён).
+220. [X] app.json: добавлены icon, splash, adaptiveIcon.foregroundImage, edgeToEdgeEnabled; убран versionCode (управляется EAS remote).
+221. [X] App.tsx: StatusBar hidden во всех ветках рендера (fullscreen без времени/батареи).
+222. [X] mmkvStorage.ts: синхронный self-test нативного MMKV (probe-ключ) + экспорт getStorageBackend/isNativeStorageAvailable.
+223. [X] SettingsScreen: карточка Diagnostics (Storage backend, Audio init/avail, Music loaded, Dev mode).
+224. [X] AudioManager: экспорт getAudioDebugInfo; громкость music loop поднята до 0.22.
+225. [X] ActivitiesScreen/DaoScreen: SafeAreaView только из react-native-safe-area-context (корректные insets при edge-to-edge).
+226. [ ] Локально: npm install (если менялся package.json) && git add -A && git commit.
+227. [ ] EAS: eas build --platform android --profile production.
+228. [ ] После установки: Settings -> Diagnostics -> прислать значения Storage и Audio.

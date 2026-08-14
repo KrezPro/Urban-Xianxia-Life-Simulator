@@ -3,14 +3,13 @@ import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { playToggle } from '../audio/AudioManager';
+import { playToggle, getAudioDebugInfo } from '../audio/AudioManager';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { getSupportedLocale } from '../constants/Locales';
 import { LanguageSelectionModal } from '../components/game/LanguageSelection';
 import { useTranslator } from '../hooks/useTranslator';
-import { isNativeStorageAvailable } from '../store/mmkvStorage';
-import { getAudioDebugInfo } from '../audio/AudioManager';
+import { getStorageBackend } from '../store/mmkvStorage';
 
 export default function SettingsScreen() {
   const locale = useLocaleStore((state) => state.locale);
@@ -33,7 +32,7 @@ export default function SettingsScreen() {
     playToggle?.(value);
   };
 
-  const storageStatus = isNativeStorageAvailable() ? 'MMKV (Native)' : 'Memory (Fallback)';
+  const storageBackend = getStorageBackend();
   const audioInfo = getAudioDebugInfo();
 
   return (
@@ -94,10 +93,11 @@ export default function SettingsScreen() {
           <View style={styles.row}>
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>Diagnostics</Text>
-              <Text style={styles.rowDesc}>Storage: {storageStatus}</Text>
-              <Text style={styles.rowDesc}>Audio Init: {audioInfo.initialized ? 'Yes' : 'No'}</Text>
-              <Text style={styles.rowDesc}>Audio Avail: {audioInfo.available ? 'Yes' : 'No'}</Text>
-              <Text style={styles.rowDesc}>Dev Mode: {audioInfo.isDev ? 'Yes' : 'No'}</Text>
+              <Text style={styles.rowDesc}>Storage: {storageBackend}</Text>
+              <Text style={styles.rowDesc}>Audio init: {audioInfo.initialized ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>Audio avail: {audioInfo.available ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>Music loaded: {audioInfo.musicSoundLoaded ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>Dev mode: {audioInfo.isDev ? 'yes' : 'no'}</Text>
             </View>
           </View>
         </Card>

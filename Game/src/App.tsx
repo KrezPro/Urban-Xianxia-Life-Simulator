@@ -75,7 +75,7 @@ export default function App() {
   if (!isReady) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor="transparent" />
+        <StatusBar hidden />
         <SafeAreaView style={styles.container}>
           <View style={styles.loadingCard}>
             <ActivityIndicator size="large" color={Theme.colors.primarySoft} />
@@ -89,7 +89,7 @@ export default function App() {
   if (!hasChosenLanguage) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor="transparent" />
+        <StatusBar hidden />
         <LanguageSelectionOverlay />
       </SafeAreaProvider>
     );
@@ -97,7 +97,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" backgroundColor="transparent" />
+      <StatusBar hidden />
       <View style={styles.root}>
         <NavigationContainer>
           <TabNavigator />
