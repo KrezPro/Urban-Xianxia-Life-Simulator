@@ -3,10 +3,14 @@ import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
 
 // Нативные модули подключаются ТОЛЬКО через guarded require с ЛИТЕРАЛЬНОЙ
 // строкой внутри try/catch: Metro статически резолвит зависимость на этапе
-// сборки (пакеты есть в node_modules), а рантайм-ошибка «Cannot find native
-// module 'ExponentAV'» на старых dev-клиентах ловится и деградирует в тишину.
-// СТАТИЧЕСКИЙ import expo-av крашит старый dev-клиент на загрузке бандла,
-// а require(переменная) ломает Metro-трансформ («Invalid call»).
+// сборки (пакеты есть в node_modules), а рантайм-ошибка ловится и деградирует
+// в тишину. СТАТИЧЕСКИЙ import expo-av крашит старые dev-клиенты, а
+// require(переменная) ломает Metro-трансформ («Invalid call»).
+//
+// ВАЖНО (Expo SDK 54): главный вход expo-file-system отдаёт НОВОЕ API без
+// cacheDirectory/writeAsStringAsync/EncodingType. Legacy-API живёт в сабпути
+// 'expo-file-system/legacy' — резолвим его ПЕРВЫМ, затем главный вход и
+// unwrap .default (ESM-interop).
 declare const require: (moduleId: string) => any;
 
 const getIsDev = (): boolean => {
@@ -27,6 +31,8 @@ interface InternalAudioState {
   musicSound: any;
   unsubscribeSettings: (() => void) | null;
   lastError: string;
+  avError: string;
+  fsError: string;
   retryScheduled: boolean;
 }
 
@@ -40,6 +46,8 @@ const state: InternalAudioState = {
   musicSound: null,
   unsubscribeSettings: null,
   lastError: '',
+  avError: '',
+  fsError: '',
   retryScheduled: false,
 };
 
@@ -53,7 +61,65 @@ export const getAudioDebugInfo = () => ({
   isDev: getIsDev(),
   musicSoundLoaded: state.musicSound !== null,
   lastError: state.lastError,
+  avError: state.avError,
+  fsError: state.fsError,
 });
+
+// Резолв expo-av с unwrap .default и захватом текста ошибки require.
+const pickAv = (): any => {
+  let mod: any = null;
+  try {
+    mod = require('expo-av');
+  } catch (error: any) {
+    state.avError = `require: ${String(error?.message || error)}`;
+    return null;
+  }
+  const levels = [mod, mod?.default];
+  for (const level of levels) {
+    if (level && level.Audio && level.Audio.Sound) {
+      state.avError = '';
+      return level;
+    }
+  }
+  state.avError = 'no Audio.Sound in module';
+  return null;
+};
+
+// Резолв expo-file-system: legacy-сабпуть ПЕРВЫМ (SDK 54), затем главный вход
+// и unwrap .default; валидным считаем модуль с legacy-полями/методами.
+const hasLegacyFsApi = (m: any): boolean =>
+  !!m &&
+  (typeof m.cacheDirectory === 'string' || typeof m.documentDirectory === 'string') &&
+  typeof m.writeAsStringAsync === 'function';
+
+const pickFs = (): any => {
+  const candidates: any[] = [];
+  try {
+    candidates.push(require('expo-file-system/legacy'));
+  } catch (error: any) {
+    state.fsError = `legacy require: ${String(error?.message || error)}`;
+  }
+  try {
+    candidates.push(require('expo-file-system'));
+  } catch (error: any) {
+    state.fsError = `main require: ${String(error?.message || error)}`;
+  }
+  for (const candidate of candidates) {
+    const levels = [candidate, candidate?.default];
+    for (const level of levels) {
+      if (hasLegacyFsApi(level)) {
+        if (!state.fsError || state.fsError.startsWith('legacy')) {
+          state.fsError = '';
+        }
+        return level;
+      }
+    }
+  }
+  if (!state.fsError) {
+    state.fsError = 'no legacy fs API in module';
+  }
+  return null;
+};
 
 const canPlayUi = (): boolean => {
   try {
@@ -187,59 +253,15 @@ const loadSound = async (
   }
 };
 
-// Один автоматический повтор инициализации через 4 секунды: лечит гонки
-// холодного старта нативных модулей в release-бинаре. Повтор строго один,
-// чтобы не зациклиться на клиентах без нативки.
-const scheduleRetry = (): void => {
-  try {
-    if (state.retryScheduled || state.initialized) {
-      return;
-    }
-    state.retryScheduled = true;
-    setTimeout(() => {
-      state.retryScheduled = false;
-      if (!state.initialized && !state.initializing && !getIsDev()) {
-        initAudio();
-      }
-    }, 4000);
-  } catch {
-    // Retry не критичен.
-  }
-};
-
 const initAsync = async (): Promise<void> => {
-  // Сброс частичного состояния предыдущей попытки (защита от дублей при retry).
-  state.clickPool = [];
-  state.clickIndex = 0;
-  state.simpleSounds = {};
-  state.musicSound = null;
+  const av = pickAv();
+  const fs = pickFs();
 
-  let av: any = null;
-  let fs: any = null;
-
-  try {
-    const avRaw = require('expo-av');
-    // Interop-fallback: в некоторых сборках модуль лежит на .default.
-    av = avRaw && avRaw.Audio ? avRaw : avRaw?.default;
-  } catch (error: any) {
-    av = null;
-    setLastError(`expo-av require: ${String(error?.message || error)}`);
-  }
-  try {
-    const fsRaw = require('expo-file-system');
-    fs = fsRaw && (fsRaw.cacheDirectory || fsRaw.documentDirectory) ? fsRaw : fsRaw?.default;
-  } catch (error: any) {
-    fs = null;
-    setLastError(`expo-file-system require: ${String(error?.message || error)}`);
-  }
-
-  if (!av || !av.Audio || !av.Audio.Sound || !fs) {
+  if (!av || !fs) {
     // Нативные модули отсутствуют в бинаре: деградируем в тишину без краша.
     if (!state.lastError) {
       setLastError('native audio modules missing');
     }
-    state.initializing = false;
-    scheduleRetry();
     return;
   }
 
@@ -254,8 +276,6 @@ const initAsync = async (): Promise<void> => {
     const baseDir = fs.cacheDirectory || fs.documentDirectory;
     if (!baseDir) {
       setLastError('no cache/document directory');
-      state.initializing = false;
-      scheduleRetry();
       return;
     }
 
@@ -339,16 +359,34 @@ const initAsync = async (): Promise<void> => {
 
     state.initialized = true;
     state.available = true;
-    state.initializing = false;
-    state.lastError = '';
     syncMusic();
   } catch (error: any) {
     // Любая ошибка аудио не должна ломать игру, но текст ошибки сохраняем
     // для диагностики в Settings -> Diagnostics.
     setLastError(`init: ${String(error?.message || error)}`);
-    state.initializing = false;
-    scheduleRetry();
   }
+};
+
+const runInitOnce = (): void => {
+  state.initializing = true;
+  void initAsync()
+    .catch((error: any) => {
+      setLastError(`initAsync: ${String(error?.message || error)}`);
+    })
+    .finally(() => {
+      state.initializing = false;
+      // Один автоматический ретрай через 4 секунды: лечит гонки холодного
+      // старта нативных модулей в release-бинаре.
+      if (!state.initialized && !state.retryScheduled) {
+        state.retryScheduled = true;
+        setTimeout(() => {
+          state.retryScheduled = false;
+          if (!state.initialized && !state.initializing && !getIsDev()) {
+            runInitOnce();
+          }
+        }, 4000);
+      }
+    });
 };
 
 export const initAudio = (): void => {
@@ -360,16 +398,10 @@ export const initAudio = (): void => {
       // Тест на телефоне (expo start / dev-клиент): звук и музыка не запускаются.
       return;
     }
-    state.initializing = true;
-    void initAsync().catch((error: any) => {
-      setLastError(`initAsync: ${String(error?.message || error)}`);
-      state.initializing = false;
-      scheduleRetry();
-    });
+    runInitOnce();
   } catch (error: any) {
     setLastError(`initAudio: ${String(error?.message || error)}`);
     state.initializing = false;
-    scheduleRetry();
   }
 };
 

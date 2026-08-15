@@ -1,11 +1,37 @@
+import { Platform } from 'react-native';
 import { StateStorage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
+
+// Guarded require для expo-constants (отпечаток окружения в диагностике).
+declare const require: (moduleId: string) => any;
+
+// Отпечаток окружения: позволяет по одному скриншоту понять, ГДЕ реально
+// выполняется JS (нативный билд / Expo Go / web) и есть ли JSI-хуки.
+const getEnvInfo = () => {
+  let execEnv = 'unknown';
+  try {
+    const ConstantsModule = require('expo-constants');
+    execEnv =
+      ConstantsModule?.default?.executionEnvironment ||
+      ConstantsModule?.executionEnvironment ||
+      'unknown';
+  } catch {
+    execEnv = 'require-failed';
+  }
+  const g: any = globalThis as any;
+  return {
+    platform: Platform.OS,
+    execEnv,
+    syncHook: typeof g.nativeCallSyncHook !== 'undefined',
+    bridgeless:
+      typeof g.RN$Bridgeless !== 'undefined' ? Boolean(g.RN$Bridgeless) : false,
+  };
+};
 
 // Синхронный self-test нативного MMKV: пишем/читаем probe-ключ сразу после
 // конструктора. Если нативка отсутствует или сломана, ловим ошибку и
 // детерминированно уходим в memory-fallback, но ТЕКСТ ошибки сохраняем для
-// полевой диагностики (Settings -> Diagnostics).
-// API совместим с react-native-mmkv v2 и v4: new MMKV({id}), set/getString/delete.
+// диагностики в Settings -> Diagnostics.
 let nativeStorage: MMKV | null = null;
 let storageError = '';
 
@@ -33,11 +59,18 @@ const memoryMap = new Map<string, string>();
 export interface StorageDebugInfo {
   backend: 'mmkv' | 'memory';
   error: string;
+  env: {
+    platform: string;
+    execEnv: string;
+    syncHook: boolean;
+    bridgeless: boolean;
+  };
 }
 
 export const getStorageDebugInfo = (): StorageDebugInfo => ({
   backend: nativeStorage !== null ? 'mmkv' : 'memory',
   error: storageError,
+  env: getEnvInfo(),
 });
 
 export const isNativeStorageAvailable = (): boolean => nativeStorage !== null;

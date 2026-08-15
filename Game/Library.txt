@@ -11,7 +11,7 @@
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en, дефолт en; смена языка выполняется только в SettingsScreen.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV: используем react-native-mmkv v2.x (НЕ требует Nitro Modules; v4 на Nitro в EAS production падал в memory-fallback). API идентична: new MMKV({id}), set/getString/delete. mmkvStorage.ts делает синхронный probe-self-test и сохраняет текст ошибки конструктора; getStorageDebugInfo() отдаёт backend+error в Settings -> Diagnostics.
+13. MMKV: react-native-mmkv 4.3.2 + react-native-nitro-modules 0.35.10 (exact-пины в package.json; Nitro-рантайм обязан попасть в бинарь, иначе конструктор бросает "React Native is not running on-device" и сторы уходят в memory-fallback). mmkvStorage делает синхронный probe-self-test и отдаёт getStorageDebugInfo() (backend + ошибка + отпечаток окружения) в Settings -> Diagnostics.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
@@ -21,7 +21,7 @@
 20. ProgressBar должен безопасно принимать progress от 0 до 1 и сам обрезать выходящие значения.
 21. Вкладка Sect отключена в пользовательской навигации. Код секты остаётся в проекте как deprecated.
 22. SectScreen больше не используется в TabNavigator, но файл сохранён для возможного будущего удаления.
-23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App. Встроенный SafeAreaView из react-native на Android insets НЕ даёт.
+23. SafeAreaView использовать только из react-native-safe-area-context, SafeAreaProvider оборачивает App.
 24. StatRow поддерживает onPress и onLongPress для показа подсказок по long-press.
 25. NotificationHost размещается глобально в App.tsx поверх NavigationContainer, использует absolute positioning с safe-area insets.
 26. Подсказки хранятся в ui.json под ключом hints для каждого стата/фокуса.
@@ -74,7 +74,8 @@
 73. Автосохранение прогресса: все игровые сторы persist в MMKV и сохраняются при каждом изменении состояния; отдельной кнопки выхода нет. useIdleProgress дополнительно обновляет lastLoginTime при старте, каждые 60 секунд и при смене AppState (active/background/inactive), чтобы offline-прогресс рассчитывался от последнего момента активности.
 74. Config plugins (Game/plugins/*.js): кастомные Expo config plugins для настройки Android-сборки. withIapPlayFlavor.js инжектит missingDimensionStrategy 'store', 'play' в app/build.gradle для решения ambiguity-ошибки react-native-iap (amazon vs play flavors). Подключаются в app.json как относительные пути в массиве plugins.
 75. EAS Build: использует ТОЛЬКО закоммиченные в git файлы. После правки app.json, package.json, plugins/ ОБЯЗАТЕЛЕН git add -A && git commit перед запуском eas build.
-76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap-flavor).
-77. Fullscreen-политика Android: StatusBar hidden (expo-status-bar) во всех ветках App.tsx + скрытие системной навигационной панели через expo-navigation-bar (setVisibilityAsync('hidden') + setBehaviorAsync('overlay-swipe') + прозрачный фон), повторное скрытие при AppState 'active'; guarded require по урокам 16/18.
-78. Диагностика в production обязана быть LIVE: карточка Diagnostics в SettingsScreen перечитывает getStorageDebugInfo()/getAudioDebugInfo() тиком 1с, пока аудио не готово, и рефрешится при фокусе вкладки (useFocusEffect). Тихие try/catch ЗАПРЕЩЕНЫ без сохранения текста ошибки в debug-поле (storageError/lastError).
-79. AudioManager авто-ретрай: при неудачной инициализации один повторный запуск через 4 секунды (гонки холодного старта нативных модулей в release); interop-fallback require('expo-av')/require('expo-file-system') через .default, если прямой модуль пустой; сброс частичных пулов звуков в начале каждой попытки.
+76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), react-native-iap (config plugin), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap -> iap-flavor).
+77. Expo SDK 54: главный вход expo-file-system отдаёт НОВОЕ API (File/Directory) без cacheDirectory/documentDirectory/writeAsStringAsync/EncodingType; legacy-API доступно ТОЛЬКО через сабпуть 'expo-file-system/legacy'. AudioManager.pickFs() резолвит legacy первым, затем главный вход с unwrap .default; валидность = наличие legacy-полей и writeAsStringAsync.
+78. Версионирование для Play Console: versionName поднимается вручную в app.json ("version": "1.1.4"); versionCode НЕ пишется в app.json — управляется EAS (appVersionSource: remote, autoIncrement в production).
+79. Fullscreen-политика Android: StatusBar hidden (expo-status-bar) во всех ветках App.tsx + скрытие системной навигационной панели через expo-navigation-bar (setVisibilityAsync('hidden') + setBehaviorAsync('overlay-swipe') + прозрачный фон), повторное скрытие при AppState 'active'; guarded require по урокам 16/18.
+80. Тихие try/catch в production ЗАПРЕЩЕНЫ без сохранения текста ошибки: state.lastError/avError/fsError (AudioManager) и storageError + env-отпечаток (mmkvStorage) выводятся в Settings -> Diagnostics; любой скриншот сам объясняет среду и причину деградации.
