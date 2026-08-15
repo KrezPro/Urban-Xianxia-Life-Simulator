@@ -1,17 +1,6 @@
 import { useSettingsStore } from '../store/useSettingsStore';
 import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
 
-// Нативные модули подключаются ТОЛЬКО через guarded require с ЛИТЕРАЛЬНОЙ
-// строкой внутри try/catch: Metro статически резолвит зависимость на этапе
-// сборки (пакеты есть в node_modules), а рантайм-ошибка «Cannot find native
-// module 'ExponentAV'» на старых dev-клиентах ловится и деградирует в тишину.
-// СТАТИЧЕСКИЙ import expo-av крашит старый dev-клиент на загрузке бандла,
-// а require(переменная) ломает Metro-трансформ («Invalid call»).
-//
-// ВАЖНО (Expo SDK 54): главный вход expo-file-system отдаёт НОВОЕ API без
-// cacheDirectory/writeAsStringAsync/EncodingType. Legacy-API живёт в сабпути
-// 'expo-file-system/legacy' — резолвим его ПЕРВЫМ, затем главный вход и
-// unwrap .default (ESM-interop).
 declare const require: (moduleId: string) => any;
 
 const getIsDev = (): boolean => {
@@ -66,7 +55,6 @@ export const getAudioDebugInfo = () => ({
   fsError: state.fsError,
 });
 
-// Резолв expo-av с unwrap .default и захватом текста ошибки require.
 const pickAv = (): any => {
   let mod: any = null;
   try {
@@ -86,8 +74,6 @@ const pickAv = (): any => {
   return null;
 };
 
-// Резолв expo-file-system: legacy-сабпуть ПЕРВЫМ (SDK 54), затем главный вход
-// и unwrap .default; валидным считаем модуль с legacy-полями/методами.
 const hasLegacyFsApi = (m: any): boolean =>
   !!m &&
   (typeof m.cacheDirectory === 'string' || typeof m.documentDirectory === 'string') &&
@@ -257,7 +243,6 @@ const initAsync = async (): Promise<void> => {
   const fs = pickFs();
 
   if (!av || !fs) {
-    // Нативные модули отсутствуют в бинаре: деградируем в тишину без краша.
     if (!state.lastError) {
       setLastError('native audio modules missing');
     }
@@ -360,8 +345,6 @@ const initAsync = async (): Promise<void> => {
     state.available = true;
     syncMusic();
   } catch (error: any) {
-    // Любая ошибка аудио не должна ломать игру, но текст ошибки сохраняем
-    // для диагностики в Settings -> Diagnostics.
     setLastError(`init: ${String(error?.message || error)}`);
   }
 };
@@ -374,8 +357,6 @@ const runInitOnce = (): void => {
     })
     .finally(() => {
       state.initializing = false;
-      // Один автоматический ретрай через 4 секунды: лечит гонки холодного
-      // старта нативных модулей в release-бинаре.
       if (!state.initialized && !state.retryScheduled) {
         state.retryScheduled = true;
         setTimeout(() => {
@@ -394,7 +375,6 @@ export const initAudio = (): void => {
       return;
     }
     if (getIsDev()) {
-      // Тест на телефоне (expo start / dev-клиент): звук и музыка не запускаются.
       return;
     }
     runInitOnce();

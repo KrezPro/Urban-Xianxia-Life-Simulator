@@ -34,8 +34,6 @@ export default function SettingsScreen() {
 
   const storageDebug = getStorageDebugInfo();
   const audioDebug = getAudioDebugInfo();
-  const storageErrorsText =
-    storageDebug.errors.length > 0 ? storageDebug.errors.join(' | ') : 'none';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,7 +94,7 @@ export default function SettingsScreen() {
             <View style={styles.rowText}>
               <Text style={styles.rowTitle}>Diagnostics</Text>
               <Text style={styles.rowDesc}>Storage: {storageDebug.backend}</Text>
-              <Text style={styles.rowDesc}>Storage errors: {storageErrorsText}</Text>
+              <Text style={styles.rowDesc}>Storage error: {storageDebug.error || 'none'}</Text>
               <Text style={styles.rowDesc}>
                 Env: {storageDebug.env.platform}/{storageDebug.env.execEnv}
               </Text>

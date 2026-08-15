@@ -2,7 +2,7 @@
   "expo": {
     "name": "BitCultivator",
     "slug": "bitcultivator",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -37,7 +37,6 @@
           "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
       ],
-      "react-native-iap",
       "./plugins/withIapPlayFlavor.js"
     ],
     "extra": {

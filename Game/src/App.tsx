@@ -22,9 +22,6 @@ import { IapService } from './services/IapService';
 
 declare const require: (moduleId: string) => any;
 
-// Скрытие системной навигационной панели Android (кнопки/жестовая полоска):
-// guarded require по урокам DataForAI 16/18 — если пакета нет в бинаре,
-// игра не крашится, а просто остаётся с системной панелью.
 const hideSystemNavigationBar = async (): Promise<void> => {
   try {
     const NavigationBar = require('expo-navigation-bar');
@@ -63,8 +60,6 @@ export default function App() {
 
   useIdleProgress();
 
-  // Fullscreen: скрываем навигационную панель Android при старте и при
-  // каждом возврате в приложение (система может показать её после свайпа).
   useEffect(() => {
     void hideSystemNavigationBar();
     const subscription = AppState.addEventListener('change', (nextState) => {
@@ -87,9 +82,6 @@ export default function App() {
     };
   }, [isReady]);
 
-  // Инициализация монетизации после гидратации сторов:
-  // AdMob (interstitial после смерти + rewarded в Дао) и Google Play Billing
-  // (restore покупки remove_ads при старте, чтобы не терять entitlement).
   useEffect(() => {
     if (!isReady) {
       return;

@@ -1,18 +1,13 @@
 import { Platform } from 'react-native';
 import { AdsConstants } from '../constants/AdsConstants';
 
-// Guarded literal require (уроки DataForAI 16/18): Metro статически включает пакет
-// в бандл, рантайм-ошибка отсутствия нативки ловится в try/catch.
 let RNIap: any = null;
-
 try {
   RNIap = require('react-native-iap');
 } catch (e) {
   RNIap = null;
 }
 
-// Детект Expo Go: кастомной нативки (react-native-iap + react-native-nitro-modules)
-// там нет вообще, вызовы Billing бессмысленны.
 let executionEnvironment = '';
 try {
   const ConstantsModule = require('expo-constants');
@@ -20,6 +15,7 @@ try {
 } catch (e) {
   executionEnvironment = '';
 }
+
 const IS_EXPO_GO = executionEnvironment === 'expo-go';
 
 export interface IapProduct {
@@ -36,7 +32,6 @@ export interface IapServiceResult {
   product?: IapProduct;
 }
 
-// Маркеры ожидаемого шума от react-native-iap / nitro на клиентах без нативки.
 const NOISE_PATTERNS = [
   'nitro runtime not installed',
   '[rn-iap]',
@@ -50,9 +45,6 @@ const isNoise = (text: string): boolean => {
   return NOISE_PATTERNS.some((pattern) => lower.includes(pattern));
 };
 
-// Временный фильтр console.error: библиотека react-native-iap сама логирует ERROR
-// ("[RN-IAP] Failed to ...") ДО throw. На старых dev-клиентах это ожидаемый шум,
-// поэтому гасим только строки с маркерами nitro/rn-iap, остальное пропускаем как обычно.
 const withSuppressedNativeNoise = async <T>(runner: () => Promise<T>): Promise<T> => {
   const originalError = console.error;
   console.error = (...args: any[]) => {
@@ -86,7 +78,6 @@ class IapServiceClass {
 
   private rememberNativeError(error: any): void {
     if (isNativeRuntimeError(error)) {
-      // Нативки нет (старый dev-клиент / Expo Go): дальше работаем в деградации.
       this.nativeBroken = true;
     }
   }
@@ -116,7 +107,6 @@ class IapServiceClass {
       return this.cachedProduct;
     }
     if (!this.hasNative()) {
-      // Fallback-цена для dev/Expo Go; реальная цена приходит из Google Play.
       return {
         productId: AdsConstants.REMOVE_ADS_PRODUCT_ID,
         title: 'Remove Ads',
@@ -126,9 +116,16 @@ class IapServiceClass {
       };
     }
     try {
-      const products = await withSuppressedNativeNoise(() =>
-        RNIap.getProducts({ skus: [AdsConstants.REMOVE_ADS_PRODUCT_ID] })
-      );
+      let products: any[] = [];
+      try {
+        products = await withSuppressedNativeNoise(() =>
+          RNIap.getProducts({ skus: [AdsConstants.REMOVE_ADS_PRODUCT_ID] })
+        );
+      } catch {
+        products = await withSuppressedNativeNoise(() =>
+          RNIap.getProducts({ sku: AdsConstants.REMOVE_ADS_PRODUCT_ID })
+        );
+      }
       if (products && products.length > 0) {
         const p = products[0];
         this.cachedProduct = {
@@ -159,10 +156,16 @@ class IapServiceClass {
       return { success: false, error: 'iap_unavailable' };
     }
     try {
-      const purchase = await withSuppressedNativeNoise(() =>
-        RNIap.requestPurchase({ sku: AdsConstants.REMOVE_ADS_PRODUCT_ID })
-      );
-      // Acknowledge/finish transaction (обязательно для non-consumable)
+      let purchase: any = null;
+      try {
+        purchase = await withSuppressedNativeNoise(() =>
+          RNIap.requestPurchase({ sku: AdsConstants.REMOVE_ADS_PRODUCT_ID })
+        );
+      } catch {
+        purchase = await withSuppressedNativeNoise(() =>
+          RNIap.requestPurchase({ skus: [AdsConstants.REMOVE_ADS_PRODUCT_ID] })
+        );
+      }
       if (Platform.OS === 'android') {
         await withSuppressedNativeNoise(() =>
           RNIap.finishTransaction({ purchase, isConsumable: false })
@@ -173,8 +176,6 @@ class IapServiceClass {
       return { success: true };
     } catch (e: any) {
       this.rememberNativeError(e);
-      // Нативка сломалась на рантайме (старый dev-клиент): в dev симулируем,
-      // чтобы можно было тестировать логику покупки и отключения рекламы.
       if (this.nativeBroken && __DEV__) {
         console.log('[IapService] DEV: native broken, simulating purchase');
         return { success: true };
