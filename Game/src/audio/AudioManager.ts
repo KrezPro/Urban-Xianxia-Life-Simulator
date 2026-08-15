@@ -27,6 +27,7 @@ interface InternalAudioState {
   musicSound: any;
   unsubscribeSettings: (() => void) | null;
   lastError: string;
+  retryScheduled: boolean;
 }
 
 const state: InternalAudioState = {
@@ -39,6 +40,7 @@ const state: InternalAudioState = {
   musicSound: null,
   unsubscribeSettings: null,
   lastError: '',
+  retryScheduled: false,
 };
 
 const setLastError = (value: string): void => {
@@ -185,18 +187,47 @@ const loadSound = async (
   }
 };
 
+// Один автоматический повтор инициализации через 4 секунды: лечит гонки
+// холодного старта нативных модулей в release-бинаре. Повтор строго один,
+// чтобы не зациклиться на клиентах без нативки.
+const scheduleRetry = (): void => {
+  try {
+    if (state.retryScheduled || state.initialized) {
+      return;
+    }
+    state.retryScheduled = true;
+    setTimeout(() => {
+      state.retryScheduled = false;
+      if (!state.initialized && !state.initializing && !getIsDev()) {
+        initAudio();
+      }
+    }, 4000);
+  } catch {
+    // Retry не критичен.
+  }
+};
+
 const initAsync = async (): Promise<void> => {
+  // Сброс частичного состояния предыдущей попытки (защита от дублей при retry).
+  state.clickPool = [];
+  state.clickIndex = 0;
+  state.simpleSounds = {};
+  state.musicSound = null;
+
   let av: any = null;
   let fs: any = null;
 
   try {
-    av = require('expo-av');
+    const avRaw = require('expo-av');
+    // Interop-fallback: в некоторых сборках модуль лежит на .default.
+    av = avRaw && avRaw.Audio ? avRaw : avRaw?.default;
   } catch (error: any) {
     av = null;
     setLastError(`expo-av require: ${String(error?.message || error)}`);
   }
   try {
-    fs = require('expo-file-system');
+    const fsRaw = require('expo-file-system');
+    fs = fsRaw && (fsRaw.cacheDirectory || fsRaw.documentDirectory) ? fsRaw : fsRaw?.default;
   } catch (error: any) {
     fs = null;
     setLastError(`expo-file-system require: ${String(error?.message || error)}`);
@@ -208,6 +239,7 @@ const initAsync = async (): Promise<void> => {
       setLastError('native audio modules missing');
     }
     state.initializing = false;
+    scheduleRetry();
     return;
   }
 
@@ -223,6 +255,7 @@ const initAsync = async (): Promise<void> => {
     if (!baseDir) {
       setLastError('no cache/document directory');
       state.initializing = false;
+      scheduleRetry();
       return;
     }
 
@@ -307,12 +340,14 @@ const initAsync = async (): Promise<void> => {
     state.initialized = true;
     state.available = true;
     state.initializing = false;
+    state.lastError = '';
     syncMusic();
   } catch (error: any) {
     // Любая ошибка аудио не должна ломать игру, но текст ошибки сохраняем
     // для диагностики в Settings -> Diagnostics.
     setLastError(`init: ${String(error?.message || error)}`);
     state.initializing = false;
+    scheduleRetry();
   }
 };
 
@@ -329,10 +364,12 @@ export const initAudio = (): void => {
     void initAsync().catch((error: any) => {
       setLastError(`initAsync: ${String(error?.message || error)}`);
       state.initializing = false;
+      scheduleRetry();
     });
   } catch (error: any) {
     setLastError(`initAudio: ${String(error?.message || error)}`);
     state.initializing = false;
+    scheduleRetry();
   }
 };
 

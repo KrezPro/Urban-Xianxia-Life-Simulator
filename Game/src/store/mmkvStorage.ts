@@ -2,9 +2,10 @@ import { StateStorage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
 
 // Синхронный self-test нативного MMKV: пишем/читаем probe-ключ сразу после
-// конструктора. Если нативка отсутствует или сломана (например, нет Nitro
-// runtime для v4), ловим ошибку и детерминированно уходим в memory-fallback,
-// но ТЕКСТ ошибки сохраняем для диагностики в Settings -> Diagnostics.
+// конструктора. Если нативка отсутствует или сломана, ловим ошибку и
+// детерминированно уходим в memory-fallback, но ТЕКСТ ошибки сохраняем для
+// полевой диагностики (Settings -> Diagnostics).
+// API совместим с react-native-mmkv v2 и v4: new MMKV({id}), set/getString/delete.
 let nativeStorage: MMKV | null = null;
 let storageError = '';
 

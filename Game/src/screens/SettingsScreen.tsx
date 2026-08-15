@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useLocaleStore } from '../store/useLocaleStore';
 import { playToggle, getAudioDebugInfo } from '../audio/AudioManager';
@@ -18,9 +19,33 @@ export default function SettingsScreen() {
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setMusicEnabled = useSettingsStore((state) => state.setMusicEnabled);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [diagTick, setDiagTick] = useState(0);
 
   const t = useTranslator('settings');
   const currentLanguage = getSupportedLocale(locale);
+
+  // Живая диагностика: значения перечитываются при каждом рендере.
+  const storageDebug = getStorageDebugInfo();
+  const audioDebug = getAudioDebugInfo();
+
+  // Тик раз в секунду, пока аудио не инициализировалось (инициализация
+  // асинхронная и может завершиться позже первого рендера экрана).
+  useEffect(() => {
+    if (audioDebug.initialized) {
+      return;
+    }
+    const interval = setInterval(() => {
+      setDiagTick((value) => value + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [audioDebug.initialized]);
+
+  // Мгновенный рефреш при возврате на вкладку Settings.
+  useFocusEffect(
+    useCallback(() => {
+      setDiagTick((value) => value + 1);
+    }, [])
+  );
 
   const handleSoundChange = (value: boolean) => {
     setSoundEnabled(value);
@@ -31,9 +56,6 @@ export default function SettingsScreen() {
     setMusicEnabled(value);
     playToggle?.(value);
   };
-
-  const storageDebug = getStorageDebugInfo();
-  const audioDebug = getAudioDebugInfo();
 
   return (
     <SafeAreaView style={styles.container}>

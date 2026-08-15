@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 69 (Production-диагностика и fullscreen: MMKV v2 без Nitro, захват ошибок storage/audio, скрытие навигационной панели Android)
+[СТАТУС]: ШАГ 70 (Production-фикс хранений и аудио: MMKV v2 без Nitro, захват ошибок, live-диагностика, авто-ретрай аудио)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -56,13 +56,11 @@
 216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
 217. [ ] Локально: npm install && git add -A && git commit.
 218. [ ] EAS: eas build --platform android --profile production (повторный запуск).
-=== ШАГ 69: Production-диагностика и fullscreen ===
-219. [X] mmkvStorage.ts: probe-ключ self-test + захват текста ошибки конструктора; экспорт getStorageDebugInfo() (backend mmkv/memory + error).
-220. [X] AudioManager.ts: state.lastError заполняется на каждой стадии инициализации (require expo-av/expo-file-system, baseDir, генерация/запись WAV, loadSound); getAudioDebugInfo() возвращает lastError; громкость music loop 0.22.
-221. [X] SettingsScreen.tsx: карточка Diagnostics (Storage backend/error, Audio init/avail/music loaded/error, Dev mode).
-222. [X] App.tsx: StatusBar hidden во всех ветках + скрытие навигационной панели Android через expo-navigation-bar (guarded require), повторное скрытие при AppState 'active'.
-223. [X] ActivitiesScreen.tsx / DaoScreen.tsx: SafeAreaView только из react-native-safe-area-context (корректные insets при fullscreen/edge-to-edge).
-224. [ ] РУКАМИ: npx expo install react-native-mmkv@2.12.3 expo-navigation-bar (MMKV v2 без Nitro Modules).
-225. [ ] РУКАМИ: git add -A && git commit.
-226. [ ] EAS: eas build --platform android --profile production.
-227. [ ] После установки: Settings -> Diagnostics -> прислать значения Storage и Audio error.
+=== ШАГ 69-70: Фикс production-хранений и аудио ===
+219. [X] mmkvStorage.ts: probe-self-test нативного MMKV + захват текста ошибки конструктора; getStorageDebugInfo() возвращает backend (mmkv/memory) и error для Settings -> Diagnostics.
+220. [X] AudioManager.ts: state.lastError заполняется на каждой стадии инициализации (require expo-av/expo-file-system, setAudioModeAsync, baseDir, генерация/запись WAV, loadSound); interop-fallback av.default/fs.default; авто-ретрай через 4 секунды при неудаче (один раз); getAudioDebugInfo() возвращает lastError; громкость music loop 0.22.
+221. [X] SettingsScreen.tsx: live-карточка Diagnostics (тик 1с, пока аудио не готово + рефреш при фокусе вкладки через useFocusEffect), строки Storage error и Audio error.
+222. [ ] РУКАМИ: npm install react-native-mmkv@2 (линейка v2 без Nitro Modules, API совместима) + npx expo install expo-navigation-bar (если ещё не установлен).
+223. [ ] РУКАМИ: npm ls react-native-mmkv (ожидаем 2.12.x без invalid) && git add -A && git commit.
+224. [ ] EAS: eas build --platform android --profile production; установить новый AAB.
+225. [ ] Проверка: Settings -> Diagnostics: Storage: mmkv / Storage error: none / Audio init: yes; тест принудительного закрытия (прогресс и язык сохраняются); тест кликов и музыки.
