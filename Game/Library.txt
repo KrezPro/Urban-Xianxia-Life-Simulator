@@ -11,7 +11,7 @@
 10. Рейтинги: score как string, сортировка через BigInt.
 11. Локализация: useLocaleStore хранит ru/en, дефолт en; смена языка выполняется только в SettingsScreen.
 12. Offline-симуляция секты ограничена SOCIAL_MAX_OFFLINE_SECONDS.
-13. MMKV: react-native-mmkv 4.3.2 + react-native-nitro-modules 0.36.5 (exact-пины без кареток; peer-конфликта нет, iap 16.3.1 сам требует nitro ^0.36.5). mmkvStorage делает синхронный probe-self-test и отдаёт getStorageDebugInfo() (backend + ошибка + env-отпечаток) в Settings -> Diagnostics.
+13. MMKV: react-native-mmkv 4.3.2 + react-native-nitro-modules 0.36.5 (exact-пины без кареток; iap 16.3.1 сам требует nitro ^0.36.5, peer-конфликта нет). mmkvStorage делает синхронный probe-self-test и отдаёт getStorageDebugInfo() (backend + ошибка + env-отпечаток) в Settings -> Diagnostics.
 14. Theme.ts: единая темная тема для всего UI.
 15. components/ui/index.tsx: единый UI-кит. Использовать Button, Card, ProgressBar, StatRow, DetailsModal вместо ручных стилей.
 16. utils/helpers.ts: единый модуль для formatLargeNumber, BigInt-утилит, bps-утилит и random-утилит.
@@ -76,7 +76,7 @@
 75. EAS Build: использует ТОЛЬКО закоммиченные в git файлы. После правки app.json, package.json, plugins/ ОБЯЗАТЕЛЕН git add -A && git commit перед запуском eas build.
 76. app.json плагины: expo-system-ui (backgroundColor для userInterfaceStyle: dark), react-native-google-mobile-ads (androidAppId/iosAppId), локальный ./plugins/withIapPlayFlavor.js (порядок важен: system-ui -> admob -> iap-flavor). react-native-iap НЕ config plugin и НЕ должен быть в plugins.
 77. Expo SDK 54: главный вход expo-file-system отдаёт НОВОЕ API (File/Directory) без cacheDirectory/documentDirectory/writeAsStringAsync/EncodingType; legacy-API доступно ТОЛЬКО через сабпуть 'expo-file-system/legacy'. AudioManager.pickFs() резолвит legacy первым, затем main с unwrap .default; валидность проверяется по наличию legacy-полей.
-78. Версионирование для Play Console: versionName поднимается вручную в app.json (сейчас 1.1.6); versionCode НЕ пишется в app.json — управляется EAS (appVersionSource: remote, autoIncrement в production).
+78. Версионирование для Play Console: versionName поднимается вручную в app.json (сейчас 1.1.7); versionCode НЕ пишется в app.json — управляется EAS (appVersionSource: remote, autoIncrement в production).
 79. Fullscreen-политика Android: StatusBar hidden (expo-status-bar) во всех ветках App.tsx + скрытие системной навигационной панели через expo-navigation-bar (setVisibilityAsync('hidden') + setBehaviorAsync('overlay-swipe') + прозрачный фон), повторное скрытие при AppState 'active'.
 80. Тихие try/catch в production ЗАПРЕЩЕНЫ без сохранения текста ошибки: state.lastError/avError/fsError (AudioManager) и storageError + env-отпечаток (mmkvStorage) выводятся в Settings -> Diagnostics; любой скриншот сам объясняет среду и причину деградации.
 81. react-native-iap 16.x (openiaps): API мог поменяться. IapService использует defensive двойные вызовы (skus/sku, requestPurchase с двумя сигнатурами) — совместимо с iap 16.3.1 и старыми версиями.

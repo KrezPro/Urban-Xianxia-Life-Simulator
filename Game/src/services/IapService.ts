@@ -15,7 +15,6 @@ try {
 } catch (e) {
   executionEnvironment = '';
 }
-
 const IS_EXPO_GO = executionEnvironment === 'expo-go';
 
 export interface IapProduct {
@@ -93,11 +92,9 @@ class IapServiceClass {
     try {
       await withSuppressedNativeNoise(() => RNIap.initConnection());
     } catch (e) {
-      if (isNativeRuntimeError(e)) {
-        this.rememberNativeError(e);
-      } else {
+      this.rememberNativeError(e);
+      if (!this.nativeBroken) {
         console.warn('[IapService] init failed:', e);
-        this.rememberNativeError(e);
       }
     }
   }

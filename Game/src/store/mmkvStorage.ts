@@ -20,8 +20,7 @@ const getEnvInfo = () => {
     platform: Platform.OS,
     execEnv,
     syncHook: typeof g.nativeCallSyncHook !== 'undefined',
-    bridgeless:
-      typeof g.RN$Bridgeless !== 'undefined' ? Boolean(g.RN$Bridgeless) : false,
+    bridgeless: typeof g.RN$Bridgeless !== 'undefined' ? Boolean(g.RN$Bridgeless) : false,
   };
 };
 
