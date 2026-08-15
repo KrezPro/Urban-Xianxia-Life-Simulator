@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 76 (Финальный production-фикс: iap 16.3.1 + nitro 0.36.5 + mmkv 4.3.2 exact-пины, diagnostics с env-отпечатком, fullscreen, version 1.1.7)
+[СТАТУС]: ШАГ 77 (Трёхуровневое sync-хранилище mmkv->sqlite->memory, exact-пины iap 16.3.1/nitro 0.36.5/mmkv 4.3.2, version 1.1.7)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -56,14 +56,13 @@
 216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
 217. [X] Локально: npm install && git add -A && git commit.
 218. [X] EAS: eas build --platform android --profile production (повторный запуск).
-=== ШАГ 75-76: финальный production-фикс storage/audio/fullscreen + версия для Play Console ===
-219. [X] package.json: exact-пины react-native-iap 16.3.1 + react-native-nitro-modules 0.36.5 + react-native-mmkv 4.3.2 (без кареток; iap 16.3.1 сам требует nitro ^0.36.5, peer-конфликта нет).
-220. [X] app.json: version 1.1.7 (versionName для Play Console); УДАЛЁН versionCode (конфликтовал с EAS autoIncrement); добавлены icon/splash/adaptiveIcon.foregroundImage/edgeToEdgeEnabled; react-native-iap НЕ в plugins (не config plugin).
-221. [X] mmkvStorage.ts: probe-self-test (set/get/delete) + getStorageDebugInfo() с env-отпечатком (Platform, executionEnvironment, nativeCallSyncHook, RN$Bridgeless) для карточки Diagnostics.
-222. [X] AudioManager: legacy-API expo-file-system через сабпуть 'expo-file-system/legacy' (SDK 54), fallback на main с unwrap .default; точечные avError/fsError; авторетрай 4с; громкость music 0.22.
-223. [X] SettingsScreen: карточка Diagnostics (Storage backend/error, Env, JSI/bridgeless, Audio init/avail/music/error, AV/FS, Dev mode).
-224. [X] IapService: defensive двойные вызовы (getProducts skus->sku, requestPurchase sku->skus) для совместимости с react-native-iap 16.3.1 (openiaps).
-225. [X] App.tsx: StatusBar hidden во всех ветках + скрытие навигационной панели Android через expo-navigation-bar (setVisibilityAsync('hidden') + setBehaviorAsync('overlay-swipe')), повторное скрытие при AppState 'active'.
-226. [ ] РУКАМИ: npm install && git add -A && git commit && git push origin main.
-227. [ ] EAS: eas build --platform android --profile production; загрузить AAB 1.1.7 в Play Console.
-228. [ ] Проверки на телефоне: Diagnostics Storage: mmkv + error none; сохранения переживают force close; клики и музыка слышны; fullscreen без системных панелей.
+=== ШАГ 75-77: финальный production-фикс storage + версия для Play Console ===
+219. [X] package.json: exact-пины react-native-iap 16.3.1 + react-native-nitro-modules 0.36.5 + react-native-mmkv 4.3.2 + expo-sqlite 16.0.10 (без кареток, peer-конфликтов нет).
+220. [X] app.json: version 1.1.7 (versionName для Play Console); УДАЛЁН versionCode (управляется EAS autoIncrement); добавлены icon/splash/adaptiveIcon.foregroundImage/edgeToEdgeEnabled; плагин expo-sqlite.
+221. [X] mmkvStorage.ts: ТРЁХУРОВНЕВОЕ синхронное хранилище mmkv(probe) -> expo-sqlite(openDatabaseSync/runSync/getFirstSync, таблица kv) -> memory; getStorageDebugInfo() возвращает backend + цепочку ошибок + env-отпечаток.
+222. [X] SettingsScreen: карточка Diagnostics (Storage backend/errors, Env, JSI/bridgeless, Audio init/avail/music/error, AV/FS, Dev mode).
+223. [X] AudioManager: legacy-fs резолв (expo-file-system/legacy -> main, unwrap .default), точечные avError/fsError, авторетрай 4с, громкость music 0.22.
+224. [X] App.tsx: StatusBar hidden во всех ветках (fullscreen без expo-navigation-bar, edge-to-edge через app.json).
+225. [ ] РУКАМИ: npm install && git add -A && git commit && git push origin main.
+226. [ ] EAS: eas build --platform android --profile production (повтор после ECONNRESET); загрузить AAB 1.1.7 в Play Console.
+227. [ ] Проверки на телефоне: Diagnostics Storage: mmkv или sqlite (оба переживают force close); сохранения после свайп-закрытия; клики и музыка; fullscreen.

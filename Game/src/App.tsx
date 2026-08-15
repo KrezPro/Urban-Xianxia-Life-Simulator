@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppState, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -19,22 +19,6 @@ import { Theme } from './constants/Theme';
 import { resolveLocalizedKey } from './utils/i18n';
 import { AdService } from './services/AdService';
 import { IapService } from './services/IapService';
-
-declare const require: (moduleId: string) => any;
-
-const hideSystemNavigationBar = async (): Promise<void> => {
-  try {
-    const NavigationBar = require('expo-navigation-bar');
-    if (!NavigationBar) {
-      return;
-    }
-    await NavigationBar.setVisibilityAsync('hidden');
-    await NavigationBar.setBehaviorAsync('overlay-swipe');
-    await NavigationBar.setBackgroundColorAsync('#00000000');
-  } catch {
-    // Нет нативного модуля: тихо деградируем.
-  }
-};
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
@@ -61,18 +45,6 @@ export default function App() {
   useIdleProgress();
 
   useEffect(() => {
-    void hideSystemNavigationBar();
-    const subscription = AppState.addEventListener('change', (nextState) => {
-      if (nextState === 'active') {
-        void hideSystemNavigationBar();
-      }
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
     if (!isReady) {
       return;
     }
@@ -82,6 +54,9 @@ export default function App() {
     };
   }, [isReady]);
 
+  // Инициализация монетизации после гидратации сторов:
+  // AdMob (interstitial после смерти + rewarded в Дао) и Google Play Billing
+  // (restore покупки remove_ads при старте, чтобы не терять entitlement).
   useEffect(() => {
     if (!isReady) {
       return;
