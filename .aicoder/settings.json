@@ -46,7 +46,12 @@
 "Game/src/navigation/TabNavigator.tsx",
 "Game/src/constants/Theme.ts",
 "Game/src/components/game/LanguageSelection.tsx",
-"Game/src/hooks/useIdleProgress.ts"
+"Game/src/hooks/useIdleProgress.ts",
+"Game/PlanOfDevelopment.txt",
+    "Game/DataForAI.txt",
+    "Game/src/store/mmkvStorage.ts",
+    "Game/src/audio/AudioManager.ts",
+    "Game/package.json"
   ],
   "max_file_size_kb": 100
 }
