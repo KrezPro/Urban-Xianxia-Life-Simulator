@@ -1,4 +1,4 @@
-[СТАТУС]: ШАГ 71 (Финальная сборка production: MMKV v4 + Nitro 0.35.10 exact-пины, expo-file-system/legacy для SDK 54, version 1.1.4 для Play Console, расширенная диагностика окружения)
+[СТАТУС]: ШАГ 72 (Трёхуровневое sync-хранилище mmkv->expo-kv-store->memory, улучшенная музыка v2, diagnostics с env-отпечатком, version 1.1.5)
 ГЛОБАЛЬНЫЙ ПЛАН РАЗРАБОТКИ "Urban Xianxia Life Simulator" (BitCultivator)
 === Фаза 33: Мультиязычная инфраструктура ===
 163. [X] Расширить тип Locale до полного списка из 22 языков.
@@ -56,14 +56,14 @@
 216. [X] package.json: react-native-google-mobile-ads ^15.2.0 (было ^14.2.4), react-native-iap ^14.2.0 (было ^12.10.2), babel-preset-expo ~54.0.10 (было ~12.0.0).
 217. [X] Локально: npm install && git add -A && git commit.
 218. [X] EAS: eas build --platform android --profile production (повторный запуск).
-=== ШАГ 70-71: финальный фикс storage/audio + версия для Play Console ===
-219. [X] package.json: exact-пины react-native-mmkv 4.3.2 + react-native-nitro-modules 0.35.10 + react-native-iap 14.7.20 (Nitro-рантайм гарантированно в бинаре, peer-конфликтов нет).
-220. [X] app.json: version 1.1.4 (versionName для Play Console), versionCode убран (управляется EAS remote autoIncrement); добавлен плагин react-native-iap; сохранены icon/splash/adaptiveIcon/edgeToEdgeEnabled.
-221. [X] AudioManager: legacy-API expo-file-system резолвится ПЕРВЫМ через сабпуть 'expo-file-system/legacy' (в SDK 54 главный вход потерял cacheDirectory/writeAsStringAsync — отсюда "no cache/document directory" на реальном устройстве), fallback на главный вход с unwrap .default; точечные avError/fsError; один авторетрай через 4с; громкость music loop 0.22.
-222. [X] mmkvStorage: probe-self-test + getStorageDebugInfo() с отпечатком окружения (Platform, executionEnvironment, nativeCallSyncHook, RN$Bridgeless) — следующий скриншот сам объяснит среду выполнения.
-223. [X] SettingsScreen: карточка Diagnostics расширена строками Env/JSI/AV/FS.
-224. [X] App.tsx: StatusBar hidden во всех ветках + скрытие навигационной панели Android (expo-navigation-bar, guarded require) с повторным скрытием при AppState 'active'.
-225. [ ] РУКАМИ: npx expo install expo-navigation-bar (добавит совместимую версию в package.json).
-226. [ ] РУКАМИ: npm install && git add -A && git commit && git push.
-227. [ ] EAS: eas build --platform android --profile production; загрузить AAB 1.1.4 в Play Console.
-228. [ ] Проверки на телефоне: Diagnostics Storage: mmkv / Audio init: yes; сохранения переживают force close; клики и музыка слышны; fullscreen без системных панелей.
+=== ШАГ 70-72: финальный фикс storage/audio + версия для Play Console ===
+219. [X] package.json: exact-пины react-native-mmkv 4.3.2 + react-native-nitro-modules 0.35.10 + react-native-iap 14.7.20 (peer-конфликтов нет).
+220. [X] app.json: version поднят для Play Console (1.1.5), versionCode убран (управляется EAS remote autoIncrement); icon/splash/adaptiveIcon/edgeToEdgeEnabled; плагин react-native-iap.
+221. [X] AudioManager: legacy-API expo-file-system через сабпуть 'expo-file-system/legacy' (SDK 54), unwrap .default, точечные avError/fsError, авторетрай 4с, громкость music 0.22.
+222. [X] mmkvStorage: ТРЁХУРОВНЕВОЕ синхронное хранилище (MMKV probe -> expo-kv-store probe -> memory) + getStorageDebugInfo() с цепочкой ошибок и env-отпечатком (Platform, executionEnvironment, nativeCallSyncHook, RN$Bridgeless).
+223. [X] SettingsScreen: карточка Diagnostics (Storage backend/errors, Env, JSI/bridgeless, Audio init/avail/music/error, AV/FS, Dev mode).
+224. [X] proceduralAudio: музыка v2 — 8-секундный бесшовный loop (детюнированный пад Am->F, бас-пульс, пентатоника с эхом, искорки); UI-звуки не тронуты.
+225. [X] App.tsx: StatusBar hidden + скрытие навигационной панели Android (expo-navigation-bar, guarded require) с повторным скрытием при AppState 'active'.
+226. [ ] РУКАМИ: npx expo install expo-kv-store && npm install && git add -A && git commit && git push.
+227. [ ] EAS: eas build --platform android --profile production; загрузить AAB 1.1.5 в Play Console.
+228. [ ] Проверки на телефоне: Diagnostics Storage: kvstore/mmkv + errors none; сохранения переживают force close; новая музыка; fullscreen.

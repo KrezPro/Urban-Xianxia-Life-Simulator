@@ -3,9 +3,10 @@ import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
 
 // Нативные модули подключаются ТОЛЬКО через guarded require с ЛИТЕРАЛЬНОЙ
 // строкой внутри try/catch: Metro статически резолвит зависимость на этапе
-// сборки (пакеты есть в node_modules), а рантайм-ошибка ловится и деградирует
-// в тишину. СТАТИЧЕСКИЙ import expo-av крашит старые dev-клиенты, а
-// require(переменная) ломает Metro-трансформ («Invalid call»).
+// сборки (пакеты есть в node_modules), а рантайм-ошибка «Cannot find native
+// module 'ExponentAV'» на старых dev-клиентах ловится и деградирует в тишину.
+// СТАТИЧЕСКИЙ import expo-av крашит старый dev-клиент на загрузке бандла,
+// а require(переменная) ломает Metro-трансформ («Invalid call»).
 //
 // ВАЖНО (Expo SDK 54): главный вход expo-file-system отдаёт НОВОЕ API без
 // cacheDirectory/writeAsStringAsync/EncodingType. Legacy-API живёт в сабпути
@@ -108,9 +109,7 @@ const pickFs = (): any => {
     const levels = [candidate, candidate?.default];
     for (const level of levels) {
       if (hasLegacyFsApi(level)) {
-        if (!state.fsError || state.fsError.startsWith('legacy')) {
-          state.fsError = '';
-        }
+        state.fsError = '';
         return level;
       }
     }

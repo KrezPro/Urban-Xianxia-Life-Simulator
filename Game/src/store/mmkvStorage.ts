@@ -23,42 +23,115 @@ const getEnvInfo = () => {
     platform: Platform.OS,
     execEnv,
     syncHook: typeof g.nativeCallSyncHook !== 'undefined',
-    bridgeless:
-      typeof g.RN$Bridgeless !== 'undefined' ? Boolean(g.RN$Bridgeless) : false,
+    bridgeless: typeof g.RN$Bridgeless !== 'undefined' ? Boolean(g.RN$Bridgeless) : false,
   };
 };
 
-// Синхронный self-test нативного MMKV: пишем/читаем probe-ключ сразу после
-// конструктора. Если нативка отсутствует или сломана, ловим ошибку и
-// детерминированно уходим в memory-fallback, но ТЕКСТ ошибки сохраняем для
-// диагностики в Settings -> Diagnostics.
-let nativeStorage: MMKV | null = null;
-let storageError = '';
-
-try {
-  const candidate = new MMKV({
-    id: 'bitcultivator-storage',
-  });
-  const probeKey = '__mmkv_probe__';
-  candidate.set(probeKey, '1');
-  const probe = candidate.getString(probeKey);
-  candidate.delete(probeKey);
-  if (probe === '1') {
-    nativeStorage = candidate;
-  } else {
-    nativeStorage = null;
-    storageError = 'probe read/write failed';
-  }
-} catch (error: any) {
-  nativeStorage = null;
-  storageError = String(error?.message || error || 'unknown mmkv error');
+// Трёхуровневое СИНХРОННОЕ хранилище (урок DataForAI 25):
+// 1) react-native-mmkv (основное по правилам архитектуры) с probe-тестом;
+// 2) expo-kv-store — официальный синхронный KV-стор Expo (страховка под
+//    SDK 54, где Nitro/MMKV-рантайм может быть несовместим с bridgeless);
+// 3) memory-fallback только как аварийная среда.
+// Каждый уровень проверяется probe-ключом (set/get/delete) до активации.
+interface SyncBackend {
+  name: 'mmkv' | 'kvstore' | 'memory';
+  set: (key: string, value: string) => void;
+  getString: (key: string) => string | undefined;
+  delete: (key: string) => void;
 }
 
+const backendErrors: string[] = [];
+
 const memoryMap = new Map<string, string>();
+const memoryBackend: SyncBackend = {
+  name: 'memory',
+  set: (key, value) => {
+    memoryMap.set(key, value);
+  },
+  getString: (key) => memoryMap.get(key),
+  delete: (key) => {
+    memoryMap.delete(key);
+  },
+};
+
+const createMmkvBackend = (): SyncBackend | null => {
+  try {
+    const candidate = new MMKV({
+      id: 'bitcultivator-storage',
+    });
+    const probeKey = '__mmkv_probe__';
+    candidate.set(probeKey, '1');
+    const probe = candidate.getString(probeKey);
+    candidate.delete(probeKey);
+    if (probe === '1') {
+      return {
+        name: 'mmkv',
+        set: (key, value) => {
+          candidate.set(key, value);
+        },
+        getString: (key) => candidate.getString(key),
+        delete: (key) => {
+          candidate.delete(key);
+        },
+      };
+    }
+    backendErrors.push('mmkv: probe read/write failed');
+  } catch (error: any) {
+    backendErrors.push(`mmkv: ${String(error?.message || error || 'unknown')}`);
+  }
+  return null;
+};
+
+const createKvStoreBackend = (): SyncBackend | null => {
+  try {
+    const mod = require('expo-kv-store');
+    const createStore = mod?.createStore || mod?.default?.createStore;
+    if (typeof createStore !== 'function') {
+      backendErrors.push('kvstore: createStore not found');
+      return null;
+    }
+    const store = createStore('bitcultivator-storage');
+    const removeFn: (key: string) => void =
+      typeof store.remove === 'function'
+        ? (key) => store.remove(key)
+        : typeof store.delete === 'function'
+        ? (key) => store.delete(key)
+        : () => undefined;
+    const probeKey = '__kv_probe__';
+    store.set(probeKey, '1');
+    const probeRaw = store.get(probeKey);
+    removeFn(probeKey);
+    if (probeRaw === '1') {
+      return {
+        name: 'kvstore',
+        set: (key, value) => {
+          store.set(key, value);
+        },
+        getString: (key) => {
+          const value = store.get(key);
+          if (typeof value === 'string') {
+            return value;
+          }
+          return value == null ? undefined : String(value);
+        },
+        delete: (key) => {
+          removeFn(key);
+        },
+      };
+    }
+    backendErrors.push('kvstore: probe read/write failed');
+  } catch (error: any) {
+    backendErrors.push(`kvstore: ${String(error?.message || error || 'unknown')}`);
+  }
+  return null;
+};
+
+const activeBackend: SyncBackend =
+  createMmkvBackend() || createKvStoreBackend() || memoryBackend;
 
 export interface StorageDebugInfo {
-  backend: 'mmkv' | 'memory';
-  error: string;
+  backend: 'mmkv' | 'kvstore' | 'memory';
+  errors: string[];
   env: {
     platform: string;
     execEnv: string;
@@ -68,33 +141,22 @@ export interface StorageDebugInfo {
 }
 
 export const getStorageDebugInfo = (): StorageDebugInfo => ({
-  backend: nativeStorage !== null ? 'mmkv' : 'memory',
-  error: storageError,
+  backend: activeBackend.name,
+  errors: backendErrors,
   env: getEnvInfo(),
 });
 
-export const isNativeStorageAvailable = (): boolean => nativeStorage !== null;
+export const isNativeStorageAvailable = (): boolean => activeBackend.name !== 'memory';
 
 export const storage = {
   set: (key: string, value: string) => {
-    if (nativeStorage) {
-      nativeStorage.set(key, value);
-      return;
-    }
-    memoryMap.set(key, value);
+    activeBackend.set(key, value);
   },
   getString: (key: string): string | undefined => {
-    if (nativeStorage) {
-      return nativeStorage.getString(key);
-    }
-    return memoryMap.get(key);
+    return activeBackend.getString(key);
   },
   delete: (key: string) => {
-    if (nativeStorage) {
-      nativeStorage.delete(key);
-      return;
-    }
-    memoryMap.delete(key);
+    activeBackend.delete(key);
   },
 };
 

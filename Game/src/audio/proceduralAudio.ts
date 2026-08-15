@@ -14,7 +14,11 @@ const BASE64_CHARS =
 
 const NOTE = {
   E2: 82.41,
+  F2: 87.31,
   A2: 110.0,
+  C3: 130.81,
+  E3: 164.81,
+  F3: 174.61,
   A3: 220.0,
   G4: 392.0,
   A4: 440.0,
@@ -51,28 +55,23 @@ const writeString = (view: DataView, offset: number, text: string): void => {
 const bytesToBase64 = (bytes: Uint8Array): string => {
   let result = '';
   let part = '';
-
   const flush = () => {
     result += part;
     part = '';
   };
-
   for (let i = 0; i < bytes.length; i += 3) {
     const b0 = bytes[i];
     const b1 = i + 1 < bytes.length ? bytes[i + 1] : 0;
     const b2 = i + 2 < bytes.length ? bytes[i + 2] : 0;
-    const triplet = (b0 << 16) | (b1 << 8) | b2;
-
+    const triplet = (b0 << 16) | (b1 << 8) | (b2);
     part += BASE64_CHARS[(triplet >> 18) & 63];
     part += BASE64_CHARS[(triplet >> 12) & 63];
     part += i + 1 < bytes.length ? BASE64_CHARS[(triplet >> 6) & 63] : '=';
     part += i + 2 < bytes.length ? BASE64_CHARS[triplet & 63] : '=';
-
     if (part.length > 8192) {
       flush();
     }
   }
-
   flush();
   return result;
 };
@@ -81,7 +80,6 @@ const encodeWavBase64 = (samples: Float32Array): string => {
   const dataSize = samples.length * 2;
   const buffer = new ArrayBuffer(44 + dataSize);
   const view = new DataView(buffer);
-
   writeString(view, 0, 'RIFF');
   view.setUint32(4, 36 + dataSize, true);
   writeString(view, 8, 'WAVE');
@@ -95,7 +93,6 @@ const encodeWavBase64 = (samples: Float32Array): string => {
   view.setUint16(34, 16, true);
   writeString(view, 36, 'data');
   view.setUint32(40, dataSize, true);
-
   let offset = 44;
   for (let i = 0; i < samples.length; i += 1) {
     const clamped = Math.max(-1, Math.min(1, samples[i]));
@@ -103,7 +100,6 @@ const encodeWavBase64 = (samples: Float32Array): string => {
     view.setInt16(offset, Math.round(value), true);
     offset += 2;
   }
-
   return bytesToBase64(new Uint8Array(buffer));
 };
 
@@ -112,7 +108,6 @@ const addTone = (samples: Float32Array, options: ToneOptions): void => {
   if (duration <= 0) {
     return;
   }
-
   const startSample = Math.max(0, Math.floor(options.start * SAMPLE_RATE));
   const durationSamples = Math.floor(duration * SAMPLE_RATE);
   const endSample = Math.min(samples.length, startSample + durationSamples);
@@ -120,9 +115,7 @@ const addTone = (samples: Float32Array, options: ToneOptions): void => {
   const attack = Math.max(0.001, options.attack ?? 0.005);
   const release = Math.max(0.001, options.release ?? 0.02);
   const pitchEnd = options.pitchEnd;
-
   let phase = 0;
-
   for (let i = startSample; i < endSample; i += 1) {
     const t = (i - startSample) / SAMPLE_RATE;
     const progress = duration > 0 ? t / duration : 0;
@@ -130,9 +123,7 @@ const addTone = (samples: Float32Array, options: ToneOptions): void => {
       pitchEnd === undefined
         ? options.freq
         : options.freq + (pitchEnd - options.freq) * progress;
-
     phase += (2 * Math.PI * currentFrequency) / SAMPLE_RATE;
-
     let sample = 0;
     if (type === 'sine') {
       sample = Math.sin(phase);
@@ -141,14 +132,12 @@ const addTone = (samples: Float32Array, options: ToneOptions): void => {
     } else {
       sample = (2 / Math.PI) * Math.asin(Math.sin(phase));
     }
-
     let envelope = 1;
     if (t < attack) {
       envelope = Math.max(0, t / attack);
     } else if (t > duration - release) {
       envelope = Math.max(0, (duration - t) / release);
     }
-
     samples[i] += sample * options.volume * envelope;
   }
 };
@@ -158,7 +147,6 @@ const applyFade = (samples: Float32Array, fadeSeconds: number): void => {
   if (fadeSamples <= 0 || samples.length <= fadeSamples * 2) {
     return;
   }
-
   for (let i = 0; i < fadeSamples; i += 1) {
     const k = i / fadeSamples;
     samples[i] *= k;
@@ -300,74 +288,117 @@ const buildError = (): string => {
   return encodeWavBase64(samples);
 };
 
+// Фоновая музыка v2: 8-секундный бесшовный loop.
+// Тёплый детюнированный пад (Am -> F), мягкий бас-пульс, пентатоническая
+// мелодия с эхом и редкие верхние «искорки». UI-звуки не тронуты.
 const buildMusic = (): string => {
-  const duration = 4.0;
+  const duration = 8.0;
   const samples = createSamples(duration);
 
+  const padChord = (start: number, freqs: number[], volume: number): void => {
+    freqs.forEach((freq, index) => {
+      const detune = index % 2 === 0 ? 1.003 : 0.997;
+      addTone(samples, {
+        start,
+        duration: 4.0,
+        freq: freq * detune,
+        volume,
+        type: 'sine',
+        attack: 1.1,
+        release: 1.6,
+      });
+      addTone(samples, {
+        start,
+        duration: 4.0,
+        freq,
+        volume: volume * 0.8,
+        type: 'sine',
+        attack: 1.1,
+        release: 1.6,
+      });
+    });
+  };
+
+  padChord(0, [NOTE.A2, NOTE.E3, NOTE.A3], 0.035);
+  padChord(4, [NOTE.F2, NOTE.C3, NOTE.F3], 0.035);
+
   addTone(samples, {
     start: 0,
-    duration: 3.9,
+    duration: 1.6,
     freq: NOTE.A2,
-    volume: 0.065,
+    volume: 0.07,
     type: 'sine',
-    attack: 0.25,
-    release: 0.55,
+    attack: 0.02,
+    release: 0.6,
   });
-
   addTone(samples, {
-    start: 2.0,
-    duration: 1.9,
-    freq: NOTE.E2,
-    volume: 0.055,
+    start: 4,
+    duration: 1.6,
+    freq: NOTE.F2,
+    volume: 0.07,
     type: 'sine',
-    attack: 0.2,
-    release: 0.45,
+    attack: 0.02,
+    release: 0.6,
   });
 
-  addTone(samples, {
-    start: 0,
-    duration: 3.9,
-    freq: NOTE.A3,
-    volume: 0.028,
-    type: 'triangle',
-    attack: 0.5,
-    release: 0.7,
-  });
-
-  const melody = [NOTE.A4, NOTE.C5, NOTE.E5, NOTE.D5, NOTE.C5, NOTE.A4, NOTE.G4, NOTE.A4];
-  melody.forEach((freq, index) => {
+  const melody: Array<[number, number]> = [
+    [0.0, NOTE.A4],
+    [0.5, NOTE.C5],
+    [1.0, NOTE.D5],
+    [1.5, NOTE.E5],
+    [2.0, NOTE.G5],
+    [2.5, NOTE.E5],
+    [3.0, NOTE.D5],
+    [3.5, NOTE.C5],
+    [4.0, NOTE.A4],
+    [4.5, NOTE.C5],
+    [5.0, NOTE.D5],
+    [5.5, NOTE.C5],
+    [6.0, NOTE.A4],
+    [6.5, NOTE.G4],
+    [7.0, NOTE.A4],
+  ];
+  melody.forEach(([start, freq]) => {
     addTone(samples, {
-      start: index * 0.5,
-      duration: 0.42,
+      start,
+      duration: 0.46,
       freq,
-      volume: 0.11,
+      volume: 0.095,
       type: 'sine',
-      attack: 0.02,
-      release: 0.14,
+      attack: 0.015,
+      release: 0.22,
+    });
+    addTone(samples, {
+      start: start + 0.25,
+      duration: 0.4,
+      freq,
+      volume: 0.03,
+      type: 'sine',
+      attack: 0.01,
+      release: 0.18,
     });
   });
 
   addTone(samples, {
-    start: 0.5,
-    duration: 0.22,
-    freq: NOTE.E5,
-    volume: 0.025,
-    type: 'sine',
-    attack: 0.02,
-    release: 0.08,
-  });
-
-  addTone(samples, {
-    start: 2.5,
-    duration: 0.22,
-    freq: NOTE.G5,
+    start: 2.0,
+    duration: 0.3,
+    freq: NOTE.A5,
     volume: 0.02,
     type: 'sine',
     attack: 0.02,
-    release: 0.08,
+    release: 0.12,
+  });
+  addTone(samples, {
+    start: 6.0,
+    duration: 0.3,
+    freq: NOTE.G5,
+    volume: 0.018,
+    type: 'sine',
+    attack: 0.02,
+    release: 0.12,
   });
 
-  applyFade(samples, 0.035);
+  applyFade(samples, 0.05);
   return encodeWavBase64(samples);
 };
 
