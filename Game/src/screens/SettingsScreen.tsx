@@ -1,23 +1,34 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Switch, Text, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSettingsStore } from '../store/useSettingsStore';
+import { Ionicons } from '@expo/vector-icons';
+import { useSettingsStore, MusicStyle } from '../store/useSettingsStore';
 import { useLocaleStore } from '../store/useLocaleStore';
-import { playToggle, getAudioDebugInfo } from '../audio/AudioManager';
+import { playToggle, playUiPress, getAudioDebugInfo } from '../audio/AudioManager';
+import { getStorageDebugInfo } from '../store/mmkvStorage';
 import { Button, Card } from '../components/ui';
 import { Theme } from '../constants/Theme';
 import { getSupportedLocale } from '../constants/Locales';
 import { LanguageSelectionModal } from '../components/game/LanguageSelection';
 import { useTranslator } from '../hooks/useTranslator';
-import { getStorageDebugInfo } from '../store/mmkvStorage';
+
+declare const require: (moduleId: string) => any;
+
+const MUSIC_STYLES: MusicStyle[] = ['calm', 'mystic', 'energetic'];
 
 export default function SettingsScreen() {
   const locale = useLocaleStore((state) => state.locale);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const musicEnabled = useSettingsStore((state) => state.musicEnabled);
+  const musicSeed = useSettingsStore((state) => state.musicSeed);
+  const musicStyle = useSettingsStore((state) => state.musicStyle);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setMusicEnabled = useSettingsStore((state) => state.setMusicEnabled);
+  const setMusicSeed = useSettingsStore((state) => state.setMusicSeed);
+  const setMusicStyle = useSettingsStore((state) => state.setMusicStyle);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [diagVisible, setDiagVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const t = useTranslator('settings');
   const currentLanguage = getSupportedLocale(locale);
@@ -32,10 +43,56 @@ export default function SettingsScreen() {
     playToggle?.(value);
   };
 
+  const handleStyleChange = (style: MusicStyle) => {
+    playUiPress?.();
+    setMusicStyle(style);
+  };
+
+  const handleGenerate = () => {
+    playUiPress?.();
+    const seed = Math.floor(Math.random() * 99999) + 1;
+    setMusicSeed(seed);
+  };
+
+  const buildDiagnosticsText = (): string => {
+    const s = getStorageDebugInfo();
+    const a = getAudioDebugInfo();
+    return [
+      'App: BitCultivator',
+      `Storage: ${s.backend}`,
+      `Storage errors: ${s.errors && s.errors.length > 0 ? s.errors.join(' | ') : 'none'}`,
+      `Env: ${s.env.platform}/${s.env.execEnv} JSI:${s.env.syncHook ? 'yes' : 'no'} bridgeless:${
+        s.env.bridgeless ? 'yes' : 'no'
+      }`,
+      `Audio init:${a.initialized ? 'yes' : 'no'} avail:${a.available ? 'yes' : 'no'} music:${
+        a.musicSoundLoaded ? 'yes' : 'no'
+      }`,
+      `Audio error: ${a.lastError || 'none'}`,
+      `AV: ${a.avError || 'ok'} FS: ${a.fsError || 'ok'}`,
+    ].join('\n');
+  };
+
+  const handleCopy = async () => {
+    playUiPress?.();
+    try {
+      const Clipboard = require('expo-clipboard');
+      const setString = Clipboard?.setStringAsync || Clipboard?.default?.setStringAsync;
+      if (typeof setString === 'function') {
+        await setString(buildDiagnosticsText());
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // Буфер недоступен: тихо игнорируем.
+    }
+  };
+
   const storageDebug = getStorageDebugInfo();
   const audioDebug = getAudioDebugInfo();
   const storageErrorsText =
-    storageDebug.errors.length > 0 ? storageDebug.errors.join(' | ') : 'none';
+    storageDebug.errors && storageDebug.errors.length > 0
+      ? storageDebug.errors.join(' | ')
+      : 'none';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,6 +134,36 @@ export default function SettingsScreen() {
         <Card variant="primary" style={styles.card}>
           <View style={styles.row}>
             <View style={styles.rowText}>
+              <Text style={styles.rowTitle}>{t('music_generator')}</Text>
+              <Text style={styles.rowDesc}>
+                {t('music_seed_label')} #{musicSeed} · {t(`music_style_${musicStyle}`)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.styleRow}>
+            {MUSIC_STYLES.map((style) => (
+              <Button
+                key={style}
+                title={t(`music_style_${style}`)}
+                onPress={() => handleStyleChange(style)}
+                variant={musicStyle === style ? 'primary' : 'secondary'}
+                small
+                style={styles.styleChip}
+              />
+            ))}
+          </View>
+          <Button
+            title={t('music_generate')}
+            onPress={handleGenerate}
+            variant="gold"
+            icon="sparkles"
+            style={styles.generateButton}
+          />
+        </Card>
+
+        <Card variant="primary" style={styles.card}>
+          <View style={styles.row}>
+            <View style={styles.rowText}>
               <Text style={styles.rowTitle}>{t('language')}</Text>
               <Text style={styles.rowDesc}>{t('language_desc')}</Text>
               <Text style={styles.currentLanguageLabel}>{t('language_current')}</Text>
@@ -92,9 +179,25 @@ export default function SettingsScreen() {
         </Card>
 
         <Card variant="primary" style={styles.card}>
-          <View style={styles.row}>
-            <View style={styles.rowText}>
-              <Text style={styles.rowTitle}>Diagnostics</Text>
+          <TouchableOpacity
+            style={styles.diagHeader}
+            onPress={() => {
+              playUiPress?.();
+              setDiagVisible((v) => !v);
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.rowTitle}>{t('diagnostics')}</Text>
+            <Ionicons
+              name={diagVisible ? 'chevron-up' : 'chevron-down'}
+              size={18}
+              color={Theme.colors.textMuted}
+            />
+          </TouchableOpacity>
+          {!diagVisible ? (
+            <Text style={styles.rowDesc}>{t('diagnostics_hint')}</Text>
+          ) : (
+            <View>
               <Text style={styles.rowDesc}>Storage: {storageDebug.backend}</Text>
               <Text style={styles.rowDesc}>Storage errors: {storageErrorsText}</Text>
               <Text style={styles.rowDesc}>
@@ -104,17 +207,28 @@ export default function SettingsScreen() {
                 JSI: {storageDebug.env.syncHook ? 'yes' : 'no'} / bridgeless:{' '}
                 {storageDebug.env.bridgeless ? 'yes' : 'no'}
               </Text>
-              <Text style={styles.rowDesc}>Audio init: {audioDebug.initialized ? 'yes' : 'no'}</Text>
-              <Text style={styles.rowDesc}>Audio avail: {audioDebug.available ? 'yes' : 'no'}</Text>
+              <Text style={styles.rowDesc}>
+                Audio init: {audioDebug.initialized ? 'yes' : 'no'}
+              </Text>
+              <Text style={styles.rowDesc}>
+                Audio avail: {audioDebug.available ? 'yes' : 'no'}
+              </Text>
               <Text style={styles.rowDesc}>
                 Music loaded: {audioDebug.musicSoundLoaded ? 'yes' : 'no'}
               </Text>
               <Text style={styles.rowDesc}>Audio error: {audioDebug.lastError || 'none'}</Text>
               <Text style={styles.rowDesc}>AV: {audioDebug.avError || 'ok'}</Text>
               <Text style={styles.rowDesc}>FS: {audioDebug.fsError || 'ok'}</Text>
-              <Text style={styles.rowDesc}>Dev mode: {audioDebug.isDev ? 'yes' : 'no'}</Text>
+              <Button
+                title={copied ? t('diagnostics_copied') : t('diagnostics_copy')}
+                onPress={handleCopy}
+                variant="secondary"
+                small
+                icon="copy-outline"
+                style={styles.copyButton}
+              />
             </View>
-          </View>
+          )}
         </Card>
 
         <LanguageSelectionModal
@@ -164,6 +278,7 @@ const styles = StyleSheet.create({
   rowDesc: {
     color: Theme.colors.textMuted,
     fontSize: Theme.fontSize.sm,
+    marginBottom: 2,
   },
   separator: {
     height: 1,
@@ -182,6 +297,26 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   languageButton: {
+    marginTop: Theme.spacing.sm,
+  },
+  styleRow: {
+    flexDirection: 'row',
+    marginBottom: Theme.spacing.sm,
+  },
+  styleChip: {
+    flex: 1,
+    marginRight: 6,
+  },
+  generateButton: {
+    marginTop: 2,
+  },
+  diagHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+  },
+  copyButton: {
     marginTop: Theme.spacing.sm,
   },
 });

@@ -1,6 +1,14 @@
 import { useSettingsStore } from '../store/useSettingsStore';
-import { GeneratedAudioName, generateAudioAssets } from './proceduralAudio';
+import {
+  GeneratedAudioName,
+  MusicStyle,
+  generateAudioAssets,
+} from './proceduralAudio';
 
+// Нативные модули подключаются ТОЛЬКО через guarded require с ЛИТЕРАЛЬНОЙ
+// строкой внутри try/catch: Metro статически резолвит зависимость на этапе
+// сборки, а рантайм-ошибка «Cannot find native module 'ExponentAV'» на старых
+// dev-клиентах ловится и деградирует в тишину.
 declare const require: (moduleId: string) => any;
 
 const getIsDev = (): boolean => {
@@ -19,6 +27,8 @@ interface InternalAudioState {
   clickIndex: number;
   simpleSounds: Partial<Record<GeneratedAudioName, any>>;
   musicSound: any;
+  avClass: any;
+  fsModule: any;
   unsubscribeSettings: (() => void) | null;
   lastError: string;
   avError: string;
@@ -34,6 +44,8 @@ const state: InternalAudioState = {
   clickIndex: 0,
   simpleSounds: {},
   musicSound: null,
+  avClass: null,
+  fsModule: null,
   unsubscribeSettings: null,
   lastError: '',
   avError: '',
@@ -238,6 +250,56 @@ const loadSound = async (
   }
 };
 
+const unloadSound = async (sound: any): Promise<void> => {
+  if (!sound) {
+    return;
+  }
+  try {
+    await sound.stopAsync();
+  } catch {
+    // Уже остановлен.
+  }
+  try {
+    await sound.unloadAsync();
+  } catch {
+    // Уже выгружен.
+  }
+};
+
+// Перегенерация фоновой мелодии при смене seed/style в настройках:
+// пишем новый WAV, выгружаем старый Sound, загружаем и возобновляем播放.
+const regenerateMusic = async (seed: number, style: MusicStyle): Promise<void> => {
+  const av = state.avClass;
+  const fs = state.fsModule;
+  if (!av || !fs || !state.initialized) {
+    return;
+  }
+  try {
+    const baseDir = fs.cacheDirectory || fs.documentDirectory;
+    if (!baseDir) {
+      return;
+    }
+    const uri = `${baseDir}audio/music_loop.wav`;
+    const shouldPlay = useSettingsStore.getState().musicEnabled === true;
+    const assets = generateAudioAssets({ seed, style });
+    await fs.writeAsStringAsync(uri, assets.music, {
+      encoding: fs.EncodingType.Base64,
+    });
+    const old = state.musicSound;
+    const sound = await loadSound(av.Audio.Sound, uri, true, 0.22);
+    state.musicSound = sound;
+    if (old && old !== sound) {
+      await unloadSound(old);
+    }
+    if (shouldPlay && sound) {
+      await sound.setIsLoopingAsync(true);
+      await sound.playAsync();
+    }
+  } catch (error: any) {
+    setLastError(`regen: ${String(error?.message || error)}`);
+  }
+};
+
 const initAsync = async (): Promise<void> => {
   const av = pickAv();
   const fs = pickFs();
@@ -246,8 +308,12 @@ const initAsync = async (): Promise<void> => {
     if (!state.lastError) {
       setLastError('native audio modules missing');
     }
+    state.initializing = false;
     return;
   }
+
+  state.avClass = av;
+  state.fsModule = fs;
 
   try {
     await av.Audio.setAudioModeAsync({
@@ -259,7 +325,7 @@ const initAsync = async (): Promise<void> => {
 
     const baseDir = fs.cacheDirectory || fs.documentDirectory;
     if (!baseDir) {
-      setLastError('no cache/document directory');
+      state.initializing = false;
       return;
     }
 
@@ -290,8 +356,18 @@ const initAsync = async (): Promise<void> => {
       music: `${audioDir}music_loop.wav`,
     };
 
+    // Музыка всегда регенерируется под текущие seed/style; UI-звуки кэшируются.
+    const settings = useSettingsStore.getState();
+    const assets = generateAudioAssets({ seed: settings.musicSeed, style: settings.musicStyle });
+    await fs.writeAsStringAsync(fileUris.music, assets.music, {
+      encoding: fs.EncodingType.Base64,
+    });
+
     const missing: GeneratedAudioName[] = [];
     for (const name of names) {
+      if (name === 'music') {
+        continue;
+      }
       try {
         const info = await fs.getInfoAsync(fileUris[name]);
         if (!info.exists) {
@@ -303,7 +379,6 @@ const initAsync = async (): Promise<void> => {
     }
 
     if (missing.length > 0) {
-      const assets = generateAudioAssets();
       for (const name of missing) {
         await fs.writeAsStringAsync(fileUris[name], assets[name], {
           encoding: fs.EncodingType.Base64,
@@ -339,34 +414,27 @@ const initAsync = async (): Promise<void> => {
           void stopMusic();
         }
       }
+      if (current.musicSeed !== prev.musicSeed || current.musicStyle !== prev.musicStyle) {
+        void regenerateMusic(current.musicSeed, current.musicStyle);
+      }
     });
 
     state.initialized = true;
     state.available = true;
+    state.initializing = false;
     syncMusic();
   } catch (error: any) {
     setLastError(`init: ${String(error?.message || error)}`);
+    state.initializing = false;
   }
 };
 
 const runInitOnce = (): void => {
   state.initializing = true;
-  void initAsync()
-    .catch((error: any) => {
-      setLastError(`initAsync: ${String(error?.message || error)}`);
-    })
-    .finally(() => {
-      state.initializing = false;
-      if (!state.initialized && !state.retryScheduled) {
-        state.retryScheduled = true;
-        setTimeout(() => {
-          state.retryScheduled = false;
-          if (!state.initialized && !state.initializing && !getIsDev()) {
-            runInitOnce();
-          }
-        }, 4000);
-      }
-    });
+  void initAsync().catch((error: any) => {
+    setLastError(`initAsync: ${String(error?.message || error)}`);
+    state.initializing = false;
+  });
 };
 
 export const initAudio = (): void => {
@@ -375,6 +443,7 @@ export const initAudio = (): void => {
       return;
     }
     if (getIsDev()) {
+      // Тест на телефоне (expo start / dev-клиент): звук и музыка не запускаются.
       return;
     }
     runInitOnce();
@@ -390,36 +459,16 @@ export const disposeAudio = (): void => {
       state.unsubscribeSettings();
       state.unsubscribeSettings = null;
     }
-
-    const unload = async (sound: any) => {
-      if (!sound) {
-        return;
-      }
-      try {
-        await sound.stopAsync();
-      } catch {
-        // Уже остановлен.
-      }
-      try {
-        await sound.unloadAsync();
-      } catch {
-        // Уже выгружен.
-      }
-    };
-
-    state.clickPool.forEach((sound) => void unload(sound));
+    state.clickPool.forEach((sound) => void unloadSound(sound));
     state.clickPool = [];
-
     Object.values(state.simpleSounds).forEach((sound) => {
       if (sound) {
-        void unload(sound);
+        void unloadSound(sound);
       }
     });
     state.simpleSounds = {};
-
-    void unload(state.musicSound);
+    void unloadSound(state.musicSound);
     state.musicSound = null;
-
     state.initialized = false;
     state.available = false;
     state.initializing = false;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { AppState, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -19,6 +19,24 @@ import { Theme } from './constants/Theme';
 import { resolveLocalizedKey } from './utils/i18n';
 import { AdService } from './services/AdService';
 import { IapService } from './services/IapService';
+
+declare const require: (moduleId: string) => any;
+
+// Скрытие системной навигационной панели Android (кнопки/жестовая полоска).
+// guarded require: если пакета нет в бинаре — тихо деградируем, игра работает.
+const hideSystemNavigationBar = async (): Promise<void> => {
+  try {
+    const NavigationBar = require('expo-navigation-bar');
+    if (!NavigationBar) {
+      return;
+    }
+    await NavigationBar.setVisibilityAsync('hidden');
+    await NavigationBar.setBehaviorAsync('overlay-swipe');
+    await NavigationBar.setBackgroundColorAsync('#00000000');
+  } catch {
+    // Нет нативного модуля: оставляем системную панель.
+  }
+};
 
 export default function App() {
   const playerHydrated = usePlayerStore((state) => state.hasHydrated);
@@ -43,6 +61,20 @@ export default function App() {
     settingsHydrated;
 
   useIdleProgress();
+
+  // Fullscreen: скрываем навигационную панель при старте и при каждом
+  // возврате в приложение (свайп с края может временно показать её).
+  useEffect(() => {
+    void hideSystemNavigationBar();
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        void hideSystemNavigationBar();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!isReady) {

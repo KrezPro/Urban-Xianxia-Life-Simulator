@@ -4,16 +4,20 @@
   "sound": "Звук интерфейса",
   "sound_desc": "Короткие звуки кнопок и действий.",
   "music": "Музыка",
-  "music_desc": "Зацикленная фоновая мелодия.",
+  "music_desc": "Фоновая мелодия по кругу.",
   "language": "Язык",
   "language_desc": "Выберите язык интерфейса.",
-  "language_button": "Изменить язык",
   "language_current": "Текущий язык",
-  "language_close": "Закрыть",
-  "language_selection": {
-    "title": "Выберите язык",
-    "subtitle": "Выберите язык интерфейса. Вы сможете изменить его позже в Настройках.",
-    "confirm": "Подтвердить",
-    "close": "Закрыть"
-  }
+  "language_button": "Сменить язык",
+  "music_generator": "Генератор музыки",
+  "music_style": "Стиль",
+  "music_style_calm": "Спокойный",
+  "music_style_mystic": "Мистический",
+  "music_style_energetic": "Энергичный",
+  "music_generate": "Сгенерировать мелодию",
+  "music_seed_label": "Мелодия",
+  "diagnostics": "Диагностика",
+  "diagnostics_hint": "Нажмите, чтобы развернуть. Copy — отправить отчёт в поддержку.",
+  "diagnostics_copy": "Копировать",
+  "diagnostics_copied": "Скопировано"
 }

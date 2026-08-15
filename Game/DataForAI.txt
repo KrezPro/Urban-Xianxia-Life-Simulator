@@ -26,3 +26,5 @@
 25. expo-navigation-bar версии ~4.1.8 НЕ существует (npm ETARGET). Версии пакетов Expo подбирать ТОЛЬКО через `npx expo install <pkg>`; если пакет недоступен — убирать его из кода и package.json, а не гадать версии.
 26. Трёхуровневое sync-хранилище: MMKV probe -> expo-sqlite sync (openDatabaseSync, таблица kv) -> memory. expo-sqlite sync-API полностью синхронный и не зависит от Nitro — гарантирует сохранения даже при отказе MMKV.
 27. EAS upload может упасть с ECONNRESET (транзиентная сетевая ошибка) — просто повторить eas build; это не ошибка кода.
+28. Скрытая диагностика для саппорта: Diagnostics свёрнута по умолчанию, тап разворачивает, Copy (guarded require expo-clipboard, setStringAsync) кладёт отчёт в буфер. Не показывать технические строки обычному игроку.
+29. Генератор музыки: mulberry32(seed) детерминирован — один seed+style = одна мелодия; musicSeed/musicStyle персистятся в useSettingsStore; regenerateMusic перезаписывает music_loop.wav и перезагружает Sound без перезапуска приложения.

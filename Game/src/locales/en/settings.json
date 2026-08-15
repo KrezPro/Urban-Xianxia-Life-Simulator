@@ -7,13 +7,17 @@
   "music_desc": "Looping background melody.",
   "language": "Language",
   "language_desc": "Choose interface language.",
-  "language_button": "Change language",
   "language_current": "Current language",
-  "language_close": "Close",
-  "language_selection": {
-    "title": "Choose language",
-    "subtitle": "Select the interface language. You can change it later in Settings.",
-    "confirm": "Confirm",
-    "close": "Close"
-  }
+  "language_button": "Change language",
+  "music_generator": "Music generator",
+  "music_style": "Style",
+  "music_style_calm": "Calm",
+  "music_style_mystic": "Mystic",
+  "music_style_energetic": "Energetic",
+  "music_generate": "Generate melody",
+  "music_seed_label": "Melody",
+  "diagnostics": "Diagnostics",
+  "diagnostics_hint": "Tap to expand. Use Copy to send a report to support.",
+  "diagnostics_copy": "Copy",
+  "diagnostics_copied": "Copied"
 }

@@ -7,6 +7,13 @@ export type GeneratedAudioName =
   | 'error'
   | 'music';
 
+export type MusicStyle = 'calm' | 'mystic' | 'energetic';
+
+export interface MusicOptions {
+  seed: number;
+  style: MusicStyle;
+}
+
 const SAMPLE_RATE = 22050;
 
 const BASE64_CHARS =
@@ -14,11 +21,7 @@ const BASE64_CHARS =
 
 const NOTE = {
   E2: 82.41,
-  F2: 87.31,
   A2: 110.0,
-  C3: 130.81,
-  E3: 164.81,
-  F3: 174.61,
   A3: 220.0,
   G4: 392.0,
   A4: 440.0,
@@ -63,7 +66,7 @@ const bytesToBase64 = (bytes: Uint8Array): string => {
     const b0 = bytes[i];
     const b1 = i + 1 < bytes.length ? bytes[i + 1] : 0;
     const b2 = i + 2 < bytes.length ? bytes[i + 2] : 0;
-    const triplet = (b0 << 16) | (b1 << 8) | (b2);
+    const triplet = (b0 << 16) | (b1 << 8) | b2;
     part += BASE64_CHARS[(triplet >> 18) & 63];
     part += BASE64_CHARS[(triplet >> 12) & 63];
     part += i + 1 < bytes.length ? BASE64_CHARS[(triplet >> 6) & 63] : '=';
@@ -288,121 +291,139 @@ const buildError = (): string => {
   return encodeWavBase64(samples);
 };
 
-// Фоновая музыка v2: 8-секундный бесшовный loop.
-// Тёплый детюнированный пад (Am -> F), мягкий бас-пульс, пентатоническая
-// мелодия с эхом и редкие верхние «искорки». UI-звуки не тронуты.
-const buildMusic = (): string => {
+// Детерминированный RNG (mulberry32): один seed = одна и та же мелодия.
+const mulberry32 = (seed: number): (() => number) => {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const SCALES: Record<string, number[]> = {
+  majorPent: [0, 2, 4, 7, 9],
+  minorPent: [0, 3, 5, 7, 10],
+  dorian: [0, 2, 3, 5, 7, 9, 10],
+};
+
+const ROOTS = [98.0, 110.0, 123.47, 130.81, 146.83, 164.81];
+
+const noteFreq = (root: number, semitones: number, octave: number): number =>
+  root * Math.pow(2, octave + semitones / 12);
+
+// Генератор фоновой мелодии из seed+style: пад, бас-пульс, мелодия по ладу,
+// эхо и стилевые украшения. 8 секунд, applyFade для бесшовного loop.
+const buildMusicFromSeed = (seed: number, style: MusicStyle): string => {
+  const rnd = mulberry32(Math.max(1, Math.floor(seed)) || 7);
   const duration = 8.0;
   const samples = createSamples(duration);
+  const scaleName =
+    style === 'mystic'
+      ? 'dorian'
+      : style === 'energetic'
+      ? 'minorPent'
+      : rnd() < 0.5
+      ? 'majorPent'
+      : 'minorPent';
+  const scale = SCALES[scaleName] || SCALES.minorPent;
+  const root = ROOTS[Math.floor(rnd() * ROOTS.length)] || 110.0;
+  const step = style === 'energetic' ? 0.25 : style === 'mystic' ? 0.66 : 0.5;
 
-  const padChord = (start: number, freqs: number[], volume: number): void => {
-    freqs.forEach((freq, index) => {
-      const detune = index % 2 === 0 ? 1.003 : 0.997;
-      addTone(samples, {
-        start,
-        duration: 4.0,
-        freq: freq * detune,
-        volume,
-        type: 'sine',
-        attack: 1.1,
-        release: 1.6,
-      });
-      addTone(samples, {
-        start,
-        duration: 4.0,
-        freq,
-        volume: volume * 0.8,
-        type: 'sine',
-        attack: 1.1,
-        release: 1.6,
-      });
-    });
-  };
-
-  padChord(0, [NOTE.A2, NOTE.E3, NOTE.A3], 0.035);
-  padChord(4, [NOTE.F2, NOTE.C3, NOTE.F3], 0.035);
-
-  addTone(samples, {
-    start: 0,
-    duration: 1.6,
-    freq: NOTE.A2,
-    volume: 0.07,
-    type: 'sine',
-    attack: 0.02,
-    release: 0.6,
-  });
-  addTone(samples, {
-    start: 4,
-    duration: 1.6,
-    freq: NOTE.F2,
-    volume: 0.07,
-    type: 'sine',
-    attack: 0.02,
-    release: 0.6,
-  });
-
-  const melody: Array<[number, number]> = [
-    [0.0, NOTE.A4],
-    [0.5, NOTE.C5],
-    [1.0, NOTE.D5],
-    [1.5, NOTE.E5],
-    [2.0, NOTE.G5],
-    [2.5, NOTE.E5],
-    [3.0, NOTE.D5],
-    [3.5, NOTE.C5],
-    [4.0, NOTE.A4],
-    [4.5, NOTE.C5],
-    [5.0, NOTE.D5],
-    [5.5, NOTE.C5],
-    [6.0, NOTE.A4],
-    [6.5, NOTE.G4],
-    [7.0, NOTE.A4],
+  const padFreqs = [
+    noteFreq(root, 0, 0),
+    noteFreq(root, scale[2] ?? 7, 0),
+    noteFreq(root, scale[4] ?? 12, 0),
   ];
-  melody.forEach(([start, freq]) => {
+  padFreqs.forEach((freq) => {
     addTone(samples, {
-      start,
-      duration: 0.46,
+      start: 0,
+      duration: duration - 0.1,
       freq,
-      volume: 0.095,
+      volume: style === 'energetic' ? 0.05 : 0.06,
       type: 'sine',
-      attack: 0.015,
-      release: 0.22,
+      attack: 0.4,
+      release: 0.8,
     });
-    addTone(samples, {
-      start: start + 0.25,
-      duration: 0.4,
-      freq,
-      volume: 0.03,
-      type: 'sine',
-      attack: 0.01,
-      release: 0.18,
-    });
+    if (style === 'mystic') {
+      addTone(samples, {
+        start: 0,
+        duration: duration - 0.1,
+        freq: freq * 1.003,
+        volume: 0.03,
+        type: 'sine',
+        attack: 0.5,
+        release: 0.9,
+      });
+    }
   });
 
-  addTone(samples, {
-    start: 2.0,
-    duration: 0.3,
-    freq: NOTE.A5,
-    volume: 0.02,
-    type: 'sine',
-    attack: 0.02,
-    release: 0.12,
-  });
-  addTone(samples, {
-    start: 6.0,
-    duration: 0.3,
-    freq: NOTE.G5,
-    volume: 0.018,
-    type: 'sine',
-    attack: 0.02,
-    release: 0.12,
-  });
+  for (let t = 0; t < duration - 0.5; t += 2) {
+    addTone(samples, {
+      start: t,
+      duration: 0.9,
+      freq: noteFreq(root, 0, -1),
+      volume: style === 'energetic' ? 0.09 : 0.06,
+      type: 'sine',
+      attack: 0.02,
+      release: 0.3,
+    });
+  }
+
+  const steps = Math.floor((duration - 1) / step);
+  for (let i = 0; i < steps; i += 1) {
+    if (style === 'mystic' && rnd() < 0.4) {
+      continue;
+    }
+    const degree = scale[Math.floor(rnd() * scale.length)] ?? 0;
+    const octave = rnd() < 0.25 ? 2 : 1;
+    const freq = noteFreq(root, degree, octave);
+    const volume = style === 'energetic' ? 0.09 : 0.1;
+    const type: WaveType = style === 'energetic' ? 'triangle' : 'sine';
+    addTone(samples, {
+      start: i * step,
+      duration: step * 0.9,
+      freq,
+      volume,
+      type,
+      attack: 0.015,
+      release: step * 0.4,
+    });
+    if (rnd() < 0.3) {
+      addTone(samples, {
+        start: i * step + step / 2,
+        duration: step * 0.7,
+        freq,
+        volume: volume * 0.35,
+        type: 'sine',
+        attack: 0.01,
+        release: step * 0.3,
+      });
+    }
+    if (style === 'mystic' && rnd() < 0.2) {
+      addTone(samples, {
+        start: i * step,
+        duration: 0.3,
+        freq: noteFreq(root, degree, 3),
+        volume: 0.02,
+        type: 'sine',
+        attack: 0.01,
+        release: 0.15,
+      });
+    }
+  }
 
   applyFade(samples, 0.05);
   return encodeWavBase64(samples);
 };
 
-export const generateAudioAssets = (): Record<GeneratedAudioName, string> => {
+export const generateAudioAssets = (
+  opts?: MusicOptions
+): Record<GeneratedAudioName, string> => {
+  const seed = opts?.seed ?? 7;
+  const style: MusicStyle = opts?.style ?? 'calm';
   return {
     click: buildClick(),
     toggleOn: buildToggleOn(),
@@ -410,6 +431,6 @@ export const generateAudioAssets = (): Record<GeneratedAudioName, string> => {
     tab: buildTab(),
     success: buildSuccess(),
     error: buildError(),
-    music: buildMusic(),
+    music: buildMusicFromSeed(seed, style),
   };
 };
