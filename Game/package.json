@@ -18,6 +18,7 @@
     "expo-av": "~16.0.8",
     "expo-dev-client": "~6.0.21",
     "expo-file-system": "~19.0.23",
+    "expo-kv-store": "^0.0.0",
     "expo-navigation-bar": "~5.0.10",
     "expo-status-bar": "~3.0.9",
     "expo-system-ui": "~6.0.9",
